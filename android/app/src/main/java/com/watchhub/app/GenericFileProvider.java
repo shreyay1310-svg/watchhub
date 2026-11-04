@@ -51,3 +51,4 @@ public class GenericFileProvider extends ContentProvider {
         throw new FileNotFoundException("File not found: " + uri.getPath());
     }
 }
+

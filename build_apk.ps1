@@ -34,10 +34,14 @@ New-Item -ItemType Directory -Force -Path (Join-Path $BUILD_DIR "assets\www") | 
 Write-Host "==> 1. Compiling Android Resources with AAPT2..."
 & $AAPT2 compile --dir $RES_DIR -o (Join-Path $BUILD_DIR "compiled_res.zip")
 
-Write-Host "==> 2. Linking Resources and generating R.java..."
+Write-Host "==> 2. Linking Resources and generating R.java (Targeting Android 15 / API 35)..."
 & $AAPT2 link `
     -I $ANDROID_JAR `
     --manifest $MANIFEST `
+    --min-sdk-version 26 `
+    --target-sdk-version 35 `
+    --version-code 101 `
+    --version-name "1.0.1" `
     -o (Join-Path $BUILD_DIR "base_unaligned.apk") `
     --java (Join-Path $BUILD_DIR "gen") `
     --auto-add-overlay `
@@ -49,7 +53,7 @@ $javaFiles = Get-ChildItem -Path $JAVA_SRC, (Join-Path $BUILD_DIR "gen") -Filter
 
 Write-Host "==> 4. Converting Java bytecode to Dalvik DEX with D8..."
 $classFiles = Get-ChildItem -Path (Join-Path $BUILD_DIR "obj") -Filter "*.class" -Recurse | Select-Object -ExpandProperty FullName
-& $D8 --min-api 24 --output $BUILD_DIR $classFiles
+& $D8 --min-api 26 --output $BUILD_DIR $classFiles
 
 Write-Host "==> 5. Bundling classes.dex into APK..."
 Set-Location $BUILD_DIR
@@ -91,6 +95,9 @@ Copy-Item $ALIGNED_APK $FINAL_APK -Force
     --ks-key-alias watchhub `
     --ks-pass "pass:WatchHub@2026" `
     --key-pass "pass:WatchHub@2026" `
+    --v1-signing-enabled true `
+    --v2-signing-enabled true `
+    --v3-signing-enabled true `
     $FINAL_APK
 
 Write-Host "==> 10. Verifying APK signature..."
