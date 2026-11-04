@@ -1,0 +1,128 @@
+[
+  {
+    "_id": "661000000000000000000001",
+    "orderId": "WH-ORD-2026-9081",
+    "customer": "660000000000000000000006",
+    "customerName": "Arjun Kapoor",
+    "customerEmail": "customer@watchhub.com",
+    "customerPhone": "+91 99887 66554",
+    "items": [
+      {
+        "name": "Rolex Submariner Date 41mm",
+        "sku": "RLX-SUB-001",
+        "price": 18999,
+        "quantity": 1,
+        "emoji": "⌚"
+      }
+    ],
+    "shippingAddress": {
+      "fullName": "Arjun Kapoor",
+      "street": "Flat 402, Royal Residency, Linking Road, Bandra West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400050",
+      "phone": "+91 99887 66554"
+    },
+    "payment": {
+      "method": "Online",
+      "status": "Completed",
+      "transactionId": "TXN_UPI_982341209",
+      "amount": 18999
+    },
+    "orderStatus": "Processing",
+    "delivery": {
+      "courierName": "BlueDart Express",
+      "trackingId": "BD-IND-77889911",
+      "estimatedDelivery": "2026-11-08T18:00:00.000Z"
+    },
+    "subtotal": 24999,
+    "discount": 6000,
+    "shippingCharges": 0,
+    "totalAmount": 18999,
+    "createdAt": "2026-11-02T10:30:00.000Z"
+  },
+  {
+    "_id": "661000000000000000000002",
+    "orderId": "WH-ORD-2026-9082",
+    "customer": "660000000000000000000006",
+    "customerName": "Meera Sen",
+    "customerEmail": "meera.sen@gmail.com",
+    "customerPhone": "+91 98301 22334",
+    "items": [
+      {
+        "name": "Cartier Santos de Cartier Large",
+        "sku": "CRT-SNT-004",
+        "price": 15999,
+        "quantity": 1,
+        "emoji": "💎"
+      }
+    ],
+    "shippingAddress": {
+      "fullName": "Meera Sen",
+      "street": "14/B South City Garden",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700068",
+      "phone": "+91 98301 22334"
+    },
+    "payment": {
+      "method": "Card",
+      "status": "Completed",
+      "transactionId": "TXN_CRD_11442299",
+      "amount": 15999
+    },
+    "orderStatus": "Shipped",
+    "delivery": {
+      "courierName": "Delhivery Priority",
+      "trackingId": "DLV-9988112233",
+      "estimatedDelivery": "2026-11-06T12:00:00.000Z"
+    },
+    "subtotal": 20999,
+    "discount": 5000,
+    "shippingCharges": 0,
+    "totalAmount": 15999,
+    "createdAt": "2026-11-01T14:15:00.000Z"
+  },
+  {
+    "_id": "661000000000000000000003",
+    "orderId": "WH-ORD-2026-9083",
+    "customer": "660000000000000000000006",
+    "customerName": "Kabir Das",
+    "customerEmail": "kabir.das@outlook.com",
+    "customerPhone": "+91 98400 88776",
+    "items": [
+      {
+        "name": "Tissot PRX Powermatic 80 Blue Dial",
+        "sku": "TSS-PRX-005",
+        "price": 6499,
+        "quantity": 1,
+        "emoji": "🔵"
+      }
+    ],
+    "shippingAddress": {
+      "fullName": "Kabir Das",
+      "street": "Plot 88, Jubilee Hills, Road No. 36",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500033",
+      "phone": "+91 98400 88776"
+    },
+    "payment": {
+      "method": "UPI",
+      "status": "Completed",
+      "transactionId": "TXN_UPI_55667788",
+      "amount": 6499
+    },
+    "orderStatus": "Delivered",
+    "delivery": {
+      "courierName": "BlueDart Express",
+      "trackingId": "BD-IND-22334455",
+      "deliveredAt": "2026-11-03T16:45:00.000Z"
+    },
+    "subtotal": 8999,
+    "discount": 2500,
+    "shippingCharges": 0,
+    "totalAmount": 6499,
+    "createdAt": "2026-10-29T11:20:00.000Z"
+  }
+]

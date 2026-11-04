@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WatchHub – Role Dashboards & Management Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --navy: #0d1522;
+      --navy-light: #162235;
+      --gold: #d49b28;
+      --gold-dark: #b88218;
+      --gold-light: #f5cf73;
+      --gold-bg: #fdf8eb;
+      --bg-body: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      --green: #10b981;
+      --green-bg: #ecfdf5;
+      --blue: #3b82f6;
+      --blue-bg: #eff6ff;
+      --purple: #8b5cf6;
+      --purple-bg: #f5f3ff;
+      --rose: #f43f5e;
+      --rose-bg: #fff1f2;
+      --amber: #f59e0b;
+      --amber-bg: #fffbeb;
+      --teal: #14b8a6;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 14px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 28px rgba(0,0,0,0.08);
+      --font: 'Poppins', -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ════════════════════════════════════════════════
+       1. TOP HEADER (WatchHub Navy)
+       ════════════════════════════════════════════════ */
+    .top-header {
+      background: var(--navy);
+      height: 64px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-hex {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .logo-title h1 {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+    .logo-title h1 span { color: var(--gold); }
+    .logo-title p {
+      font-size: 9.5px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+      margin-top: 1px;
+    }
+
+    /* Search bar */
+    .header-search {
+      flex: 1;
+      max-width: 520px;
+      position: relative;
+    }
+    .header-search input {
+      width: 100%;
+      height: 40px;
+      padding: 0 44px 0 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 9999px;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .header-search input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+    .header-search input:focus {
+      background: rgba(255,255,255,0.14);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,155,40,0.2);
+    }
+    .header-search button {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .header-search button:hover { color: var(--gold); }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.16);
+      color: var(--gold);
+    }
+    .icon-btn .badge-count {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: var(--rose);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--navy);
+    }
+
+    /* Role Selector Dropdown */
+    .role-dropdown-wrap {
+      position: relative;
+    }
+    .role-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(212,155,40,0.6);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .role-btn:hover {
+      background: rgba(212,155,40,0.2);
+      border-color: var(--gold);
+    }
+    .role-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .role-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 260px;
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+      border: 1px solid var(--border);
+      padding: 8px;
+      display: none;
+      z-index: 200;
+      color: var(--text-main);
+    }
+    .role-menu.open { display: block; }
+    .role-menu-header {
+      padding: 8px 12px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .role-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .role-item:hover {
+      background: var(--gold-bg);
+      color: var(--gold-dark);
+    }
+    .role-item.active {
+      background: var(--gold-bg);
+      color: var(--gold-dark);
+      font-weight: 700;
+    }
+    .role-item-badge {
+      margin-left: auto;
+      font-size: 10px;
+      background: #e2e8f0;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      color: var(--text-muted);
+    }
+
+    .storefront-link {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .storefront-link:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    /* ════════════════════════════════════════════════
+       2. MODULE NAVIGATION SUB-BAR (Role-Specific)
+       ════════════════════════════════════════════════ */
+    .module-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      scrollbar-width: none;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+    .module-nav-bar::-webkit-scrollbar { display: none; }
+
+    .module-tab {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+      background: none;
+      font-family: inherit;
+    }
+    .module-tab:hover {
+      color: var(--text-main);
+      background: #f8fafc;
+    }
+    .module-tab.active {
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 600;
+      border-color: #fde68a;
+    }
+    .module-tab svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 1.8;
+    }
+
+    /* ════════════════════════════════════════════════
+       3. MAIN CONTENT CONTAINER
+       ════════════════════════════════════════════════ */
+    .main-wrap {
+      flex: 1;
+      padding: 24px 32px 48px;
+      max-width: 1520px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Page Header */
+    .page-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .page-title-left h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .page-title-left p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .date-filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: var(--shadow-sm);
+    }
+    .date-filter-btn:hover { border-color: var(--gold); }
+
+    /* ════════════════════════════════════════════════
+       4. HERO BANNER (Luxury Watch & Platform Title)
+       ════════════════════════════════════════════════ */
+    .hero-banner {
+      background: linear-gradient(135deg, #0a111b 0%, #162438 60%, #1f2228 100%);
+      border-radius: var(--radius-xl);
+      padding: 24px 36px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(10, 17, 27, 0.25);
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      right: 280px;
+      top: -50px;
+      width: 180px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(212,155,40,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-banner-content {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-banner-content .tag {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .hero-banner-content h3 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .hero-banner-content p {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.7);
+    }
+    .hero-banner-watch {
+      position: relative;
+      width: 220px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      z-index: 2;
+    }
+    .hero-banner-watch img {
+      height: 140px;
+      object-fit: contain;
+      filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6));
+    }
+
+    /* ════════════════════════════════════════════════
+       5. KPI METRIC CARDS ROW (5-6 Columns)
+       ════════════════════════════════════════════════ */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .kpi-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-icon-wrap svg {
+      width: 24px;
+      height: 24px;
+    }
+    .kpi-icon-yellow { background: #fef3c7; color: #b45309; }
+    .kpi-icon-purple { background: var(--purple-bg); color: var(--purple); }
+    .kpi-icon-blue   { background: var(--blue-bg); color: var(--blue); }
+    .kpi-icon-rose   { background: var(--rose-bg); color: var(--rose); }
+    .kpi-icon-green  { background: var(--green-bg); color: var(--green); }
+    .kpi-icon-teal   { background: #ccfbf1; color: var(--teal); }
+    .kpi-icon-amber  { background: var(--amber-bg); color: var(--amber); }
+
+    .kpi-details { flex: 1; }
+    .kpi-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .kpi-value {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.15;
+    }
+    .kpi-trend {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .trend-up { color: var(--green); }
+    .trend-down { color: var(--rose); }
+
+    /* ════════════════════════════════════════════════
+       6. MIDDLE ANALYTICS SECTION (Charts & Widget)
+       ════════════════════════════════════════════════ */
+    .grid-row-3 {
+      display: grid;
+      grid-template-columns: 2fr 1.3fr 1.3fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .card-action-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .card-action-link:hover { text-decoration: underline; }
+
+    .chart-select {
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 3px 8px;
+      background: #fff;
+      outline: none;
+    }
+
+    /* Trend SVG Chart */
+    .svg-chart-wrap {
+      width: 100%;
+      height: 190px;
+      position: relative;
+    }
+    .svg-chart-wrap svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Donut Chart with Legend */
+    .donut-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      height: 100%;
+    }
+    .donut-graphic {
+      width: 140px;
+      height: 140px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .donut-center-text {
+      position: absolute;
+      text-align: center;
+      pointer-events: none;
+    }
+    .donut-center-text strong {
+      display: block;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+    }
+    .donut-center-text span {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    .legend-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+    }
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .legend-pct {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* List Widgets (User Summary, Stock Movement, Inventory Alerts, Query Categories) */
+    .widget-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .widget-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+    }
+    .widget-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+    .widget-item-val {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ════════════════════════════════════════════════
+       7. BOTTOM SECTION (Tables, Products, Quick Actions)
+       ════════════════════════════════════════════════ */
+    .grid-row-bottom {
+      display: grid;
+      grid-template-columns: 2fr 1.3fr 1.3fr;
+      gap: 18px;
+    }
+
+    /* Data Table */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+    table.data-table th {
+      padding: 10px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1.5px solid var(--border);
+      background: #f8fafc;
+    }
+    table.data-table td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+    table.data-table tr:hover td {
+      background: #f8fafc;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+    .status-delivered  { background: #d1fae5; color: #065f46; }
+    .status-shipped    { background: #dbeafe; color: #1e40af; }
+    .status-processing { background: #fef3c7; color: #92400e; }
+    .status-cancelled  { background: #fee2e2; color: #991b1b; }
+    .status-open       { background: #fee2e2; color: #991b1b; }
+    .status-inprogress { background: #fef3c7; color: #92400e; }
+    .status-resolved   { background: #d1fae5; color: #065f46; }
+
+    /* Top Selling Products List */
+    .product-rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .product-rank-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      transition: background 0.15s;
+    }
+    .product-rank-item:hover { background: #f8fafc; }
+    .prod-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .prod-info { flex: 1; }
+    .prod-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+    .prod-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+    }
+    .prod-sold-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: #92400e;
+      background: #fef3c7;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      white-space: nowrap;
+    }
+
+    /* Quick Actions 6-grid */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .action-card-btn {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      color: var(--text-main);
+      text-align: center;
+    }
+    .action-card-btn:hover {
+      background: #ffffff;
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .action-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .action-title {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    /* ════════════════════════════════════════════════
+       8. MODAL / DIALOG POPUP
+       ════════════════════════════════════════════════ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 21, 34, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      width: 90%;
+      max-width: 520px;
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+      position: relative;
+      animation: popIn 0.25s ease-out;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close-btn:hover { color: var(--text-main); background: #e2e8f0; }
+    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .modal-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .modal-form-group { margin-bottom: 14px; }
+    .modal-form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 5px;
+    }
+    .modal-form-group input,
+    .modal-form-group select,
+    .modal-form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+    .modal-form-group input:focus { border-color: var(--gold); }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .btn-secondary {
+      padding: 9px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary {
+      padding: 9px 18px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--gold);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary:hover { background: var(--gold-dark); }
+
+    /* ════════════════════════════════════════════════
+       9. FOOTER
+       ════════════════════════════════════════════════ */
+    .dashboard-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+    .footer-links-row {
+      display: flex;
+      gap: 18px;
+    }
+    .footer-links-row a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .footer-links-row a:hover { color: var(--gold-dark); }
+
+    /* ════════════════════════════════════════════════
+       RESPONSIVE BREAKPOINTS
+       ════════════════════════════════════════════════ */
+    @media (max-width: 1180px) {
+      .grid-row-3,
+      .grid-row-bottom {
+        grid-template-columns: 1fr;
+      }
+      .main-wrap { padding: 18px; }
+      .hero-banner-watch { display: none; }
+    }
+    @media (max-width: 768px) {
+      .top-header { padding: 0 16px; }
+      .header-search { display: none; }
+      .module-nav-bar { padding: 0 16px; }
+      .quick-actions-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════
+       1. TOP HEADER (WatchHub Navy)
+       ════════════════════════════════════════════════ -->
+  <header class="top-header">
+    <a href="index.html" class="header-left" title="Back to Customer Storefront">
+      <!-- Gold Hexagon Watch Logo -->
+      <svg class="logo-hex" viewBox="0 0 100 100" fill="none">
+        <polygon points="50,4 92,26 92,74 50,96 8,74 8,26" stroke="#d49b28" stroke-width="6" fill="#0d1522"/>
+        <circle cx="50" cy="50" r="30" stroke="#f5cf73" stroke-width="3" fill="#080e18"/>
+        <path d="M44 26 L46 22 L50 25 L54 22 L56 26 Z" fill="#d49b28"/>
+        <line x1="50" y1="50" x2="38" y2="38" stroke="#f5cf73" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="50" y1="50" x2="66" y2="38" stroke="#f5cf73" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="4.5" fill="#d49b28"/>
+      </svg>
+      <div class="logo-title">
+        <h1>Watch<span>Hub</span></h1>
+        <p>Premium Watches for Every Style</p>
+      </div>
+    </a>
+
+    <!-- Global Search -->
+    <div class="header-search">
+      <input type="text" id="globalSearchInput" placeholder="Search orders, users, products, reports..."/>
+      <button type="button" onclick="handleSearch()" title="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <!-- Customer Store Link -->
+      <a href="index.html" class="storefront-link" title="Visit Storefront">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>View Store</span>
+      </a>
+
+      <!-- Notification Bell -->
+      <button class="icon-btn" onclick="openNotificationModal()" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="badge-count" id="notificationCountBadge">5</span>
+      </button>
+
+      <!-- Settings Icon -->
+      <button class="icon-btn" onclick="openSettingsModal()" title="System Settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+
+      <!-- Role Dropdown Selector (Switch Between All 5 Dashboards) -->
+      <div class="role-dropdown-wrap">
+        <button class="role-btn" id="roleBtn" onclick="toggleRoleMenu()">
+          <span class="role-avatar" id="currentRoleAvatar">👑</span>
+          <span id="currentRoleLabel">Super Admin</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="role-menu" id="roleMenu">
+          <div class="role-menu-header">Switch Role Dashboard</div>
+          <div class="role-item active" onclick="switchRole('super_admin')">
+            <span>👑</span>
+            <span>Super Admin</span>
+            <span class="role-item-badge">Full Access</span>
+          </div>
+          <div class="role-item" onclick="switchRole('store_admin')">
+            <span>🏪</span>
+            <span>Store Admin</span>
+            <span class="role-item-badge">Catalog & Sales</span>
+          </div>
+          <div class="role-item" onclick="switchRole('inventory_manager')">
+            <span>📦</span>
+            <span>Inventory Manager</span>
+            <span class="role-item-badge">Stocks & Warehouses</span>
+          </div>
+          <div class="role-item" onclick="switchRole('delivery_manager')">
+            <span>🚚</span>
+            <span>Delivery Manager</span>
+            <span class="role-item-badge">Dispatch & Logistics</span>
+          </div>
+          <div class="role-item" onclick="switchRole('customer_support')">
+            <span>🎧</span>
+            <span>Support Executive</span>
+            <span class="role-item-badge">Tickets & Returns</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════
+       2. MODULE NAVIGATION SUB-BAR (Role-Specific Tabs)
+       ════════════════════════════════════════════════ -->
+  <nav class="module-nav-bar" id="moduleNavBar"></nav>
+
+  <!-- ════════════════════════════════════════════════
+       3. MAIN CONTENT CONTAINER
+       ════════════════════════════════════════════════ -->
+  <main class="main-wrap">
+    <!-- Page Title & Date Filter -->
+    <div class="page-title-row">
+      <div class="page-title-left">
+        <h2 id="pageMainHeading">Super Admin Dashboard 👑</h2>
+        <p id="pageMainSub">Manage the entire WatchHub platform — users, products, orders, inventory, offers and more.</p>
+      </div>
+      <button class="date-filter-btn" onclick="openDateFilter()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span id="dateFilterLabel">Last 30 Days</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Hero Control Center Banner -->
+    <section class="hero-banner">
+      <div class="hero-banner-content">
+        <div class="tag">WatchHub</div>
+        <h3 id="heroBannerTitle">Platform Control Center</h3>
+        <p id="heroBannerSub">Complete management of your watch store in one place.</p>
+      </div>
+      <div class="hero-banner-watch">
+        <img src="images/watch-cut.png" alt="WatchHub Luxury Watch Timepiece"/>
+      </div>
+    </section>
+
+    <!-- 5-6 KPI Metric Cards Row -->
+    <section class="kpi-row" id="kpiRowContainer"></section>
+
+    <!-- Middle Analytics Section: Chart 1, Donut Status, List Widget -->
+    <section class="grid-row-3">
+      <!-- Main Trend Line Chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" id="trendChartTitle">Sales Overview</div>
+          <select class="chart-select" id="trendChartSelect" onchange="updateTrendChart(this.value)">
+            <option value="revenue">Revenue</option>
+            <option value="orders">Orders</option>
+            <option value="growth">Growth %</option>
+          </select>
+        </div>
+        <div class="svg-chart-wrap" id="trendChartSvgContainer"></div>
+      </div>
+
+      <!-- Donut Status Distribution -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" id="donutChartTitle">Orders Status</div>
+        </div>
+        <div class="donut-layout">
+          <div class="donut-graphic">
+            <svg viewBox="0 0 100 100" width="130" height="130" id="donutSvg"></svg>
+            <div class="donut-center-text" id="donutCenterText">
+              <strong>1,248</strong>
+              <span>Orders</span>
+            </div>
+          </div>
+          <div class="donut-legend" id="donutLegendContainer"></div>
+        </div>
+      </div>
+
+      <!-- Right Column Widget (User Summary, Stock Movement, Inventory Alerts, Delivery Tasks, Query Categories) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" id="widgetTitle">User & Role Summary</div>
+          <a href="javascript:void(0)" class="card-action-link" id="widgetActionLink">View All →</a>
+        </div>
+        <div class="widget-list" id="widgetListContainer"></div>
+      </div>
+    </section>
+
+    <!-- Bottom Section: Data Table, Center Ranking List, Quick Actions -->
+    <section class="grid-row-bottom">
+      <!-- Data Table Card (Recent Orders, Stock Updates, Deliveries, Support Tickets) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" id="tableCardTitle">Recent Orders</div>
+          <a href="javascript:void(0)" class="card-action-link" onclick="openActionModal('View All Records')">View All →</a>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="mainDataTable">
+            <thead id="mainTableHead"></thead>
+            <tbody id="mainTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Center Ranking Card (Top Selling Products, Low Stock Products, Live Delivery Tracking, Customer Chats) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" id="centerCardTitle">Top Selling Products</div>
+          <a href="javascript:void(0)" class="card-action-link" onclick="openActionModal('View Products')">View All →</a>
+        </div>
+        <div class="product-rank-list" id="centerCardContent"></div>
+      </div>
+
+      <!-- Quick Actions Grid -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚡ Quick Actions</div>
+        </div>
+        <div class="quick-actions-grid" id="quickActionsContainer"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ════════════════════════════════════════════════
+       MODAL DIALOG POPUP (Reusable)
+       ════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="actionModalBackdrop" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeActionModal()">&times;</button>
+      <h3 class="modal-title" id="modalTitle">Action</h3>
+      <p class="modal-desc" id="modalDesc">Fill in the details below to proceed.</p>
+      <form id="modalForm" onsubmit="handleModalSubmit(event)">
+        <div id="modalFormFields"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeActionModal()">Cancel</button>
+          <button type="submit" class="btn-primary" id="modalSubmitBtn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════ -->
+  <footer class="dashboard-footer">
+    <div>WatchHub | Role Dashboards, Technology Stack & Access Control • v2.4</div>
+    <div class="footer-links-row">
+      <a href="index.html">Storefront</a>
+      <a href="javascript:void(0)" onclick="openAccessMatrixModal()">Role Permissions Matrix</a>
+      <a href="javascript:void(0)" onclick="openTechStackModal()">Tech Stack & Architecture</a>
+      <a href="javascript:void(0)" onclick="openAuditModal()">Audit Logs</a>
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════════════════════════
+       JAVASCRIPT: ALL 5 ROLES DATA & DYNAMIC ENGINE
+       ════════════════════════════════════════════════ -->
+  <script>
+    /* ══════════════════════════════════════════════
+       DATA DEFINITIONS FOR ALL 5 ROLES
+       ══════════════════════════════════════════════ */
+    const ROLES_DATA = {
+      // ─────────────────────────────────────────────
+      // ROLE 1: SUPER ADMIN (Page 1)
+      // ─────────────────────────────────────────────
+      super_admin: {
+        roleKey: 'super_admin',
+        roleLabel: 'Super Admin',
+        roleIcon: '👑',
+        heading: 'Super Admin Dashboard 👑',
+        subheading: 'Manage the entire WatchHub platform — users, products, orders, inventory, offers and more.',
+        heroTitle: 'Platform Control Center',
+        heroSub: 'Complete management of your watch store in one place.',
+        modules: [
+          { id: 'dashboard', name: 'Dashboard', icon: '📊', active: true },
+          { id: 'users', name: 'Users & Roles', icon: '👥' },
+          { id: 'products', name: 'Products', icon: '⌚' },
+          { id: 'categories', name: 'Categories', icon: '📁' },
+          { id: 'inventory', name: 'Inventory', icon: '📦' },
+          { id: 'orders', name: 'Orders', icon: '🛒' },
+          { id: 'payments', name: 'Payments', icon: '💳' },
+          { id: 'offers', name: 'Offers & Coupons', icon: '🏷️' },
+          { id: 'banners', name: 'Banners', icon: '🖼️' },
+          { id: 'reviews', name: 'Reviews', icon: '⭐' },
+          { id: 'reports', name: 'Reports', icon: '📈' },
+          { id: 'settings', name: 'System Settings', icon: '⚙️' }
+        ],
+        kpis: [
+          { label: 'Total Orders', value: '1,248', trend: '▲ +12%', isUp: true, color: 'yellow', icon: 'cart' },
+          { label: 'Total Customers', value: '5,320', trend: '▲ +18%', isUp: true, color: 'purple', icon: 'users' },
+          { label: 'Total Products', value: '320', trend: '▲ +6%', isUp: true, color: 'blue', icon: 'box' },
+          { label: 'Total Revenue', value: '₹12,48,000', trend: '▲ +22%', isUp: true, color: 'rose', icon: 'rupee' },
+          { label: 'Active Offers', value: '18', trend: '▲ +5%', isUp: true, color: 'green', icon: 'tag' }
+        ],
+        trendTitle: 'Sales Overview',
+        trendPoints: [
+          { label: 'Apr', val: 2.1 },
+          { label: 'May', val: 3.4 },
+          { label: 'Jun', val: 4.8 },
+          { label: 'Jul', val: 5.2 },
+          { label: 'Aug', val: 7.1 },
+          { label: 'Sep', val: 7.9 },
+          { label: 'Oct', val: 9.8 }
+        ],
+        donutTitle: 'Orders Status',
+        donutTotal: '1,248',
+        donutUnit: 'Orders',
+        donutSegments: [
+          { label: 'Delivered', pct: 62, color: '#3b82f6' },
+          { label: 'Processing', pct: 14, color: '#f59e0b' },
+          { label: 'Shipped', pct: 12, color: '#8b5cf6' },
+          { label: 'Cancelled', pct: 7, color: '#f43f5e' },
+          { label: 'Returned', pct: 5, color: '#14b8a6' }
+        ],
+        widgetTitle: 'User & Role Summary',
+        widgetItems: [
+          { label: '👥 Customers', val: '5,320' },
+          { label: '🏪 Store Admins', val: '12' },
+          { label: '📦 Inventory Managers', val: '8' },
+          { label: '🚚 Delivery Managers', val: '10' },
+          { label: '🎧 Support Executives', val: '6' }
+        ],
+        tableTitle: 'Recent Orders',
+        tableHeaders: ['Order ID', 'Customer', 'Amount', 'Status', 'Date'],
+        tableRows: [
+          ['#WH12548', 'Ananya Singh', '₹2,999', 'delivered', '04 Nov 2026'],
+          ['#WH12547', 'Rahul Verma', '₹3,499', 'shipped', '04 Nov 2026'],
+          ['#WH12546', 'Priya Yadav', '₹1,899', 'processing', '03 Nov 2026'],
+          ['#WH12545', 'Rohit Kumar', '₹2,749', 'delivered', '03 Nov 2026'],
+          ['#WH12544', 'Sneha Patel', '₹3,299', 'cancelled', '02 Nov 2026']
+        ],
+        centerTitle: 'Top Selling Products',
+        centerItems: [
+          { emoji: '⌚', name: 'Classic Chronograph Watch', meta: '★ 4.5 (1.2k)', badge: '324 Sold' },
+          { emoji: '📱', name: 'Smartwatch Pro', meta: '★ 4.5 (3.4k)', badge: '287 Sold' },
+          { emoji: '🕰️', name: 'Elegant Partywear Watch', meta: '★ 4.6 (980)', badge: '256 Sold' }
+        ],
+        actions: [
+          { icon: '➕', title: 'Add Product', action: 'add_product' },
+          { icon: '📁', title: 'Add Category', action: 'add_category' },
+          { icon: '🏷️', title: 'Create Offer', action: 'create_offer' },
+          { icon: '👥', title: 'Manage Users', action: 'manage_users' },
+          { icon: '📊', title: 'View Reports', action: 'view_reports' },
+          { icon: '⚙️', title: 'System Settings', action: 'system_settings' }
+        ]
+      },
+
+      // ─────────────────────────────────────────────
+      // ROLE 2: STORE ADMIN (Page 2)
+      // ─────────────────────────────────────────────
+      store_admin: {
+        roleKey: 'store_admin',
+        roleLabel: 'Store Admin',
+        roleIcon: '🏪',
+        heading: 'Store Admin Dashboard 🏪',
+        subheading: 'Manage products, inventory, orders and promotions for your WatchHub store.',
+        heroTitle: 'Store Management Center',
+        heroSub: 'Control your store products, inventory, orders and offers in one place.',
+        modules: [
+          { id: 'dashboard', name: 'Dashboard', icon: '📊', active: true },
+          { id: 'products', name: 'Products', icon: '⌚' },
+          { id: 'categories', name: 'Categories', icon: '📁' },
+          { id: 'inventory', name: 'Inventory', icon: '📦' },
+          { id: 'orders', name: 'Orders', icon: '🛒' },
+          { id: 'offers', name: 'Offers & Coupons', icon: '🏷️' },
+          { id: 'banners', name: 'Banners & Promotions', icon: '🖼️' },
+          { id: 'reviews', name: 'Reviews & Ratings', icon: '⭐' },
+          { id: 'reports', name: 'Reports', icon: '📈' },
+          { id: 'store_settings', name: 'Store Settings', icon: '⚙️' }
+        ],
+        kpis: [
+          { label: 'Total Products', value: '320', trend: '▲ +6%', isUp: true, color: 'yellow', icon: 'box' },
+          { label: 'Total Orders', value: '1,248', trend: '▲ +12%', isUp: true, color: 'purple', icon: 'cart' },
+          { label: 'Total Customers', value: '5,320', trend: '▲ +18%', isUp: true, color: 'blue', icon: 'users' },
+          { label: 'Total Sales', value: '₹12,48,000', trend: '▲ +22%', isUp: true, color: 'rose', icon: 'rupee' },
+          { label: 'Active Offers', value: '18', trend: '▲ +5%', isUp: true, color: 'green', icon: 'tag' }
+        ],
+        trendTitle: 'Sales Overview',
+        trendPoints: [
+          { label: 'Apr', val: 2.1 },
+          { label: 'May', val: 3.4 },
+          { label: 'Jun', val: 4.8 },
+          { label: 'Jul', val: 5.2 },
+          { label: 'Aug', val: 7.1 },
+          { label: 'Sep', val: 7.9 },
+          { label: 'Oct', val: 9.8 }
+        ],
+        donutTitle: 'Orders Status',
+        donutTotal: '1,248',
+        donutUnit: 'Orders',
+        donutSegments: [
+          { label: 'Delivered', pct: 62, color: '#3b82f6' },
+          { label: 'Processing', pct: 14, color: '#f59e0b' },
+          { label: 'Shipped', pct: 12, color: '#8b5cf6' },
+          { label: 'Cancelled', pct: 7, color: '#f43f5e' },
+          { label: 'Returned', pct: 5, color: '#14b8a6' }
+        ],
+        widgetTitle: '⚠️ Inventory Alerts',
+        widgetItems: [
+          { label: '📱 Digital Sports Watch', val: 'Low Stock (5 left)' },
+          { label: '⌚ Classic Chronograph Watch', val: 'Low Stock (8 left)' },
+          { label: '⌚ Smartwatch Pro', val: 'Low Stock (10 left)' }
+        ],
+        tableTitle: 'Recent Orders',
+        tableHeaders: ['Order ID', 'Customer', 'Amount', 'Status', 'Date'],
+        tableRows: [
+          ['#WH12548', 'Ananya Singh', '₹2,999', 'delivered', '04 Nov 2026'],
+          ['#WH12547', 'Rahul Verma', '₹3,499', 'shipped', '04 Nov 2026'],
+          ['#WH12546', 'Priya Yadav', '₹1,899', 'processing', '03 Nov 2026'],
+          ['#WH12545', 'Rohit Kumar', '₹2,749', 'delivered', '03 Nov 2026'],
+          ['#WH12544', 'Sneha Patel', '₹3,299', 'cancelled', '02 Nov 2026']
+        ],
+        centerTitle: 'Top Selling Products',
+        centerItems: [
+          { emoji: '⌚', name: 'Classic Chronograph Watch', meta: '★ 4.5 (1.2k)', badge: '324 Sold' },
+          { emoji: '📱', name: 'Smartwatch Pro', meta: '★ 4.5 (3.4k)', badge: '287 Sold' },
+          { emoji: '🕰️', name: 'Elegant Partywear Watch', meta: '★ 4.6 (980)', badge: '256 Sold' }
+        ],
+        actions: [
+          { icon: '➕', title: 'Add Product', action: 'add_product' },
+          { icon: '📦', title: 'Update Stock', action: 'update_stock' },
+          { icon: '🏷️', title: 'Create Offer', action: 'create_offer' },
+          { icon: '🖼️', title: 'Upload Banner', action: 'upload_banner' },
+          { icon: '🛒', title: 'View Orders', action: 'view_orders' },
+          { icon: '📈', title: 'Generate Report', action: 'generate_report' }
+        ]
+      },
+
+      // ─────────────────────────────────────────────
+      // ROLE 3: INVENTORY MANAGER (Page 3)
+      // ─────────────────────────────────────────────
+      inventory_manager: {
+        roleKey: 'inventory_manager',
+        roleLabel: 'Inventory Manager',
+        roleIcon: '📦',
+        heading: 'Inventory Manager Dashboard 📦',
+        subheading: 'Manage stock, warehouse, and inventory operations for WatchHub.',
+        heroTitle: 'Inventory Control Center',
+        heroSub: 'Track stock levels, update inventory and manage stock across warehouses.',
+        modules: [
+          { id: 'dashboard', name: 'Dashboard', icon: '📊', active: true },
+          { id: 'inventory', name: 'Inventory', icon: '📦' },
+          { id: 'stock_update', name: 'Stock Update', icon: '🔄' },
+          { id: 'stock_requests', name: 'Stock Requests', icon: '📋' },
+          { id: 'products', name: 'Products', icon: '⌚' },
+          { id: 'warehouses', name: 'Warehouses', icon: '🏢' },
+          { id: 'stock_reports', name: 'Stock Reports', icon: '📈' },
+          { id: 'settings', name: 'Settings', icon: '⚙️' }
+        ],
+        kpis: [
+          { label: 'Total Stock (Units)', value: '8,540', trend: '▲ +6%', isUp: true, color: 'yellow', icon: 'box' },
+          { label: 'In Stock Products', value: '296', trend: '▲ +8%', isUp: true, color: 'purple', icon: 'box' },
+          { label: 'Low Stock Products', value: '24', trend: '▼ -25%', isUp: false, color: 'blue', icon: 'alert' },
+          { label: 'Out of Stock', value: '6', trend: '▼ -40%', isUp: false, color: 'rose', icon: 'cancel' },
+          { label: 'Warehouses', value: '3', trend: '● Active', isUp: true, color: 'green', icon: 'warehouse' }
+        ],
+        trendTitle: 'Stock Overview',
+        trendPoints: [
+          { label: 'Apr', val: 5.2 },
+          { label: 'May', val: 5.8 },
+          { label: 'Jun', val: 6.4 },
+          { label: 'Jul', val: 7.0 },
+          { label: 'Aug', val: 7.9 },
+          { label: 'Sep', val: 8.2 },
+          { label: 'Oct', val: 8.5 }
+        ],
+        donutTitle: 'Stock Status',
+        donutTotal: '296',
+        donutUnit: 'Products',
+        donutSegments: [
+          { label: 'In Stock', pct: 82, color: '#3b82f6' },
+          { label: 'Low Stock', pct: 12, color: '#f59e0b' },
+          { label: 'Out of Stock', pct: 6, color: '#f43f5e' }
+        ],
+        widgetTitle: '🔄 Stock Movement',
+        widgetItems: [
+          { label: '↑ Stock Added', val: '+1,250 Units' },
+          { label: '⇄ Stock Transferred', val: '320 Units' },
+          { label: '↻ Stock Updated', val: '480 Units' },
+          { label: '↓ Stock Removed', val: '-140 Units' }
+        ],
+        tableTitle: 'Recent Stock Updates',
+        tableHeaders: ['Product', 'SKU', 'Update Type', 'Quantity', 'Date'],
+        tableRows: [
+          ['Classic Chronograph', 'WHC-001', 'Stock Added', '+100', '04 Nov 2026'],
+          ['Smartwatch Pro', 'WHS-010', 'Stock Updated', '+50', '04 Nov 2026'],
+          ['Elegant Partywear', 'WHP-005', 'Stock Removed', '-20', '03 Nov 2026'],
+          ['Digital Sports Watch', 'WHD-008', 'Stock Added', '+150', '03 Nov 2026'],
+          ['Waterproof Dive Watch', 'WHW-006', 'Stock Updated', '+75', '02 Nov 2026']
+        ],
+        centerTitle: 'Low Stock Products (24)',
+        centerItems: [
+          { emoji: '📱', name: 'Digital Sports Watch', meta: '★ 4.4 (760)', badge: '5 left' },
+          { emoji: '⌚', name: 'Classic Chronograph Watch', meta: '★ 4.5 (1.2k)', badge: '8 left' },
+          { emoji: '⌚', name: 'Smartwatch Pro', meta: '★ 4.5 (3.4k)', badge: '10 left' }
+        ],
+        actions: [
+          { icon: '➕', title: 'Add Stock', action: 'add_stock' },
+          { icon: '⇄', title: 'Transfer Stock', action: 'transfer_stock' },
+          { icon: '🔄', title: 'Update Stock', action: 'update_stock' },
+          { icon: '🏢', title: 'Manage Warehouses', action: 'manage_warehouses' },
+          { icon: '⚠️', title: 'View Low Stock', action: 'view_low_stock' },
+          { icon: '📈', title: 'Inventory Report', action: 'inventory_report' }
+        ]
+      },
+
+      // ─────────────────────────────────────────────
+      // ROLE 4: DELIVERY MANAGER (Page 4)
+      // ─────────────────────────────────────────────
+      delivery_manager: {
+        roleKey: 'delivery_manager',
+        roleLabel: 'Delivery Manager',
+        roleIcon: '🚚',
+        heading: 'Delivery Manager Dashboard 🚚',
+        subheading: 'Manage order dispatch, delivery, tracking and returns for WatchHub.',
+        heroTitle: 'Delivery Operations Center',
+        heroSub: 'Process, dispatch and track all orders for timely delivery.',
+        modules: [
+          { id: 'dashboard', name: 'Dashboard', icon: '📊', active: true },
+          { id: 'assigned_orders', name: 'Assigned Orders', icon: '📋' },
+          { id: 'pick_pack', name: 'Pick & Pack', icon: '📦' },
+          { id: 'shipments', name: 'Shipments', icon: '🚚' },
+          { id: 'track_orders', name: 'Track Orders', icon: '📍' },
+          { id: 'returns', name: 'Returns & Cancellations', icon: '🔄' },
+          { id: 'delivery_reports', name: 'Delivery Reports', icon: '📈' },
+          { id: 'settings', name: 'Settings', icon: '⚙️' }
+        ],
+        kpis: [
+          { label: 'Total Orders', value: '1,248', trend: '▲ +12%', isUp: true, color: 'yellow', icon: 'cart' },
+          { label: 'Assigned Orders', value: '320', trend: '▲ +8%', isUp: true, color: 'purple', icon: 'box' },
+          { label: 'Out for Delivery', value: '286', trend: '▲ +15%', isUp: true, color: 'blue', icon: 'truck' },
+          { label: 'Delivered Orders', value: '812', trend: '▲ +18%', isUp: true, color: 'green', icon: 'check' },
+          { label: 'Return Requests', value: '24', trend: '▼ -20%', isUp: false, color: 'rose', icon: 'return' },
+          { label: 'Avg. Delivery Time', value: '2.4 Days', trend: '▼ -18%', isUp: true, color: 'green', icon: 'clock' }
+        ],
+        trendTitle: 'Delivery Trend',
+        trendPoints: [
+          { label: 'Apr', val: 240 },
+          { label: 'May', val: 380 },
+          { label: 'Jun', val: 490 },
+          { label: 'Jul', val: 550 },
+          { label: 'Aug', val: 680 },
+          { label: 'Sep', val: 740 },
+          { label: 'Oct', val: 812 }
+        ],
+        donutTitle: 'Order Status Distribution',
+        donutTotal: '1,248',
+        donutUnit: 'Orders',
+        donutSegments: [
+          { label: 'Delivered', pct: 65, color: '#3b82f6' },
+          { label: 'Out for Delivery', pct: 23, color: '#f59e0b' },
+          { label: 'Processing', pct: 6, color: '#8b5cf6' },
+          { label: 'Returned', pct: 4, color: '#f43f5e' },
+          { label: 'Cancelled', pct: 2, color: '#14b8a6' }
+        ],
+        widgetTitle: '📅 Today\'s Delivery Tasks',
+        widgetItems: [
+          { label: '📦 Orders to Pick & Pack', val: '48' },
+          { label: '🚚 Orders to Dispatch', val: '36' },
+          { label: '📍 Out for Delivery', val: '112' },
+          { label: '✅ Expected Deliveries Today', val: '104' }
+        ],
+        tableTitle: 'Recent Deliveries',
+        tableHeaders: ['Order ID', 'Customer', 'Location', 'Status', 'Delivery Date'],
+        tableRows: [
+          ['#WH12548', 'Ananya Singh', 'Lucknow', 'delivered', '04 Nov 2026'],
+          ['#WH12547', 'Rahul Verma', 'Kanpur', 'out for delivery', '04 Nov 2026'],
+          ['#WH12546', 'Priya Yadav', 'Varanasi', 'processing', '03 Nov 2026'],
+          ['#WH12545', 'Rohit Kumar', 'Lucknow', 'delivered', '03 Nov 2026'],
+          ['#WH12544', 'Sneha Patel', 'Sitapur', 'out for delivery', '02 Nov 2026']
+        ],
+        centerTitle: 'Live Delivery Tracking',
+        centerItems: [
+          { emoji: '✅', name: 'Order Confirmed', meta: '03 Nov, 10:24 AM', badge: 'Completed' },
+          { emoji: '📦', name: 'Packed at Warehouse', meta: '03 Nov, 04:30 PM', badge: 'Completed' },
+          { emoji: '🚚', name: 'Out for Delivery', meta: '04 Nov, 09:15 AM', badge: 'Active' },
+          { emoji: '🏠', name: 'Delivered (Expected)', meta: '04 Nov, by 6:00 PM', badge: 'Pending' }
+        ],
+        actions: [
+          { icon: '👤', title: 'Assign Delivery', action: 'assign_delivery' },
+          { icon: '✏️', title: 'Update Status', action: 'update_delivery_status' },
+          { icon: '📷', title: 'Scan Package', action: 'scan_package' },
+          { icon: '📍', title: 'Track Order', action: 'track_order' },
+          { icon: '🔄', title: 'Handle Return', action: 'handle_return' },
+          { icon: '📊', title: 'Generate Report', action: 'generate_report' }
+        ]
+      },
+
+      // ─────────────────────────────────────────────
+      // ROLE 5: CUSTOMER SUPPORT (Page 5)
+      // ─────────────────────────────────────────────
+      customer_support: {
+        roleKey: 'customer_support',
+        roleLabel: 'Support Executive',
+        roleIcon: '🎧',
+        heading: 'Customer Support Dashboard 🎧',
+        subheading: 'Manage customer queries, tickets, returns and provide the best support experience for WatchHub.',
+        heroTitle: 'Customer Support Center',
+        heroSub: 'Resolve queries, manage requests and keep our customers happy.',
+        modules: [
+          { id: 'dashboard', name: 'Dashboard', icon: '📊', active: true },
+          { id: 'support_tickets', name: 'Support Tickets', icon: '🎫' },
+          { id: 'customer_queries', name: 'Customer Queries', icon: '💬' },
+          { id: 'orders_lookup', name: 'Orders Lookup', icon: '🔍' },
+          { id: 'returns_refunds', name: 'Returns & Refunds', icon: '🔄' },
+          { id: 'complaints', name: 'Complaints', icon: '⚠️' },
+          { id: 'reviews_ratings', name: 'Reviews & Ratings', icon: '⭐' },
+          { id: 'customer_management', name: 'Customer Management', icon: '👥' },
+          { id: 'reports', name: 'Reports', icon: '📈' }
+        ],
+        kpis: [
+          { label: 'Total Tickets', value: '1,248', trend: '▲ +12%', isUp: true, color: 'yellow', icon: 'ticket' },
+          { label: 'Open Tickets', value: '186', trend: '▲ +6%', isUp: false, color: 'purple', icon: 'hourglass' },
+          { label: 'Resolved Tickets', value: '1,020', trend: '▲ +18%', isUp: true, color: 'blue', icon: 'check' },
+          { label: 'Return Requests', value: '48', trend: '▲ +10%', isUp: false, color: 'rose', icon: 'return' },
+          { label: 'Refunds Processed', value: '₹1,24,500', trend: '▲ +22%', isUp: true, color: 'rose', icon: 'rupee' },
+          { label: 'Avg. Response Time', value: '4.8 Min', trend: '▼ -25%', isUp: true, color: 'green', icon: 'clock' }
+        ],
+        trendTitle: 'Ticket Trend',
+        trendPoints: [
+          { label: 'Apr', val: 80 },
+          { label: 'May', val: 120 },
+          { label: 'Jun', val: 140 },
+          { label: 'Jul', val: 160 },
+          { label: 'Aug', val: 190 },
+          { label: 'Sep', val: 210 },
+          { label: 'Oct', val: 250 }
+        ],
+        donutTitle: 'Ticket Status Overview',
+        donutTotal: '1,248',
+        donutUnit: 'Tickets',
+        donutSegments: [
+          { label: 'Resolved', pct: 82, color: '#3b82f6' },
+          { label: 'Open', pct: 15, color: '#f59e0b' },
+          { label: 'In Progress', pct: 6, color: '#8b5cf6' },
+          { label: 'Escalated', pct: 3, color: '#f43f5e' }
+        ],
+        widgetTitle: '💬 Query Categories',
+        widgetItems: [
+          { label: '📦 Order Related', val: '38%' },
+          { label: '🔄 Returns & Refunds', val: '22%' },
+          { label: '⌚ Product & Warranty', val: '16%' },
+          { label: '💳 Payment & Billing', val: '14%' },
+          { label: 'ℹ️ Others', val: '10%' }
+        ],
+        tableTitle: 'Recent Support Tickets',
+        tableHeaders: ['Ticket ID', 'Customer', 'Subject', 'Status', 'Priority'],
+        tableRows: [
+          ['#TKT8754', 'Ananya Singh', 'Order not delivered', 'open', 'High'],
+          ['#TKT8753', 'Rahul Verma', 'Return request', 'inprogress', 'Medium'],
+          ['#TKT8752', 'Priya Yadav', 'Refund not received', 'open', 'High'],
+          ['#TKT8751', 'Rohit Kumar', 'Product warranty', 'resolved', 'Low'],
+          ['#TKT8750', 'Sneha Patel', 'Wrong item received', 'resolved', 'Medium']
+        ],
+        centerTitle: 'Recent Customer Chats',
+        centerItems: [
+          { emoji: 'AS', name: 'Ananya Singh', meta: 'Can you help me track my order?', badge: '10:24 AM' },
+          { emoji: 'RV', name: 'Rahul Verma', meta: 'I want to return my watch.', badge: '10:05 AM' },
+          { emoji: 'PY', name: 'Priya Yadav', meta: 'Is there any warranty on this product?', badge: '09:47 AM' }
+        ],
+        actions: [
+          { icon: '💬', title: 'Reply to Tickets', action: 'reply_tickets' },
+          { icon: '🔄', title: 'Process Return', action: 'process_return' },
+          { icon: '💳', title: 'Initiate Refund', action: 'initiate_refund' },
+          { icon: '🔍', title: 'Order Lookup', action: 'order_lookup' },
+          { icon: '✏️', title: 'Update Ticket', action: 'update_ticket' },
+          { icon: '⚠️', title: 'Escalate Issue', action: 'escalate_issue' }
+        ]
+      }
+    };
+
+    let currentRole = 'super_admin';
+
+    /* ══════════════════════════════════════════════
+       RENDER ENGINE: POPULATES COMPLETE DASHBOARD
+       ══════════════════════════════════════════════ */
+    function renderDashboard(roleKey) {
+      const data = ROLES_DATA[roleKey];
+      if (!data) return;
+
+      currentRole = roleKey;
+
+      // 1. Header Role state
+      document.getElementById('currentRoleLabel').textContent = data.roleLabel;
+      document.getElementById('currentRoleAvatar').textContent = data.roleIcon;
+
+      // 2. Headings & Hero Banner
+      document.getElementById('pageMainHeading').textContent = data.heading;
+      document.getElementById('pageMainSub').textContent = data.subheading;
+      document.getElementById('heroBannerTitle').textContent = data.heroTitle;
+      document.getElementById('heroBannerSub').textContent = data.heroSub;
+
+      // 3. Module Nav Tabs
+      const navBar = document.getElementById('moduleNavBar');
+      navBar.innerHTML = data.modules.map(m => `
+        <button class="module-tab ${m.active ? 'active' : ''}" onclick="selectModuleTab('${m.id}', this)">
+          <span>${m.icon}</span>
+          <span>${m.name}</span>
+        </button>
+      `).join('');
+
+      // 4. KPI Cards
+      const kpiContainer = document.getElementById('kpiRowContainer');
+      kpiContainer.innerHTML = data.kpis.map(k => `
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap kpi-icon-${k.color}">
+            ${getKpiSvg(k.icon)}
+          </div>
+          <div class="kpi-details">
+            <div class="kpi-label">${k.label}</div>
+            <div class="kpi-value">${k.value}</div>
+            <div class="kpi-trend ${k.isUp ? 'trend-up' : 'trend-down'}">${k.trend}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // 5. Trend Chart
+      document.getElementById('trendChartTitle').textContent = data.trendTitle;
+      renderTrendChart(data.trendPoints);
+
+      // 6. Donut Status Chart
+      document.getElementById('donutChartTitle').textContent = data.donutTitle;
+      document.getElementById('donutCenterText').innerHTML = `
+        <strong>${data.donutTotal}</strong>
+        <span>${data.donutUnit}</span>
+      `;
+      renderDonutChart(data.donutSegments);
+
+      // 7. Right Widget
+      document.getElementById('widgetTitle').textContent = data.widgetTitle;
+      const widgetList = document.getElementById('widgetListContainer');
+      widgetList.innerHTML = data.widgetItems.map(item => `
+        <div class="widget-list-item">
+          <div class="widget-item-left">${item.label}</div>
+          <div class="widget-item-val">${item.val}</div>
+        </div>
+      `).join('');
+
+      // 8. Bottom Data Table
+      document.getElementById('tableCardTitle').textContent = data.tableTitle;
+      const tHead = document.getElementById('mainTableHead');
+      tHead.innerHTML = `<tr>${data.tableHeaders.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+      const tBody = document.getElementById('mainTableBody');
+      tBody.innerHTML = data.tableRows.map(row => {
+        return `<tr>${row.map((cell, idx) => {
+          // Status column styling
+          if (idx === 3) {
+            return `<td><span class="status-pill status-${cell.replace(/\s+/g, '')}">${cell}</span></td>`;
+          }
+          if (idx === 0) {
+            return `<td style="font-weight:700; color:var(--text-main); font-family:monospace;">${cell}</td>`;
+          }
+          if (idx === 2 && cell.startsWith('₹')) {
+            return `<td style="font-weight:700;">${cell}</td>`;
+          }
+          return `<td>${cell}</td>`;
+        }).join('')}</tr>`;
+      }).join('');
+
+      // 9. Center Ranking Card
+      document.getElementById('centerCardTitle').textContent = data.centerTitle;
+      const centerBox = document.getElementById('centerCardContent');
+      centerBox.innerHTML = data.centerItems.map(item => `
+        <div class="product-rank-item">
+          <div class="prod-avatar">${item.emoji}</div>
+          <div class="prod-info">
+            <div class="prod-title">${item.name}</div>
+            <div class="prod-meta">${item.meta}</div>
+          </div>
+          <div class="prod-sold-badge">${item.badge}</div>
+        </div>
+      `).join('');
+
+      // 10. Quick Actions Grid
+      const actionBox = document.getElementById('quickActionsContainer');
+      actionBox.innerHTML = data.actions.map(act => `
+        <button class="action-card-btn" onclick="openActionModal('${act.title}', '${act.action}')">
+          <div class="action-icon" style="background:#fef3c7;">${act.icon}</div>
+          <div class="action-title">${act.title}</div>
+        </button>
+      `).join('');
+    }
+
+    /* ══════════════════════════════════════════════
+       SVG LINE CHART RENDERER
+       ══════════════════════════════════════════════ */
+    function renderTrendChart(points) {
+      const wrap = document.getElementById('trendChartSvgContainer');
+      const w = 480;
+      const h = 170;
+      const padL = 40;
+      const padR = 20;
+      const padT = 15;
+      const padB = 30;
+
+      const maxVal = Math.max(...points.map(p => p.val)) * 1.15;
+      const stepX = (w - padL - padR) / (points.length - 1);
+
+      const coords = points.map((p, i) => {
+        const x = padL + i * stepX;
+        const y = h - padB - (p.val / maxVal) * (h - padT - padB);
+        return { x, y, label: p.label, val: p.val };
+      });
+
+      // SVG path definition
+      let pathD = `M ${coords[0].x} ${coords[0].y}`;
+      for (let i = 1; i < coords.length; i++) {
+        const prev = coords[i - 1];
+        const curr = coords[i];
+        const cp1x = prev.x + (curr.x - prev.x) / 2;
+        const cp2x = cp1x;
+        pathD += ` C ${cp1x} ${prev.y}, ${cp2x} ${curr.y}, ${curr.x} ${curr.y}`;
+      }
+
+      // Area fill path
+      const areaD = `${pathD} L ${coords[coords.length - 1].x} ${h - padB} L ${coords[0].x} ${h - padB} Z`;
+
+      wrap.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}">
+          <defs>
+            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="${padL}" y1="${padT}" x2="${w - padR}" y2="${padT}" stroke="#f1f5f9" stroke-width="1"/>
+          <line x1="${padL}" y1="${(h - padB + padT)/2}" x2="${w - padR}" y2="${(h - padB + padT)/2}" stroke="#f1f5f9" stroke-width="1"/>
+          <line x1="${padL}" y1="${h - padB}" x2="${w - padR}" y2="${h - padB}" stroke="#e2e8f0" stroke-width="1.2"/>
+
+          <!-- Area -->
+          <path d="${areaD}" fill="url(#chartGrad)"/>
+          <!-- Line -->
+          <path d="${pathD}" fill="none" stroke="#d49b28" stroke-width="3.2" stroke-linecap="round"/>
+
+          <!-- Points & Labels -->
+          ${coords.map(c => `
+            <circle cx="${c.x}" cy="${c.y}" r="4" fill="#ffffff" stroke="#d49b28" stroke-width="2.5"/>
+            <text x="${c.x}" y="${h - 10}" text-anchor="middle" font-size="10.5" fill="#94a3b8" font-family="Poppins">${c.label}</text>
+          `).join('')}
+        </svg>
+      `;
+    }
+
+    /* ══════════════════════════════════════════════
+       SVG DONUT CHART RENDERER
+       ══════════════════════════════════════════════ */
+    function renderDonutChart(segments) {
+      const svg = document.getElementById('donutSvg');
+      const legendBox = document.getElementById('donutLegendContainer');
+      let cumulativePercent = 0;
+
+      function getCoordinatesForPercent(percent) {
+        const x = Math.cos(2 * Math.PI * percent);
+        const y = Math.sin(2 * Math.PI * percent);
+        return [x, y];
+      }
+
+      let pathsHtml = '';
+      segments.forEach(seg => {
+        const startPercent = cumulativePercent;
+        const endPercent = cumulativePercent + (seg.pct / 100);
+        cumulativePercent = endPercent;
+
+        const [startX, startY] = getCoordinatesForPercent(startPercent);
+        const [endX, endY] = getCoordinatesForPercent(endPercent);
+        const largeArcFlag = seg.pct / 100 > 0.5 ? 1 : 0;
+
+        // Radius = 40, center = (50, 50)
+        const pathData = [
+          `M ${50 + 40 * startX} ${50 + 40 * startY}`,
+          `A 40 40 0 ${largeArcFlag} 1 ${50 + 40 * endX} ${50 + 40 * endY}`,
+          `L ${50 + 26 * endX} ${50 + 26 * endY}`,
+          `A 26 26 0 ${largeArcFlag} 0 ${50 + 26 * startX} ${50 + 26 * startY}`,
+          'Z'
+        ].join(' ');
+
+        pathsHtml += `<path d="${pathData}" fill="${seg.color}" stroke="#ffffff" stroke-width="1.5"></path>`;
+      });
+
+      svg.innerHTML = pathsHtml;
+
+      // Legend items
+      legendBox.innerHTML = segments.map(s => `
+        <div class="legend-item">
+          <div class="legend-label">
+            <span class="legend-dot" style="background:${s.color};"></span>
+            <span>${s.label}</span>
+          </div>
+          <div class="legend-pct">${s.pct}%</div>
+        </div>
+      `).join('');
+    }
+
+    /* ══════════════════════════════════════════════
+       HELPER SVG ICONS
+       ══════════════════════════════════════════════ */
+    function getKpiSvg(type) {
+      switch (type) {
+        case 'cart':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>`;
+        case 'users':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+        case 'box':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`;
+        case 'rupee':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 3h12"/><path d="M6 8h12"/><path d="M6 13l8.5 8"/><path d="M6 13h3a4.5 4.5 0 0 0 0-9"/></svg>`;
+        case 'tag':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`;
+        case 'truck':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
+        case 'alert':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+        case 'check':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+        case 'return':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
+        case 'clock':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+        case 'ticket':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18v10H3z"/><circle cx="7" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/></svg>`;
+        case 'warehouse':
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/></svg>`;
+        default:
+          return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
+      }
+    }
+
+    /* ══════════════════════════════════════════════
+       INTERACTION HANDLERS
+       ══════════════════════════════════════════════ */
+    function toggleRoleMenu() {
+      const menu = document.getElementById('roleMenu');
+      menu.classList.toggle('open');
+    }
+
+    // Close role menu on outside click
+    document.addEventListener('click', (e) => {
+      const wrap = document.querySelector('.role-dropdown-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        document.getElementById('roleMenu').classList.remove('open');
+      }
+    });
+
+    function switchRole(roleKey) {
+      document.getElementById('roleMenu').classList.remove('open');
+      renderDashboard(roleKey);
+
+      // Highlight active in menu
+      document.querySelectorAll('.role-item').forEach(el => el.classList.remove('active'));
+      const activeEl = document.querySelector(`.role-item[onclick*="${roleKey}"]`);
+      if (activeEl) activeEl.classList.add('active');
+    }
+
+    function selectModuleTab(modId, btn) {
+      document.querySelectorAll('.module-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      openActionModal(`Module: ${btn.textContent.trim()}`);
+    }
+
+    /* ══════════════════════════════════════════════
+       ACTION MODAL CONTROLLER
+       ══════════════════════════════════════════════ */
+    function openActionModal(title, actionKey = '') {
+      const modal = document.getElementById('actionModalBackdrop');
+      document.getElementById('modalTitle').textContent = `⚡ ${title}`;
+      document.getElementById('modalDesc').textContent = `Manage and execute ${title.toLowerCase()} operational workflow.`;
+
+      const fieldsBox = document.getElementById('modalFormFields');
+
+      if (actionKey === 'add_product') {
+        fieldsBox.innerHTML = `
+          <div class="modal-form-group">
+            <label>Product Name</label>
+            <input type="text" placeholder="e.g. Royal Chronograph Silver 42mm" required/>
+          </div>
+          <div class="modal-form-group">
+            <label>Category</label>
+            <select>
+              <option>Men's Luxury</option>
+              <option>Women's Collection</option>
+              <option>Partywear</option>
+              <option>Smartwatches</option>
+              <option>Waterproof / Dive</option>
+            </select>
+          </div>
+          <div class="modal-form-group">
+            <label>Price (₹)</label>
+            <input type="number" placeholder="2999" required/>
+          </div>
+          <div class="modal-form-group">
+            <label>Initial Stock Quantity</label>
+            <input type="number" placeholder="50" required/>
+          </div>
+        `;
+      } else if (actionKey === 'add_stock' || actionKey === 'update_stock') {
+        fieldsBox.innerHTML = `
+          <div class="modal-form-group">
+            <label>Select Watch SKU</label>
+            <select>
+              <option>WHC-001 – Classic Chronograph Watch</option>
+              <option>WHS-010 – Smartwatch Pro X</option>
+              <option>WHP-005 – Elegant Partywear Watch</option>
+              <option>WHD-008 – Digital Sports Watch</option>
+              <option>WHW-006 – Waterproof Dive Watch</option>
+            </select>
+          </div>
+          <div class="modal-form-group">
+            <label>Quantity to Adjust (+/-)</label>
+            <input type="number" placeholder="+100" required/>
+          </div>
+          <div class="modal-form-group">
+            <label>Target Warehouse</label>
+            <select>
+              <option>Warehouse A (Mumbai Central)</option>
+              <option>Warehouse B (Delhi Hub)</option>
+              <option>Warehouse C (Bangalore South)</option>
+            </select>
+          </div>
+          <div class="modal-form-group">
+            <label>Reason / Audit Note</label>
+            <input type="text" placeholder="Fresh supplier shipment batch #440"/>
+          </div>
+        `;
+      } else if (actionKey === 'create_offer') {
+        fieldsBox.innerHTML = `
+          <div class="modal-form-group">
+            <label>Coupon Code / Offer Title</label>
+            <input type="text" placeholder="e.g. FESTIVAL40" required/>
+          </div>
+          <div class="modal-form-group">
+            <label>Discount Percentage (%)</label>
+            <input type="number" placeholder="40" max="90" required/>
+          </div>
+          <div class="modal-form-group">
+            <label>Applicable Categories</label>
+            <select>
+              <option>All Selected Watches</option>
+              <option>Partywear Watches Only</option>
+              <option>Combo Offers Only</option>
+              <option>Orders Above ₹2,999</option>
+            </select>
+          </div>
+        `;
+      } else {
+        fieldsBox.innerHTML = `
+          <div class="modal-form-group">
+            <label>Reference Identifier</label>
+            <input type="text" placeholder="Order ID / Ticket ID / User ID"/>
+          </div>
+          <div class="modal-form-group">
+            <label>Action Notes / Remarks</label>
+            <textarea rows="3" placeholder="Enter operational notes here..."></textarea>
+          </div>
+        `;
+      }
+
+      modal.classList.add('open');
+    }
+
+    function closeActionModal() {
+      document.getElementById('actionModalBackdrop').classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'actionModalBackdrop') closeActionModal();
+    }
+
+    function handleModalSubmit(e) {
+      e.preventDefault();
+      alert('✅ Action executed and logged into WatchHub audit trail successfully!');
+      closeActionModal();
+    }
+
+    function openNotificationModal() {
+      openActionModal('System Notifications & Alerts');
+    }
+
+    function openSettingsModal() {
+      openActionModal('System Configuration & Access Keys');
+    }
+
+    function openDateFilter() {
+      const choice = prompt('Select Date Range:\n1. Today\n2. Last 7 Days\n3. Last 30 Days\n4. This Quarter\n5. Year to Date', 'Last 30 Days');
+      if (choice) {
+        document.getElementById('dateFilterLabel').textContent = choice;
+      }
+    }
+
+    function handleSearch() {
+      const q = document.getElementById('globalSearchInput').value.trim();
+      if (q) {
+        openActionModal(`Search Results: "${q}"`);
+      }
+    }
+
+    function openAccessMatrixModal() {
+      alert('📋 Role Permissions Matrix (from Documentation Page 6-7):\n\n• Super Admin: Full Platform & Audit Control\n• Store Admin: Catalog, Offers, Store Settings\n• Inventory Manager: Stocks, Warehouses, Stock Requests\n• Delivery Manager: Pick/Pack, Dispatch, Carrier Logistics\n• Support Executive: Tickets, Returns, Customer Queries');
+    }
+
+    function openTechStackModal() {
+      alert('🛠️ Recommended Tech Stack (from Documentation Page 8):\n\n• Frontend: React.js + Vite + Tailwind CSS\n• Backend: Node.js + Express.js REST APIs\n• Database: MongoDB + Mongoose\n• Auth: JWT Access/Refresh + RBAC Middleware\n• Payments: Razorpay (UPI, Cards)\n• Storage: Cloudinary / AWS S3\n• Analytics: Recharts / SVG Engine');
+    }
+
+    function openAuditModal() {
+      alert('🔒 Audit Logs:\nAll sensitive operations (refund execution, stock transfers, role updates, and price changes) are strictly recorded with timestamp, staff identity, and before/after state values.');
+    }
+
+    // Initialize on load with Super Admin
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDashboard('super_admin');
+    });
+  </script>
+</body>
+</html>

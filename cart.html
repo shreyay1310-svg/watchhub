@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Cart – WatchHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: #f0f2f8; color: #1a1a2e; }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 70px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    }
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #d4a017;
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: 1px;
+    }
+    .nav-logo span { color: #fff; }
+    .nav-search {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(212,160,23,0.3);
+      border-radius: 50px;
+      overflow: hidden;
+      max-width: 420px;
+    }
+    .nav-search input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 9px 16px;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      outline: none;
+    }
+    .nav-search input::placeholder { color: rgba(255,255,255,0.45); }
+    .nav-search button {
+      background: #d4a017;
+      border: none;
+      padding: 9px 16px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .nav-actions { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+    .nav-link {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: color .2s;
+    }
+    .nav-link:hover { color: #d4a017; }
+    .nav-icon-btn {
+      position: relative;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.85);
+      font-size: 1.3rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-icon-btn:hover { color: #d4a017; }
+    .badge {
+      position: absolute;
+      top: -6px; right: -8px;
+      background: #d4a017;
+      color: #1a1a2e;
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-auth {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background .2s, border-color .2s;
+    }
+    .btn-auth:hover { background: rgba(212,160,23,0.2); border-color: #d4a017; }
+
+    /* ── Category Bar ── */
+    .category-bar {
+      background: #16213e;
+      padding: 0 32px;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid rgba(212,160,23,0.15);
+    }
+    .category-bar::-webkit-scrollbar { display: none; }
+    .cat-link {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      padding: 10px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .cat-link:hover, .cat-link.active { color: #d4a017; border-bottom-color: #d4a017; }
+
+    /* ── Page Layout ── */
+    .page-wrapper {
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    /* ── Cart Section ── */
+    .cart-section { flex: 1; min-width: 0; }
+    .cart-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cart-count-badge {
+      background: #d4a017;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 50px;
+    }
+
+    /* ── Cart Item Card ── */
+    .cart-item-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(26,26,46,0.08);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 16px;
+      transition: box-shadow .2s, transform .2s;
+      animation: slideIn .3s ease;
+    }
+    .cart-item-card:hover { box-shadow: 0 8px 30px rgba(26,26,46,0.14); transform: translateY(-2px); }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .item-emoji-box {
+      width: 80px; height: 80px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem;
+      flex-shrink: 0;
+    }
+    .item-info { flex: 1; min-width: 0; }
+    .item-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .item-category {
+      display: inline-block;
+      background: rgba(212,160,23,0.12);
+      color: #d4a017;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 50px;
+      margin-bottom: 6px;
+    }
+    .item-unit-price {
+      color: #666;
+      font-size: 0.82rem;
+    }
+    .item-unit-price span { font-weight: 600; color: #1a1a2e; }
+
+    .item-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: #f0f2f8;
+      border-radius: 50px;
+      padding: 2px;
+    }
+    .qty-btn {
+      width: 32px; height: 32px;
+      border: none;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      transition: background .15s, color .15s;
+    }
+    .qty-btn:hover { background: #d4a017; color: #fff; }
+    .qty-display {
+      width: 36px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .item-subtotal {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #1a1a2e;
+    }
+    .remove-btn {
+      background: rgba(220,53,69,0.08);
+      border: 1px solid rgba(220,53,69,0.2);
+      color: #dc3545;
+      padding: 5px 12px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: background .15s, border-color .15s;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .remove-btn:hover { background: #dc3545; color: #fff; border-color: #dc3545; }
+
+    /* ── Empty State ── */
+    .empty-state {
+      background: #fff;
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(26,26,46,0.08);
+    }
+    .empty-emoji { font-size: 5rem; margin-bottom: 16px; display: block; }
+    .empty-state h2 { font-size: 1.4rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .empty-state p { color: #888; margin-bottom: 24px; font-size: 0.95rem; }
+    .btn-shop {
+      display: inline-block;
+      background: linear-gradient(135deg, #d4a017 0%, #f0c040 100%);
+      color: #1a1a2e;
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 15px rgba(212,160,23,0.4);
+    }
+    .btn-shop:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,160,23,0.5); }
+
+    .continue-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #d4a017;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: color .2s;
+    }
+    .continue-link:hover { color: #b8860b; text-decoration: underline; }
+
+    /* ── Order Summary ── */
+    .order-summary {
+      width: 340px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 90px;
+    }
+    .summary-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(26,26,46,0.1);
+      overflow: hidden;
+    }
+    .summary-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      padding: 20px 24px;
+    }
+    .summary-header h2 {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-body { padding: 24px; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #eee;
+      font-size: 0.88rem;
+      color: #555;
+    }
+    .summary-row:last-of-type { border-bottom: none; }
+    .summary-row .label { font-weight: 500; }
+    .summary-row .value { font-weight: 600; color: #1a1a2e; }
+    .summary-row .value.green { color: #28a745; }
+    .summary-row .value.free {
+      color: #28a745;
+      font-weight: 700;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0 10px;
+      margin-top: 4px;
+      border-top: 2px solid #eee;
+    }
+    .summary-total .label { font-size: 1rem; font-weight: 700; color: #1a1a2e; }
+    .summary-total .value { font-size: 1.3rem; font-weight: 800; color: #1a1a2e; }
+    .savings-msg {
+      background: linear-gradient(135deg, rgba(40,167,69,0.08) 0%, rgba(40,167,69,0.04) 100%);
+      border: 1px dashed rgba(40,167,69,0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #28a745;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: center;
+      margin: 12px 0;
+    }
+    .btn-checkout {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #d4a017 0%, #f0c040 100%);
+      color: #1a1a2e;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 16px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 16px rgba(212,160,23,0.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(212,160,23,0.5); }
+    .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .or-link {
+      display: block;
+      text-align: center;
+      color: #888;
+      font-size: 0.8rem;
+      margin-top: 10px;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .or-link a { color: #d4a017; font-weight: 600; text-decoration: none; }
+    .or-link a:hover { text-decoration: underline; }
+
+    .trust-badges {
+      display: flex;
+      justify-content: space-around;
+      padding: 16px 24px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+    }
+    .trust-badge {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #555;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .trust-badge span:first-child { font-size: 1.2rem; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      border-left: 4px solid #d4a017;
+      z-index: 9999;
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .4s;
+      opacity: 0;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .page-wrapper { flex-direction: column; }
+      .order-summary { width: 100%; position: static; }
+    }
+    @media (max-width: 540px) {
+      .navbar { padding: 0 16px; gap: 10px; }
+      .nav-search { max-width: 180px; }
+      .item-emoji-box { width: 60px; height: 60px; font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">⌚ Watch<span>Hub</span></a>
+    <div class="nav-search">
+      <input type="text" placeholder="Search watches, brands…" />
+      <button>🔍</button>
+    </div>
+    <div class="nav-actions">
+      <a href="#" class="nav-link">Track Order</a>
+      <a href="wishlist.html" class="nav-icon-btn" title="Wishlist">
+        ♡
+        <span class="badge" id="wishlist-badge">0</span>
+      </a>
+      <a href="cart.html" class="nav-icon-btn" title="Cart">
+        🛒
+        <span class="badge" id="cart-badge">0</span>
+      </a>
+      <a href="login.html" class="btn-auth">Login / Signup</a>
+    </div>
+  </nav>
+
+  <!-- ══ CATEGORY BAR ══ -->
+  <div class="category-bar">
+    <a href="#" class="cat-link">🏆 Best Sellers</a>
+    <a href="#" class="cat-link">⌚ Luxury</a>
+    <a href="#" class="cat-link">🏃 Sports</a>
+    <a href="#" class="cat-link">💼 Formal</a>
+    <a href="#" class="cat-link">📱 Smart</a>
+    <a href="#" class="cat-link">👗 Women's</a>
+    <a href="#" class="cat-link">👦 Kids</a>
+    <a href="#" class="cat-link">🌊 Diver</a>
+    <a href="#" class="cat-link">🏔️ Outdoor</a>
+    <a href="#" class="cat-link">💸 Under ₹5000</a>
+    <a href="#" class="cat-link">🆕 New Arrivals</a>
+  </div>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <div class="page-wrapper">
+
+    <!-- LEFT: Cart Items -->
+    <section class="cart-section">
+      <h1 class="cart-heading">
+        🛒 My Cart
+        <span class="cart-count-badge" id="cart-count-badge">0 items</span>
+      </h1>
+
+      <div id="cart-items-container"></div>
+
+      <a href="index.html" class="continue-link" id="continue-link" style="display:none;">← Continue Shopping</a>
+    </section>
+
+    <!-- RIGHT: Order Summary -->
+    <aside class="order-summary" id="order-summary" style="display:none;">
+      <div class="summary-card">
+        <div class="summary-header">
+          <h2>🧾 Order Summary</h2>
+        </div>
+        <div class="summary-body">
+          <div class="summary-row">
+            <span class="label">MRP Total</span>
+            <span class="value" id="mrp-total">₹0</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Discount</span>
+            <span class="value green" id="discount-amount">− ₹0</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Delivery Charges</span>
+            <span class="value free" id="delivery-charge">FREE</span>
+          </div>
+          <div class="summary-total">
+            <span class="label">Total Amount</span>
+            <span class="value" id="total-amount">₹0</span>
+          </div>
+          <div class="savings-msg" id="savings-msg">
+            You are saving <strong id="savings-value">₹0</strong> on this order 🎉
+          </div>
+          <button class="btn-checkout" id="checkout-btn" onclick="handleCheckout()">
+            Proceed to Checkout →
+          </button>
+          <p class="or-link">or <a href="index.html">continue shopping</a></p>
+        </div>
+        <div class="trust-badges">
+          <div class="trust-badge"><span>🔒</span><span>Secure Payment</span></div>
+          <div class="trust-badge"><span>🔄</span><span>Easy Returns</span></div>
+          <div class="trust-badge"><span>🚚</span><span>Fast Delivery</span></div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ── Helpers ── */
+    const CART_KEY = 'wh_cart';
+    const WISH_KEY = 'wh_wishlist';
+
+    function getCart() {
+      try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+      catch { return []; }
+    }
+    function saveCart(cart) {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
+    function fmt(n) {
+      return '₹' + Number(n).toLocaleString('en-IN');
+    }
+    function showToast(msg, duration = 3000) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), duration);
+    }
+
+    /* ── Badge Updates ── */
+    function updateBadges() {
+      const cart = getCart();
+      const totalQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
+      document.getElementById('cart-badge').textContent = totalQty;
+
+      const wish = JSON.parse(localStorage.getItem(WISH_KEY) || '[]');
+      document.getElementById('wishlist-badge').textContent = wish.length;
+    }
+
+    /* ── Render Cart ── */
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cart-items-container');
+      const summary = document.getElementById('order-summary');
+      const continueLink = document.getElementById('continue-link');
+      const countBadge = document.getElementById('cart-count-badge');
+
+      container.innerHTML = '';
+
+      if (cart.length === 0) {
+        countBadge.textContent = '0 items';
+        summary.style.display = 'none';
+        continueLink.style.display = 'none';
+        container.innerHTML = `
+          <div class="empty-state">
+            <span class="empty-emoji">🛒</span>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added any watches yet.</p>
+            <a href="products.html" class="btn-shop">Start Shopping</a>
+          </div>`;
+        updateSummary(cart);
+        updateBadges();
+        return;
+      }
+
+      const totalQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
+      countBadge.textContent = totalQty + (totalQty === 1 ? ' item' : ' items');
+      summary.style.display = 'block';
+      continueLink.style.display = 'inline-block';
+
+      cart.forEach((item, idx) => {
+        const qty    = item.qty || 1;
+        const price  = item.price || 0;
+        const subtotal = price * qty;
+        const emoji  = item.emoji || '⌚';
+
+        const card = document.createElement('div');
+        card.className = 'cart-item-card';
+        card.setAttribute('data-idx', idx);
+        card.innerHTML = `
+          <div class="item-emoji-box">${emoji}</div>
+          <div class="item-info">
+            <div class="item-name">${item.name || 'Watch'}</div>
+            <span class="item-category">${item.category || 'Watch'}</span>
+            <div class="item-unit-price">Price per unit: <span>${fmt(price)}</span></div>
+          </div>
+          <div class="item-controls">
+            <div class="qty-control">
+              <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+              <span class="qty-display">${qty}</span>
+              <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+            </div>
+            <div class="item-subtotal">${fmt(subtotal)}</div>
+            <button class="remove-btn" onclick="removeItem(${idx})">🗑️ Remove</button>
+          </div>`;
+        container.appendChild(card);
+      });
+
+      updateSummary(cart);
+      updateBadges();
+    }
+
+    /* ── Update Summary ── */
+    function updateSummary(cart) {
+      const DELIVERY_THRESHOLD = 999;
+      const DELIVERY_FEE = 99;
+      const DISCOUNT_RATE = 0.10; // 10% simulated discount
+
+      const mrpTotal = cart.reduce((s, i) => s + ((i.mrp || i.price || 0) * (i.qty || 1)), 0);
+      const payTotal = cart.reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0);
+      const discount = mrpTotal - payTotal;
+      const delivery = payTotal > DELIVERY_THRESHOLD ? 0 : (cart.length > 0 ? DELIVERY_FEE : 0);
+      const grandTotal = payTotal + delivery;
+      const savings = discount + (delivery === 0 && cart.length > 0 ? DELIVERY_FEE : 0);
+
+      document.getElementById('mrp-total').textContent = fmt(mrpTotal || payTotal);
+      document.getElementById('discount-amount').textContent = '− ' + fmt(discount);
+      document.getElementById('delivery-charge').textContent = delivery === 0 && cart.length > 0 ? 'FREE 🎉' : (cart.length === 0 ? '—' : fmt(delivery));
+      document.getElementById('total-amount').textContent = fmt(grandTotal);
+      document.getElementById('savings-value').textContent = fmt(savings);
+
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (checkoutBtn) checkoutBtn.disabled = cart.length === 0;
+    }
+
+    /* ── Qty Change ── */
+    function changeQty(idx, delta) {
+      const cart = getCart();
+      if (!cart[idx]) return;
+      cart[idx].qty = Math.max(1, (cart[idx].qty || 1) + delta);
+      saveCart(cart);
+      renderCart();
+    }
+
+    /* ── Remove Item ── */
+    function removeItem(idx) {
+      const cart = getCart();
+      const removed = cart.splice(idx, 1);
+      saveCart(cart);
+      showToast('🗑️ ' + (removed[0]?.name || 'Item') + ' removed from cart');
+      renderCart();
+    }
+
+    /* ── Checkout ── */
+    function handleCheckout() {
+      const cart = getCart();
+      if (cart.length === 0) return;
+      const btn = document.getElementById('checkout-btn');
+      btn.disabled = true;
+      btn.textContent = 'Processing…';
+
+      showToast('✅ Order placed successfully! 🎉', 4000);
+
+      setTimeout(() => {
+        saveCart([]);
+        renderCart();
+        btn.textContent = 'Proceed to Checkout →';
+      }, 2000);
+    }
+
+    /* ── Init ── */
+    renderCart();
+  </script>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

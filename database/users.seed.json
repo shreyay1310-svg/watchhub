@@ -1,0 +1,85 @@
+[
+  {
+    "_id": "660000000000000000000001",
+    "name": "Vikram Malhotra",
+    "email": "superadmin@watchhub.com",
+    "phone": "+91 98765 43210",
+    "password": "$2a$10$wT5W2nZ0bZ2vE7D8rV7w9uF5P3L6bK2Z0A7Y8uM1nO3pQ4sR5tU6v",
+    "role": "Super Admin",
+    "permissions": ["all"],
+    "avatar": "👑",
+    "isActive": true,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "660000000000000000000002",
+    "name": "Aanya Singhania",
+    "email": "admin@watchhub.com",
+    "phone": "+91 98765 12345",
+    "password": "$2a$10$wT5W2nZ0bZ2vE7D8rV7w9uF5P3L6bK2Z0A7Y8uM1nO3pQ4sR5tU6v",
+    "role": "Store Admin",
+    "permissions": ["manage_products", "manage_orders", "view_analytics", "manage_discounts"],
+    "avatar": "💼",
+    "isActive": true,
+    "createdAt": "2026-01-05T00:00:00.000Z"
+  },
+  {
+    "_id": "660000000000000000000003",
+    "name": "Rajesh Mehta",
+    "email": "inventory@watchhub.com",
+    "phone": "+91 98220 54321",
+    "password": "$2a$10$wT5W2nZ0bZ2vE7D8rV7w9uF5P3L6bK2Z0A7Y8uM1nO3pQ4sR5tU6v",
+    "role": "Inventory Manager",
+    "permissions": ["manage_stock", "receive_shipments", "update_low_stock", "view_reports"],
+    "avatar": "📦",
+    "isActive": true,
+    "createdAt": "2026-01-10T00:00:00.000Z"
+  },
+  {
+    "_id": "660000000000000000000004",
+    "name": "Karan Verma",
+    "email": "delivery@watchhub.com",
+    "phone": "+91 98111 22334",
+    "password": "$2a$10$wT5W2nZ0bZ2vE7D8rV7w9uF5P3L6bK2Z0A7Y8uM1nO3pQ4sR5tU6v",
+    "role": "Delivery Manager",
+    "permissions": ["assign_courier", "update_tracking", "manage_returns", "confirm_dispatch"],
+    "avatar": "🚚",
+    "isActive": true,
+    "createdAt": "2026-01-12T00:00:00.000Z"
+  },
+  {
+    "_id": "660000000000000000000005",
+    "name": "Pooja Sharma",
+    "email": "support@watchhub.com",
+    "phone": "+91 98450 99887",
+    "password": "$2a$10$wT5W2nZ0bZ2vE7D8rV7w9uF5P3L6bK2Z0A7Y8uM1nO3pQ4sR5tU6v",
+    "role": "Customer Support Executive",
+    "permissions": ["view_tickets", "resolve_complaints", "initiate_refund", "live_chat"],
+    "avatar": "🎧",
+    "isActive": true,
+    "createdAt": "2026-01-15T00:00:00.000Z"
+  },
+  {
+    "_id": "660000000000000000000006",
+    "name": "Arjun Kapoor",
+    "email": "customer@watchhub.com",
+    "phone": "+91 99887 66554",
+    "password": "$2a$10$wT5W2nZ0bZ2vE7D8rV7w9uF5P3L6bK2Z0A7Y8uM1nO3pQ4sR5tU6v",
+    "role": "Customer",
+    "permissions": ["shop", "review", "track_orders", "wishlist"],
+    "avatar": "👤",
+    "isActive": true,
+    "addresses": [
+      {
+        "fullName": "Arjun Kapoor",
+        "street": "Flat 402, Royal Residency, Linking Road, Bandra West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400050",
+        "phone": "+91 99887 66554",
+        "isDefault": true
+      }
+    ],
+    "createdAt": "2026-02-01T00:00:00.000Z"
+  }
+]

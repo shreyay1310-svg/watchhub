@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+*/node_modules/
+package-lock.json
+client/package-lock.json
+server/package-lock.json
+
+# Build outputs
+dist/
+client/dist/
+build/
+.output/
+
+# Android build outputs & caches
+android/.gradle/
+android/app/build/
+android/build/
+*.apk
+!WatchHub-v1.0.0.apk
+!client/public/downloads/*.apk
+
+# Environment Variables
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Vercel
+.vercel/
+
+# Antigravity & Scratch
+.antigravity/
+.gemini/
+scratch/
+
+.vercel

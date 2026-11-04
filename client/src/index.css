@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-watch-light text-watch-dark font-poppins;
+  }
+}
+
+/* Custom Gold Button */
+.btn-gold {
+  @apply bg-gradient-to-r from-watch-gold to-watch-gold-light text-watch-navy-dark font-bold px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 inline-flex items-center justify-center gap-2;
+}
+
+/* Luxury Card */
+.card-luxury {
+  @apply bg-white rounded-xl border border-watch-border shadow-sm hover:shadow-luxury transition-all duration-200;
+}
+

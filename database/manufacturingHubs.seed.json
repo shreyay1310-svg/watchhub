@@ -1,0 +1,116 @@
+[
+  {
+    "id": "switzerland",
+    "name": "Switzerland",
+    "flag": "🇨🇭",
+    "code": "CH",
+    "companies": "45+ Companies",
+    "brands": "120+ Brands",
+    "heroTag": "The Watch Capital",
+    "description": "Home to world-renowned luxury horology houses known for micro-mechanical perfection, handcrafted tourbillons, and chronometer certifications.",
+    "keyHubs": "La Chaux-de-Fonds, Biel/Bienne, Geneva, Le Locle, Schaffhausen",
+    "signatureBrands": ["Rolex", "Patek Philippe", "Audemars Piguet", "Omega", "Vacheron Constantin", "Breitling"],
+    "heroWatch": {
+      "name": "Rolex Submariner Date 41mm",
+      "model": "126610LN",
+      "price": 18999,
+      "tag": "Certified Swiss Chronometer",
+      "image": "https://images.unsplash.com/photo-1526045431048-f857369baa09?auto=format&fit=crop&w=600&q=80"
+    }
+  },
+  {
+    "id": "germany",
+    "name": "Germany",
+    "flag": "🇩🇪",
+    "code": "DE",
+    "companies": "18 Companies",
+    "brands": "35+ Brands",
+    "heroTag": "Saxon Horological Mastery",
+    "description": "Historic Glashütte watchmaking center celebrated for German-silver three-quarter plates, hand-engraved balance cocks, and Bauhaus minimalism.",
+    "keyHubs": "Glashütte, Schramberg, Ruhla, Pforzheim",
+    "signatureBrands": ["A. Lange & Söhne", "Glashütte Original", "Nomos Glashütte", "Junghans", "Sinn"],
+    "heroWatch": {
+      "name": "A. Lange & Söhne Lange 1",
+      "model": "191.032",
+      "price": 32000,
+      "tag": "Glashütte Precision",
+      "image": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=600&q=80"
+    }
+  },
+  {
+    "id": "japan",
+    "name": "Japan",
+    "flag": "🇯🇵",
+    "code": "JP",
+    "companies": "22 Companies",
+    "brands": "40+ Brands",
+    "heroTag": "Pioneer of Quartz & Micro-Engineering",
+    "description": "Leading technological powerhouse that revolutionized quartz accuracy, Spring Drive hybrids, titanium alloy case forging, and ultra-tough G-Shock armor.",
+    "keyHubs": "Suwa, Shizukuishi, Morioka, Yamagata, Tokyo",
+    "signatureBrands": ["Grand Seiko", "Seiko", "Citizen", "Casio", "G-Shock", "Orient"],
+    "heroWatch": {
+      "name": "Grand Seiko Snowflake Spring Drive",
+      "model": "SBGA211",
+      "price": 5800,
+      "tag": "Spring Drive Hybrid",
+      "image": "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=600&q=80"
+    }
+  },
+  {
+    "id": "france",
+    "name": "France",
+    "flag": "🇫🇷",
+    "code": "FR",
+    "companies": "10 Companies",
+    "brands": "25+ Brands",
+    "heroTag": "High Fashion & Haute Horlogerie",
+    "description": "Where French Parisian couture aesthetics meet Jura border precision watchmaking. Famous for iconic square cases and jewelry watches.",
+    "keyHubs": "Besançon, Paris, Morteau",
+    "signatureBrands": ["Cartier", "Hermès", "Bell & Ross", "Yema", "Breguet Heritage"],
+    "heroWatch": {
+      "name": "Cartier Santos de Cartier Large",
+      "model": "WSSA0018",
+      "price": 15999,
+      "tag": "Parisian Icon",
+      "image": "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&w=600&q=80"
+    }
+  },
+  {
+    "id": "india",
+    "name": "India",
+    "flag": "🇮🇳",
+    "code": "IN",
+    "companies": "8 Companies",
+    "brands": "20+ Brands",
+    "heroTag": "Fastest Growing Horology & Smartwatch Center",
+    "description": "Home to world's slimmest quartz movement (Titan Edge), historic mechanical manufacture (HMT), and world-leading domestic smartwatch production volume.",
+    "keyHubs": "Hosur, Bangalore, Noida, Roorkee, Dharuhera",
+    "signatureBrands": ["Titan", "Titan Edge", "Titan Raga", "Fastrack", "HMT", "boAt", "Noise"],
+    "heroWatch": {
+      "name": "Titan Edge Ceramic Ultra Slim",
+      "model": "1696QC01",
+      "price": 3499,
+      "tag": "World's Slimmest Quartz",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+    }
+  },
+  {
+    "id": "china",
+    "name": "China",
+    "flag": "🇨🇳",
+    "code": "CN",
+    "companies": "28+ Companies",
+    "brands": "50+ Brands",
+    "heroTag": "Global High-Volume Manufacturing Hub",
+    "description": "Mass movement manufacturing, complex multi-axis CNC micro-machining, sapphire crystal grinding, and advanced wearable smartwatch hardware.",
+    "keyHubs": "Shenzhen, Tianjin, Guangzhou, Dongguan, Yantai",
+    "signatureBrands": ["Sea-Gull", "Beijing Watch", "Shanghai Watch", "Fiyta"],
+    "heroWatch": {
+      "name": "Sea-Gull 1963 Air Force Chrono",
+      "model": "ST1901",
+      "price": 2899,
+      "tag": "Column Wheel Mechanical",
+      "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80"
+    }
+  }
+]

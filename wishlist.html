@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wishlist – WatchHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 40px;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+
+    .breadcrumb a {
+      color: var(--gold);
+    }
+
+    .page-header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .page-header h1 span {
+      color: var(--gold);
+    }
+
+    .wishlist-section {
+      padding: 36px 40px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .wl-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+      position: relative;
+    }
+
+    .wl-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .wl-img {
+      height: 200px;
+      background: linear-gradient(135deg, #f8f8f8, #eeeeee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      position: relative;
+    }
+
+    .remove-wl-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      background: var(--white);
+      border: none;
+      border-radius: 50%;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      color: var(--red);
+      transition: transform var(--transition), background var(--transition);
+    }
+
+    .remove-wl-btn:hover {
+      background: var(--red);
+      color: var(--white);
+      transform: scale(1.1);
+    }
+
+    .wl-body {
+      padding: 14px;
+    }
+
+    .wl-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .wl-price {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .wl-price .cur {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .wl-price .orig {
+      font-size: 13px;
+      color: var(--text-light);
+      text-decoration: line-through;
+    }
+
+    .wl-price .disc {
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .wl-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .move-cart-btn {
+      flex: 1;
+      padding: 10px;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-family: var(--font);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: background var(--transition);
+    }
+
+    .move-cart-btn:hover {
+      background: var(--gold);
+      color: var(--primary);
+    }
+
+    /* Summary banner */
+    .wl-summary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      color: var(--white);
+    }
+
+    .wl-summary h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .wl-summary p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .add-all-btn {
+      background: var(--gold);
+      color: var(--primary);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--font);
+      white-space: nowrap;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .add-all-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 160, 23, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .wishlist-section {
+        padding: 24px 16px;
+      }
+
+      .wl-summary {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⌚</div>
+      <div class="logo-text">
+        <h1>Watch<span>Hub</span></h1>
+        <p>Premium Watches for Every Style</p>
+      </div>
+    </a>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Search for watches, brands, categories..." />
+      <button class="search-btn" id="searchBtn">🔍</button>
+    </div>
+    <div class="nav-actions">
+      <a href="wishlist.html" class="nav-action-btn" style="color:var(--gold)">
+        <span style="font-size:18px">❤️</span>
+        <div><span class="label">Wishlist</span></div>
+        <span class="badge wishlist-count" style="background:var(--red)">0</span>
+      </a>
+      <a href="cart.html" class="nav-action-btn">
+        <span style="font-size:18px">🛒</span>
+        <div><span class="label">Cart</span></div>
+        <span class="badge cart-count">0</span>
+      </a>
+      <a href="login.html" class="nav-action-btn nav-login-btn">👤 Login / Signup</a>
+    </div>
+  </nav>
+
+  <!-- ══ CAT BAR ══ -->
+  <div class="cat-bar">
+    <button class="all-cat-btn">☰ All Categories</button>
+    <ul class="cat-links">
+      <li><a href="products.html?cat=mens">Men</a></li>
+      <li><a href="products.html?cat=womens">Women</a></li>
+      <li><a href="products.html?cat=couple">Couple</a></li>
+      <li><a href="products.html?cat=partywear">Partywear</a></li>
+      <li><a href="products.html?cat=combo">Combo Offers <span class="hot-badge">Hot</span></a></li>
+      <li><a href="products.html?cat=waterproof">Waterproof</a></li>
+      <li><a href="products.html?cat=digital">Digital</a></li>
+      <li><a href="products.html?cat=smartwatches">Smartwatches</a></li>
+      <li><a href="products.html?cat=luxury">Luxury</a></li>
+    </ul>
+  </div>
+
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="page-header">
+    <p class="breadcrumb"><a href="index.html">Home</a> › My Wishlist</p>
+    <h1>My <span>Wishlist</span> <span id="wlHeadCount"
+        style="font-size:16px;color:var(--text-light);font-weight:500"></span></h1>
+  </div>
+
+  <!-- ══ CONTENT ══ -->
+  <div class="wishlist-section">
+    <!-- Summary banner -->
+    <div class="wl-summary" id="wlSummaryBar" style="display:none">
+      <div>
+        <h3 id="wlSummaryTitle">Aapki Wishlist</h3>
+        <p id="wlSummaryDesc">Saare items cart mein add karo ek click mein!</p>
+      </div>
+      <button class="add-all-btn" onclick="addAllToCart()">🛒 Add All to Cart</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="wishlist-grid" id="wishlistGrid"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="wlEmpty" style="display:none">
+      <div class="empty-icon">🤍</div>
+      <h3>Aapki Wishlist Khaali Hai</h3>
+      <p>Apni pasand ki watches save karo aur baad mein kharido!</p>
+      <a href="products.html" class="btn btn-gold">Watches Dekho</a>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <h2>Watch<span>Hub</span></h2>
+          <p>Premium Watches for Every Style</p>
+        </div>
+        <p class="footer-desc">India ka sabse bada online watch store. 100% original branded watches, free delivery aur
+          easy returns.</p>
+        <div class="footer-social">
+          <a href="#" class="social-icon">📘</a>
+          <a href="#" class="social-icon">📸</a>
+          <a href="#" class="social-icon">🐦</a>
+          <a href="#" class="social-icon">▶️</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Quick Links</h4>
+        <div class="footer-links">
+          <a href="index.html">🏠 Home</a>
+          <a href="products.html">⌚ All Watches</a>
+          <a href="cart.html">🛒 Cart</a>
+          <a href="wishlist.html">❤️ Wishlist</a>
+          <a href="login.html">👤 Login</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Categories</h4>
+        <div class="footer-links">
+          <a href="#">👨 Men's Watches</a>
+          <a href="#">👩 Women's Watches</a>
+          <a href="#">⌚ Smartwatches</a>
+          <a href="#">👑 Luxury</a>
+          <a href="#">💧 Waterproof</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Contact Us</h4>
+        <div class="footer-links">
+          <a href="#">📧 support@watchhub.in</a>
+          <a href="#">📞 1800-123-4567</a>
+          <a href="#">📍 Mumbai, India</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 WatchHub. All rights reserved. | Made with ❤️ in India</div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    function renderWishlist() {
+      const grid = document.getElementById('wishlistGrid');
+      const empty = document.getElementById('wlEmpty');
+      const summary = document.getElementById('wlSummaryBar');
+      const hCount = document.getElementById('wlHeadCount');
+
+      if (!wishlist.length) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        summary.style.display = 'none';
+        hCount.textContent = '';
+        return;
+      }
+
+      empty.style.display = 'none';
+      summary.style.display = 'flex';
+      hCount.textContent = `(${wishlist.length} items)`;
+      document.getElementById('wlSummaryTitle').textContent = `Aapki ${wishlist.length} Favourite Watch${wishlist.length > 1 ? 'es' : ''}`;
+      document.getElementById('wlSummaryDesc').textContent = 'Saare items cart mein add karo ek click mein!';
+
+      grid.innerHTML = wishlist.map(item => `
+      <div class="wl-card" id="wlcard-${item.id}">
+        <div class="wl-img">
+          <span>${item.emoji}</span>
+          <button class="remove-wl-btn" onclick="removeFromWishlist('${item.id}')" title="Remove from wishlist">❌</button>
+        </div>
+        <div class="wl-body">
+          <p class="wl-name">${item.name}</p>
+          <div class="wl-price">
+            <span class="cur">₹${item.price.toLocaleString('en-IN')}</span>
+          </div>
+          <div class="wl-actions">
+            <button class="move-cart-btn" onclick="moveToCart('${item.id}')">🛒 Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    }
+
+    function removeFromWishlist(id) {
+      const item = wishlist.find(i => i.id === id);
+      wishlist = wishlist.filter(i => i.id !== id);
+      saveWishlist();
+      renderWishlist();
+      if (item) showToast(`💔 ${item.name} wishlist se remove hua`);
+    }
+
+    function moveToCart(id) {
+      const item = wishlist.find(i => i.id === id);
+      if (!item) return;
+      addToCart(item.id, item.name, item.price, item.emoji);
+      removeFromWishlist(id);
+    }
+
+    function addAllToCart() {
+      if (!wishlist.length) return;
+      const count = wishlist.length;
+      [...wishlist].forEach(item => addToCart(item.id, item.name, item.price, item.emoji));
+      wishlist = [];
+      saveWishlist();
+      renderWishlist();
+      showToast(`🛒 ${count} items cart mein add ho gaye!`, 'success');
+    }
+
+    renderWishlist();
+  </script>
+</body>
+
+</html>
