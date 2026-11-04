@@ -12,8 +12,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="WatchHub"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.WatchHub"
         android:usesCleartextTraffic="true">
@@ -31,8 +30,8 @@
 
         <!-- Secure FileProvider for In-App APK Upgrade & Installation -->
         <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:name=".GenericFileProvider"
+            android:authorities="com.watchhub.app.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -42,4 +41,3 @@
 
     </application>
 </manifest>
-

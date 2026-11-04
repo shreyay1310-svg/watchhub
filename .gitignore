@@ -16,6 +16,7 @@ android/.gradle/
 android/app/build/
 android/build/
 *.apk
+*.apk.idsig
 !WatchHub-v1.0.0.apk
 !client/public/downloads/*.apk
 

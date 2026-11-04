@@ -68,3 +68,4 @@ mysql -u root -p watchhub < database/schema.sql
 | **Delivery Manager** | `delivery@watchhub.com` | `Admin@123` | Order dispatch, courier tracking (BlueDart/Delhivery) |
 | **Customer Support** | `support@watchhub.com` | `Admin@123` | Ticket resolution, customer queries, refund initiation |
 | **Customer** | `customer@watchhub.com` | `Admin@123` | Browsing, shopping cart, checkout, order tracking |
+
