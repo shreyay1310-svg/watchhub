@@ -20,6 +20,12 @@ import {
   Tag,
 } from 'lucide-react';
 
+// Banners cropped from user reference design
+import bannerWaterproof from '../../assets/images/banners/banner-waterproof.jpg';
+import bannerLuxury from '../../assets/images/banners/banner-luxury.jpg';
+import bannerSmart from '../../assets/images/banners/banner-smartwatches.jpg';
+import bannerCouples from '../../assets/images/banners/banner-couples.jpg';
+
 // Cropped Reference Assets (Exact 1:1 match to reference design)
 import heroWatchCenter from '../../assets/images/ref_crops/hero-watch-center.jpg';
 import tabLuxury from '../../assets/images/ref_crops/tab-luxury.jpg';
@@ -51,7 +57,13 @@ import catCombo from '../../assets/images/ref_crops/cat-combo.jpg';
 export const HomePage = () => {
   const { addToCart, toggleWishlist, isInWishlist, applyCoupon } = useCart();
   const navigate = useNavigate();
-  const [activeHeroTab, setActiveHeroTab] = useState(0); // 0: Luxury, 1: Smart, 2: Sports, 3: Party
+  const [currentBanner, setCurrentBanner] = useState(0); // 0: Luxury, 1: Waterproof, 2: Smartwatches, 3: Couples
+  const [isHovered, setIsHovered] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
   const [activeFilterTab, setActiveFilterTab] = useState('All');
   const [addedItem, setAddedItem] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
@@ -90,57 +102,100 @@ export const HomePage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // 4 Interactive Hero Slides with distinct centerpiece imagery
-  const HERO_SLIDES = [
+  // 4 Moveable Reference Banner Slides (Matching user's exact uploaded image)
+  const BANNER_SLIDES = [
     {
       id: 'luxury',
       label: 'Luxury Collection',
-      thumb: tabLuxury,
-      centerImage: heroWatchCenter,
-      eyebrow: '👑 THE LUXURY COLLECTION —',
-      title1: 'Timeless',
-      title2: 'Elegance',
-      subtitle: "Explore iconic timepieces from the world's most prestigious brands.",
-      ctaText: 'Shop Luxury Watches →',
+      tag: '👑 Luxury Collection',
+      title: 'Premium Luxury Watches',
+      subtitle: 'Timeless Craftsmanship, Modern Elegance.',
+      img: bannerLuxury,
       link: '/products?cat=luxury',
+      accent: '#D9A441',
+    },
+    {
+      id: 'waterproof',
+      label: 'Waterproof Watches',
+      tag: '🌊 Waterproof',
+      title: 'Waterproof Watches',
+      subtitle: 'Built for Adventure, Ready for Every Challenge.',
+      img: bannerWaterproof,
+      link: '/products?cat=waterproof',
+      accent: '#38BDF8',
     },
     {
       id: 'smartwatches',
       label: 'Smartwatches',
-      thumb: tabSmart,
-      centerImage: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=800&q=80',
-      eyebrow: '⚡ NEXT-GEN AMOLED WEARABLES —',
-      title1: 'Smart',
-      title2: 'Innovation',
-      subtitle: 'Bluetooth calling, ultra-bright AMOLED display and 24/7 fitness tracking.',
-      ctaText: 'Explore Smartwatches →',
+      tag: '⚡ Smartwatches',
+      title: 'Smarter on Your Wrist',
+      subtitle: 'Health Tracking • Fitness Modes • Bluetooth Calling • Long Battery Life',
+      img: bannerSmart,
       link: '/products?cat=smartwatches',
+      accent: '#A855F7',
     },
     {
-      id: 'sports',
-      label: 'Sports Series',
-      thumb: tabSports,
-      centerImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
-      eyebrow: '🌊 WATERPROOF DIVER EDITIONS —',
-      title1: 'Extreme',
-      title2: 'Performance',
-      subtitle: 'Engineered for adventure with ISO certified 200M water resistance & sapphire glass.',
-      ctaText: 'Shop Sports Series →',
-      link: '/products?cat=waterproof',
-    },
-    {
-      id: 'party',
-      label: 'Party Wear',
-      thumb: tabParty,
-      centerImage: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
-      eyebrow: '✨ EVENING & GALA GLAMOUR —',
-      title1: 'Radiant',
-      title2: 'Celebration',
-      subtitle: 'Diamond studded bezels, mother-of-pearl dials and royal gold accents.',
-      ctaText: 'Shop Party Wear →',
-      link: '/products?cat=partywear',
+      id: 'couples',
+      label: 'Couple Collection',
+      tag: '❤️ Couple Collection',
+      title: 'Perfect Time Together',
+      subtitle: 'Matching Watches for Every Special Bond.',
+      img: bannerCouples,
+      link: '/products?cat=combo',
+      accent: '#F43F5E',
     },
   ];
+
+  // Auto-slide every 4.5 seconds unless user is hovering or dragging
+  useEffect(() => {
+    if (isHovered || isDragging) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % BANNER_SLIDES.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isHovered, isDragging, BANNER_SLIDES.length]);
+
+  const handlePrevBanner = () => {
+    setCurrentBanner((prev) => (prev === 0 ? BANNER_SLIDES.length - 1 : prev - 1));
+  };
+
+  const handleNextBanner = () => {
+    setCurrentBanner((prev) => (prev + 1) % BANNER_SLIDES.length);
+  };
+
+  // Touch & Mouse Drag / Swipe Handlers for physical moveable feel
+  const handleDragStart = (clientX) => {
+    setTouchStartX(clientX);
+    setTouchEndX(clientX);
+    setIsDragging(true);
+    setDragOffset(0);
+  };
+
+  const handleDragMove = (clientX) => {
+    if (!isDragging) return;
+    setTouchEndX(clientX);
+    setDragOffset(clientX - touchStartX);
+  };
+
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    const diff = touchEndX - touchStartX;
+    if (diff > 45) {
+      handlePrevBanner();
+    } else if (diff < -45) {
+      handleNextBanner();
+    }
+    setDragOffset(0);
+  };
+
+  const handleSlideClick = (slide) => {
+    // If it was just a click and not a drag swipe
+    if (Math.abs(touchEndX - touchStartX) < 12) {
+      showToast(`✨ Opening ${slide.title}...`);
+      navigate(slide.link);
+    }
+  };
 
   // 11 Popular Brands from Reference UI
   const POPULAR_BRANDS = [
@@ -216,177 +271,162 @@ export const HomePage = () => {
 
       <main className="flex-1 pb-16">
         {/* ════════════════════════════════════════════════════════════════
-            2. HERO SHOWCASE SECTION (Opulent Midnight Navy Stage)
+            2. MOVEABLE 4-SLIDE HERO BANNER CAROUSEL
             ════════════════════════════════════════════════════════════════ */}
-        <section className="bg-gradient-to-b from-[#070C14] via-[#09111D] to-[#060A10] text-white relative overflow-hidden px-4 sm:px-8 py-8 sm:py-12 border-b border-white/5">
+        <section className="bg-gradient-to-b from-[#070C14] via-[#09111D] to-[#060A10] text-white relative px-3 sm:px-6 lg:px-8 py-5 sm:py-8 border-b border-white/5">
           {/* Subtle cosmic silk smoke atmosphere glow */}
           <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[140px] pointer-events-none" />
           <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#D9A441]/10 rounded-full blur-[150px] pointer-events-none" />
 
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center relative z-10">
-            
-            {/* ── LEFT COLUMN: 4 Interactive Category Pills ── */}
-            <div className="lg:col-span-3 space-y-2.5 sm:space-y-3 order-2 lg:order-1">
-              {HERO_SLIDES.map((slide, idx) => {
-                const isActive = activeHeroTab === idx;
-                return (
+          <div className="max-w-7xl mx-auto relative z-10">
+            {/* ── THE 4-SLIDE MOVEABLE STAGE ── */}
+            <div
+              className="relative w-full overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl border border-white/10 bg-[#070B12] select-none cursor-grab active:cursor-grabbing group"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => {
+                setIsHovered(false);
+                handleDragEnd();
+              }}
+              onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
+              onTouchMove={(e) => handleDragMove(e.touches[0].clientX)}
+              onTouchEnd={handleDragEnd}
+              onMouseDown={(e) => handleDragStart(e.clientX)}
+              onMouseMove={(e) => handleDragMove(e.clientX)}
+              onMouseUp={handleDragEnd}
+            >
+              {/* Horizontal Moveable Track */}
+              <div
+                className="flex"
+                style={{
+                  transform: `translateX(calc(-${currentBanner * 100}% + ${dragOffset}px))`,
+                  transition: isDragging ? 'none' : 'transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+                }}
+              >
+                {BANNER_SLIDES.map((slide, idx) => (
+                  <div
+                    key={slide.id}
+                    onClick={() => handleSlideClick(slide)}
+                    className="w-full flex-shrink-0 relative aspect-[1020/338] min-h-[160px] sm:min-h-[240px] md:min-h-[300px] lg:min-h-[360px] cursor-pointer"
+                  >
+                    <img
+                      src={slide.img}
+                      alt={slide.title}
+                      className="w-full h-full object-cover select-none pointer-events-none transition-transform duration-700"
+                    />
+
+                    {/* Gradient overlay at bottom for controls legibility */}
+                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Left Arrow Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevBanner();
+                }}
+                className="absolute left-2 sm:left-5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md text-white border border-white/20 flex items-center justify-center shadow-xl transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                title="Previous Slide"
+              >
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              {/* Right Arrow Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNextBanner();
+                }}
+                className="absolute right-2 sm:right-5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md text-white border border-white/20 flex items-center justify-center shadow-xl transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                title="Next Slide"
+              >
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              {/* Bottom Indicator Dots (Moveable Pagination) */}
+              <div className="absolute bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-lg">
+                {BANNER_SLIDES.map((slide, idx) => (
                   <button
                     key={slide.id}
-                    onClick={() => setActiveHeroTab(idx)}
-                    className={`w-full flex items-center gap-3 p-2.5 sm:p-3 rounded-2xl transition-all text-left cursor-pointer border ${
-                      isActive
-                        ? 'bg-black/50 border-[#D9A441] shadow-[0_0_20px_rgba(217,164,65,0.25)]'
-                        : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20'
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentBanner(idx);
+                    }}
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                      currentBanner === idx
+                        ? 'w-7 sm:w-8 bg-[#D9A441] shadow-[0_0_12px_rgba(217,164,65,0.8)]'
+                        : 'w-2 bg-white/40 hover:bg-white/80'
                     }`}
-                  >
-                    <div className="w-12 h-10 sm:w-14 sm:h-11 rounded-xl overflow-hidden bg-black/60 flex-shrink-0 flex items-center justify-center border border-white/10">
-                      <img
-                        src={slide.thumb}
-                        alt={slide.label}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-xs sm:text-[13px] font-bold truncate ${isActive ? 'text-white' : 'text-gray-300'}`}>
-                        {slide.label}
-                      </p>
-                      {isActive && (
-                        <span className="text-[10px] text-watch-gold font-semibold tracking-wider uppercase block mt-0.5">
-                          ● Featured View
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* ── CENTER COLUMN: Hero Headline, Showcase Watch & Controls ── */}
-            <div className="lg:col-span-6 flex flex-col md:flex-row items-center justify-between gap-4 order-1 lg:order-2 relative">
-              {/* Text Side */}
-              <div className="space-y-3 max-w-sm text-center md:text-left z-20">
-                <span className="text-[11px] font-bold text-watch-gold tracking-widest uppercase inline-block">
-                  {currentSlide.eyebrow}
-                </span>
-
-                <h2 className="text-3xl sm:text-5xl font-bold tracking-tight leading-[1.1] font-serif">
-                  <span className="text-white block">{currentSlide.title1}</span>
-                  <span className="text-[#D9A441] italic font-serif block mt-0.5">
-                    {currentSlide.title2}
-                  </span>
-                </h2>
-
-                <p className="text-xs sm:text-[13px] text-gray-300 leading-relaxed">
-                  {currentSlide.subtitle}
-                </p>
-
-                <div className="pt-2">
-                  <Link
-                    to={currentSlide.link}
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D9A441] to-[#B98332] hover:from-[#E5B04E] hover:to-[#C6903E] text-black font-extrabold text-xs sm:text-sm py-3 px-6 rounded-full shadow-lg hover:shadow-watch-gold/30 transition-all cursor-pointer"
-                  >
-                    <span>{currentSlide.ctaText}</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Showcase Dual-Tone Watch Centerpiece Image (Seamless cosmic dark stage integration) */}
-              <div className="relative flex items-center justify-center">
-                <div className="w-60 sm:w-72 lg:w-80 group overflow-hidden rounded-2xl">
-                  <img
-                    key={currentSlide.id}
-                    src={currentSlide.centerImage || heroWatchCenter}
-                    alt={currentSlide.label}
-                    className="w-full h-72 sm:h-80 object-cover rounded-2xl drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] transform group-hover:scale-105 transition-all duration-700 select-none animate-fade-in"
-                  />
-                </div>
-
-                {/* Left & Right Glass Arrows */}
-                <button
-                  type="button"
-                  onClick={() => setActiveHeroTab((prev) => (prev === 0 ? HERO_SLIDES.length - 1 : prev - 1))}
-                  className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
-                  title="Previous Slide"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveHeroTab((prev) => (prev === HERO_SLIDES.length - 1 ? 0 : prev + 1))}
-                  className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
-                  title="Next Slide"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Slide Indicator Dots */}
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
-                {HERO_SLIDES.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveHeroTab(i)}
-                    className={`h-1.5 transition-all rounded-full ${
-                      activeHeroTab === i ? 'w-6 bg-watch-gold' : 'w-1.5 bg-white/30'
-                    }`}
+                    title={`Slide ${idx + 1}: ${slide.label}`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* ── RIGHT COLUMN: Glassmorphic Countdown Offer Card ── */}
-            <div className="lg:col-span-3 flex justify-center lg:justify-end order-3">
-              <div className="w-full max-w-[280px] bg-white/[0.06] backdrop-blur-md border border-white/15 rounded-3xl p-5 text-center text-white shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-watch-gold/10 rounded-full blur-2xl pointer-events-none" />
-
-                <span className="text-xs font-semibold text-gray-300 block">
-                  Limited Time Offer
-                </span>
-
-                <h3 className="text-3xl sm:text-4xl font-black text-white mt-1 mb-0.5 tracking-tight">
-                  <span className="text-[#D9A441]">40%</span> OFF
-                </h3>
-
-                <p className="text-[11px] text-gray-400 mb-4">
-                  On Selected Premium Brands
-                </p>
-
-                {/* 4 Digital Timer Squares (Real live countdown) */}
-                <div className="grid grid-cols-4 gap-2 mb-5">
-                  <div className="bg-black/50 border border-white/10 rounded-xl py-2 px-1">
-                    <span className="font-mono text-base font-bold text-white block">
-                      {String(timeLeft.days).padStart(2, '0')}
+            {/* ── 4 QUICK-SELECT INTERACTIVE CATEGORY CHIPS ── */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-3.5">
+              {BANNER_SLIDES.map((slide, idx) => {
+                const isActive = currentBanner === idx;
+                return (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    onClick={() => setCurrentBanner(idx)}
+                    className={`flex items-center justify-between p-2.5 sm:p-3 rounded-xl border transition-all text-left cursor-pointer ${
+                      isActive
+                        ? 'bg-black/80 border-[#D9A441] shadow-[0_0_15px_rgba(217,164,65,0.3)]'
+                        : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20 text-gray-300'
+                    }`}
+                  >
+                    <span className={`text-xs sm:text-[13px] font-bold truncate ${isActive ? 'text-white' : 'text-gray-300'}`}>
+                      {slide.tag}
                     </span>
-                    <span className="text-[9px] text-gray-400 uppercase font-semibold">Days</span>
-                  </div>
-                  <div className="bg-black/50 border border-white/10 rounded-xl py-2 px-1">
-                    <span className="font-mono text-base font-bold text-white block">
-                      {String(timeLeft.hours).padStart(2, '0')}
+                    <span className={`text-[9.5px] uppercase font-black tracking-wider ml-1 flex-shrink-0 ${isActive ? 'text-[#D9A441]' : 'text-gray-500'}`}>
+                      {isActive ? '● Active' : 'Slide'}
                     </span>
-                    <span className="text-[9px] text-gray-400 uppercase font-semibold">Hrs</span>
-                  </div>
-                  <div className="bg-black/50 border border-white/10 rounded-xl py-2 px-1">
-                    <span className="font-mono text-base font-bold text-white block">
-                      {String(timeLeft.minutes).padStart(2, '0')}
-                    </span>
-                    <span className="text-[9px] text-gray-400 uppercase font-semibold">Min</span>
-                  </div>
-                  <div className="bg-black/50 border border-white/10 rounded-xl py-2 px-1">
-                    <span className="font-mono text-base font-bold text-watch-gold block">
-                      {String(timeLeft.seconds).padStart(2, '0')}
-                    </span>
-                    <span className="text-[9px] text-gray-400 uppercase font-semibold">Sec</span>
-                  </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── FESTIVAL 40% OFF COUNTDOWN FLASH OFFER STRIP ── */}
+            <div className="mt-4 bg-gradient-to-r from-amber-500/10 via-[#D9A441]/15 to-amber-500/10 border border-[#D9A441]/30 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-white backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D9A441] to-[#B98332] text-black flex items-center justify-center font-black text-sm flex-shrink-0 shadow-md">
+                  40%
                 </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                    <span>Limited Time Festival Flash Offer</span>
+                    <span className="text-[9.5px] bg-red-500 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">
+                      40% OFF
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-gray-300">
+                    Get Flat 40% OFF on luxury & sports brands. Coupon <strong className="text-[#D9A441] font-mono">WATCHLUX40</strong> applied instantly!
+                  </p>
+                </div>
+              </div>
 
-                {/* Solid Gold Grab Offer CTA */}
+              {/* Timer & CTA */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-white bg-black/50 px-3 py-1.5 rounded-xl border border-white/10">
+                  <span className="text-[#D9A441]">{String(timeLeft.days).padStart(2, '0')}d</span> :
+                  <span>{String(timeLeft.hours).padStart(2, '0')}h</span> :
+                  <span>{String(timeLeft.minutes).padStart(2, '0')}m</span> :
+                  <span className="text-red-400">{String(timeLeft.seconds).padStart(2, '0')}s</span>
+                </div>
                 <button
                   type="button"
                   onClick={handleGrabOffer}
-                  className="w-full bg-gradient-to-r from-[#D9A441] to-[#B98332] hover:from-[#E5B04E] hover:to-[#C6903E] active:scale-[0.98] text-black font-extrabold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-md hover:shadow-watch-gold/30 transition-all cursor-pointer"
+                  className="bg-gradient-to-r from-[#D9A441] to-[#B98332] hover:from-[#E5B04E] hover:to-[#C6903E] active:scale-[0.98] text-black font-extrabold text-xs sm:text-sm py-2 px-4 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-watch-gold/30 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <Tag className="w-4 h-4 text-black" />
-                  <span>Grab the Offer →</span>
+                  <span>Grab 40% OFF →</span>
                 </button>
               </div>
             </div>
