@@ -23,6 +23,8 @@ export default {
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        cinzel: ['Cinzel', 'serif'],
       },
       boxShadow: {
         'luxury': '0 10px 30px rgba(16, 28, 43, 0.12)',
