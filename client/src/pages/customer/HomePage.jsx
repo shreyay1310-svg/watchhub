@@ -26,12 +26,8 @@ import bannerLuxury from '../../assets/images/banners/banner-luxury.jpg';
 import bannerSmart from '../../assets/images/banners/banner-smartwatches.jpg';
 import bannerCouples from '../../assets/images/banners/banner-couples.jpg';
 
-// Cropped Reference Assets (Exact 1:1 match to reference design)
+// Cropped Brand & Category Assets (Exact 1:1 match to reference design)
 import heroWatchCenter from '../../assets/images/ref_crops/hero-watch-center.jpg';
-import tabLuxury from '../../assets/images/ref_crops/tab-luxury.jpg';
-import tabSmart from '../../assets/images/ref_crops/tab-smart.jpg';
-import tabSports from '../../assets/images/ref_crops/tab-sports.jpg';
-import tabParty from '../../assets/images/ref_crops/tab-party.jpg';
 
 import brandRolex from '../../assets/images/ref_crops/brand-rolex.jpg';
 import brandOmega from '../../assets/images/ref_crops/brand-omega.jpg';
@@ -223,8 +219,6 @@ export const HomePage = () => {
     { name: 'Waterproof', img: catWaterproof, cat: 'waterproof' },
     { name: 'Combo Offers', img: catCombo, cat: 'combo' },
   ];
-
-  const currentSlide = HERO_SLIDES[activeHeroTab];
 
   const handleAddToCart = (product) => {
     addToCart(product);
