@@ -385,17 +385,17 @@
               </svg>
               <input type="password" id="passwordInput" class="input-field" placeholder="Enter your password" value="Admin@123" required/>
             </div>
-            <a href="javascript:void(0)" onclick="alert('Password reset link sent to your email.')" class="forgot-link">Forgot password?</a>
+            <a href="javascript:void(0)" onclick="openForgotModal()" class="forgot-link">Forgot password?</a>
           </div>
 
-          <button type="submit" class="btn-submit">Sign In</button>
+          <button type="submit" id="submitBtn" class="btn-submit">Sign In</button>
         </form>
 
         <div class="divider">
           <span class="divider-text">Or continue with</span>
         </div>
 
-        <button type="button" class="btn-google" onclick="alert('Redirecting to Google authentication...')">
+        <button type="button" class="btn-google" onclick="openGoogleModal()">
           <svg viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -412,6 +412,51 @@
     </div>
   </div>
 
+  <!-- Google OAuth Modal -->
+  <div id="googleModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; color:#1f2937; border-radius:18px; width:90%; max-width:380px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.3); position:relative;">
+      <button onclick="closeGoogleModal()" style="position:absolute; top:16px; right:16px; border:none; background:#f3f4f6; width:28px; height:28px; border-radius:50%; cursor:pointer; font-weight:bold;">✕</button>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <svg style="width:20px; height:20px;" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+        <strong style="font-size:15px;">Sign in with Google</strong>
+      </div>
+      <p style="font-size:12px; color:#6b7280; margin-bottom:16px;">Choose an account to continue to WatchHub</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div onclick="loginAsGoogle('Ananya Singh', 'ananya.singh@gmail.com')" style="display:flex; align-items:center; gap:12px; padding:10px; border:1px solid #e5e7eb; border-radius:12px; cursor:pointer;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='#fff'">
+          <div style="width:36px; height:36px; border-radius:50%; background:#4285F4; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold;">A</div>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:#111827;">Ananya Singh</div>
+            <div style="font-size:11px; color:#6b7280;">ananya.singh@gmail.com</div>
+          </div>
+        </div>
+        <div onclick="loginAsGoogle('Shreyas Y.', 'shreyas.watchhub@gmail.com')" style="display:flex; align-items:center; gap:12px; padding:10px; border:1px solid #e5e7eb; border-radius:12px; cursor:pointer;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='#fff'">
+          <div style="width:36px; height:36px; border-radius:50%; background:#34A853; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold;">S</div>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:#111827;">Shreyas Y. (VIP)</div>
+            <div style="font-size:11px; color:#6b7280;">shreyas.watchhub@gmail.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgotModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; color:#1f2937; border-radius:20px; width:90%; max-width:400px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.3); position:relative;">
+      <button onclick="closeForgotModal()" style="position:absolute; top:16px; right:16px; border:none; background:#f3f4f6; width:28px; height:28px; border-radius:50%; cursor:pointer; font-weight:bold;">✕</button>
+      <h3 style="font-size:18px; font-weight:bold; margin-bottom:4px; color:#111827;">Reset Password</h3>
+      <p style="font-size:12px; color:#6b7280; margin-bottom:16px;">Verification OTP has been generated for your email.</p>
+      <div style="background:#fef3c7; border:1px solid #fde68a; color:#92400e; padding:10px; border-radius:10px; font-size:12px; margin-bottom:14px;">
+        🔑 Verification OTP: <strong style="font-size:14px; color:#b45309;" id="otpCode">582910</strong> (Auto-verified)
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">New Password</label>
+        <input type="password" id="newPwdInput" value="WatchHub@2026" style="width:100%; height:40px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:13px;"/>
+      </div>
+      <button type="button" onclick="confirmResetPassword()" style="width:100%; height:42px; background:var(--gold-amber); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer;">Update Password & Sign In</button>
+    </div>
+  </div>
+
   <script>
     let currentRole = 'Customer';
 
@@ -425,12 +470,61 @@
 
     function handleLogin(e) {
       e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerText = 'Signing In...';
+      submitBtn.disabled = true;
+
       const email = document.getElementById('emailInput').value;
-      if (currentRole === 'Customer') {
-        window.location.href = 'index.html';
-      } else {
-        window.location.href = 'dashboard.html';
-      }
+      const userObj = {
+        name: email.split('@')[0],
+        email: email,
+        role: currentRole,
+        avatar: currentRole === 'Customer' ? '👤' : '🏪'
+      };
+      localStorage.setItem('watchhub_auth_user', JSON.stringify(userObj));
+      localStorage.setItem('watchhub_token', 'mock_jwt_token_val_2026');
+
+      setTimeout(() => {
+        if (currentRole === 'Customer') {
+          window.location.href = 'index.html';
+        } else {
+          window.location.href = 'dashboard.html';
+        }
+      }, 500);
+    }
+
+    function openGoogleModal() {
+      document.getElementById('googleModal').style.display = 'flex';
+    }
+    function closeGoogleModal() {
+      document.getElementById('googleModal').style.display = 'none';
+    }
+    function loginAsGoogle(name, email) {
+      const userObj = {
+        name: name,
+        email: email,
+        role: 'Customer',
+        avatar: '👤',
+        provider: 'Google'
+      };
+      localStorage.setItem('watchhub_auth_user', JSON.stringify(userObj));
+      localStorage.setItem('watchhub_token', 'mock_jwt_google_token_2026');
+      closeGoogleModal();
+      window.location.href = 'index.html';
+    }
+
+    function openForgotModal() {
+      document.getElementById('otpCode').innerText = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('forgotModal').style.display = 'flex';
+    }
+    function closeForgotModal() {
+      document.getElementById('forgotModal').style.display = 'none';
+    }
+    function confirmResetPassword() {
+      const newPwd = document.getElementById('newPwdInput').value;
+      document.getElementById('passwordInput').value = newPwd;
+      closeForgotModal();
+      alert('✅ Password updated successfully! Please click "Sign In".');
     }
   </script>
 </body>

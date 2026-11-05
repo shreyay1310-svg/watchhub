@@ -114,6 +114,43 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Google OAuth Login handler
+  const loginWithGoogle = async (customGoogleUser = null) => {
+    setLoading(true);
+    try {
+      await new Promise((res) => setTimeout(res, 500));
+      const googleUser = customGoogleUser || {
+        id: `usr_google_${Date.now()}`,
+        name: 'Ananya Singh',
+        email: 'ananya.singh@gmail.com',
+        role: ROLES.CUSTOMER,
+        avatar: '👤',
+        provider: 'Google',
+        permissions: ['orders.own', 'cart.own', 'wishlist.own'],
+      };
+      setUser(googleUser);
+      setToken('mock_jwt_google_token_2026');
+      localStorage.setItem('watchhub_token', 'mock_jwt_google_token_2026');
+      localStorage.setItem('watchhub_auth_user', JSON.stringify(googleUser));
+      return { success: true, user: googleUser };
+    } catch (err) {
+      return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Reset password handler
+  const resetPassword = async (email, newPassword) => {
+    try {
+      await new Promise((res) => setTimeout(res, 400));
+      localStorage.setItem(`pwd_${email.toLowerCase()}`, newPassword);
+      return { success: true, message: 'Password updated successfully!' };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  };
+
   // Switch role directly (for testing all 6 dashboards seamlessly)
   const switchRole = (roleName) => {
     if (MOCK_STAFF_ACCOUNTS[roleName]) {
@@ -135,6 +172,8 @@ export const AuthProvider = ({ children }) => {
         token,
         loading,
         login,
+        loginWithGoogle,
+        resetPassword,
         logout,
         switchRole,
         isAuthenticated: !!user,
