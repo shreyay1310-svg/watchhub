@@ -84,6 +84,7 @@ public class MainActivity extends Activity {
         ws.setDisplayZoomControls(false);
         ws.setSupportZoom(false);
         ws.setMediaPlaybackRequiresUserGesture(false);
+        ws.setUserAgentString(ws.getUserAgentString() + " WatchHubNativeApp/1.0");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ws.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);

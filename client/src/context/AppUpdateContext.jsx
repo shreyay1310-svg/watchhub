@@ -11,6 +11,31 @@ const DEFAULT_CHANGELOG = [
   'Curated 2026 Swiss Haute Horlogerie catalog with 28+ world brands'
 ];
 
+// Helper to strictly detect if running inside the Android APK
+export const isRunningInApk = () => {
+  if (typeof window === 'undefined') return false;
+
+  // 1. Android Native JavascriptInterface injected by MainActivity.java
+  if (window.AndroidInstaller) return true;
+
+  // 2. Custom User-Agent tag added by WatchHub Android APK WebSettings
+  if (typeof navigator !== 'undefined' && /WatchHubNativeApp/i.test(navigator.userAgent)) {
+    return true;
+  }
+
+  // 3. Android Standalone WebView checks
+  const isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+  const isWebView = isAndroid && (/(wv|\.0\.0\.0)/i.test(navigator.userAgent) || window.matchMedia('(display-mode: standalone)').matches);
+  if (isWebView && window.AndroidInstaller) return true;
+
+  // 4. Explicit query parameter for debugging APK mode (?app=apk or #apk)
+  if (typeof window !== 'undefined' && (window.location.search.includes('source=apk') || window.location.hash.includes('apk'))) {
+    return true;
+  }
+
+  return false;
+};
+
 export const AppUpdateProvider = ({ children }) => {
   const [currentVersion, setCurrentVersion] = useState(() => {
     return localStorage.getItem('watchhub_app_version') || '1.0.0';
@@ -19,6 +44,7 @@ export const AppUpdateProvider = ({ children }) => {
   const [hasUpdate, setHasUpdate] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [isManualTrigger, setIsManualTrigger] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloadComplete, setDownloadComplete] = useState(false);
@@ -27,8 +53,13 @@ export const AppUpdateProvider = ({ children }) => {
   const [fileSize, setFileSize] = useState('12.8 MB');
   const [statusMessage, setStatusMessage] = useState('');
 
-  // Check version on mount
+  // Check version on mount ONLY if running inside the Android APK!
   useEffect(() => {
+    // If running in regular web browser on PC/Laptop or Mobile Chrome, NEVER auto-open the popup!
+    if (!isRunningInApk()) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       checkForUpdates(false);
     }, 1500);
@@ -37,6 +68,7 @@ export const AppUpdateProvider = ({ children }) => {
 
   const checkForUpdates = async (manual = false) => {
     setIsChecking(true);
+    if (manual) setIsManualTrigger(true);
     setStatusMessage('Checking update server...');
 
     try {
@@ -51,7 +83,10 @@ export const AppUpdateProvider = ({ children }) => {
 
         if (serverVersion !== currentVersion) {
           setHasUpdate(true);
-          setShowUpdateModal(true);
+          // STRICT RULE: Only show update popup if inside Android APK, or if user explicitly clicked "Check for Updates" manually
+          if (isRunningInApk() || manual) {
+            setShowUpdateModal(true);
+          }
           setStatusMessage(`New version v${serverVersion} available!`);
         } else {
           setHasUpdate(false);
@@ -64,7 +99,9 @@ export const AppUpdateProvider = ({ children }) => {
         // Fallback simulation check
         if (latestVersion !== currentVersion) {
           setHasUpdate(true);
-          setShowUpdateModal(true);
+          if (isRunningInApk() || manual) {
+            setShowUpdateModal(true);
+          }
           setStatusMessage(`New version v${latestVersion} available!`);
         } else {
           setHasUpdate(false);
@@ -110,36 +147,30 @@ export const AppUpdateProvider = ({ children }) => {
     // 1. Download file via anchor
     const link = document.createElement('a');
     link.href = apkDownloadUrl;
-    link.download = `WatchHub-v${latestVersion}.apk`;
-    link.setAttribute('type', 'application/vnd.android.package-archive');
+    link.download = 'WatchHub-update.apk';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
-    // 2. Update local version
+    // 2. If running inside Android WebView native bridge, trigger native installer intent
+    if (window.AndroidInstaller && typeof window.AndroidInstaller.installApk === 'function') {
+      try {
+        window.AndroidInstaller.installApk('WatchHub-update.apk');
+      } catch (e) {
+        console.warn('AndroidInstaller bridge invocation:', e);
+      }
+    }
+
+    // Update local storage version to latest
     localStorage.setItem('watchhub_app_version', latestVersion);
     setCurrentVersion(latestVersion);
     setHasUpdate(false);
-
-    // 3. If running inside Android WebView / Capacitor app, trigger intent
-    if (window.AndroidInstaller && window.AndroidInstaller.installApk) {
-      window.AndroidInstaller.installApk(`WatchHub-v${latestVersion}.apk`);
-    }
   };
 
-  // Simulate new version bump for testing
   const simulateNewVersionRelease = (newVer = '1.2.0') => {
     setLatestVersion(newVer);
     setHasUpdate(true);
-    setDownloadComplete(false);
-    setDownloadProgress(0);
-    setChangelog([
-      `WatchHub v${newVer} Official Release`,
-      'Enhanced 3D Watch Manufacturing Hub with touch-gyro controls',
-      'Instant UPI Refund settlement engine with Razorpay webhook hooks',
-      'Ultra-fast pre-shipment barcode scanning at packaging desks',
-      'General performance & security enhancements'
-    ]);
+    setIsManualTrigger(true);
     setShowUpdateModal(true);
   };
 
@@ -152,6 +183,7 @@ export const AppUpdateProvider = ({ children }) => {
         isChecking,
         showUpdateModal,
         setShowUpdateModal,
+        isManualTrigger,
         isDownloading,
         downloadProgress,
         downloadComplete,
@@ -159,6 +191,7 @@ export const AppUpdateProvider = ({ children }) => {
         apkDownloadUrl,
         fileSize,
         statusMessage,
+        isApk: isRunningInApk(),
         checkForUpdates,
         downloadAndInstallUpdate,
         simulateNewVersionRelease,
@@ -177,3 +210,4 @@ export const useAppUpdate = () => {
   return context;
 };
 
+export default AppUpdateContext;

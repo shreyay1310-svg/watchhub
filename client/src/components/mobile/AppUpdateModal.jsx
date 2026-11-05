@@ -25,9 +25,12 @@ export const AppUpdateModal = () => {
     changelog,
     fileSize,
     downloadAndInstallUpdate,
+    isApk,
+    isManualTrigger,
   } = useAppUpdate();
 
-  if (!showUpdateModal) return null;
+  // Popup is strictly restricted to Android APK app, or if manually triggered by user on the app download page
+  if (!showUpdateModal || (!isApk && !isManualTrigger)) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in font-poppins">
