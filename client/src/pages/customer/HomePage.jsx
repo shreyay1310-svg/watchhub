@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import { useCart } from '../../context/CartContext';
@@ -16,6 +16,8 @@ import {
   ArrowRight,
   Sparkles,
   Flame,
+  CheckCircle2,
+  Tag,
 } from 'lucide-react';
 
 // Cropped Reference Assets (Exact 1:1 match to reference design)
@@ -47,11 +49,25 @@ import catWaterproof from '../../assets/images/ref_crops/cat-waterproof.jpg';
 import catCombo from '../../assets/images/ref_crops/cat-combo.jpg';
 
 export const HomePage = () => {
-  const { addToCart, toggleWishlist, isInWishlist } = useCart();
+  const { addToCart, toggleWishlist, isInWishlist, applyCoupon } = useCart();
   const navigate = useNavigate();
   const [activeHeroTab, setActiveHeroTab] = useState(0); // 0: Luxury, 1: Smart, 2: Sports, 3: Party
   const [activeFilterTab, setActiveFilterTab] = useState('All');
   const [addedItem, setAddedItem] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const brandsRowRef = useRef(null);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const scrollBrandsRight = () => {
+    if (brandsRowRef.current) {
+      brandsRowRef.current.scrollBy({ left: 280, behavior: 'smooth' });
+    }
+  };
 
   // Live Countdown Timer (matching "02 Days 14 Hrs 36 Min 20 Sec")
   const [timeLeft, setTimeLeft] = useState({
@@ -74,12 +90,13 @@ export const HomePage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // 4 Interactive Hero Slides
+  // 4 Interactive Hero Slides with distinct centerpiece imagery
   const HERO_SLIDES = [
     {
       id: 'luxury',
       label: 'Luxury Collection',
       thumb: tabLuxury,
+      centerImage: heroWatchCenter,
       eyebrow: '👑 THE LUXURY COLLECTION —',
       title1: 'Timeless',
       title2: 'Elegance',
@@ -91,6 +108,7 @@ export const HomePage = () => {
       id: 'smartwatches',
       label: 'Smartwatches',
       thumb: tabSmart,
+      centerImage: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=800&q=80',
       eyebrow: '⚡ NEXT-GEN AMOLED WEARABLES —',
       title1: 'Smart',
       title2: 'Innovation',
@@ -102,6 +120,7 @@ export const HomePage = () => {
       id: 'sports',
       label: 'Sports Series',
       thumb: tabSports,
+      centerImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
       eyebrow: '🌊 WATERPROOF DIVER EDITIONS —',
       title1: 'Extreme',
       title2: 'Performance',
@@ -113,6 +132,7 @@ export const HomePage = () => {
       id: 'party',
       label: 'Party Wear',
       thumb: tabParty,
+      centerImage: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
       eyebrow: '✨ EVENING & GALA GLAMOUR —',
       title1: 'Radiant',
       title2: 'Celebration',
@@ -142,7 +162,7 @@ export const HomePage = () => {
     { name: "Men's Watches", img: catMen, cat: 'men' },
     { name: "Women's Watches", img: catWomen, cat: 'women' },
     { name: 'Smartwatches', img: catSmart, cat: 'smartwatches' },
-    { name: 'Sports Watches', img: catSports, cat: 'digital' },
+    { name: 'Sports Watches', img: catSports, cat: 'sports' },
     { name: 'Luxury Watches', img: catLuxury, cat: 'luxury' },
     { name: 'Party Wear', img: catParty, cat: 'partywear' },
     { name: 'Waterproof', img: catWaterproof, cat: 'waterproof' },
@@ -154,7 +174,33 @@ export const HomePage = () => {
   const handleAddToCart = (product) => {
     addToCart(product);
     setAddedItem(product.id);
+    showToast(`🛒 "${product.name}" added to cart!`);
     setTimeout(() => setAddedItem(null), 1800);
+  };
+
+  const handleToggleWishlist = (product) => {
+    toggleWishlist(product);
+    const inWish = isInWishlist(product.id);
+    showToast(inWish ? `💔 Removed from wishlist` : `❤️ Added to wishlist!`);
+  };
+
+  const handleGrabOffer = (e) => {
+    e.preventDefault();
+    applyCoupon('WATCHLUX40');
+    showToast('🎉 40% OFF Coupon WATCHLUX40 Applied! Opening Flash Deals...');
+    setTimeout(() => {
+      navigate('/products?tag=deals');
+    }, 600);
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      showToast('⚠️ Please enter a valid email address');
+      return;
+    }
+    showToast(`✨ Subscribed ${newsletterEmail} to VIP WatchHub Club!`);
+    setNewsletterEmail('');
   };
 
   const filterTabs = ['All', 'Luxury', 'Waterproof', 'Digital', 'Smartwatches', 'Combo'];
@@ -246,11 +292,12 @@ export const HomePage = () => {
 
               {/* Showcase Dual-Tone Watch Centerpiece Image (Seamless cosmic dark stage integration) */}
               <div className="relative flex items-center justify-center">
-                <div className="w-60 sm:w-72 lg:w-80 group">
+                <div className="w-60 sm:w-72 lg:w-80 group overflow-hidden rounded-2xl">
                   <img
-                    src={heroWatchCenter}
-                    alt="WatchHub Luxury Timepiece"
-                    className="w-full h-auto object-cover rounded-2xl drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] transform group-hover:scale-105 transition-transform duration-700 select-none"
+                    key={currentSlide.id}
+                    src={currentSlide.centerImage || heroWatchCenter}
+                    alt={currentSlide.label}
+                    className="w-full h-72 sm:h-80 object-cover rounded-2xl drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] transform group-hover:scale-105 transition-all duration-700 select-none animate-fade-in"
                   />
                 </div>
 
@@ -333,12 +380,14 @@ export const HomePage = () => {
                 </div>
 
                 {/* Solid Gold Grab Offer CTA */}
-                <Link
-                  to="/products?tag=deals"
-                  className="w-full bg-gradient-to-r from-[#D9A441] to-[#B98332] hover:from-[#E5B04E] hover:to-[#C6903E] text-black font-extrabold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer"
+                <button
+                  type="button"
+                  onClick={handleGrabOffer}
+                  className="w-full bg-gradient-to-r from-[#D9A441] to-[#B98332] hover:from-[#E5B04E] hover:to-[#C6903E] active:scale-[0.98] text-black font-extrabold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-md hover:shadow-watch-gold/30 transition-all cursor-pointer"
                 >
+                  <Tag className="w-4 h-4 text-black" />
                   <span>Grab the Offer →</span>
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -410,7 +459,7 @@ export const HomePage = () => {
           </div>
 
           {/* 11 Authentic Brand Pills Row */}
-          <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto scrollbar-none pb-2">
+          <div ref={brandsRowRef} className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto scrollbar-none scroll-smooth pb-2">
             {POPULAR_BRANDS.map((b) => (
               <Link
                 key={b.slug}
@@ -426,14 +475,15 @@ export const HomePage = () => {
               </Link>
             ))}
 
-            {/* Circular Next Arrow */}
-            <Link
-              to="/products"
-              className="w-10 h-10 rounded-full border border-gray-300 hover:border-watch-gold hover:bg-watch-gold hover:text-black text-gray-600 flex items-center justify-center flex-shrink-0 transition-all shadow-xs"
-              title="See all brands"
+            {/* Circular Next Arrow with smooth scrolling */}
+            <button
+              type="button"
+              onClick={scrollBrandsRight}
+              className="w-10 h-10 rounded-full border border-gray-300 hover:border-watch-gold hover:bg-watch-gold hover:text-black text-gray-600 flex items-center justify-center flex-shrink-0 transition-all shadow-xs cursor-pointer"
+              title="Scroll brands forward"
             >
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </button>
           </div>
         </section>
 
@@ -545,7 +595,7 @@ export const HomePage = () => {
 
                     {/* Wishlist Button */}
                     <button
-                      onClick={() => toggleWishlist(p)}
+                      onClick={() => handleToggleWishlist(p)}
                       className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center transition-all cursor-pointer ${
                         inWish ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-500'
                       }`}
@@ -644,10 +694,18 @@ export const HomePage = () => {
           <div>
             <h5 className="font-bold text-white mb-3">VIP Newsletter</h5>
             <p className="text-[11px] text-gray-400 mb-2">Subscribe to receive exclusive drops & festival vouchers.</p>
-            <div className="flex gap-1.5">
-              <input type="email" placeholder="Enter your email" className="bg-white/10 text-white text-xs px-3 py-2 rounded-lg outline-none border border-white/20 flex-1" />
-              <button onClick={() => alert('Subscribed to WatchHub newsletter!')} className="btn-gold text-xs px-3 py-2">Join</button>
-            </div>
+            <form onSubmit={handleNewsletterSubmit} className="flex gap-1.5">
+              <input
+                type="email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="bg-white/10 text-white text-xs px-3 py-2 rounded-lg outline-none border border-white/20 flex-1 placeholder:text-gray-500"
+              />
+              <button type="submit" className="btn-gold text-xs px-3 py-2 cursor-pointer font-bold">
+                Join
+              </button>
+            </form>
           </div>
         </div>
 
@@ -655,6 +713,14 @@ export const HomePage = () => {
           © 2026 WatchHub – The World of Watches. All rights reserved.
         </div>
       </footer>
+
+      {/* Floating Interactive Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#0B121C] text-white px-5 py-3 rounded-2xl shadow-2xl border border-watch-gold/40 flex items-center gap-3 animate-fade-in backdrop-blur-md">
+          <Sparkles className="w-5 h-5 text-watch-gold animate-pulse flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-semibold">{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 };

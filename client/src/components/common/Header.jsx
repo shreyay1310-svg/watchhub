@@ -17,6 +17,10 @@ import {
   Truck,
   RotateCcw,
   Sparkles,
+  Upload,
+  X,
+  Scan,
+  CheckCircle2,
 } from 'lucide-react';
 import { useAuth, ROLES } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -26,7 +30,9 @@ export const CustomerNavbar = () => {
   const { cartCount, wishlistCount } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [profileOpen, setProfileOpen] = useState(false);
-  const [brandsOpen, setBrandsOpen] = useState(false);
+  const [showVisualSearch, setShowVisualSearch] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [detectedWatch, setDetectedWatch] = useState(null);
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -34,6 +40,15 @@ export const CustomerNavbar = () => {
     if (searchQuery.trim()) {
       navigate(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
     }
+  };
+
+  const handleSampleScan = (watchName, searchQuery) => {
+    setIsScanning(true);
+    setDetectedWatch(null);
+    setTimeout(() => {
+      setIsScanning(false);
+      setDetectedWatch({ name: watchName, query: searchQuery });
+    }, 900);
   };
 
   const displayName = user?.name ? user.name.split(' ')[0] : 'Shreya';
@@ -104,7 +119,7 @@ export const CustomerNavbar = () => {
           />
           <button
             type="button"
-            onClick={() => navigate('/products')}
+            onClick={() => setShowVisualSearch(true)}
             title="Visual Watch Search / Scan"
             className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-watch-gold transition-colors cursor-pointer"
           >
@@ -218,7 +233,7 @@ export const CustomerNavbar = () => {
       </div>
 
       {/* ════════════════════════════════════════════════════════════════
-          3. SECONDARY CATEGORY & DEALS MENU BAR (Exact Match to Image 2)
+          3. SECONDARY CATEGORY & DEALS MENU BAR (Interactive Dropdowns)
           ════════════════════════════════════════════════════════════════ */}
       <div className="bg-[#070C14] border-b border-white/5 px-4 sm:px-8 py-2 overflow-x-auto scrollbar-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs">
@@ -233,67 +248,133 @@ export const CustomerNavbar = () => {
 
           {/* Nav Categories with Dropdown Carets */}
           <nav className="flex items-center gap-3 sm:gap-6 text-gray-300 font-medium whitespace-nowrap overflow-x-auto scrollbar-none">
-            {/* Brands Dropdown */}
+            
+            {/* 1. Brands Dropdown */}
             <div className="relative group">
-              <button
-                type="button"
-                onClick={() => setBrandsOpen(!brandsOpen)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer"
-              >
+              <Link to="/products" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer">
                 <span>Brands</span>
                 <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </button>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl grid grid-cols-2 gap-2 w-56 text-xs text-gray-300">
-                  <Link to="/products?brand=rolex" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Rolex</Link>
-                  <Link to="/products?brand=omega" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Omega</Link>
-                  <Link to="/products?brand=casio" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Casio</Link>
-                  <Link to="/products?brand=seiko" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Seiko</Link>
-                  <Link to="/products?brand=titan" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Titan</Link>
-                  <Link to="/products?brand=fossil" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Fossil</Link>
-                  <Link to="/products?brand=timex" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Timex</Link>
-                  <Link to="/products?brand=citizen" className="hover:text-watch-gold p-1 rounded hover:bg-white/5">Citizen</Link>
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl grid grid-cols-2 gap-2 w-64 text-xs text-gray-300">
+                  <Link to="/products?brand=rolex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>👑</span> Rolex</Link>
+                  <Link to="/products?brand=omega" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>Ω</span> Omega</Link>
+                  <Link to="/products?brand=casio" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>⌚</span> Casio</Link>
+                  <Link to="/products?brand=seiko" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>✨</span> Seiko</Link>
+                  <Link to="/products?brand=titan" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>🏆</span> Titan</Link>
+                  <Link to="/products?brand=fossil" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>💼</span> Fossil</Link>
+                  <Link to="/products?brand=timex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>⏱️</span> Timex</Link>
+                  <Link to="/products?brand=tissot" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>🇨🇭</span> Tissot</Link>
                 </div>
               </div>
             </div>
 
-            <Link to="/products?cat=men" className="flex items-center gap-1 hover:text-watch-gold transition-colors">
-              <span>Men</span>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
-            </Link>
+            {/* 2. Men Dropdown */}
+            <div className="relative group">
+              <Link to="/products?cat=men" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Men</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300">
+                  <Link to="/products?cat=men" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Men's Watches</Link>
+                  <Link to="/products?cat=men&q=chronograph" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Chronographs</Link>
+                  <Link to="/products?cat=luxury&q=automatic" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Automatic Mechanical</Link>
+                  <Link to="/products?cat=men&q=steel" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Stainless Steel Bracelets</Link>
+                  <Link to="/products?cat=men&q=leather" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Italian Leather Straps</Link>
+                </div>
+              </div>
+            </div>
 
-            <Link to="/products?cat=women" className="flex items-center gap-1 hover:text-watch-gold transition-colors">
-              <span>Women</span>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
-            </Link>
+            {/* 3. Women Dropdown */}
+            <div className="relative group">
+              <Link to="/products?cat=women" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Women</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300">
+                  <Link to="/products?cat=women" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Women's Watches</Link>
+                  <Link to="/products?cat=women&q=rose+gold" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Rose Gold Collection</Link>
+                  <Link to="/products?cat=partywear" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Diamond & Pearl Dials</Link>
+                  <Link to="/products?cat=women&q=mesh" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Minimalist Mesh Straps</Link>
+                </div>
+              </div>
+            </div>
 
-            <Link to="/products?cat=kids" className="flex items-center gap-1 hover:text-watch-gold transition-colors">
-              <span>Kids</span>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
-            </Link>
+            {/* 4. Kids Dropdown */}
+            <div className="relative group">
+              <Link to="/products?cat=kids" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Kids</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-44 text-xs text-gray-300">
+                  <Link to="/products?cat=kids" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Kids Watches</Link>
+                  <Link to="/products?cat=digital" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Shock-Proof Digital</Link>
+                  <Link to="/products?cat=smartwatches" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Kids Smart Trackers</Link>
+                </div>
+              </div>
+            </div>
 
-            <Link to="/products?cat=smartwatches" className="hover:text-watch-gold transition-colors">
+            {/* 5. Smartwatches Link */}
+            <Link to="/products?cat=smartwatches" className="hover:text-watch-gold transition-colors py-1">
               Smartwatches
             </Link>
 
-            <Link to="/products?cat=luxury" className="flex items-center gap-1 hover:text-watch-gold transition-colors">
-              <span>Luxury</span>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
-            </Link>
+            {/* 6. Luxury Dropdown */}
+            <div className="relative group">
+              <Link to="/products?cat=luxury" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Luxury</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
+                  <Link to="/products?cat=luxury" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-watch-gold">👑 Swiss Haute Horlogerie</Link>
+                  <Link to="/products?brand=rolex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Rolex Submariner & Daytona</Link>
+                  <Link to="/products?brand=omega" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Omega Moonwatch Masters</Link>
+                  <Link to="/products?brand=patek" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Patek Philippe Nautilus</Link>
+                  <Link to="/products?brand=audemars" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Audemars Piguet Royal Oak</Link>
+                </div>
+              </div>
+            </div>
 
-            <Link to="/products?cat=sports" className="flex items-center gap-1 hover:text-watch-gold transition-colors">
-              <span>Sports</span>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
-            </Link>
+            {/* 7. Sports Dropdown */}
+            <div className="relative group">
+              <Link to="/products?cat=sports" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Sports</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300">
+                  <Link to="/products?cat=sports" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Sports Watches</Link>
+                  <Link to="/products?cat=waterproof" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">200M Certified Divers</Link>
+                  <Link to="/products?cat=digital" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Military Tactical Shock</Link>
+                </div>
+              </div>
+            </div>
 
-            <Link to="/products?cat=partywear" className="hover:text-watch-gold transition-colors">
+            {/* 8. Party Wear Link */}
+            <Link to="/products?cat=partywear" className="hover:text-watch-gold transition-colors py-1">
               Party Wear
             </Link>
 
-            <Link to="/products" className="flex items-center gap-1 hover:text-watch-gold transition-colors">
-              <span>Collections</span>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
-            </Link>
+            {/* 9. Collections Dropdown */}
+            <div className="relative group">
+              <Link to="/products" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Collections</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
+                  <Link to="/products?tag=new" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 text-emerald-400 font-bold">✨ 2026 Vault Arrivals</Link>
+                  <Link to="/products?cat=couple" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">💑 His & Hers Couple Sets</Link>
+                  <Link to="/products?cat=combo" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">🎁 Value Combo Packs</Link>
+                  <Link to="/manufacturing-hub" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 text-watch-gold">🏭 3D Manufacturing Hub</Link>
+                </div>
+              </div>
+            </div>
+
           </nav>
 
           {/* Deals & Offers Solid Gold Button */}
@@ -306,6 +387,112 @@ export const CustomerNavbar = () => {
           </Link>
         </div>
       </div>
+
+      {/* ════════════════════════════════════════════════════════════════
+          VISUAL WATCH SEARCH (CAMERA SCANNER MODAL)
+          ════════════════════════════════════════════════════════════════ */}
+      {showVisualSearch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in font-poppins text-gray-800">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-gray-100 relative animate-scale-up">
+            <button
+              onClick={() => {
+                setShowVisualSearch(false);
+                setDetectedWatch(null);
+                setIsScanning(false);
+              }}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-8 h-8 rounded-xl bg-watch-gold/20 flex items-center justify-center text-watch-gold-dark font-bold text-sm">
+                📷
+              </span>
+              <h3 className="text-lg font-bold text-gray-900">AI Visual Watch Recognition</h3>
+            </div>
+            <p className="text-xs text-gray-500 mb-5">
+              Upload a watch photo or click a sample to find matching timepieces instantly.
+            </p>
+
+            {/* Scanner Box */}
+            <div className="border-2 border-dashed border-gray-200 hover:border-watch-gold rounded-2xl p-6 text-center bg-gray-50/50 mb-5 transition-colors">
+              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <p className="text-xs font-bold text-gray-800">Drop a watch photo here, or browse files</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">Supports JPG, PNG & WEBP formats up to 10MB</p>
+            </div>
+
+            {/* Quick Sample Detections */}
+            <div className="space-y-2 mb-5">
+              <p className="text-xs font-bold text-gray-700">Or try 1-click sample watch scans:</p>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <button
+                  type="button"
+                  onClick={() => handleSampleScan('Rolex Submariner Oystersteel', 'Rolex Submariner')}
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                >
+                  <Scan className="w-3.5 h-3.5 text-watch-gold" />
+                  <span className="font-semibold text-gray-800 truncate">Rolex Submariner</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSampleScan('Omega Speedmaster Moonwatch', 'Omega Speedmaster')}
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                >
+                  <Scan className="w-3.5 h-3.5 text-watch-gold" />
+                  <span className="font-semibold text-gray-800 truncate">Omega Moonwatch</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSampleScan('AMOLED Ultra Smartwatch', 'Smartwatches')}
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                >
+                  <Scan className="w-3.5 h-3.5 text-watch-gold" />
+                  <span className="font-semibold text-gray-800 truncate">AMOLED Smartwatch</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSampleScan('Patek Philippe Nautilus Selfwinding', 'Patek Philippe')}
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                >
+                  <Scan className="w-3.5 h-3.5 text-watch-gold" />
+                  <span className="font-semibold text-gray-800 truncate">Patek Nautilus</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Scanning Indicator / Result */}
+            {isScanning && (
+              <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 flex items-center gap-2 animate-pulse">
+                <Scan className="w-4 h-4 animate-spin text-watch-gold" />
+                <span>AI analyzing dial geometry, bezel markers & movement...</span>
+              </div>
+            )}
+
+            {detectedWatch && (
+              <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl text-xs text-emerald-900 space-y-2 animate-fade-in">
+                <div className="flex items-center gap-2 font-bold text-emerald-800">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>Detected: {detectedWatch.name} (98.4% Confidence Match)</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowVisualSearch(false);
+                    navigate(`/products?q=${encodeURIComponent(detectedWatch.query)}`);
+                  }}
+                  className="w-full bg-gradient-to-r from-watch-gold to-amber-500 text-black font-extrabold py-2 px-3 rounded-lg shadow-sm hover:opacity-95 transition-all text-xs"
+                >
+                  View Matching Watches in Vault →
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

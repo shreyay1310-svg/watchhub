@@ -90,6 +90,7 @@ export const CartProvider = ({ children }) => {
 
   const applyCoupon = (code) => {
     const validCoupons = {
+      'WATCHLUX40': { percent: 40, code: 'WATCHLUX40', desc: '40% OFF Flash Offer' },
       'FESTIVAL40': { percent: 40, code: 'FESTIVAL40', desc: 'Festival 40% OFF' },
       'WATCHHUB10': { percent: 10, code: 'WATCHHUB10', desc: '10% Instant Discount' },
       'FIRSTBUY': { percent: 15, code: 'FIRSTBUY', desc: '15% First Order Discount' },

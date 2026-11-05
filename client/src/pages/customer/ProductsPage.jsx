@@ -104,6 +104,20 @@ const CATEGORY_META = {
     badge: 'LIMITED-TIME FLASH DEALS',
     gradient: 'from-red-950 via-rose-950 to-orange-950',
     icon: '🏷️'
+  },
+  sports: {
+    title: 'Professional Sports, Racing & Tactical Watches',
+    subtitle: 'Tachymeter bezels, shock-resistant cases, and high-precision split-second chronographs.',
+    badge: 'SPORTS & TACTICAL SERIES',
+    gradient: 'from-emerald-950 via-slate-900 to-gray-900',
+    icon: '🏎️'
+  },
+  kids: {
+    title: "Kids & Teens Colorful & Smart Watches",
+    subtitle: 'Durable, water-resistant and kid-friendly timepieces with safety tracking.',
+    badge: 'KIDS HOROLOGY',
+    gradient: 'from-indigo-950 via-purple-900 to-slate-900',
+    icon: '👦'
   }
 };
 
@@ -126,13 +140,14 @@ export const ProductsPage = () => {
   const queryParam = searchParams.get('q') || '';
   const categoryParam = searchParams.get('cat') || '';
   const tagParam = searchParams.get('tag') || '';
+  const brandParam = searchParams.get('brand') || '';
 
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
 
   // Filters State
   const [selectedCategory, setSelectedCategory] = useState(categoryParam || 'all');
   const [selectedTag, setSelectedTag] = useState(tagParam || '');
-  const [selectedBrand, setSelectedBrand] = useState('All Brands');
+  const [selectedBrand, setSelectedBrand] = useState(brandParam ? brandParam.charAt(0).toUpperCase() + brandParam.slice(1) : 'All Brands');
   const [selectedGender, setSelectedGender] = useState('all');
   const [maxPrice, setMaxPrice] = useState(5000000); // 50 Lakhs max for luxury pieces
   const [sortBy, setSortBy] = useState('popular');
@@ -140,6 +155,14 @@ export const ProductsPage = () => {
 
   // Sync state whenever URL search parameters change
   useEffect(() => {
+    if (brandParam) {
+      // Find matching case-insensitive brand
+      const matched = GLOBAL_WATCH_BRANDS.find(b => b.toLowerCase() === brandParam.toLowerCase());
+      setSelectedBrand(matched || (brandParam.charAt(0).toUpperCase() + brandParam.slice(1)));
+    } else {
+      setSelectedBrand('All Brands');
+    }
+
     if (categoryParam) {
       setSelectedCategory(categoryParam);
       setSelectedTag('');
@@ -150,7 +173,7 @@ export const ProductsPage = () => {
       setSelectedCategory('all');
       setSelectedTag('');
     }
-  }, [categoryParam, tagParam]);
+  }, [categoryParam, tagParam, brandParam]);
 
   // Determine current active category meta
   const currentMetaKey = selectedTag || (selectedCategory !== 'all' ? selectedCategory : 'all');
@@ -169,7 +192,17 @@ export const ProductsPage = () => {
 
       // Category match
       if (selectedCategory !== 'all') {
-        const catMatch = p.category.toLowerCase().includes(selectedCategory.toLowerCase());
+        let catMatch = p.category.toLowerCase().includes(selectedCategory.toLowerCase());
+        if (selectedCategory === 'sports') {
+          catMatch = p.category.toLowerCase().includes('waterproof') ||
+                     p.category.toLowerCase().includes('digital') ||
+                     p.name.toLowerCase().includes('diver') ||
+                     p.name.toLowerCase().includes('sports') ||
+                     p.description?.toLowerCase().includes('diver');
+        }
+        if (selectedCategory === 'kids') {
+          catMatch = p.category.toLowerCase().includes('digital') || p.price < 5000;
+        }
         const genderMatch = selectedCategory === 'men' ? p.gender.toLowerCase() === 'men' :
                             selectedCategory === 'women' ? p.gender.toLowerCase() === 'women' : true;
         if (!catMatch && !genderMatch) return false;
