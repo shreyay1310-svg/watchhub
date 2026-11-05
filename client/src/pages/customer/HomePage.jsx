@@ -244,13 +244,13 @@ export const HomePage = () => {
                 </div>
               </div>
 
-              {/* Showcase Dual-Tone Watch Centerpiece Image */}
+              {/* Showcase Dual-Tone Watch Centerpiece Image (Seamless cosmic dark stage integration) */}
               <div className="relative flex items-center justify-center">
-                <div className="w-56 sm:w-72 lg:w-80 rounded-2xl overflow-hidden drop-shadow-[0_25px_50px_rgba(0,0,0,0.8)] border border-white/10 group">
+                <div className="w-60 sm:w-72 lg:w-80 group">
                   <img
                     src={heroWatchCenter}
                     alt="WatchHub Luxury Timepiece"
-                    className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 select-none"
+                    className="w-full h-auto object-cover rounded-2xl drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] transform group-hover:scale-105 transition-transform duration-700 select-none"
                   />
                 </div>
 
