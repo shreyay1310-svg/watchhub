@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -30,10 +30,29 @@ export const CustomerNavbar = () => {
   const { cartCount, wishlistCount } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [profileOpen, setProfileOpen] = useState(false);
+  const [activeNavDropdown, setActiveNavDropdown] = useState(null);
   const [showVisualSearch, setShowVisualSearch] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [detectedWatch, setDetectedWatch] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('.nav-dropdown-item-wrap')) {
+        setActiveNavDropdown(null);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
+  const toggleDropdown = (name, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setActiveNavDropdown(prev => prev === name ? null : name);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -263,7 +282,7 @@ export const CustomerNavbar = () => {
       {/* ════════════════════════════════════════════════════════════════
           3. SECONDARY CATEGORY & DEALS MENU BAR (Interactive Dropdowns)
           ════════════════════════════════════════════════════════════════ */}
-      <div className="bg-[#070C14] border-b border-white/5 px-4 sm:px-8 py-2 overflow-x-auto scrollbar-none">
+      <div className="bg-[#070C14] border-b border-white/5 px-4 sm:px-8 py-2 relative z-40 overflow-visible">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs">
           {/* Home Solid Golden Pill Button */}
           <Link
@@ -275,139 +294,171 @@ export const CustomerNavbar = () => {
           </Link>
 
           {/* Nav Categories with Dropdown Carets */}
-          <nav className="flex items-center gap-3 sm:gap-6 text-gray-300 font-medium whitespace-nowrap overflow-x-auto scrollbar-none">
+          <nav className="flex items-center gap-3 sm:gap-6 text-gray-300 font-medium whitespace-nowrap relative z-40 overflow-visible">
             
             {/* 1. Brands Dropdown */}
-            <div className="relative group">
-              <Link to="/products" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('brands', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Brands</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl grid grid-cols-2 gap-2 w-64 text-xs text-gray-300">
-                  <Link to="/products?brand=rolex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>👑</span> Rolex</Link>
-                  <Link to="/products?brand=omega" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>Ω</span> Omega</Link>
-                  <Link to="/products?brand=casio" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>⌚</span> Casio</Link>
-                  <Link to="/products?brand=seiko" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>✨</span> Seiko</Link>
-                  <Link to="/products?brand=titan" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>🏆</span> Titan</Link>
-                  <Link to="/products?brand=fossil" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>💼</span> Fossil</Link>
-                  <Link to="/products?brand=timex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>⏱️</span> Timex</Link>
-                  <Link to="/products?brand=tissot" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 flex items-center gap-2"><span>🇨🇭</span> Tissot</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'brands' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute left-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'brands' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl grid grid-cols-2 gap-2 w-72 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?brand=rolex" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>👑</span> Rolex</Link>
+                  <Link to="/products?brand=omega" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>Ω</span> Omega</Link>
+                  <Link to="/products?brand=casio" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>⌚</span> Casio</Link>
+                  <Link to="/products?brand=seiko" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>✨</span> Seiko</Link>
+                  <Link to="/products?brand=titan" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>🏆</span> Titan</Link>
+                  <Link to="/products?brand=fossil" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>💼</span> Fossil</Link>
+                  <Link to="/products?brand=timex" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>⏱️</span> Timex</Link>
+                  <Link to="/products?brand=tissot" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>🇨🇭</span> Tissot</Link>
                 </div>
               </div>
             </div>
 
             {/* 2. Men Dropdown */}
-            <div className="relative group">
-              <Link to="/products?cat=men" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('men', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Men</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300">
-                  <Link to="/products?cat=men" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Men's Watches</Link>
-                  <Link to="/products?cat=men&q=chronograph" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Chronographs</Link>
-                  <Link to="/products?cat=luxury&q=automatic" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Automatic Mechanical</Link>
-                  <Link to="/products?cat=men&q=steel" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Stainless Steel Bracelets</Link>
-                  <Link to="/products?cat=men&q=leather" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Italian Leather Straps</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'men' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute left-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'men' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?cat=men" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Men's Watches</Link>
+                  <Link to="/products?cat=men&q=chronograph" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Chronographs</Link>
+                  <Link to="/products?cat=luxury&q=automatic" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Automatic Mechanical</Link>
+                  <Link to="/products?cat=men&q=steel" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Stainless Steel Bracelets</Link>
+                  <Link to="/products?cat=men&q=leather" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Italian Leather Straps</Link>
                 </div>
               </div>
             </div>
 
             {/* 3. Women Dropdown */}
-            <div className="relative group">
-              <Link to="/products?cat=women" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('women', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Women</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300">
-                  <Link to="/products?cat=women" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Women's Watches</Link>
-                  <Link to="/products?cat=women&q=rose+gold" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Rose Gold Collection</Link>
-                  <Link to="/products?cat=partywear" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Diamond & Pearl Dials</Link>
-                  <Link to="/products?cat=women&q=mesh" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Minimalist Mesh Straps</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'women' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute left-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'women' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?cat=women" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Women's Watches</Link>
+                  <Link to="/products?cat=women&q=rose+gold" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Rose Gold Collection</Link>
+                  <Link to="/products?cat=partywear" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Diamond & Pearl Dials</Link>
+                  <Link to="/products?cat=women&q=mesh" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Minimalist Mesh Straps</Link>
                 </div>
               </div>
             </div>
 
             {/* 4. Kids Dropdown */}
-            <div className="relative group">
-              <Link to="/products?cat=kids" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('kids', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Kids</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-44 text-xs text-gray-300">
-                  <Link to="/products?cat=kids" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Kids Watches</Link>
-                  <Link to="/products?cat=digital" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Shock-Proof Digital</Link>
-                  <Link to="/products?cat=smartwatches" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Kids Smart Trackers</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'kids' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute left-1/2 -translate-x-1/2 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'kids' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?cat=kids" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Kids Watches</Link>
+                  <Link to="/products?cat=digital" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Shock-Proof Digital</Link>
+                  <Link to="/products?cat=smartwatches" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Kids Smart Trackers</Link>
                 </div>
               </div>
             </div>
 
             {/* 5. Smartwatches Dropdown */}
-            <div className="relative group">
-              <Link to="/products?cat=smartwatches" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('smartwatches', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Smartwatches</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
-                  <Link to="/products?cat=smartwatches" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Smartwatches</Link>
-                  <Link to="/products?cat=smartwatches&q=calling" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">AMOLED Bluetooth Calling</Link>
-                  <Link to="/products?cat=smartwatches&q=fitness" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Fitness & 120+ Sports Modes</Link>
-                  <Link to="/products?cat=smartwatches&q=health" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">24/7 SpO2 & Heart Rate Vitals</Link>
-                  <Link to="/products?cat=smartwatches&q=rugged" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">IP68 / 5ATM Military Rugged</Link>
-                  <Link to="/products?cat=smartwatches&q=battery" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">14+ Days Ultra Battery Life</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'smartwatches' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute left-1/2 -translate-x-1/2 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'smartwatches' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-56 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?cat=smartwatches" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Smartwatches</Link>
+                  <Link to="/products?cat=smartwatches&q=calling" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">AMOLED Bluetooth Calling</Link>
+                  <Link to="/products?cat=smartwatches&q=fitness" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Fitness & 120+ Sports Modes</Link>
+                  <Link to="/products?cat=smartwatches&q=health" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">24/7 SpO2 & Heart Rate Vitals</Link>
+                  <Link to="/products?cat=smartwatches&q=rugged" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">IP68 / 5ATM Military Rugged</Link>
+                  <Link to="/products?cat=smartwatches&q=battery" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">14+ Days Ultra Battery Life</Link>
                 </div>
               </div>
             </div>
 
             {/* 6. Luxury Dropdown */}
-            <div className="relative group">
-              <Link to="/products?cat=luxury" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('luxury', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Luxury</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
-                  <Link to="/products?cat=luxury" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-watch-gold">👑 Swiss Haute Horlogerie</Link>
-                  <Link to="/products?brand=rolex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Rolex Submariner & Daytona</Link>
-                  <Link to="/products?brand=omega" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Omega Moonwatch Masters</Link>
-                  <Link to="/products?cat=luxury&q=tourbillon" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Tourbillon & Skeleton Art</Link>
-                  <Link to="/products?cat=luxury&q=gold" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">18K Solid Gold Vault Editions</Link>
-                  <Link to="/products?cat=luxury&q=diamond" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Hand-Set Diamond Bezels</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'luxury' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute left-1/2 -translate-x-1/2 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'luxury' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-56 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?cat=luxury" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-watch-gold">👑 Swiss Haute Horlogerie</Link>
+                  <Link to="/products?brand=rolex" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Rolex Submariner & Daytona</Link>
+                  <Link to="/products?brand=omega" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Omega Moonwatch Masters</Link>
+                  <Link to="/products?cat=luxury&q=tourbillon" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Tourbillon & Skeleton Art</Link>
+                  <Link to="/products?cat=luxury&q=gold" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">18K Solid Gold Vault Editions</Link>
+                  <Link to="/products?cat=luxury&q=diamond" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Hand-Set Diamond Bezels</Link>
                 </div>
               </div>
             </div>
 
             {/* 7. Sports Dropdown */}
-            <div className="relative group">
-              <Link to="/products?cat=sports" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('sports', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Sports</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300">
-                  <Link to="/products?cat=sports" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Sports Watches</Link>
-                  <Link to="/products?cat=waterproof" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">200M Certified Divers</Link>
-                  <Link to="/products?cat=digital" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Military Tactical Shock</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'sports' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute right-0 sm:left-auto top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'sports' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?cat=sports" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Sports Watches</Link>
+                  <Link to="/products?cat=waterproof" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">200M Certified Divers</Link>
+                  <Link to="/products?cat=digital" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Military Tactical Shock</Link>
                 </div>
               </div>
             </div>
 
             {/* 8. Collections Dropdown */}
-            <div className="relative group">
-              <Link to="/products" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+            <div className="relative group nav-dropdown-item-wrap">
+              <button
+                type="button"
+                onClick={(e) => toggleDropdown('collections', e)}
+                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
+              >
                 <span>Collections</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
-                  <Link to="/products?tag=new" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 text-emerald-400 font-bold">✨ 2026 Vault Arrivals</Link>
-                  <Link to="/products?cat=couple" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">💑 His & Hers Couple Sets</Link>
-                  <Link to="/products?cat=combo" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">🎁 Value Combo Packs</Link>
-                  <Link to="/manufacturing-hub" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 text-watch-gold">🏭 3D Manufacturing Hub</Link>
+                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'collections' ? 'rotate-180 text-watch-gold' : ''}`} />
+              </button>
+              <div className={`absolute right-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'collections' ? 'block' : 'hidden group-hover:block'}`}>
+                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-56 text-xs text-gray-300 backdrop-blur-xl">
+                  <Link to="/products?tag=new" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 text-emerald-400 font-bold">✨ 2026 Vault Arrivals</Link>
+                  <Link to="/products?cat=couple" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">💑 His & Hers Couple Sets</Link>
+                  <Link to="/products?cat=combo" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">🎁 Value Combo Packs</Link>
+                  <Link to="/manufacturing-hub" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 text-watch-gold">🏭 3D Manufacturing Hub</Link>
                 </div>
               </div>
             </div>

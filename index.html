@@ -251,6 +251,9 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border-subtle);
+      position: relative;
+      z-index: 999;
+      overflow: visible !important;
     }
 
     .home-pill {
@@ -274,6 +277,8 @@
       color: #D1D5DB;
       font-size: 12.5px;
       font-weight: 500;
+      position: relative;
+      overflow: visible !important;
     }
 
     /* ── Dropdown Menus for All Sub-Nav Items (Exact Match to User Request) ── */
@@ -287,19 +292,24 @@
       align-items: center;
       gap: 5px;
       cursor: pointer;
-      padding: 6px 4px;
-      transition: color 0.2s;
+      padding: 8px 6px;
+      transition: color 0.2s, background-color 0.2s;
       font-size: 12.5px;
       color: #D1D5DB;
       font-weight: 500;
+      border-radius: 8px;
+      user-select: none;
     }
 
     .nav-dropdown-wrapper:hover .menu-item,
+    .nav-dropdown-wrapper.active .menu-item,
     .menu-item:hover {
       color: var(--gold);
+      background: rgba(255, 255, 255, 0.05);
     }
 
-    .nav-dropdown-wrapper:hover .menu-item svg {
+    .nav-dropdown-wrapper:hover .menu-item svg,
+    .nav-dropdown-wrapper.active .menu-item svg {
       transform: rotate(180deg);
       color: var(--gold);
     }
@@ -313,41 +323,63 @@
 
     .dropdown-panel {
       position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%) translateY(12px);
+      top: calc(100% + 4px);
+      left: 0;
       background: #0B121C;
-      border: 1px solid rgba(217, 164, 65, 0.3);
+      border: 1.5px solid rgba(217, 164, 65, 0.4);
       border-radius: 18px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 25px rgba(217, 164, 65, 0.15);
-      backdrop-filter: blur(16px);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(217, 164, 65, 0.2);
+      backdrop-filter: blur(20px);
       padding: 14px;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
+      transform: translateY(8px);
       transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
-      z-index: 1000;
-      min-width: 480px;
+      z-index: 99999;
+      min-width: 460px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px;
     }
 
-    .nav-dropdown-wrapper:hover .dropdown-panel {
+    /* Position alignments so dropdown never clips out of screen */
+    .nav-dropdown-wrapper.align-left .dropdown-panel {
+      left: 0;
+      right: auto;
+    }
+
+    .nav-dropdown-wrapper.align-center .dropdown-panel {
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+    }
+
+    .nav-dropdown-wrapper.align-right .dropdown-panel {
+      left: auto;
+      right: 0;
+    }
+
+    .nav-dropdown-wrapper:hover .dropdown-panel,
+    .nav-dropdown-wrapper.active .dropdown-panel {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transform: translateX(-50%) translateY(2px);
+      transform: translateY(0);
+    }
+
+    .nav-dropdown-wrapper.align-center:hover .dropdown-panel,
+    .nav-dropdown-wrapper.align-center.active .dropdown-panel {
+      transform: translateX(-50%) translateY(0);
     }
 
     /* Invisible hover bridge */
     .dropdown-panel::before {
       content: '';
       position: absolute;
-      top: -12px;
+      top: -14px;
       left: 0;
       right: 0;
-      height: 14px;
+      height: 16px;
     }
 
     .dropdown-item {
@@ -1252,8 +1284,8 @@
     <div class="menu-links">
       
       <!-- 1. BRANDS DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="window.location.href='products.html'">
+      <div class="nav-dropdown-wrapper align-left">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Brands</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -1322,8 +1354,8 @@
       </div>
 
       <!-- 2. MEN DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="window.location.href='products.html?cat=men'">
+      <div class="nav-dropdown-wrapper align-left">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Men</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -1378,8 +1410,8 @@
       </div>
 
       <!-- 3. WOMEN DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="window.location.href='products.html?cat=women'">
+      <div class="nav-dropdown-wrapper align-left">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Women</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -1434,8 +1466,8 @@
       </div>
 
       <!-- 4. KIDS DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="window.location.href='products.html?cat=kids'">
+      <div class="nav-dropdown-wrapper align-center">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Kids</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -1490,8 +1522,8 @@
       </div>
 
       <!-- 5. SMARTWATCHES DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="selectSlide(2)">
+      <div class="nav-dropdown-wrapper align-center">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Smartwatches</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -1546,8 +1578,8 @@
       </div>
 
       <!-- 6. LUXURY DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="selectSlide(0)">
+      <div class="nav-dropdown-wrapper align-center">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Luxury</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -1602,8 +1634,8 @@
       </div>
 
       <!-- 7. SPORTS DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="selectSlide(1)">
+      <div class="nav-dropdown-wrapper align-right">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Sports</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -1658,8 +1690,8 @@
       </div>
 
       <!-- 8. COLLECTIONS DROPDOWN -->
-      <div class="nav-dropdown-wrapper">
-        <div class="menu-item" onclick="window.location.href='products.html'">
+      <div class="nav-dropdown-wrapper align-right">
+        <div class="menu-item" onclick="toggleNavDropdown(event, this)">
           <span>Collections</span>
           <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
@@ -2211,6 +2243,26 @@
         btn.style.color = '#EF4444';
       }
     }
+
+    // Dropdown toggle on click & close on outside click
+    function toggleNavDropdown(e, elem) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const wrapper = elem.closest('.nav-dropdown-wrapper');
+      const wasActive = wrapper.classList.contains('active');
+      document.querySelectorAll('.nav-dropdown-wrapper').forEach(w => w.classList.remove('active'));
+      if (!wasActive) {
+        wrapper.classList.add('active');
+      }
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown-wrapper')) {
+        document.querySelectorAll('.nav-dropdown-wrapper').forEach(w => w.classList.remove('active'));
+      }
+    });
   </script>
 </body>
 </html>
