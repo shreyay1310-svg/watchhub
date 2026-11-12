@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Mail,
@@ -16,6 +16,9 @@ import {
   ArrowRight,
   ShieldCheck,
   RefreshCw,
+  Smartphone,
+  Phone,
+  MessageSquare,
 } from 'lucide-react';
 import { useAuth, ROLES } from '../../context/AuthContext';
 import luxuryHeroPanel from '../../assets/images/luxury-hero-panel.jpg';
@@ -37,7 +40,9 @@ export const LoginPage = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const [showForgotModal, setShowForgotModal] = useState(false);
-  const [forgotStep, setForgotStep] = useState(1); // 1: email, 2: otp + new password
+  const [forgotStep, setForgotStep] = useState(1); // 1: input (mobile/email), 2: otp + new password
+  const [forgotChannel, setForgotChannel] = useState('phone'); // 'phone' | 'email'
+  const [forgotPhone, setForgotPhone] = useState('9876543210');
   const [forgotEmail, setForgotEmail] = useState('customer@watchhub.com');
   const [generatedOtp, setGeneratedOtp] = useState('');
   const [enteredOtp, setEnteredOtp] = useState('');
@@ -45,6 +50,15 @@ export const LoginPage = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [forgotError, setForgotError] = useState('');
   const [forgotSuccess, setForgotSuccess] = useState('');
+  const [smsToast, setSmsToast] = useState(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Cooldown countdown for resending OTP
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendCooldown]);
 
   // Exactly matching the 5 role tabs from the reference UI
   const ROLE_TABS = [
@@ -150,18 +164,40 @@ export const LoginPage = () => {
     }
   };
 
-  // Forgot password flow
+  // Forgot password flow (supports Customer Mobile SMS & Email)
   const handleSendOtp = (e) => {
-    e.preventDefault();
-    if (!forgotEmail.trim() || !forgotEmail.includes('@')) {
-      setForgotError('Please enter a valid email address.');
-      return;
-    }
+    if (e && e.preventDefault) e.preventDefault();
     setForgotError('');
+
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     setGeneratedOtp(otp);
     setEnteredOtp(otp); // prefill for instant convenience
+
+    if (forgotChannel === 'phone') {
+      const cleanDigits = forgotPhone.replace(/[^0-9]/g, '');
+      if (cleanDigits.length < 10) {
+        setForgotError('Please enter a valid 10-digit mobile number.');
+        return;
+      }
+      const tenDigit = cleanDigits.slice(-10);
+      setForgotPhone(tenDigit);
+
+      // Trigger Realistic Simulated Mobile SMS Toast
+      setSmsToast({
+        phone: `+91 ${tenDigit.slice(0, 5)} ${tenDigit.slice(5)}`,
+        otp: otp,
+        time: 'Just now',
+      });
+      setTimeout(() => setSmsToast(null), 12000);
+    } else {
+      if (!forgotEmail.trim() || !forgotEmail.includes('@')) {
+        setForgotError('Please enter a valid email address.');
+        return;
+      }
+    }
+
     setForgotStep(2);
+    setResendCooldown(30);
   };
 
   const handleResetSubmit = async (e) => {
@@ -180,15 +216,25 @@ export const LoginPage = () => {
     }
 
     setForgotError('');
-    await resetPassword(forgotEmail, newPassword);
+    const targetIdentifier = forgotChannel === 'phone' ? forgotPhone : forgotEmail;
+    await resetPassword(targetIdentifier, newPassword);
     setPassword(newPassword);
-    setAccount(forgotEmail);
-    setForgotSuccess('Password updated successfully! Signing you in...');
+
+    const loginId = forgotChannel === 'phone' ? 'customer@watchhub.com' : forgotEmail;
+    setAccount(loginId);
+
+    setForgotSuccess(
+      forgotChannel === 'phone'
+        ? 'Mobile OTP verified! Password updated successfully. Signing you in...'
+        : 'Password updated successfully! Signing you in...'
+    );
+
     setTimeout(async () => {
-      await login(forgotEmail, newPassword);
+      await login(loginId, newPassword);
       setShowForgotModal(false);
       setForgotSuccess('');
       setForgotStep(1);
+      setSmsToast(null);
       navigate('/');
     }, 900);
   };
@@ -471,6 +517,40 @@ export const LoginPage = () => {
         </div>
       )}
 
+      {/* ── Realistic Simulated Mobile SMS Toast Notification ── */}
+      {smsToast && (
+        <div className="fixed top-5 right-5 sm:right-8 z-[100] max-w-sm w-full bg-[#0D1522] text-white p-4 rounded-2xl shadow-2xl border border-[#C4913B]/50 animate-bounce-in flex items-start gap-3.5 backdrop-blur-md">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C4913B] to-[#8C601E] text-white flex items-center justify-center flex-shrink-0 shadow-md">
+            <Smartphone className="w-5 h-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold tracking-wider text-[#F5D88A] uppercase flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block"></span>
+                SMS Message · {smsToast.time}
+              </span>
+              <button
+                onClick={() => setSmsToast(null)}
+                className="text-gray-400 hover:text-white text-xs"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-xs text-gray-100 font-medium mt-1 leading-snug">
+              WatchHub OTP: Your password reset code is{' '}
+              <strong className="font-mono text-sm font-bold text-[#F5D88A] bg-black/40 px-1.5 py-0.5 rounded border border-[#C4913B]/40">
+                {smsToast.otp}
+              </strong>
+              . Valid for 10 mins.
+            </p>
+            <p className="text-[10.5px] text-gray-400 mt-1 flex items-center gap-1">
+              <span>Delivered to</span>
+              <span className="text-gray-300 font-semibold">{smsToast.phone}</span>
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ════════════════════════════════════════════════════════════════
           FORGOT PASSWORD & INSTANT OTP RESET MODAL
           ════════════════════════════════════════════════════════════════ */}
@@ -478,7 +558,10 @@ export const LoginPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in font-poppins">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-gray-200 relative animate-scale-up">
             <button
-              onClick={() => setShowForgotModal(false)}
+              onClick={() => {
+                setShowForgotModal(false);
+                setSmsToast(null);
+              }}
               className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
             >
               <X className="w-4 h-4" />
@@ -489,11 +572,49 @@ export const LoginPage = () => {
             </div>
 
             <h3 className="text-xl font-bold text-gray-900">Reset Your Password</h3>
-            <p className="text-xs text-gray-500 mt-0.5 mb-5">
+            <p className="text-xs text-gray-500 mt-0.5 mb-4">
               {forgotStep === 1
-                ? 'Enter your registered email address to receive an instant verification OTP.'
-                : 'Enter the verification OTP and choose your new password.'}
+                ? (forgotChannel === 'phone'
+                    ? 'Enter customer mobile number to receive an instant verification OTP via SMS.'
+                    : 'Enter your registered email address to receive an instant verification OTP.')
+                : `Enter the 6-digit OTP sent to your ${forgotChannel === 'phone' ? 'mobile number' : 'email'} and choose your new password.`}
             </p>
+
+            {/* Step 1: Channel Switcher (Mobile SMS vs Email) */}
+            {forgotStep === 1 && (
+              <div className="grid grid-cols-2 gap-1.5 p-1 bg-gray-100 rounded-2xl mb-4 text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForgotChannel('phone');
+                    setForgotError('');
+                  }}
+                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
+                    forgotChannel === 'phone'
+                      ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
+                      : 'text-gray-500 hover:text-gray-800'
+                  }`}
+                >
+                  <Smartphone className="w-4 h-4" />
+                  <span>Mobile SMS OTP</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForgotChannel('email');
+                    setForgotError('');
+                  }}
+                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
+                    forgotChannel === 'email'
+                      ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
+                      : 'text-gray-500 hover:text-gray-800'
+                  }`}
+                >
+                  <Mail className="w-4 h-4" />
+                  <span>Email Address</span>
+                </button>
+              </div>
+            )}
 
             {forgotError && (
               <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs p-2.5 rounded-xl mb-3 text-center">
@@ -510,36 +631,84 @@ export const LoginPage = () => {
 
             {forgotStep === 1 ? (
               <form onSubmit={handleSendOtp} className="space-y-4 text-xs">
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1.5">Registered Email</label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      value={forgotEmail}
-                      onChange={(e) => setForgotEmail(e.target.value)}
-                      placeholder="you@watchhub.com"
-                      className="w-full h-11 pl-10 pr-3 rounded-xl border border-gray-300 text-xs sm:text-sm focus:border-[#C4913B] outline-none"
-                      required
-                    />
+                {forgotChannel === 'phone' ? (
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-1.5">Customer Mobile Number</label>
+                    <div className="flex rounded-xl border border-gray-300 overflow-hidden focus-within:border-[#C4913B] focus-within:ring-2 focus-within:ring-[#C4913B]/20 transition-all">
+                      <div className="bg-gray-50 border-r border-gray-300 px-3 flex items-center gap-1.5 text-gray-700 font-semibold text-xs sm:text-sm select-none">
+                        <span>🇮🇳</span>
+                        <span>+91</span>
+                      </div>
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        value={forgotPhone}
+                        onChange={(e) => setForgotPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                        placeholder="98765 43210"
+                        className="w-full h-11 px-3 text-xs sm:text-sm outline-none font-medium tracking-wide text-gray-900"
+                        required
+                        autoFocus
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-gray-400 mt-1.5">
+                      <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                        <ShieldCheck className="w-3.5 h-3.5" /> SMS OTP Delivery Ready
+                      </span>
+                      <span>Default: 9876543210</span>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-1.5">Registered Email</label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="email"
+                        value={forgotEmail}
+                        onChange={(e) => setForgotEmail(e.target.value)}
+                        placeholder="you@watchhub.com"
+                        className="w-full h-11 pl-10 pr-3 rounded-xl border border-gray-300 text-xs sm:text-sm focus:border-[#C4913B] outline-none"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   className="w-full h-11 bg-gradient-to-r from-[#C4913B] to-[#AD7929] hover:from-[#B5822E] hover:to-[#9E6E24] text-white font-semibold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2"
                 >
-                  <span>Send Verification OTP</span>
+                  <Smartphone className="w-4 h-4" />
+                  <span>{forgotChannel === 'phone' ? 'Send OTP to Customer Mobile' : 'Send Verification OTP'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
             ) : (
               <form onSubmit={handleResetSubmit} className="space-y-3.5 text-xs">
-                {/* Generated OTP Notice */}
-                <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-amber-900 text-xs">
-                  <p className="font-semibold flex items-center gap-1.5">
-                    <span>🔑</span> Verification OTP: <span className="font-mono text-base font-bold text-[#C4913B]">{generatedOtp}</span>
-                  </p>
-                  <p className="text-[10.5px] text-amber-700 mt-0.5">Auto-filled for instant verification convenience.</p>
+                {/* Generated OTP Notice with Mobile badge */}
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50/60 border border-amber-200/90 p-3 rounded-2xl text-amber-950 text-xs shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-xs flex items-center gap-1.5 text-amber-900">
+                        {forgotChannel === 'phone' ? (
+                          <>
+                            <Smartphone className="w-4 h-4 text-[#C4913B]" />
+                            <span>OTP sent via SMS to <strong className="text-gray-900">+91 {forgotPhone}</strong></span>
+                          </>
+                        ) : (
+                          <>
+                            <Mail className="w-4 h-4 text-[#C4913B]" />
+                            <span>OTP sent to <strong className="text-gray-900">{forgotEmail}</strong></span>
+                          </>
+                        )}
+                      </p>
+                      <p className="text-[11px] text-amber-700 mt-0.5">Auto-filled for instant verification convenience.</p>
+                    </div>
+                    <div className="bg-white border border-amber-200 px-2.5 py-1 rounded-xl text-center shadow-xs">
+                      <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">OTP</span>
+                      <span className="font-mono text-sm font-bold text-[#C4913B] tracking-wider">{generatedOtp}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -550,7 +719,7 @@ export const LoginPage = () => {
                     value={enteredOtp}
                     onChange={(e) => setEnteredOtp(e.target.value)}
                     placeholder="e.g. 482910"
-                    className="w-full h-10 px-3 rounded-xl border border-gray-300 font-mono text-center tracking-widest text-base font-bold focus:border-[#C4913B] outline-none"
+                    className="w-full h-10 px-3 rounded-xl border border-gray-300 font-mono text-center tracking-widest text-base font-bold focus:border-[#C4913B] outline-none bg-gray-50/50"
                     required
                   />
                 </div>
@@ -579,11 +748,36 @@ export const LoginPage = () => {
                   />
                 </div>
 
+                {/* Resend Link and Channel Info */}
+                <div className="flex items-center justify-between text-[11px] text-gray-500 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setForgotStep(1)}
+                    className="text-gray-500 hover:text-gray-800 underline"
+                  >
+                    Change number
+                  </button>
+
+                  {resendCooldown > 0 ? (
+                    <span className="text-gray-400 font-medium">Resend SMS in {resendCooldown}s</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={(e) => handleSendOtp(e)}
+                      className="text-[#C4913B] font-semibold hover:underline flex items-center gap-1"
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      <span>Resend OTP on Mobile</span>
+                    </button>
+                  )}
+                </div>
+
                 <button
                   type="submit"
                   className="w-full h-11 bg-gradient-to-r from-[#C4913B] to-[#AD7929] hover:from-[#B5822E] hover:to-[#9E6E24] text-white font-semibold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 mt-2"
                 >
-                  <span>Update Password & Sign In</span>
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Verify OTP & Update Password</span>
                 </button>
               </form>
             )}

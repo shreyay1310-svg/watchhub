@@ -596,23 +596,101 @@
 
   <!-- Forgot Password Modal -->
   <div id="forgotModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
-    <div style="background:#fff; color:#1f2937; border-radius:20px; width:90%; max-width:400px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.3); position:relative;">
-      <button onclick="closeForgotModal()" style="position:absolute; top:16px; right:16px; border:none; background:#f3f4f6; width:28px; height:28px; border-radius:50%; cursor:pointer; font-weight:bold;">✕</button>
-      <h3 style="font-size:18px; font-weight:bold; margin-bottom:4px; color:#111827;">Reset Password</h3>
-      <p style="font-size:12px; color:#6b7280; margin-bottom:16px;">Verification OTP has been generated for your email.</p>
-      <div style="background:#fef3c7; border:1px solid #fde68a; color:#92400e; padding:10px; border-radius:10px; font-size:12px; margin-bottom:14px;">
-        🔑 Verification OTP: <strong style="font-size:14px; color:#b45309;" id="otpCode">582910</strong> (Auto-verified)
+    <div style="background:#fff; color:#1f2937; border-radius:24px; width:92%; max-width:420px; padding:26px; box-shadow:0 20px 40px rgba(0,0,0,0.3); position:relative; font-family:'Poppins',sans-serif;">
+      <button onclick="closeForgotModal()" style="position:absolute; top:18px; right:18px; border:none; background:#f3f4f6; width:30px; height:30px; border-radius:50%; cursor:pointer; font-weight:bold; color:#6b7280;">✕</button>
+      
+      <div style="width:42px; height:42px; border-radius:12px; background:#FAF7F2; border:1px solid #E8E2D5; display:flex; align-items:center; justify-content:center; color:#C4913B; margin-bottom:12px; font-size:20px;">
+        🔑
       </div>
+
+      <h3 style="font-size:19px; font-weight:700; margin-bottom:4px; color:#111827;">Reset Your Password</h3>
+      <p style="font-size:12px; color:#6b7280; margin-bottom:16px;">Choose how to receive your instant verification OTP.</p>
+      
+      <!-- Channel Switcher -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; background:#f3f4f6; padding:4px; border-radius:14px; margin-bottom:16px;">
+        <button type="button" id="tabMobile" onclick="switchForgotTab('mobile')" style="height:34px; border:none; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; background:#fff; color:#C4913B; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+          📱 Mobile SMS
+        </button>
+        <button type="button" id="tabEmail" onclick="switchForgotTab('email')" style="height:34px; border:none; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; background:transparent; color:#6b7280;">
+          ✉️ Email Address
+        </button>
+      </div>
+
+      <!-- Mobile input -->
+      <div id="mobileSection" style="margin-bottom:14px;">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px; color:#374151;">Customer Mobile Number</label>
+        <div style="display:flex; border:1px solid #d1d5db; border-radius:10px; overflow:hidden;">
+          <div style="background:#f9fafb; border-right:1px solid #d1d5db; padding:0 10px; display:flex; align-items:center; font-size:13px; font-weight:600; color:#374151;">
+            🇮🇳 +91
+          </div>
+          <input type="tel" id="customerPhoneInput" value="9876543210" maxlength="10" style="width:100%; height:40px; border:none; padding:0 12px; font-size:13px; outline:none; font-weight:500;"/>
+        </div>
+      </div>
+
+      <!-- Email input -->
+      <div id="emailSection" style="display:none; margin-bottom:14px;">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px; color:#374151;">Registered Email</label>
+        <input type="email" id="customerEmailInput" value="customer@watchhub.com" style="width:100%; height:40px; border:1px solid #d1d5db; border-radius:10px; padding:0 12px; font-size:13px; outline:none;"/>
+      </div>
+
+      <!-- SMS OTP Banner -->
+      <div id="otpBanner" style="background:#fffbeb; border:1px solid #fde68a; color:#92400e; padding:12px; border-radius:12px; font-size:12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <span style="font-weight:600;" id="otpRecipientLabel">📱 SMS Sent to +91 9876543210</span>
+          <div style="font-size:11px; color:#b45309; margin-top:2px;">Auto-filled for instant verification.</div>
+        </div>
+        <div style="background:#fff; border:1px solid #fcd34d; padding:4px 10px; border-radius:8px; font-family:monospace; font-weight:bold; font-size:15px; color:#C4913B;" id="otpCode">
+          582910
+        </div>
+      </div>
+
       <div style="margin-bottom:12px;">
-        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">New Password</label>
-        <input type="password" id="newPwdInput" value="WatchHub@2026" style="width:100%; height:40px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:13px;"/>
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px; color:#374151;">New Password</label>
+        <input type="password" id="newPwdInput" value="WatchHub@2026" style="width:100%; height:40px; border:1px solid #d1d5db; border-radius:10px; padding:0 12px; font-size:13px; outline:none;"/>
       </div>
-      <button type="button" onclick="confirmResetPassword()" style="width:100%; height:42px; background:var(--gold-amber); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer;">Update Password & Sign In</button>
+
+      <button type="button" onclick="confirmResetPassword()" style="width:100%; height:44px; background:linear-gradient(135deg, #C4913B 0%, #AD7929 100%); color:#fff; border:none; border-radius:12px; font-weight:600; font-size:13px; cursor:pointer; box-shadow:0 4px 12px rgba(196,145,59,0.3);">
+        Verify OTP & Update Password
+      </button>
     </div>
   </div>
 
   <script>
     let currentRole = 'Customer';
+    let forgotChannel = 'mobile';
+
+    function switchForgotTab(channel) {
+      forgotChannel = channel;
+      const tabMobile = document.getElementById('tabMobile');
+      const tabEmail = document.getElementById('tabEmail');
+      const mobileSec = document.getElementById('mobileSection');
+      const emailSec = document.getElementById('emailSection');
+      const otpLabel = document.getElementById('otpRecipientLabel');
+
+      if (channel === 'mobile') {
+        tabMobile.style.background = '#fff';
+        tabMobile.style.color = '#C4913B';
+        tabMobile.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+        tabEmail.style.background = 'transparent';
+        tabEmail.style.color = '#6b7280';
+        tabEmail.style.boxShadow = 'none';
+        mobileSec.style.display = 'block';
+        emailSec.style.display = 'none';
+        const phone = document.getElementById('customerPhoneInput').value;
+        otpLabel.innerText = '📱 SMS Sent to +91 ' + phone;
+      } else {
+        tabEmail.style.background = '#fff';
+        tabEmail.style.color = '#C4913B';
+        tabEmail.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+        tabMobile.style.background = 'transparent';
+        tabMobile.style.color = '#6b7280';
+        tabMobile.style.boxShadow = 'none';
+        mobileSec.style.display = 'none';
+        emailSec.style.display = 'block';
+        const email = document.getElementById('customerEmailInput').value;
+        otpLabel.innerText = '✉️ OTP Sent to ' + email;
+      }
+    }
 
     function selectRole(role, email) {
       currentRole = role;
@@ -668,7 +746,10 @@
     }
 
     function openForgotModal() {
-      document.getElementById('otpCode').innerText = Math.floor(100000 + Math.random() * 900000);
+      const code = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('otpCode').innerText = code;
+      const phone = document.getElementById('customerPhoneInput').value;
+      document.getElementById('otpRecipientLabel').innerText = '📱 SMS Sent to +91 ' + phone;
       document.getElementById('forgotModal').style.display = 'flex';
     }
     function closeForgotModal() {
@@ -678,7 +759,7 @@
       const newPwd = document.getElementById('newPwdInput').value;
       document.getElementById('passwordInput').value = newPwd;
       closeForgotModal();
-      alert('✅ Password updated successfully! Please click "Sign In".');
+      alert('📱 Mobile OTP Verified! Password updated successfully. Please click "Sign In".');
     }
   </script>
 </body>

@@ -56,7 +56,8 @@ export const MOCK_STAFF_ACCOUNTS = {
   [ROLES.CUSTOMER]: {
     id: 'usr_customer_demo',
     name: 'Ananya Singh',
-    email: 'ananya@gmail.com',
+    email: 'customer@watchhub.com',
+    phone: '+91 98765 43210',
     role: ROLES.CUSTOMER,
     avatar: '👤',
     permissions: ['orders.own', 'cart.own', 'wishlist.own'],
@@ -227,20 +228,46 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Reset password handler
-  const resetPassword = async (email, newPassword) => {
+  // Reset password handler (supports email or mobile number)
+  const resetPassword = async (identifier, newPassword) => {
     try {
       await new Promise((res) => setTimeout(res, 350));
-      const cleanEmail = email.trim().toLowerCase();
-      localStorage.setItem(`pwd_${cleanEmail}`, newPassword);
+      const cleanId = (identifier || '').trim().toLowerCase();
+      const cleanPhone = cleanId.replace(/[^0-9]/g, '');
+
+      // Store password for this identifier directly
+      localStorage.setItem(`pwd_${cleanId}`, newPassword);
+      if (cleanPhone.length >= 10) {
+        localStorage.setItem(`pwd_${cleanPhone.slice(-10)}`, newPassword);
+        localStorage.setItem(`pwd_customer@watchhub.com`, newPassword);
+      }
 
       // Update in registered users database
       const all = getRegisteredUsers();
-      if (all[cleanEmail]) {
-        all[cleanEmail].password = newPassword;
-        localStorage.setItem('watchhub_registered_users', JSON.stringify(all));
+      let matchedEmail = cleanId;
+
+      if (!cleanId.includes('@') && cleanPhone.length >= 10) {
+        for (const [em, u] of Object.entries(all)) {
+          const userPhone = (u.phone || '').replace(/[^0-9]/g, '');
+          if (userPhone && userPhone.includes(cleanPhone.slice(-10))) {
+            matchedEmail = em;
+            break;
+          }
+        }
+        if (!all[matchedEmail]) {
+          matchedEmail = 'customer@watchhub.com';
+        }
       }
-      return { success: true, message: 'Password updated successfully!' };
+
+      if (all[matchedEmail]) {
+        all[matchedEmail].password = newPassword;
+      }
+      if (all['customer@watchhub.com']) {
+        all['customer@watchhub.com'].password = newPassword;
+      }
+      localStorage.setItem('watchhub_registered_users', JSON.stringify(all));
+
+      return { success: true, email: matchedEmail, message: 'Password updated successfully!' };
     } catch (err) {
       return { success: false, message: err.message };
     }
