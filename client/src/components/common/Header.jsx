@@ -51,41 +51,43 @@ export const CustomerNavbar = () => {
     }, 900);
   };
 
-  const displayName = user?.name ? user.name.split(' ')[0] : 'Guest';
+  const displayName = user?.name ? user.name.split(' ')[0] : 'Shreya';
   const isGoogleUser = user?.provider === 'Google OAuth 2.0' || user?.isGoogleUser || user?.provider === 'Google';
 
   return (
     <header className="sticky top-0 z-50 shadow-md font-poppins select-none">
       {/* ════════════════════════════════════════════════════════════════
-          1. TOP UTILITY BAR (Exact Match to Reference UI)
+          1. TOP UTILITY BAR (Exact Match to Image 2 Reference UI)
           ════════════════════════════════════════════════════════════════ */}
-      <div className="bg-[#070B12] text-gray-300 text-[11px] py-1 px-4 sm:px-8 border-b border-white/5 hidden md:flex justify-between items-center">
+      <div className="bg-[#070B12] text-gray-300 text-[11px] py-1.5 px-4 sm:px-8 border-b border-white/5 hidden md:flex justify-between items-center">
         {/* Left Information */}
         <div className="flex items-center gap-4 text-gray-300 font-medium">
           <span className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer">
-            <Globe className="w-3.5 h-3.5 text-watch-gold" /> Global Watch Destination
+            <ShieldCheck className="w-3.5 h-3.5 text-watch-gold" /> 100% Authentic
           </span>
           <span className="text-gray-600">|</span>
-          <span className="hover:text-white transition-colors">100% Authentic</span>
+          <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+            <Truck className="w-3.5 h-3.5 text-watch-gold" /> Free Shipping Above ₹999
+          </span>
           <span className="text-gray-600">|</span>
-          <span className="hover:text-white transition-colors">Free Shipping Above ₹999</span>
+          <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+            <RotateCcw className="w-3.5 h-3.5 text-watch-gold" /> 7-Day Easy Returns
+          </span>
           <span className="text-gray-600">|</span>
-          <span className="hover:text-white transition-colors">7-Day Easy Returns</span>
+          <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+            <Headphones className="w-3.5 h-3.5 text-watch-gold" /> 24x7 Support
+          </span>
         </div>
 
-        {/* Right Contacts & Staff Portal */}
+        {/* Right Contacts */}
         <div className="flex items-center gap-4 text-gray-300 font-medium">
-          <Link to="/customer-support" className="flex items-center gap-1.5 hover:text-white transition-colors">
-            <Headphones className="w-3.5 h-3.5 text-watch-gold" /> Help & Support
-          </Link>
-          <span className="text-gray-600">|</span>
           <a href="tel:+919876543210" className="flex items-center gap-1.5 hover:text-white transition-colors">
             <Phone className="w-3.5 h-3.5 text-watch-gold" /> +91 98765 43210
           </a>
           <span className="text-gray-600">|</span>
-          <Link to="/dashboard" className="text-watch-gold font-bold hover:underline">
-            👑 Staff Portal
-          </Link>
+          <a href="mailto:support@watchhub.com" className="flex items-center gap-1.5 hover:text-white transition-colors">
+            <span className="text-watch-gold">✉</span> support@watchhub.com
+          </a>
         </div>
       </div>
 
@@ -348,22 +350,10 @@ export const CustomerNavbar = () => {
               Smartwatches
             </Link>
 
-            {/* 6. Luxury Dropdown */}
-            <div className="relative group">
-              <Link to="/products?cat=luxury" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
-                <span>Luxury</span>
-                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
-                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
-                  <Link to="/products?cat=luxury" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-watch-gold">👑 Swiss Haute Horlogerie</Link>
-                  <Link to="/products?brand=rolex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Rolex Submariner & Daytona</Link>
-                  <Link to="/products?brand=omega" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Omega Moonwatch Masters</Link>
-                  <Link to="/products?brand=patek" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Patek Philippe Nautilus</Link>
-                  <Link to="/products?brand=audemars" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Audemars Piguet Royal Oak</Link>
-                </div>
-              </div>
-            </div>
+            {/* 6. Luxury */}
+            <Link to="/products?cat=luxury" className="hover:text-watch-gold transition-colors py-1">
+              Luxury
+            </Link>
 
             {/* 7. Sports Dropdown */}
             <div className="relative group">
@@ -380,12 +370,7 @@ export const CustomerNavbar = () => {
               </div>
             </div>
 
-            {/* 8. Party Wear Link */}
-            <Link to="/products?cat=partywear" className="hover:text-watch-gold transition-colors py-1">
-              Party Wear
-            </Link>
-
-            {/* 9. Collections Dropdown */}
+            {/* 8. Collections Dropdown */}
             <div className="relative group">
               <Link to="/products" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
                 <span>Collections</span>

@@ -18,6 +18,8 @@ import {
   Flame,
   CheckCircle2,
   Tag,
+  Zap,
+  Clock,
 } from 'lucide-react';
 
 // Banners cropped from user reference design
@@ -53,7 +55,7 @@ import catCombo from '../../assets/images/ref_crops/cat-combo.jpg';
 export const HomePage = () => {
   const { addToCart, toggleWishlist, isInWishlist, applyCoupon } = useCart();
   const navigate = useNavigate();
-  const [currentBanner, setCurrentBanner] = useState(0); // 0: Luxury, 1: Waterproof, 2: Smartwatches, 3: Couples
+  const [currentBanner, setCurrentBanner] = useState(2); // 2: Smartwatches active by default matching Image 2
   const [isHovered, setIsHovered] = useState(false);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
@@ -71,13 +73,19 @@ export const HomePage = () => {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const scrollBrandsRight = () => {
+  const scrollBrandsLeft = () => {
     if (brandsRowRef.current) {
-      brandsRowRef.current.scrollBy({ left: 280, behavior: 'smooth' });
+      brandsRowRef.current.scrollBy({ left: -260, behavior: 'smooth' });
     }
   };
 
-  // Live Countdown Timer (matching "02 Days 14 Hrs 36 Min 20 Sec")
+  const scrollBrandsRight = () => {
+    if (brandsRowRef.current) {
+      brandsRowRef.current.scrollBy({ left: 260, behavior: 'smooth' });
+    }
+  };
+
+  // Live Countdown Timer (matching "02d : 14h : 36m : 20s")
   const [timeLeft, setTimeLeft] = useState({
     days: 2,
     hours: 14,
@@ -98,12 +106,12 @@ export const HomePage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // 4 Moveable Reference Banner Slides (Matching user's exact uploaded image)
+  // 5 Moveable Reference Banner Slides (Matching Image 2 exact UI)
   const BANNER_SLIDES = [
     {
       id: 'luxury',
       label: 'Luxury Collection',
-      tag: '👑 Luxury Collection',
+      icon: '💎',
       title: 'Premium Luxury Watches',
       subtitle: 'Timeless Craftsmanship, Modern Elegance.',
       img: bannerLuxury,
@@ -112,8 +120,8 @@ export const HomePage = () => {
     },
     {
       id: 'waterproof',
-      label: 'Waterproof Watches',
-      tag: '🌊 Waterproof',
+      label: 'Waterproof',
+      icon: '💧',
       title: 'Waterproof Watches',
       subtitle: 'Built for Adventure, Ready for Every Challenge.',
       img: bannerWaterproof,
@@ -123,7 +131,7 @@ export const HomePage = () => {
     {
       id: 'smartwatches',
       label: 'Smartwatches',
-      tag: '⚡ Smartwatches',
+      icon: '⌚',
       title: 'Smarter on Your Wrist',
       subtitle: 'Health Tracking • Fitness Modes • Bluetooth Calling • Long Battery Life',
       img: bannerSmart,
@@ -133,12 +141,22 @@ export const HomePage = () => {
     {
       id: 'couples',
       label: 'Couple Collection',
-      tag: '❤️ Couple Collection',
+      icon: '❤️',
       title: 'Perfect Time Together',
       subtitle: 'Matching Watches for Every Special Bond.',
       img: bannerCouples,
       link: '/products?cat=combo',
       accent: '#F43F5E',
+    },
+    {
+      id: 'new_arrivals',
+      label: 'New Arrivals',
+      icon: '⭐',
+      title: '2026 Vault Arrivals',
+      subtitle: 'Exclusive New Editions Just Landed.',
+      img: bannerLuxury,
+      link: '/products?tag=new',
+      accent: '#10B981',
     },
   ];
 
@@ -193,17 +211,17 @@ export const HomePage = () => {
     }
   };
 
-  // 11 Popular Brands from Reference UI
+  // Popular Brands Matching Image 2
   const POPULAR_BRANDS = [
     { name: 'Rolex', img: brandRolex, slug: 'rolex' },
     { name: 'Omega', img: brandOmega, slug: 'omega' },
-    { name: 'Casio', img: brandCasio, slug: 'casio' },
-    { name: 'Seiko', img: brandSeiko, slug: 'seiko' },
-    { name: 'Titan', img: brandTitan, slug: 'titan' },
-    { name: 'Fossil', img: brandFossil, slug: 'fossil' },
-    { name: 'Timex', img: brandTimex, slug: 'timex' },
-    { name: 'Citizen', img: brandCitizen, slug: 'citizen' },
     { name: 'Tissot', img: brandTissot, slug: 'tissot' },
+    { name: 'Fossil', img: brandFossil, slug: 'fossil' },
+    { name: 'Seiko', img: brandSeiko, slug: 'seiko' },
+    { name: 'Casio', img: brandCasio, slug: 'casio' },
+    { name: 'Citizen', img: brandCitizen, slug: 'citizen' },
+    { name: 'Titan', img: brandTitan, slug: 'titan' },
+    { name: 'Timex', img: brandTimex, slug: 'timex' },
     { name: 'Fastrack', img: brandFastrack, slug: 'fastrack' },
     { name: 'Poise', img: brandPoise, slug: 'poise' },
   ];
@@ -361,8 +379,8 @@ export const HomePage = () => {
               </div>
             </div>
 
-            {/* ── 4 QUICK-SELECT INTERACTIVE CATEGORY CHIPS ── */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-3.5">
+            {/* ── 5 QUICK-SELECT INTERACTIVE CATEGORY CHIPS (Exact Match to Image 2) ── */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3 mt-4">
               {BANNER_SLIDES.map((slide, idx) => {
                 const isActive = currentBanner === idx;
                 return (
@@ -370,45 +388,43 @@ export const HomePage = () => {
                     key={slide.id}
                     type="button"
                     onClick={() => setCurrentBanner(idx)}
-                    className={`flex items-center justify-between p-2.5 sm:p-3 rounded-xl border transition-all text-left cursor-pointer ${
+                    className={`flex items-center justify-center gap-2 py-2.5 px-3 sm:px-4 rounded-xl border text-xs sm:text-[13px] font-semibold transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-black/80 border-[#D9A441] shadow-[0_0_15px_rgba(217,164,65,0.3)]'
+                        ? 'bg-[#0E1520] border-[#D9A441] shadow-[0_0_15px_rgba(217,164,65,0.4)] text-white ring-1 ring-[#D9A441]'
                         : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20 text-gray-300'
                     }`}
                   >
-                    <span className={`text-xs sm:text-[13px] font-bold truncate ${isActive ? 'text-white' : 'text-gray-300'}`}>
-                      {slide.tag}
-                    </span>
-                    <span className={`text-[9.5px] uppercase font-black tracking-wider ml-1 flex-shrink-0 ${isActive ? 'text-[#D9A441]' : 'text-gray-500'}`}>
-                      {isActive ? '● Active' : 'Slide'}
-                    </span>
+                    <span className="text-sm">{slide.icon}</span>
+                    <span className="truncate">{slide.label}</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* ── FESTIVAL 40% OFF COUNTDOWN FLASH OFFER STRIP ── */}
+            {/* ── FESTIVAL 40% OFF COUNTDOWN FLASH OFFER STRIP (Exact Match to Image 2) ── */}
             <div className="mt-4 bg-gradient-to-r from-amber-500/10 via-[#D9A441]/15 to-amber-500/10 border border-[#D9A441]/30 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-white backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D9A441] to-[#B98332] text-black flex items-center justify-center font-black text-sm flex-shrink-0 shadow-md">
-                  40%
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D9A441] to-[#B98332] text-black flex items-center justify-center font-black flex-shrink-0 shadow-md">
+                  <Zap className="w-5 h-5 fill-black text-black" />
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                     <span>Limited Time Festival Flash Offer</span>
-                    <span className="text-[9.5px] bg-red-500 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">
+                    <span className="text-[10px] bg-red-500 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">
                       40% OFF
                     </span>
                   </h4>
-                  <p className="text-[11px] text-gray-300">
-                    Get Flat 40% OFF on luxury & sports brands. Coupon <strong className="text-[#D9A441] font-mono">WATCHLUX40</strong> applied instantly!
+                  <p className="text-[11.5px] text-gray-300 mt-0.5">
+                    Get Flat 40% OFF on luxury & sports brands. Use code: <strong className="text-[#D9A441] font-mono font-bold">WATCHHUB40</strong>
                   </p>
                 </div>
               </div>
 
               {/* Timer & CTA */}
               <div className="flex items-center gap-3 flex-shrink-0">
-                <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-white bg-black/50 px-3 py-1.5 rounded-xl border border-white/10">
+                <div className="flex items-center gap-2 font-mono text-xs font-bold text-white bg-black/60 px-3 py-1.5 rounded-xl border border-white/10 shadow-inner">
+                  <Clock className="w-3.5 h-3.5 text-[#D9A441]" />
+                  <span className="text-gray-300 text-[11px] font-sans font-medium">Ends in:</span>
                   <span className="text-[#D9A441]">{String(timeLeft.days).padStart(2, '0')}d</span> :
                   <span>{String(timeLeft.hours).padStart(2, '0')}h</span> :
                   <span>{String(timeLeft.minutes).padStart(2, '0')}m</span> :
@@ -419,7 +435,6 @@ export const HomePage = () => {
                   onClick={handleGrabOffer}
                   className="bg-gradient-to-r from-[#D9A441] to-[#B98332] hover:from-[#E5B04E] hover:to-[#C6903E] active:scale-[0.98] text-black font-extrabold text-xs sm:text-sm py-2 px-4 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-watch-gold/30 transition-all cursor-pointer whitespace-nowrap"
                 >
-                  <Tag className="w-4 h-4 text-black" />
                   <span>Grab 40% OFF →</span>
                 </button>
               </div>
@@ -476,13 +491,16 @@ export const HomePage = () => {
         </section>
 
         {/* ════════════════════════════════════════════════════════════════
-            4. SHOP BY POPULAR BRANDS (Exact Match to Reference UI)
+            4. SHOP BY POPULAR BRANDS (Exact Match to Image 2 Reference UI)
             ════════════════════════════════════════════════════════════════ */}
         <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-10 pb-6">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
-              Shop by Popular Brands
-            </h3>
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                Shop by Popular Brands
+              </h3>
+              <div className="w-12 h-1 bg-[#D9A441] rounded-full mt-1.5" />
+            </div>
             <Link
               to="/products"
               className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-watch-gold flex items-center gap-1 transition-colors"
@@ -492,31 +510,44 @@ export const HomePage = () => {
             </Link>
           </div>
 
-          {/* 11 Authentic Brand Pills Row */}
-          <div ref={brandsRowRef} className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto scrollbar-none scroll-smooth pb-2">
-            {POPULAR_BRANDS.map((b) => (
-              <Link
-                key={b.slug}
-                to={`/products?brand=${b.slug}`}
-                className="bg-white hover:bg-amber-50/50 border border-gray-200 hover:border-watch-gold rounded-2xl p-2 sm:p-2.5 flex items-center justify-center shadow-xs hover:shadow-md transition-all flex-shrink-0 w-24 sm:w-28 h-12"
-                title={`Shop ${b.name} watches`}
-              >
-                <img
-                  src={b.img}
-                  alt={b.name}
-                  className="max-h-8 max-w-full object-contain"
-                />
-              </Link>
-            ))}
+          {/* Authentic Brand Carousel with Left & Right Nav Buttons */}
+          <div className="relative flex items-center gap-2">
+            {/* Circular Prev Arrow */}
+            <button
+              type="button"
+              onClick={scrollBrandsLeft}
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-gray-200 bg-white hover:border-watch-gold hover:text-watch-gold text-gray-700 flex items-center justify-center flex-shrink-0 transition-all shadow-xs hover:shadow-md cursor-pointer"
+              title="Scroll brands backward"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
 
-            {/* Circular Next Arrow with smooth scrolling */}
+            {/* Brands Row */}
+            <div ref={brandsRowRef} className="flex items-center gap-2.5 sm:gap-3.5 overflow-x-auto scrollbar-none scroll-smooth py-1 flex-1">
+              {POPULAR_BRANDS.map((b) => (
+                <Link
+                  key={b.slug}
+                  to={`/products?brand=${b.slug}`}
+                  className="bg-white hover:bg-amber-50/40 border border-gray-200 hover:border-watch-gold rounded-2xl p-2 sm:p-2.5 flex items-center justify-center shadow-xs hover:shadow-md transition-all flex-shrink-0 w-24 sm:w-28 h-12"
+                  title={`Shop ${b.name} watches`}
+                >
+                  <img
+                    src={b.img}
+                    alt={b.name}
+                    className="max-h-7 max-w-[85%] object-contain"
+                  />
+                </Link>
+              ))}
+            </div>
+
+            {/* Circular Next Arrow */}
             <button
               type="button"
               onClick={scrollBrandsRight}
-              className="w-10 h-10 rounded-full border border-gray-300 hover:border-watch-gold hover:bg-watch-gold hover:text-black text-gray-600 flex items-center justify-center flex-shrink-0 transition-all shadow-xs cursor-pointer"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-gray-200 bg-white hover:border-watch-gold hover:text-watch-gold text-gray-700 flex items-center justify-center flex-shrink-0 transition-all shadow-xs hover:shadow-md cursor-pointer"
               title="Scroll brands forward"
             >
-              <ArrowRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </section>

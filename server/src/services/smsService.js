@@ -51,3 +51,4 @@ export const sendFast2SMS = async (mobile, otp) => {
     return { success: false, error: err.message };
   }
 };
+
