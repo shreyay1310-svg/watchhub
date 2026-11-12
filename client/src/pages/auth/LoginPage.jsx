@@ -862,6 +862,30 @@ export const LoginPage = () => {
                       <span className="font-mono text-sm font-bold text-[#C4913B] tracking-wider">{generatedOtp}</span>
                     </div>
                   </div>
+
+                  {/* Direct Phone Delivery Links */}
+                  {forgotChannel === 'phone' && (
+                    <div className="mt-2.5 pt-2 border-t border-amber-200/60 flex items-center gap-2 flex-wrap">
+                      <a
+                        href={`https://api.whatsapp.com/send?phone=91${forgotPhone.replace(/[^0-9]/g, '').slice(-10)}&text=${encodeURIComponent(
+                          `WatchHub Password Reset OTP: ${generatedOtp}. Valid for 10 minutes. Do not share with anyone.`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
+                      >
+                        <span>💬 Receive on WhatsApp</span>
+                      </a>
+                      <a
+                        href={`sms:+91${forgotPhone.replace(/[^0-9]/g, '').slice(-10)}?body=${encodeURIComponent(
+                          `Your WatchHub password reset OTP is ${generatedOtp}`
+                        )}`}
+                        className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
+                      >
+                        <span>📲 Open in Messages App</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
 
                 <div>

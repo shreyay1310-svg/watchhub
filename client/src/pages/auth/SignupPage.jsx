@@ -497,6 +497,28 @@ export const SignupPage = () => {
                       <span className="font-mono text-base font-bold text-[#C4913B] tracking-wider">{generatedOtp}</span>
                     </div>
                   </div>
+
+                  {/* Direct Phone Delivery Links (WhatsApp & Native SMS) */}
+                  <div className="mt-2.5 pt-2 border-t border-amber-200/60 flex items-center gap-2 flex-wrap">
+                    <a
+                      href={`https://api.whatsapp.com/send?phone=91${phone.replace(/[^0-9]/g, '').slice(-10)}&text=${encodeURIComponent(
+                        `WatchHub Registration OTP: ${generatedOtp}. Valid for 10 minutes. Do not share with anyone.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
+                    >
+                      <span>💬 Receive on WhatsApp</span>
+                    </a>
+                    <a
+                      href={`sms:+91${phone.replace(/[^0-9]/g, '').slice(-10)}?body=${encodeURIComponent(
+                        `Your WatchHub registration OTP is ${generatedOtp}`
+                      )}`}
+                      className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
+                    >
+                      <span>📲 Open in Messages App</span>
+                    </a>
+                  </div>
                 </div>
 
                 <form onSubmit={handleVerifyOtpAndCreate} className="space-y-4 text-xs">
