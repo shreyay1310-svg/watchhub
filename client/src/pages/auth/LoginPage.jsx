@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth, ROLES } from '../../context/AuthContext';
 import luxuryHeroPanel from '../../assets/images/luxury-hero-panel.jpg';
+import GoldenStarsBackground from '../../components/common/GoldenStarsBackground';
 
 export const LoginPage = () => {
   const { login, loginWithGoogle, resetPassword } = useAuth();
@@ -191,9 +192,12 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#060A10] flex items-center justify-center p-3 sm:p-6 lg:p-10 font-poppins selection:bg-[#C59341] selection:text-white">
+    <div className="min-h-screen bg-[#050912] flex items-center justify-center p-3 sm:p-6 lg:p-10 font-poppins selection:bg-[#C59341] selection:text-white relative overflow-hidden">
+      {/* ── Premium Animated Golden Stars Background (Pointer-events: none, z-0) ── */}
+      <GoldenStarsBackground />
+
       {/* 2-Column Luxury Split Card matching Reference Design */}
-      <div className="w-full max-w-5xl rounded-[28px] overflow-hidden shadow-2xl border border-white/10 bg-[#0A101A] grid grid-cols-1 lg:grid-cols-12 relative">
+      <div className="w-full max-w-5xl rounded-[28px] overflow-hidden shadow-2xl border border-white/10 bg-[#0A101A] grid grid-cols-1 lg:grid-cols-12 relative z-10">
         
         {/* ════════════════════════════════════════════════════════════════
             LEFT EDITORIAL PANEL: Pure, Uncompromised Luxury Watch Visual
