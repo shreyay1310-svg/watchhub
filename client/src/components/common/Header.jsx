@@ -345,15 +345,41 @@ export const CustomerNavbar = () => {
               </div>
             </div>
 
-            {/* 5. Smartwatches Link */}
-            <Link to="/products?cat=smartwatches" className="hover:text-watch-gold transition-colors py-1">
-              Smartwatches
-            </Link>
+            {/* 5. Smartwatches Dropdown */}
+            <div className="relative group">
+              <Link to="/products?cat=smartwatches" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Smartwatches</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
+                  <Link to="/products?cat=smartwatches" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-white">All Smartwatches</Link>
+                  <Link to="/products?cat=smartwatches&q=calling" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">AMOLED Bluetooth Calling</Link>
+                  <Link to="/products?cat=smartwatches&q=fitness" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Fitness & 120+ Sports Modes</Link>
+                  <Link to="/products?cat=smartwatches&q=health" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">24/7 SpO2 & Heart Rate Vitals</Link>
+                  <Link to="/products?cat=smartwatches&q=rugged" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">IP68 / 5ATM Military Rugged</Link>
+                  <Link to="/products?cat=smartwatches&q=battery" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">14+ Days Ultra Battery Life</Link>
+                </div>
+              </div>
+            </div>
 
-            {/* 6. Luxury */}
-            <Link to="/products?cat=luxury" className="hover:text-watch-gold transition-colors py-1">
-              Luxury
-            </Link>
+            {/* 6. Luxury Dropdown */}
+            <div className="relative group">
+              <Link to="/products?cat=luxury" className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1">
+                <span>Luxury</span>
+                <ChevronDown className="w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-colors" />
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-fade-in">
+                <div className="bg-[#0B121C] border border-white/10 rounded-xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300">
+                  <Link to="/products?cat=luxury" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5 font-bold text-watch-gold">👑 Swiss Haute Horlogerie</Link>
+                  <Link to="/products?brand=rolex" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Rolex Submariner & Daytona</Link>
+                  <Link to="/products?brand=omega" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Omega Moonwatch Masters</Link>
+                  <Link to="/products?cat=luxury&q=tourbillon" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Tourbillon & Skeleton Art</Link>
+                  <Link to="/products?cat=luxury&q=gold" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">18K Solid Gold Vault Editions</Link>
+                  <Link to="/products?cat=luxury&q=diamond" className="hover:text-watch-gold p-1.5 rounded hover:bg-white/5">Hand-Set Diamond Bezels</Link>
+                </div>
+              </div>
+            </div>
 
             {/* 7. Sports Dropdown */}
             <div className="relative group">

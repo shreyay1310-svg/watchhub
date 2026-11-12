@@ -276,16 +276,145 @@
       font-weight: 500;
     }
 
+    /* ── Dropdown Menus for All Sub-Nav Items (Exact Match to User Request) ── */
+    .nav-dropdown-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
     .menu-item {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       cursor: pointer;
+      padding: 6px 4px;
       transition: color 0.2s;
+      font-size: 12.5px;
+      color: #D1D5DB;
+      font-weight: 500;
     }
 
-    .menu-item:hover { color: var(--gold); }
-    .menu-item svg { width: 11px; height: 11px; stroke: currentColor; }
+    .nav-dropdown-wrapper:hover .menu-item,
+    .menu-item:hover {
+      color: var(--gold);
+    }
+
+    .nav-dropdown-wrapper:hover .menu-item svg {
+      transform: rotate(180deg);
+      color: var(--gold);
+    }
+
+    .menu-item svg {
+      width: 11px;
+      height: 11px;
+      stroke: currentColor;
+      transition: transform 0.25s ease;
+    }
+
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #0B121C;
+      border: 1px solid rgba(217, 164, 65, 0.3);
+      border-radius: 18px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 25px rgba(217, 164, 65, 0.15);
+      backdrop-filter: blur(16px);
+      padding: 14px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+      z-index: 1000;
+      min-width: 480px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .nav-dropdown-wrapper:hover .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(2px);
+    }
+
+    /* Invisible hover bridge */
+    .dropdown-panel::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 0;
+      right: 0;
+      height: 14px;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #E5E7EB;
+      transition: all 0.15s;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      transform: translateX(3px);
+    }
+
+    .dropdown-item:hover .dd-title {
+      color: var(--gold);
+    }
+
+    .dropdown-icon {
+      font-size: 16px;
+      line-height: 1;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .dd-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dd-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #F3F4F6;
+      transition: color 0.15s;
+    }
+
+    .dd-desc {
+      font-size: 10.5px;
+      color: #9CA3AF;
+      margin-top: 1px;
+      line-height: 1.3;
+    }
+
+    .dropdown-footer {
+      grid-column: 1 / -1;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+    .dropdown-footer:hover {
+      text-decoration: underline;
+    }
 
     .deals-pill {
       background: var(--gold-gradient);
@@ -1121,14 +1250,469 @@
     </div>
 
     <div class="menu-links">
-      <div class="menu-item" onclick="window.location.href='products.html'"><span>Brands</span> <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="menu-item" onclick="window.location.href='products.html?cat=men'"><span>Men</span> <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="menu-item" onclick="window.location.href='products.html?cat=women'"><span>Women</span> <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="menu-item" onclick="window.location.href='products.html?cat=kids'"><span>Kids</span> <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="menu-item" onclick="selectSlide(2)"><span>Smartwatches</span></div>
-      <div class="menu-item" onclick="selectSlide(0)"><span>Luxury</span></div>
-      <div class="menu-item" onclick="selectSlide(1)"><span>Sports</span> <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="menu-item" onclick="window.location.href='products.html'"><span>Collections</span> <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      
+      <!-- 1. BRANDS DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="window.location.href='products.html'">
+          <span>Brands</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?brand=rolex" class="dropdown-item">
+            <span class="dropdown-icon">👑</span>
+            <div class="dd-content">
+              <span class="dd-title">Rolex</span>
+              <span class="dd-desc">Submariner, Daytona & Oyster Perpetual</span>
+            </div>
+          </a>
+          <a href="products.html?brand=omega" class="dropdown-item">
+            <span class="dropdown-icon">Ω</span>
+            <div class="dd-content">
+              <span class="dd-title">Omega</span>
+              <span class="dd-desc">Speedmaster Moonwatch & Seamaster 300</span>
+            </div>
+          </a>
+          <a href="products.html?brand=tissot" class="dropdown-item">
+            <span class="dropdown-icon">🇨🇭</span>
+            <div class="dd-content">
+              <span class="dd-title">Tissot</span>
+              <span class="dd-desc">Swiss Powermatic 80 Heritage Editions</span>
+            </div>
+          </a>
+          <a href="products.html?brand=fossil" class="dropdown-item">
+            <span class="dropdown-icon">💼</span>
+            <div class="dd-content">
+              <span class="dd-title">Fossil</span>
+              <span class="dd-desc">American Classic Leather & Chronos</span>
+            </div>
+          </a>
+          <a href="products.html?brand=seiko" class="dropdown-item">
+            <span class="dropdown-icon">✨</span>
+            <div class="dd-content">
+              <span class="dd-title">Seiko</span>
+              <span class="dd-desc">Prospex, Presage & 5 Sports Automatic</span>
+            </div>
+          </a>
+          <a href="products.html?brand=casio" class="dropdown-item">
+            <span class="dropdown-icon">⏱️</span>
+            <div class="dd-content">
+              <span class="dd-title">Casio</span>
+              <span class="dd-desc">G-Shock, Edifice & Vintage Chronographs</span>
+            </div>
+          </a>
+          <a href="products.html?brand=citizen" class="dropdown-item">
+            <span class="dropdown-icon">☀️</span>
+            <div class="dd-content">
+              <span class="dd-title">Citizen</span>
+              <span class="dd-desc">Eco-Drive Light-Powered Accuracy</span>
+            </div>
+          </a>
+          <a href="products.html?brand=titan" class="dropdown-item">
+            <span class="dropdown-icon">🏆</span>
+            <div class="dd-content">
+              <span class="dd-title">Titan</span>
+              <span class="dd-desc">India's Premier Horology & Edge Series</span>
+            </div>
+          </a>
+          <a href="products.html" class="dropdown-footer">
+            <span>Explore All 50+ Certified Brands</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. MEN DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="window.location.href='products.html?cat=men'">
+          <span>Men</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?cat=men&q=chronograph" class="dropdown-item">
+            <span class="dropdown-icon">🏎️</span>
+            <div class="dd-content">
+              <span class="dd-title">Chronograph Watches</span>
+              <span class="dd-desc">Precision Stopwatch & Tachymeter Dials</span>
+            </div>
+          </a>
+          <a href="products.html?cat=men&q=automatic" class="dropdown-item">
+            <span class="dropdown-icon">⚙️</span>
+            <div class="dd-content">
+              <span class="dd-title">Automatic Mechanical</span>
+              <span class="dd-desc">Self-Winding Skeleton Exhibition Back</span>
+            </div>
+          </a>
+          <a href="products.html?cat=men&q=steel" class="dropdown-item">
+            <span class="dropdown-icon">⛓️</span>
+            <div class="dd-content">
+              <span class="dd-title">Stainless Steel Bracelets</span>
+              <span class="dd-desc">316L Surgical Oyster & Jubilee Links</span>
+            </div>
+          </a>
+          <a href="products.html?cat=men&q=leather" class="dropdown-item">
+            <span class="dropdown-icon">👞</span>
+            <div class="dd-content">
+              <span class="dd-title">Italian Leather Straps</span>
+              <span class="dd-desc">Handcrafted Genuine Calfskin Straps</span>
+            </div>
+          </a>
+          <a href="products.html?cat=men&q=formal" class="dropdown-item">
+            <span class="dropdown-icon">👔</span>
+            <div class="dd-content">
+              <span class="dd-title">Minimalist Dress Watches</span>
+              <span class="dd-desc">Ultra-Slim Understated Executive Elegance</span>
+            </div>
+          </a>
+          <a href="products.html?cat=men&q=bold" class="dropdown-item">
+            <span class="dropdown-icon">💪</span>
+            <div class="dd-content">
+              <span class="dd-title">Big Dial Statement</span>
+              <span class="dd-desc">44mm+ Robust Sport Casing & Bezel</span>
+            </div>
+          </a>
+          <a href="products.html?cat=men" class="dropdown-footer">
+            <span>Explore Complete Men's Collection</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. WOMEN DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="window.location.href='products.html?cat=women'">
+          <span>Women</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?cat=women&q=rose" class="dropdown-item">
+            <span class="dropdown-icon">🌹</span>
+            <div class="dd-content">
+              <span class="dd-title">Rose Gold Collection</span>
+              <span class="dd-desc">Warm Champagne & Blush Luxury Hues</span>
+            </div>
+          </a>
+          <a href="products.html?cat=women&q=diamond" class="dropdown-item">
+            <span class="dropdown-icon">✨</span>
+            <div class="dd-content">
+              <span class="dd-title">Diamond & Crystal Accents</span>
+              <span class="dd-desc">Hand-Set Shimmering Gemstone Bezels</span>
+            </div>
+          </a>
+          <a href="products.html?cat=women&q=mesh" class="dropdown-item">
+            <span class="dropdown-icon">💎</span>
+            <div class="dd-content">
+              <span class="dd-title">Minimalist Mesh Straps</span>
+              <span class="dd-desc">Breathable Ultrathin Everyday Dials</span>
+            </div>
+          </a>
+          <a href="products.html?cat=women&q=pearl" class="dropdown-item">
+            <span class="dropdown-icon">🐚</span>
+            <div class="dd-content">
+              <span class="dd-title">Mother of Pearl Dials</span>
+              <span class="dd-desc">Natural Iridescent Seashell Elegance</span>
+            </div>
+          </a>
+          <a href="products.html?cat=women&q=petite" class="dropdown-item">
+            <span class="dropdown-icon">🌸</span>
+            <div class="dd-content">
+              <span class="dd-title">Petite & Compact Dials</span>
+              <span class="dd-desc">28mm-32mm Dainty Wrist Timepieces</span>
+            </div>
+          </a>
+          <a href="products.html?cat=partywear" class="dropdown-item">
+            <span class="dropdown-icon">💍</span>
+            <div class="dd-content">
+              <span class="dd-title">Jewellery Cuffs & Bracelets</span>
+              <span class="dd-desc">Statement Evening & Wedding Sets</span>
+            </div>
+          </a>
+          <a href="products.html?cat=women" class="dropdown-footer">
+            <span>Explore Complete Women's Collection</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. KIDS DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="window.location.href='products.html?cat=kids'">
+          <span>Kids</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?cat=kids&q=digital" class="dropdown-item">
+            <span class="dropdown-icon">🎮</span>
+            <div class="dd-content">
+              <span class="dd-title">Shock-Proof Digital</span>
+              <span class="dd-desc">High-Impact Resin Bumper Protection</span>
+            </div>
+          </a>
+          <a href="products.html?cat=kids&q=learning" class="dropdown-item">
+            <span class="dropdown-icon">🎨</span>
+            <div class="dd-content">
+              <span class="dd-title">Learning Time Teacher</span>
+              <span class="dd-desc">Color-Coded Numbers & Easy Hand Dials</span>
+            </div>
+          </a>
+          <a href="products.html?cat=kids&q=smart" class="dropdown-item">
+            <span class="dropdown-icon">📡</span>
+            <div class="dd-content">
+              <span class="dd-title">GPS Smart Trackers</span>
+              <span class="dd-desc">Parental SOS Calling & Geo-Fencing</span>
+            </div>
+          </a>
+          <a href="products.html?cat=kids&q=cartoon" class="dropdown-item">
+            <span class="dropdown-icon">🚀</span>
+            <div class="dd-content">
+              <span class="dd-title">Fun Vibrant Silicon</span>
+              <span class="dd-desc">Hypoallergenic Flexible Sports Straps</span>
+            </div>
+          </a>
+          <a href="products.html?cat=kids&q=swim" class="dropdown-item">
+            <span class="dropdown-icon">🏊</span>
+            <div class="dd-content">
+              <span class="dd-title">50M Water-Resistant</span>
+              <span class="dd-desc">Pool Swimming & Splash Safe Protection</span>
+            </div>
+          </a>
+          <a href="products.html?cat=kids&q=glow" class="dropdown-item">
+            <span class="dropdown-icon">🌙</span>
+            <div class="dd-content">
+              <span class="dd-title">Night Glow Luminescent</span>
+              <span class="dd-desc">Electric Backlight Illuminator Buttons</span>
+            </div>
+          </a>
+          <a href="products.html?cat=kids" class="dropdown-footer">
+            <span>Explore All Kids Timepieces</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 5. SMARTWATCHES DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="selectSlide(2)">
+          <span>Smartwatches</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?cat=smartwatches&q=amoled" class="dropdown-item">
+            <span class="dropdown-icon">📱</span>
+            <div class="dd-content">
+              <span class="dd-title">AMOLED HD Calling</span>
+              <span class="dd-desc">Bluetooth Crisp Microphone & Dialpad</span>
+            </div>
+          </a>
+          <a href="products.html?cat=smartwatches&q=fitness" class="dropdown-item">
+            <span class="dropdown-icon">🏃</span>
+            <div class="dd-content">
+              <span class="dd-title">Sports & Fitness Pro</span>
+              <span class="dd-desc">120+ Sports Modes, Calorie & Step Burn</span>
+            </div>
+          </a>
+          <a href="products.html?cat=smartwatches&q=health" class="dropdown-item">
+            <span class="dropdown-icon">💓</span>
+            <div class="dd-content">
+              <span class="dd-title">Health & Vitals Suite</span>
+              <span class="dd-desc">24/7 SpO2, Heart Rate & Sleep Tracking</span>
+            </div>
+          </a>
+          <a href="products.html?cat=smartwatches&q=rugged" class="dropdown-item">
+            <span class="dropdown-icon">🛡️</span>
+            <div class="dd-content">
+              <span class="dd-title">Rugged Military Grade</span>
+              <span class="dd-desc">IP68 / 5ATM Dust, Drop & Water Armor</span>
+            </div>
+          </a>
+          <a href="products.html?cat=smartwatches&q=battery" class="dropdown-item">
+            <span class="dropdown-icon">🔋</span>
+            <div class="dd-content">
+              <span class="dd-title">Long Battery Life</span>
+              <span class="dd-desc">14+ Days Ultra-Low Power Endurance</span>
+            </div>
+          </a>
+          <a href="products.html?cat=smartwatches&q=luxury" class="dropdown-item">
+            <span class="dropdown-icon">⌚</span>
+            <div class="dd-content">
+              <span class="dd-title">Ceramic Luxury Smart</span>
+              <span class="dd-desc">Sapphire Crystal Glass & Metal Straps</span>
+            </div>
+          </a>
+          <a href="products.html?cat=smartwatches" class="dropdown-footer">
+            <span>Explore Next-Gen Smartwatches</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 6. LUXURY DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="selectSlide(0)">
+          <span>Luxury</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?cat=luxury&q=swiss" class="dropdown-item">
+            <span class="dropdown-icon">🇨🇭</span>
+            <div class="dd-content">
+              <span class="dd-title">Swiss Haute Horlogerie</span>
+              <span class="dd-desc">100% Certified Swiss Masterpieces</span>
+            </div>
+          </a>
+          <a href="products.html?cat=luxury&q=tourbillon" class="dropdown-item">
+            <span class="dropdown-icon">🌀</span>
+            <div class="dd-content">
+              <span class="dd-title">Tourbillon & Skeleton</span>
+              <span class="dd-desc">Intricate Openwork Mechanical Heart</span>
+            </div>
+          </a>
+          <a href="products.html?cat=luxury&q=gold" class="dropdown-item">
+            <span class="dropdown-icon">🪙</span>
+            <div class="dd-content">
+              <span class="dd-title">18K Solid Gold Vault</span>
+              <span class="dd-desc">Rare Investment Timepieces & Bezels</span>
+            </div>
+          </a>
+          <a href="products.html?cat=luxury&q=limited" class="dropdown-item">
+            <span class="dropdown-icon">🏆</span>
+            <div class="dd-content">
+              <span class="dd-title">Numbered Limited Editions</span>
+              <span class="dd-desc">Exclusive Collector Serial Releases</span>
+            </div>
+          </a>
+          <a href="products.html?cat=luxury&q=diamond" class="dropdown-item">
+            <span class="dropdown-icon">💎</span>
+            <div class="dd-content">
+              <span class="dd-title">Diamond-Paved Bezels</span>
+              <span class="dd-desc">Hand-Cut Flawless VVS Gemstone Settings</span>
+            </div>
+          </a>
+          <a href="products.html?cat=luxury" class="dropdown-item">
+            <span class="dropdown-icon">📜</span>
+            <div class="dd-content">
+              <span class="dd-title">Certified Vault Warranty</span>
+              <span class="dd-desc">Official 5-Year Global Service Papers</span>
+            </div>
+          </a>
+          <a href="products.html?cat=luxury" class="dropdown-footer">
+            <span>Explore The Full Luxury Vault</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 7. SPORTS DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="selectSlide(1)">
+          <span>Sports</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?cat=waterproof" class="dropdown-item">
+            <span class="dropdown-icon">🌊</span>
+            <div class="dd-content">
+              <span class="dd-title">200M Certified Divers</span>
+              <span class="dd-desc">Screw-Down Crown & Unidirectional Bezel</span>
+            </div>
+          </a>
+          <a href="products.html?cat=sports&q=racing" class="dropdown-item">
+            <span class="dropdown-icon">🏎️</span>
+            <div class="dd-content">
+              <span class="dd-title">Racing Chronographs</span>
+              <span class="dd-desc">Speed Tachymeter & Split Lap Timers</span>
+            </div>
+          </a>
+          <a href="products.html?cat=sports&q=tactical" class="dropdown-item">
+            <span class="dropdown-icon">🎖️</span>
+            <div class="dd-content">
+              <span class="dd-title">Tactical Military Shock</span>
+              <span class="dd-desc">Heavy-Duty Mud, Drop & Vibration Proof</span>
+            </div>
+          </a>
+          <a href="products.html?cat=sports&q=solar" class="dropdown-item">
+            <span class="dropdown-icon">☀️</span>
+            <div class="dd-content">
+              <span class="dd-title">Solar Powered Outdoor</span>
+              <span class="dd-desc">Built-In Compass & Altimeter Sensors</span>
+            </div>
+          </a>
+          <a href="products.html?cat=sports&q=titanium" class="dropdown-item">
+            <span class="dropdown-icon">⚡</span>
+            <div class="dd-content">
+              <span class="dd-title">Titanium Lightweight</span>
+              <span class="dd-desc">Aerospace Grade Hypoallergenic Metal</span>
+            </div>
+          </a>
+          <a href="products.html?cat=sports&q=swim" class="dropdown-item">
+            <span class="dropdown-icon">🏊</span>
+            <div class="dd-content">
+              <span class="dd-title">Swim & Triathlon Timers</span>
+              <span class="dd-desc">Waterproof Countdown Lap Memory</span>
+            </div>
+          </a>
+          <a href="products.html?cat=sports" class="dropdown-footer">
+            <span>Explore All Sports Watches</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 8. COLLECTIONS DROPDOWN -->
+      <div class="nav-dropdown-wrapper">
+        <div class="menu-item" onclick="window.location.href='products.html'">
+          <span>Collections</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-panel">
+          <a href="products.html?tag=new" class="dropdown-item">
+            <span class="dropdown-icon">✨</span>
+            <div class="dd-content">
+              <span class="dd-title">2026 Vault Arrivals</span>
+              <span class="dd-desc">Freshly Imported Global Release Vault</span>
+            </div>
+          </a>
+          <a href="products.html?cat=combo" class="dropdown-item">
+            <span class="dropdown-icon">💑</span>
+            <div class="dd-content">
+              <span class="dd-title">His & Hers Couple Sets</span>
+              <span class="dd-desc">Matching Anniversary Luxury Boxes</span>
+            </div>
+          </a>
+          <a href="products.html?cat=combo" class="dropdown-item">
+            <span class="dropdown-icon">🎁</span>
+            <div class="dd-content">
+              <span class="dd-title">Value Combo Packs</span>
+              <span class="dd-desc">Timepiece + Premium Wallet / Cuff Sets</span>
+            </div>
+          </a>
+          <a href="products.html?q=black" class="dropdown-item">
+            <span class="dropdown-icon">🖤</span>
+            <div class="dd-content">
+              <span class="dd-title">Stealth Blackout Edition</span>
+              <span class="dd-desc">Monochrome Matte PVD Black Finishes</span>
+            </div>
+          </a>
+          <a href="products.html?q=vintage" class="dropdown-item">
+            <span class="dropdown-icon">🕰️</span>
+            <div class="dd-content">
+              <span class="dd-title">Vintage Heritage Re-Issues</span>
+              <span class="dd-desc">1970s Iconic Classic Retro Remakes</span>
+            </div>
+          </a>
+          <a href="manufacturing-hub.html" class="dropdown-item">
+            <span class="dropdown-icon">🏭</span>
+            <div class="dd-content">
+              <span class="dd-title">3D Manufacturing Hub</span>
+              <span class="dd-desc">Interactive Custom Bespoke Watch Studio</span>
+            </div>
+          </a>
+          <a href="products.html" class="dropdown-footer">
+            <span>Explore All Curated Collections</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
     </div>
 
     <div class="deals-pill" onclick="window.location.href='products.html?tag=deals'">
