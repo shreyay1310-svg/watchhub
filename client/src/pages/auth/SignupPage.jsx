@@ -4,7 +4,7 @@ import { User, Mail, Phone, Lock, Eye, EyeOff, ShieldCheck, Gift, Truck } from '
 import { useAuth } from '../../context/AuthContext';
 
 export const SignupPage = () => {
-  const { login } = useAuth();
+  const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -41,12 +41,13 @@ export const SignupPage = () => {
 
     setError('');
     setLoading(true);
-    // Simulate user creation and login
-    setTimeout(async () => {
-      await login(email, password);
-      setLoading(false);
+    const res = await register(name, email, password, phone);
+    setLoading(false);
+    if (res.success) {
       navigate('/');
-    }, 1000);
+    } else {
+      setError(res.message || 'Failed to create account.');
+    }
   };
 
   return (

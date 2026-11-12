@@ -51,7 +51,7 @@ export const CustomerNavbar = () => {
     }, 900);
   };
 
-  const displayName = user?.name ? user.name.split(' ')[0] : 'Shreya';
+  const displayName = user?.name ? user.name.split(' ')[0] : 'Guest';
 
   return (
     <header className="sticky top-0 z-50 shadow-md font-poppins select-none">
@@ -157,57 +157,57 @@ export const CustomerNavbar = () => {
             <span className="ml-1 hidden sm:inline">Cart</span>
           </Link>
 
-          {/* User Profile Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/15 rounded-full py-1.5 px-3 text-xs font-semibold text-white transition-all cursor-pointer"
-            >
-              <User className="w-3.5 h-3.5 text-watch-gold" />
-              <span>Hi, {displayName}</span>
-              <ChevronDown className="w-3 h-3 text-gray-400" />
-            </button>
+          {/* User Profile or Sign In Button */}
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 border border-[#D9A441]/40 rounded-full py-1.5 px-3 text-xs font-semibold text-white transition-all cursor-pointer shadow-xs"
+              >
+                <User className="w-3.5 h-3.5 text-watch-gold" />
+                <span>Hi, {displayName}</span>
+                <ChevronDown className="w-3 h-3 text-gray-400" />
+              </button>
 
-            {profileOpen && (
-              <div className="absolute right-0 mt-2 w-52 bg-[#0E1724] text-white rounded-xl shadow-2xl border border-white/10 py-1.5 z-50 text-xs animate-scale-up">
-                <div className="px-3.5 py-2 border-b border-white/10">
-                  <p className="font-bold text-white">{user?.name || 'Shreya (VIP Member)'}</p>
-                  <p className="text-gray-400 text-[11px] truncate">{user?.email || 'shreya@watchhub.com'}</p>
-                  <span className="inline-block mt-1 bg-watch-gold/20 text-watch-gold border border-watch-gold/30 text-[9.5px] font-bold px-2 py-0.5 rounded-full">
-                    {user?.role || 'VIP Customer'}
-                  </span>
-                </div>
+              {profileOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-[#0E1724] text-white rounded-xl shadow-2xl border border-white/10 py-1.5 z-50 text-xs animate-scale-up">
+                  <div className="px-3.5 py-2 border-b border-white/10">
+                    <p className="font-bold text-white">{user.name}</p>
+                    <p className="text-gray-400 text-[11px] truncate">{user.email}</p>
+                    <span className="inline-block mt-1 bg-watch-gold/20 text-watch-gold border border-watch-gold/30 text-[9.5px] font-bold px-2 py-0.5 rounded-full">
+                      {user.role}
+                    </span>
+                  </div>
 
-                <Link
-                  to="/cart"
-                  onClick={() => setProfileOpen(false)}
-                  className="block px-3.5 py-2 hover:bg-white/5 text-gray-300 hover:text-white"
-                >
-                  📦 My Orders & Tracking
-                </Link>
-                <Link
-                  to="/mobile-app"
-                  onClick={() => setProfileOpen(false)}
-                  className="block px-3.5 py-2 hover:bg-white/5 text-gray-300 hover:text-white"
-                >
-                  📱 Download Android App
-                </Link>
-                <Link
-                  to="/manufacturing-hub"
-                  onClick={() => setProfileOpen(false)}
-                  className="block px-3.5 py-2 hover:bg-white/5 text-watch-gold font-semibold"
-                >
-                  🏭 Manufacturing Hub
-                </Link>
-                <Link
-                  to="/dashboard"
-                  onClick={() => setProfileOpen(false)}
-                  className="block px-3.5 py-2 hover:bg-white/5 text-watch-gold font-semibold"
-                >
-                  👑 Staff Portal
-                </Link>
+                  <Link
+                    to="/cart"
+                    onClick={() => setProfileOpen(false)}
+                    className="block px-3.5 py-2 hover:bg-white/5 text-gray-300 hover:text-white"
+                  >
+                    📦 My Orders & Tracking
+                  </Link>
+                  <Link
+                    to="/mobile-app"
+                    onClick={() => setProfileOpen(false)}
+                    className="block px-3.5 py-2 hover:bg-white/5 text-gray-300 hover:text-white"
+                  >
+                    📱 Download Android App
+                  </Link>
+                  <Link
+                    to="/manufacturing-hub"
+                    onClick={() => setProfileOpen(false)}
+                    className="block px-3.5 py-2 hover:bg-white/5 text-watch-gold font-semibold"
+                  >
+                    🏭 Manufacturing Hub
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setProfileOpen(false)}
+                    className="block px-3.5 py-2 hover:bg-white/5 text-watch-gold font-semibold"
+                  >
+                    👑 Staff Portal
+                  </Link>
 
-                {user ? (
                   <button
                     onClick={() => {
                       logout();
@@ -217,18 +217,18 @@ export const CustomerNavbar = () => {
                   >
                     <LogOut className="w-3.5 h-3.5" /> Logout
                   </button>
-                ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setProfileOpen(false)}
-                    className="block px-3.5 py-2 hover:bg-white/5 text-watch-gold font-bold border-t border-white/10 mt-1"
-                  >
-                    Sign In to Account
-                  </Link>
-                )}
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center gap-1.5 bg-gradient-to-r from-[#D9A441] to-[#B98332] hover:from-[#E5B04E] hover:to-[#C6903E] text-black font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-sm transition-all cursor-pointer"
+            >
+              <User className="w-3.5 h-3.5 fill-black" />
+              <span>Sign In</span>
+            </Link>
+          )}
         </div>
       </div>
 

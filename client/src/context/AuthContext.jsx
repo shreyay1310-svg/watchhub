@@ -66,7 +66,7 @@ export const MOCK_STAFF_ACCOUNTS = {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('watchhub_auth_user');
-    return saved ? JSON.parse(saved) : MOCK_STAFF_ACCOUNTS[ROLES.SUPER_ADMIN];
+    return saved ? JSON.parse(saved) : MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER];
   });
   const [token, setToken] = useState(() => localStorage.getItem('watchhub_token') || 'mock_jwt_token_2026');
   const [loading, setLoading] = useState(false);
@@ -79,28 +79,114 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Login handler
+  // Helper to get registered users from localStorage
+  const getRegisteredUsers = () => {
+    try {
+      const saved = localStorage.getItem('watchhub_registered_users');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  };
+
+  // Helper to save registered user
+  const saveRegisteredUser = (userData) => {
+    try {
+      const all = getRegisteredUsers();
+      all[userData.email.toLowerCase()] = userData;
+      localStorage.setItem('watchhub_registered_users', JSON.stringify(all));
+    } catch (e) {
+      console.error('Failed to save user', e);
+    }
+  };
+
+  // Register new customer account
+  const register = async (name, email, password, phone = '') => {
+    setLoading(true);
+    try {
+      await new Promise((res) => setTimeout(res, 500));
+      const newUser = {
+        id: `usr_${Date.now()}`,
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password: password,
+        phone: phone.trim(),
+        role: ROLES.CUSTOMER,
+        avatar: '👤',
+        permissions: ['orders.own', 'cart.own', 'wishlist.own'],
+        createdAt: new Date().toISOString(),
+      };
+
+      saveRegisteredUser(newUser);
+      setUser(newUser);
+      setToken('jwt_user_token_' + Date.now());
+      localStorage.setItem('watchhub_token', 'jwt_user_token_' + Date.now());
+      return { success: true, user: newUser };
+    } catch (err) {
+      return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Login handler with credentials verification
   const login = async (identifier, password, selectedRole = null) => {
     setLoading(true);
     try {
-      // Simulate API verification
-      await new Promise((res) => setTimeout(res, 800));
+      await new Promise((res) => setTimeout(res, 600));
 
+      const cleanEmail = (identifier || '').trim().toLowerCase();
+      const registered = getRegisteredUsers();
+
+      // 1. Check if user exists in custom registered accounts
+      if (registered[cleanEmail]) {
+        const regUser = registered[cleanEmail];
+        if (regUser.password && regUser.password !== password) {
+          // Check if reset password was set
+          const savedPwd = localStorage.getItem(`pwd_${cleanEmail}`);
+          if (savedPwd && savedPwd === password) {
+            // Password matches reset password
+          } else {
+            return {
+              success: false,
+              message: 'Incorrect password for this email. Use "Forgot password?" to reset.',
+            };
+          }
+        }
+        setUser(regUser);
+        setToken('jwt_registered_token_' + Date.now());
+        localStorage.setItem('watchhub_token', 'jwt_registered_token_' + Date.now());
+        return { success: true, user: regUser };
+      }
+
+      // 2. Check if matching Staff Demo role
       let matchedUser = null;
       if (selectedRole && MOCK_STAFF_ACCOUNTS[selectedRole]) {
-        matchedUser = MOCK_STAFF_ACCOUNTS[selectedRole];
+        matchedUser = { ...MOCK_STAFF_ACCOUNTS[selectedRole] };
+        // If email was modified by user
+        if (cleanEmail && !cleanEmail.includes(matchedUser.email.toLowerCase())) {
+          matchedUser.email = cleanEmail;
+          matchedUser.name = cleanEmail.split('@')[0];
+        }
       } else {
-        // Find by email or fallback to customer
+        // Find staff by email
         matchedUser = Object.values(MOCK_STAFF_ACCOUNTS).find(
-          (u) => u.email.toLowerCase() === identifier.toLowerCase()
-        ) || {
+          (u) => u.email.toLowerCase() === cleanEmail
+        );
+      }
+
+      // 3. If still not matched, dynamically create customer profile
+      if (!matchedUser) {
+        matchedUser = {
           id: `usr_${Date.now()}`,
-          name: identifier.split('@')[0],
-          email: identifier,
+          name: cleanEmail.split('@')[0],
+          email: cleanEmail,
           role: ROLES.CUSTOMER,
           avatar: '👤',
-          permissions: ['orders.own'],
+          permissions: ['orders.own', 'cart.own', 'wishlist.own'],
         };
+        // Auto-save for next login
+        saveRegisteredUser({ ...matchedUser, password });
       }
 
       setUser(matchedUser);
@@ -118,16 +204,17 @@ export const AuthProvider = ({ children }) => {
   const loginWithGoogle = async (customGoogleUser = null) => {
     setLoading(true);
     try {
-      await new Promise((res) => setTimeout(res, 500));
+      await new Promise((res) => setTimeout(res, 450));
       const googleUser = customGoogleUser || {
         id: `usr_google_${Date.now()}`,
-        name: 'Ananya Singh',
-        email: 'ananya.singh@gmail.com',
+        name: 'Shreyas Y.',
+        email: 'shreyas.watchhub@gmail.com',
         role: ROLES.CUSTOMER,
         avatar: '👤',
-        provider: 'Google',
+        provider: 'Google OAuth 2.0',
         permissions: ['orders.own', 'cart.own', 'wishlist.own'],
       };
+      saveRegisteredUser(googleUser);
       setUser(googleUser);
       setToken('mock_jwt_google_token_2026');
       localStorage.setItem('watchhub_token', 'mock_jwt_google_token_2026');
@@ -143,8 +230,16 @@ export const AuthProvider = ({ children }) => {
   // Reset password handler
   const resetPassword = async (email, newPassword) => {
     try {
-      await new Promise((res) => setTimeout(res, 400));
-      localStorage.setItem(`pwd_${email.toLowerCase()}`, newPassword);
+      await new Promise((res) => setTimeout(res, 350));
+      const cleanEmail = email.trim().toLowerCase();
+      localStorage.setItem(`pwd_${cleanEmail}`, newPassword);
+
+      // Update in registered users database
+      const all = getRegisteredUsers();
+      if (all[cleanEmail]) {
+        all[cleanEmail].password = newPassword;
+        localStorage.setItem('watchhub_registered_users', JSON.stringify(all));
+      }
       return { success: true, message: 'Password updated successfully!' };
     } catch (err) {
       return { success: false, message: err.message };
@@ -172,6 +267,7 @@ export const AuthProvider = ({ children }) => {
         token,
         loading,
         login,
+        register,
         loginWithGoogle,
         resetPassword,
         logout,

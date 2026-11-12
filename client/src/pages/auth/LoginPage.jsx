@@ -183,12 +183,14 @@ export const LoginPage = () => {
     await resetPassword(forgotEmail, newPassword);
     setPassword(newPassword);
     setAccount(forgotEmail);
-    setForgotSuccess('Password updated successfully! You can now sign in.');
-    setTimeout(() => {
+    setForgotSuccess('Password updated successfully! Signing you in...');
+    setTimeout(async () => {
+      await login(forgotEmail, newPassword);
       setShowForgotModal(false);
       setForgotSuccess('');
       setForgotStep(1);
-    }, 1200);
+      navigate('/');
+    }, 900);
   };
 
   return (
