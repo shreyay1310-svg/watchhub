@@ -208,7 +208,7 @@ export const LoginPage = () => {
           {/* Integrated High-Resolution Luxury Hero Graphic (Zero text ghosting) */}
           <img
             src={luxuryHeroPanel}
-            alt="WatchHub – Time, beautifully chosen"
+            alt="WatchHub – Every second, a statement"
             className="absolute inset-0 w-full h-full object-cover object-left-top select-none pointer-events-none"
           />
 
