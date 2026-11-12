@@ -589,6 +589,22 @@
         <div class="card-body">
           <form id="signup-form" novalidate>
 
+            <!-- Type of User (Role Selection) -->
+            <div class="form-group">
+              <label for="user-role">Type of User</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👑</span>
+                <select class="form-input" id="user-role" name="user-role" style="padding-left:42px; cursor:pointer; font-weight:600; background:#fbfbfb;">
+                  <option value="Customer">👤 Customer / User</option>
+                  <option value="Super Admin">👑 Super Admin</option>
+                  <option value="Store Admin">🏪 Store Admin / Manager</option>
+                  <option value="Inventory Manager">📦 Inventory Manager</option>
+                  <option value="Delivery Manager">🚚 Delivery Manager</option>
+                  <option value="Customer Support">🎧 Customer Support</option>
+                </select>
+              </div>
+            </div>
+
             <!-- Full Name -->
             <div class="form-group">
               <label for="fullname">Full Name</label>
@@ -691,6 +707,56 @@
 
     </div>
   </section>
+
+  <!-- OTP Verification Modal -->
+  <div id="otpModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; font-family:'Poppins',sans-serif;">
+    <div style="background:#fff; color:#1f2937; border-radius:24px; width:92%; max-width:420px; padding:28px; box-shadow:0 20px 40px rgba(0,0,0,0.3); position:relative;">
+      <button onclick="closeOtpModal()" style="position:absolute; top:18px; right:18px; border:none; background:#f3f4f6; width:30px; height:30px; border-radius:50%; cursor:pointer; font-weight:bold; color:#6b7280;">✕</button>
+
+      <div style="width:44px; height:44px; border-radius:14px; background:#FAF7F2; border:1px solid #E8E2D5; display:flex; align-items:center; justify-content:center; font-size:22px; color:#C4913B; margin-bottom:12px;">
+        🔑
+      </div>
+
+      <h3 style="font-size:19px; font-weight:700; margin-bottom:4px; color:#111827;">Enter Verification OTP</h3>
+      <p style="font-size:12px; color:#6b7280; margin-bottom:16px;">Please enter the 6-digit OTP sent to your registered mobile number.</p>
+
+      <div style="background:#fffbeb; border:1px solid #fde68a; padding:12px; border-radius:12px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font-size:12px; font-weight:600; color:#92400e;" id="otpNoticeMobile">📱 SMS Sent to +91 9876543210</div>
+          <div style="font-size:11px; color:#b45309;" id="otpNoticeRole">Role: Customer</div>
+        </div>
+        <div style="background:#fff; border:1px solid #fcd34d; padding:4px 10px; border-radius:8px; font-family:monospace; font-weight:bold; font-size:16px; color:#C4913B;" id="htmlOtpCode">
+          749201
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px; color:#374151;">6-Digit OTP</label>
+        <input type="text" id="enteredOtpInput" value="" maxlength="6" style="width:100%; height:44px; border:1.5px solid #d1d5db; border-radius:12px; font-family:monospace; font-size:18px; font-weight:700; text-align:center; letter-spacing:4px; outline:none; background:#fafafa;"/>
+      </div>
+
+      <button type="button" onclick="confirmOtpAndCreate()" style="width:100%; height:44px; background:linear-gradient(135deg, #d4a017 0%, #b8860b 100%); color:#fff; border:none; border-radius:12px; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(212,160,23,0.3);">
+        Verify OTP &amp; Create Account
+      </button>
+    </div>
+  </div>
+
+  <!-- Creating Account Overlay Animation -->
+  <div id="creatingOverlay" style="display:none; position:fixed; inset:0; background:rgba(10,17,28,0.92); backdrop-filter:blur(8px); z-index:10000; align-items:center; justify-content:center; flex-direction:column; font-family:'Poppins',sans-serif; text-align:center; color:#fff; padding:20px;">
+    <div style="width:80px; height:80px; border-radius:50%; background:rgba(212,160,23,0.1); border:2px solid rgba(212,160,23,0.3); display:flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:20px; position:relative;">
+      <span>⌚</span>
+      <div style="position:absolute; inset:0; border-radius:50%; border:3px solid transparent; border-top-color:#d4a017; animation:spin 1s linear infinite;"></div>
+    </div>
+    <h2 style="font-size:22px; font-weight:800; margin-bottom:8px; color:#fff;">User account is being created...</h2>
+    <p id="creatingStatusText" style="font-size:13px; color:#d1d5db; margin-bottom:20px;">Initializing profile credentials and permissions...</p>
+    <div style="width:260px; height:8px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; border:1px solid rgba(255,255,255,0.2);">
+      <div id="creatingProgressBar" style="width:20%; height:100%; background:linear-gradient(90deg, #d4a017, #f5d88a); border-radius:10px; transition:width 0.4s ease;"></div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
+  </style>
 
   <!-- Toast -->
   <div class="toast" id="toast"></div>
@@ -834,16 +900,63 @@
 
       if (!valid) return;
 
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = '⏳ Creating account…';
+      // Open OTP Modal with generated code
+      const otpCode = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('htmlOtpCode').innerText = otpCode;
+      document.getElementById('enteredOtpInput').value = otpCode;
+      document.getElementById('otpNoticeMobile').innerText = '📱 SMS Sent to +91 ' + mobile;
+      const role = document.getElementById('user-role').value;
+      document.getElementById('otpNoticeRole').innerText = 'Role: ' + role;
 
-      showToast('🎉 Account created! Welcome to WatchHub!', 4000);
+      document.getElementById('otpModal').style.display = 'flex';
+    });
+
+    function closeOtpModal() {
+      document.getElementById('otpModal').style.display = 'none';
+    }
+
+    function confirmOtpAndCreate() {
+      closeOtpModal();
+      const overlay = document.getElementById('creatingOverlay');
+      const statusText = document.getElementById('creatingStatusText');
+      const pBar = document.getElementById('creatingProgressBar');
+      const role = document.getElementById('user-role').value;
+      const name = document.getElementById('fullname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+
+      overlay.style.display = 'flex';
+      pBar.style.width = '35%';
+      statusText.innerText = 'Creating ' + role + ' profile & privileges...';
 
       setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 2000);
-    });
+        pBar.style.width = '70%';
+        statusText.innerText = 'Encrypting credentials & 256-bit security token...';
+      }, 700);
+
+      setTimeout(() => {
+        pBar.style.width = '100%';
+        statusText.innerText = 'User account created successfully!';
+
+        const userObj = {
+          name: name,
+          email: email,
+          phone: '+91 ' + mobile,
+          role: role,
+          avatar: role === 'Customer' ? '👤' : (role === 'Super Admin' ? '👑' : '🏪')
+        };
+        localStorage.setItem('watchhub_auth_user', JSON.stringify(userObj));
+        localStorage.setItem('watchhub_token', 'mock_jwt_token_val_2026');
+
+        setTimeout(() => {
+          if (role === 'Customer') {
+            window.location.href = 'index.html';
+          } else {
+            window.location.href = 'dashboard.html';
+          }
+        }, 1000);
+      }, 1500);
+    }
   </script>
 
   <script src="js/main.js"></script>

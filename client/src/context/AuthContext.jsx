@@ -101,20 +101,39 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register new customer account
-  const register = async (name, email, password, phone = '') => {
+  // Register new account with role selection (Customer, Admin, Store Manager, etc.)
+  const register = async (name, email, password, phone = '', role = ROLES.CUSTOMER) => {
     setLoading(true);
     try {
       await new Promise((res) => setTimeout(res, 500));
+      
+      const roleAvatars = {
+        [ROLES.SUPER_ADMIN]: '👑',
+        [ROLES.STORE_ADMIN]: '🏪',
+        [ROLES.INVENTORY_MANAGER]: '📦',
+        [ROLES.DELIVERY_MANAGER]: '🚚',
+        [ROLES.CUSTOMER_SUPPORT]: '🎧',
+        [ROLES.CUSTOMER]: '👤',
+      };
+
+      const rolePermissions = {
+        [ROLES.SUPER_ADMIN]: ['all'],
+        [ROLES.STORE_ADMIN]: ['products.manage', 'categories.manage', 'offers.manage', 'orders.manage'],
+        [ROLES.INVENTORY_MANAGER]: ['inventory.manage', 'stock.adjust', 'warehouses.manage'],
+        [ROLES.DELIVERY_MANAGER]: ['orders.assigned', 'shipments.manage', 'tracking.update'],
+        [ROLES.CUSTOMER_SUPPORT]: ['tickets.manage', 'refunds.request', 'orders.lookup'],
+        [ROLES.CUSTOMER]: ['orders.own', 'cart.own', 'wishlist.own'],
+      };
+
       const newUser = {
         id: `usr_${Date.now()}`,
         name: name.trim(),
         email: email.trim().toLowerCase(),
         password: password,
         phone: phone.trim(),
-        role: ROLES.CUSTOMER,
-        avatar: '👤',
-        permissions: ['orders.own', 'cart.own', 'wishlist.own'],
+        role: role || ROLES.CUSTOMER,
+        avatar: roleAvatars[role] || '👤',
+        permissions: rolePermissions[role] || ['orders.own', 'cart.own', 'wishlist.own'],
         createdAt: new Date().toISOString(),
       };
 
