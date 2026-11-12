@@ -274,7 +274,28 @@ export const HomePage = () => {
 
   const filteredProducts = activeFilterTab === 'All'
     ? MOCK_PRODUCTS.slice(0, 8)
-    : MOCK_PRODUCTS.filter(p => p.category.toLowerCase().includes(activeFilterTab.toLowerCase())).slice(0, 8);
+    : MOCK_PRODUCTS.filter((p) => {
+        const cat = (p.category || '').toLowerCase();
+        const name = (p.name || '').toLowerCase();
+        const brand = (p.brand || '').toLowerCase();
+        const tab = activeFilterTab.toLowerCase();
+        if (tab === 'waterproof') {
+          return cat.includes('waterproof') || (p.waterproof && (p.waterproof.includes('200M') || p.waterproof.includes('300M') || p.waterproof.includes('Diver')));
+        }
+        if (tab === 'digital') {
+          return cat.includes('digital') || name.includes('digital') || name.includes('g-shock') || name.includes('a168');
+        }
+        if (tab === 'smartwatches') {
+          return cat.includes('smartwatch') || name.includes('smartwatch') || name.includes('apple watch') || name.includes('galaxy watch');
+        }
+        if (tab === 'combo') {
+          return cat.includes('combo') || cat.includes('couple') || name.includes('pair') || name.includes('twin') || name.includes('bandhan');
+        }
+        if (tab === 'luxury') {
+          return cat.includes('luxury') || ['rolex', 'omega', 'patek', 'audemars', 'cartier', 'breitling', 'rado'].includes(brand);
+        }
+        return cat.includes(tab);
+      }).slice(0, 8);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
@@ -670,11 +691,17 @@ export const HomePage = () => {
               return (
                 <div key={p.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-watch-gold hover:shadow-xl transition-all flex flex-col justify-between group">
                   {/* Image Container with Badges */}
-                  <div className="h-60 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden">
+                  <div
+                    onClick={() => navigate(`/products?q=${encodeURIComponent(p.name)}`)}
+                    className="h-60 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden cursor-pointer"
+                  >
                     <img
                       src={p.image}
                       alt={p.name}
                       loading="lazy"
+                      onError={(e) => {
+                        e.target.src = '/images/ref_crops/hero-watch-center.jpg';
+                      }}
                       className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
                     />
 
@@ -690,10 +717,15 @@ export const HomePage = () => {
 
                     {/* Wishlist Button */}
                     <button
-                      onClick={() => handleToggleWishlist(p)}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleWishlist(p);
+                      }}
                       className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center transition-all cursor-pointer ${
                         inWish ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-500'
                       }`}
+                      title={inWish ? "Remove from Wishlist" : "Add to Wishlist"}
                     >
                       <Heart className={`w-4 h-4 ${inWish ? 'fill-red-500' : ''}`} />
                     </button>
@@ -705,7 +737,10 @@ export const HomePage = () => {
                       <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">
                         {p.category}
                       </span>
-                      <h4 className="text-sm font-bold text-gray-900 group-hover:text-watch-gold transition-colors line-clamp-1">
+                      <h4
+                        onClick={() => navigate(`/products?q=${encodeURIComponent(p.name)}`)}
+                        className="text-sm font-bold text-gray-900 group-hover:text-watch-gold transition-colors line-clamp-1 cursor-pointer"
+                      >
                         {p.name}
                       </h4>
                       <div className="flex items-center gap-1.5 mt-1 text-xs">

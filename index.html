@@ -1243,12 +1243,101 @@
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .btn-add:hover {
       background: var(--gold);
       color: #000;
+    }
+
+    .btn-add.added {
+      background: #059669 !important;
+      color: #ffffff !important;
+    }
+
+    .filter-pills-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      background: #F3F4F6;
+      padding: 4px;
+      border-radius: 9999px;
+    }
+
+    .filter-pill-btn {
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #4B5563;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .filter-pill-btn:hover {
+      color: #111827;
+    }
+
+    .filter-pill-btn.active {
+      background: var(--navy-main);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      font-size: 11px;
+    }
+
+    .rating-star {
+      color: #F59E0B;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .rating-count {
+      color: #9CA3AF;
+    }
+
+    /* Floating Toast */
+    #actionToast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0B121C;
+      color: #ffffff;
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    #actionToast.show {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -1382,7 +1471,10 @@
     <!-- Actions -->
     <div class="nav-actions">
       <a href="wishlist.html" class="nav-action-item">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <div class="cart-badge-wrap">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="cart-badge wishlist-badge" style="background: #EF4444;">0</span>
+        </div>
         <span>Wishlist</span>
       </a>
 
@@ -2269,111 +2361,271 @@
 
   <!-- ════ 8. FEATURED PRODUCTS CATALOG ════ -->
   <section class="prods-section">
-    <div class="section-head">
+    <div class="section-head" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 22px;">
       <div class="head-title-wrap">
         <h3>Featured Timepieces</h3>
-        <div class="gold-underline-bar"></div>
+        <p style="font-size: 12px; color: #6B7280; margin-top: 2px;">Handpicked Swiss mechanical movements, smart wear &amp; diver chronographs</p>
       </div>
-      <a href="products.html" class="view-all-link">
-        <span>View Full Catalog</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
+
+      <!-- Filter Pills -->
+      <div class="filter-pills-bar">
+        <button class="filter-pill-btn active" onclick="filterProducts('All', this)">All</button>
+        <button class="filter-pill-btn" onclick="filterProducts('Luxury', this)">Luxury</button>
+        <button class="filter-pill-btn" onclick="filterProducts('Waterproof', this)">Waterproof</button>
+        <button class="filter-pill-btn" onclick="filterProducts('Digital', this)">Digital</button>
+        <button class="filter-pill-btn" onclick="filterProducts('Smartwatches', this)">Smartwatches</button>
+        <button class="filter-pill-btn" onclick="filterProducts('Combo', this)">Combo</button>
+      </div>
     </div>
 
-    <div class="products-grid">
-      <!-- 1 -->
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <img src="images/ref_crops/hero-watch-center.jpg" alt="Rolex Submariner Date" />
-          <span class="discount-tag">35% OFF</span>
+    <div class="products-grid" id="featuredProdsGrid">
+      <!-- 1. Rolex Submariner -->
+      <div class="prod-card" data-category="luxury waterproof">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Rolex+Submariner'" style="cursor: pointer;">
+          <img src="images/products/rolex_submariner.jpg" alt="Rolex Submariner Date 41mm" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-24% OFF</span>
           <span class="brand-tag">ROLEX</span>
-          <button class="wish-btn" onclick="toggleWish(this)">♥</button>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Rolex Submariner Date 41mm')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Luxury • Automatic</div>
-            <h4 class="prod-name">Rolex Submariner Oystersteel Date</h4>
+            <div class="prod-cat">Luxury • Professional Diver</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Rolex+Submariner'" style="cursor: pointer;">Rolex Submariner Date 41mm</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 4.9</span>
+              <span class="rating-count">(3,840)</span>
+            </div>
           </div>
           <div class="prod-foot">
             <div>
-              <span class="price-curr">₹11,499</span>
-              <span class="price-orig">₹17,999</span>
+              <span class="price-curr">₹18,999</span>
+              <span class="price-orig">₹24,999</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Rolex Submariner')">Add to Cart</button>
+            <button class="btn-add" onclick="addToCart('Rolex Submariner Date 41mm', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- 2 -->
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <img src="images/banners/banner-smartwatches.jpg" alt="WatchHub Pro Smartwatch" />
-          <span class="discount-tag">45% OFF</span>
-          <span class="brand-tag">SMARTWATCH</span>
-          <button class="wish-btn" onclick="toggleWish(this)">♥</button>
+      <!-- 2. Rolex Daytona -->
+      <div class="prod-card" data-category="luxury">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Rolex+Daytona'" style="cursor: pointer;">
+          <img src="images/products/rolex_daytona.jpg" alt="Rolex Cosmograph Daytona Gold" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-27% OFF</span>
+          <span class="brand-tag">ROLEX</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Rolex Cosmograph Daytona Gold')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Smart • Bluetooth Calling</div>
-            <h4 class="prod-name">WatchHub Ultra AMOLED Smartwatch</h4>
+            <div class="prod-cat">Luxury • Gold Chronograph</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Rolex+Daytona'" style="cursor: pointer;">Rolex Cosmograph Daytona Gold</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 4.9</span>
+              <span class="rating-count">(4,120)</span>
+            </div>
           </div>
           <div class="prod-foot">
             <div>
-              <span class="price-curr">₹3,499</span>
-              <span class="price-orig">₹6,499</span>
+              <span class="price-curr">₹21,999</span>
+              <span class="price-orig">₹29,999</span>
             </div>
-            <button class="btn-add" onclick="addToCart('WatchHub Ultra Smartwatch')">Add to Cart</button>
+            <button class="btn-add" onclick="addToCart('Rolex Cosmograph Daytona Gold', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- 3 -->
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <img src="images/banners/banner-waterproof.jpg" alt="Casio G-Shock Divers" />
-          <span class="discount-tag">25% OFF</span>
+      <!-- 3. Omega Speedmaster -->
+      <div class="prod-card" data-category="luxury">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Omega+Speedmaster'" style="cursor: pointer;">
+          <img src="images/products/omega_speedmaster.jpg" alt="Omega Speedmaster Moonwatch" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-25% OFF</span>
+          <span class="brand-tag">OMEGA</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Omega Speedmaster Professional Moonwatch')" title="Wishlist">♥</button>
+        </div>
+        <div class="prod-body">
+          <div>
+            <div class="prod-cat">Luxury • Moonwatch Chrono</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Omega+Speedmaster'" style="cursor: pointer;">Omega Speedmaster Professional</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 4.8</span>
+              <span class="rating-count">(2,950)</span>
+            </div>
+          </div>
+          <div class="prod-foot">
+            <div>
+              <span class="price-curr">₹16,499</span>
+              <span class="price-orig">₹22,000</span>
+            </div>
+            <button class="btn-add" onclick="addToCart('Omega Speedmaster Professional', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Omega Seamaster Diver -->
+      <div class="prod-card" data-category="waterproof luxury">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Omega+Seamaster'" style="cursor: pointer;">
+          <img src="images/products/omega_seamaster.jpg" alt="Omega Seamaster Diver 300M" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-25% OFF</span>
+          <span class="brand-tag">OMEGA</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Omega Seamaster Diver 300M')" title="Wishlist">♥</button>
+        </div>
+        <div class="prod-body">
+          <div>
+            <div class="prod-cat">Waterproof • 300M Certified</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Omega+Seamaster'" style="cursor: pointer;">Omega Seamaster Diver 300M Co-Axial</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 4.8</span>
+              <span class="rating-count">(2,100)</span>
+            </div>
+          </div>
+          <div class="prod-foot">
+            <div>
+              <span class="price-curr">₹14,999</span>
+              <span class="price-orig">₹19,999</span>
+            </div>
+            <button class="btn-add" onclick="addToCart('Omega Seamaster Diver 300M', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Patek Philippe Nautilus -->
+      <div class="prod-card" data-category="luxury">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Patek+Philippe'" style="cursor: pointer;">
+          <img src="images/products/patek_nautilus.jpg" alt="Patek Philippe Nautilus" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-28% OFF</span>
+          <span class="brand-tag">PATEK</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Patek Philippe Nautilus 5711')" title="Wishlist">♥</button>
+        </div>
+        <div class="prod-body">
+          <div>
+            <div class="prod-cat">Luxury • Haute Horlogerie</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Patek+Philippe'" style="cursor: pointer;">Patek Philippe Nautilus Selfwinding</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 5.0</span>
+              <span class="rating-count">(1,890)</span>
+            </div>
+          </div>
+          <div class="prod-foot">
+            <div>
+              <span class="price-curr">₹24,999</span>
+              <span class="price-orig">₹34,999</span>
+            </div>
+            <button class="btn-add" onclick="addToCart('Patek Philippe Nautilus', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Apple Watch Ultra -->
+      <div class="prod-card" data-category="smartwatches digital">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?cat=smartwatches'" style="cursor: pointer;">
+          <img src="images/products/smartwatch_apple.jpg" alt="Apple Watch Ultra AMOLED" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-25% OFF</span>
+          <span class="brand-tag">APPLE</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Apple Watch Ultra GPS')" title="Wishlist">♥</button>
+        </div>
+        <div class="prod-body">
+          <div>
+            <div class="prod-cat">Smartwatches • GPS Calling</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?cat=smartwatches'" style="cursor: pointer;">Apple Watch Ultra AMOLED Pro</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 4.9</span>
+              <span class="rating-count">(5,310)</span>
+            </div>
+          </div>
+          <div class="prod-foot">
+            <div>
+              <span class="price-curr">₹12,499</span>
+              <span class="price-orig">₹16,999</span>
+            </div>
+            <button class="btn-add" onclick="addToCart('Apple Watch Ultra AMOLED', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Casio G-Shock Mudmaster -->
+      <div class="prod-card" data-category="digital waterproof">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?cat=sports'" style="cursor: pointer;">
+          <img src="images/products/gshock_digital.jpg" alt="Casio G-Shock Mudmaster" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-24% OFF</span>
           <span class="brand-tag">CASIO</span>
-          <button class="wish-btn" onclick="toggleWish(this)">♥</button>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Casio G-Shock Mudmaster')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Sports • 200M Waterproof</div>
-            <h4 class="prod-name">Casio G-Shock Certified Diver Edition</h4>
+            <div class="prod-cat">Digital • 200M Shock Resist</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?cat=sports'" style="cursor: pointer;">Casio G-Shock Mudmaster Digital</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 4.8</span>
+              <span class="rating-count">(3,450)</span>
+            </div>
           </div>
           <div class="prod-foot">
             <div>
               <span class="price-curr">₹7,999</span>
               <span class="price-orig">₹10,500</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Casio G-Shock Diver')">Add to Cart</button>
+            <button class="btn-add" onclick="addToCart('Casio G-Shock Mudmaster', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- 4 -->
-      <div class="prod-card">
-        <div class="prod-img-wrap">
-          <img src="images/banners/banner-couples.jpg" alt="Titan Bandhan His & Hers" />
-          <span class="discount-tag">40% OFF</span>
+      <!-- 8. Titan Bandhan Combo Pair -->
+      <div class="prod-card" data-category="combo">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?cat=combo'" style="cursor: pointer;">
+          <img src="images/products/couple_pair.jpg" alt="Titan Bandhan Luxury Pair" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-24% OFF</span>
           <span class="brand-tag">TITAN</span>
-          <button class="wish-btn" onclick="toggleWish(this)">♥</button>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Titan Bandhan Luxury Pair')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Couple • Classic Pair</div>
-            <h4 class="prod-name">Titan Bandhan Luxury Pair Collection</h4>
+            <div class="prod-cat">Combo • His &amp; Hers Set</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?cat=combo'" style="cursor: pointer;">Titan Bandhan Luxury Pair Collection</h4>
+            <div class="rating-row">
+              <span class="rating-star">★ 4.8</span>
+              <span class="rating-count">(1,980)</span>
+            </div>
           </div>
           <div class="prod-foot">
             <div>
               <span class="price-curr">₹9,499</span>
-              <span class="price-orig">₹15,999</span>
+              <span class="price-orig">₹12,500</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Titan Bandhan Pair')">Add to Cart</button>
+            <button class="btn-add" onclick="addToCart('Titan Bandhan Luxury Pair', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Add</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Floating Toast Container -->
+  <div id="actionToast">
+    <span id="toastIcon">🛒</span>
+    <span id="toastText">Item updated</span>
+  </div>
 
   <!-- ════ 9. FOOTER ════ -->
   <footer>
@@ -2524,18 +2776,77 @@
     }, 1000);
 
     let cartCount = 0;
-    function addToCart(name) {
-      cartCount++;
-      document.querySelector('.cart-badge').textContent = cartCount;
-      alert(`🛒 "${name}" added to cart!`);
+    let wishCount = 0;
+
+    function showToast(text, icon = '✓') {
+      const toast = document.getElementById('actionToast');
+      const toastText = document.getElementById('toastText');
+      const toastIcon = document.getElementById('toastIcon');
+      if (toast && toastText) {
+        toastText.textContent = text;
+        if (toastIcon) toastIcon.textContent = icon;
+        toast.classList.add('show');
+        clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2200);
+      }
     }
 
-    function toggleWish(btn) {
-      if (btn.style.color === 'rgb(239, 68, 68)') {
-        btn.style.color = '#9CA3AF';
-      } else {
-        btn.style.color = '#EF4444';
+    function addToCart(name, btn) {
+      cartCount++;
+      const cartBadge = document.querySelector('.cart-badge:not(.wishlist-badge)');
+      if (cartBadge) cartBadge.textContent = cartCount;
+
+      if (btn) {
+        const origHtml = btn.innerHTML;
+        btn.classList.add('added');
+        btn.innerHTML = `<span>Added! ✓</span>`;
+        setTimeout(() => {
+          btn.classList.remove('added');
+          btn.innerHTML = origHtml;
+        }, 1600);
       }
+
+      showToast(`"${name}" added to your bag!`, '🛒');
+    }
+
+    function toggleWish(btn, name = 'Timepiece') {
+      const wishBadge = document.querySelector('.wishlist-badge');
+      const isRed = btn.classList.contains('active') || btn.style.color === 'rgb(239, 68, 68)';
+
+      if (isRed) {
+        btn.classList.remove('active');
+        btn.style.color = '#9CA3AF';
+        if (wishCount > 0) wishCount--;
+        showToast(`Removed "${name}" from Wishlist`, '🤍');
+      } else {
+        btn.classList.add('active');
+        btn.style.color = '#EF4444';
+        wishCount++;
+        showToast(`Saved "${name}" to Wishlist!`, '❤️');
+      }
+
+      if (wishBadge) {
+        wishBadge.textContent = wishCount;
+      }
+    }
+
+    function filterProducts(category, btn) {
+      document.querySelectorAll('.filter-pill-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const cards = document.querySelectorAll('#featuredProdsGrid .prod-card');
+      const catLower = category.toLowerCase();
+
+      cards.forEach(card => {
+        const cardCat = (card.getAttribute('data-category') || '').toLowerCase();
+        if (category === 'All' || cardCat.includes(catLower)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     }
 
     // Dropdown toggle on click & close on outside click

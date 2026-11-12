@@ -66,7 +66,7 @@ const INITIAL_BANNERS = [
     ctaText: 'Discover Pro Divers',
     targetLink: '/products?cat=waterproof',
     placement: 'Category Promo Spotlight',
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1200&q=80',
+    image: '/images/products/omega_speedmaster.jpg',
     impressions: '64,100',
     clicks: '4,890',
     ctr: '7.62%',
@@ -108,7 +108,7 @@ export const OffersCouponsModule = ({ activeSubTab = 'offers', onSubTabChange })
     ctaText: 'Shop Now',
     targetLink: '/products',
     placement: 'Homepage Hero Slider (Slot 3)',
-    image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&q=80',
+    image: '/images/products/rolex_daytona.jpg',
     scheduled: '05 Nov – 31 Dec 2026'
   });
 

@@ -157,8 +157,8 @@ export const ProductsPage = () => {
   useEffect(() => {
     if (brandParam) {
       // Find matching case-insensitive brand
-      const matched = GLOBAL_WATCH_BRANDS.find(b => b.toLowerCase() === brandParam.toLowerCase());
-      setSelectedBrand(matched || (brandParam.charAt(0).toUpperCase() + brandParam.slice(1)));
+      const found = GLOBAL_WATCH_BRANDS.find(b => (typeof b === 'string' ? b : b.name).toLowerCase() === brandParam.toLowerCase());
+      setSelectedBrand(found ? (typeof found === 'string' ? found : found.name) : (brandParam.charAt(0).toUpperCase() + brandParam.slice(1)));
     } else {
       setSelectedBrand('All Brands');
     }
@@ -482,7 +482,7 @@ export const ProductsPage = () => {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onError={(e) => {
                               e.target.onerror = null;
-                              e.target.src = 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80';
+                              e.target.src = '/images/ref_crops/hero-watch-center.jpg';
                             }}
                           />
                         ) : (
