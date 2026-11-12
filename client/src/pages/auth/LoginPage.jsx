@@ -250,6 +250,15 @@ export const LoginPage = () => {
       const tenDigit = cleanDigits.slice(-10);
       setForgotPhone(tenDigit);
 
+      // Trigger Fast2SMS server dispatch
+      try {
+        fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: tenDigit, otp: otp }),
+        }).catch((err) => console.log('[Fast2SMS]', err));
+      } catch (err) {}
+
       // Trigger Realistic Simulated Mobile SMS Toast
       setSmsToast({
         phone: `+91 ${tenDigit.slice(0, 5)} ${tenDigit.slice(5)}`,

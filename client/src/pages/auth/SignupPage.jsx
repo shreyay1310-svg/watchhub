@@ -144,6 +144,15 @@ export const SignupPage = () => {
     setGeneratedOtp(code);
     setEnteredOtp(code); // prefilled for instant verification convenience
 
+    // Call server to trigger Fast2SMS Real Mobile SMS Dispatch
+    try {
+      fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: cleanDigits.slice(-10), otp: code }),
+      }).catch((err) => console.log('[Fast2SMS]', err));
+    } catch (err) {}
+
     // Trigger SMS Push Notification Toast
     setSmsToast({
       phone: `+91 ${cleanDigits.slice(-10).slice(0, 5)} ${cleanDigits.slice(-10).slice(5)}`,
