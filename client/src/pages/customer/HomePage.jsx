@@ -228,14 +228,14 @@ export const HomePage = () => {
 
   // 8 Category Visual Cards from Reference UI
   const CATEGORY_CARDS = [
-    { name: "Men's Watches", img: catMen, cat: 'men' },
-    { name: "Women's Watches", img: catWomen, cat: 'women' },
-    { name: 'Smartwatches', img: catSmart, cat: 'smartwatches' },
-    { name: 'Sports Watches', img: catSports, cat: 'sports' },
-    { name: 'Luxury Watches', img: catLuxury, cat: 'luxury' },
-    { name: 'Party Wear', img: catParty, cat: 'partywear' },
-    { name: 'Waterproof', img: catWaterproof, cat: 'waterproof' },
-    { name: 'Combo Offers', img: catCombo, cat: 'combo' },
+    { name: "Men's Watches", img: '/images/hd_categories/cat_men.jpg', cat: 'men', icon: '👔', styles: '1,240+ Styles', desc: 'Chronos, Automatics & Steel' },
+    { name: "Women's Watches", img: '/images/hd_categories/cat_women.jpg', cat: 'women', icon: '🌸', styles: '980+ Styles', desc: 'Rose Gold, Diamond & Chic' },
+    { name: 'Smartwatches', img: '/images/hd_categories/cat_smartwatches.jpg', cat: 'smartwatches', icon: '⌚', styles: '650+ Styles', desc: 'AMOLED, BT Calling & Health', active: true },
+    { name: 'Sports Watches', img: '/images/hd_categories/cat_sports.jpg', cat: 'sports', icon: '🏃', styles: '720+ Styles', desc: 'Rugged Shock-Proof & Outdoor' },
+    { name: 'Luxury Watches', img: '/images/hd_categories/cat_luxury.jpg', cat: 'luxury', icon: '👑', styles: '410+ Styles', desc: 'Certified Swiss Haute Horlogerie' },
+    { name: 'Party Wear', img: '/images/hd_categories/cat_party.jpg', cat: 'partywear', icon: '🥂', styles: '360+ Styles', desc: 'Cocktail & Evening Statements' },
+    { name: 'Waterproof', img: '/images/hd_categories/cat_waterproof.jpg', cat: 'waterproof', icon: '💧', styles: '540+ Styles', desc: '100M-300M Deep Diver Grade' },
+    { name: 'Combo Offers', img: '/images/hd_categories/cat_combo.jpg', cat: 'combo', icon: '💑', styles: '320+ Styles', desc: 'Synchronized Twin Couple Sets' },
   ];
 
   const handleAddToCart = (product) => {
@@ -569,33 +569,63 @@ export const HomePage = () => {
             </Link>
           </div>
 
-          {/* 8 Clean Visual Category Cards */}
+          {/* 8 Clean Visual Category Cards with 3D Hover Flip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
             {CATEGORY_CARDS.map((cat, idx) => (
-              <Link
+              <div
                 key={idx}
-                to={`/products?cat=${cat.cat}`}
-                className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-watch-gold shadow-xs hover:shadow-lg transition-all flex flex-col group"
+                onClick={() => navigate(`/products?cat=${cat.cat}`)}
+                className="h-44 [perspective:1000px] cursor-pointer group"
               >
-                {/* Watch Photographic Visual */}
-                <div className="h-24 sm:h-28 bg-gray-50 overflow-hidden flex items-center justify-center">
-                  <img
-                    src={cat.img}
-                    alt={cat.name}
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
-                  />
-                </div>
+                <div className="relative w-full h-full text-center transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] rounded-2xl shadow-sm group-hover:shadow-xl">
+                  {/* Front Side: Clear High-Res Image + Legible Label */}
+                  <div
+                    className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-2xl overflow-hidden border flex flex-col justify-between ${
+                      cat.active ? 'border-watch-gold ring-1 ring-watch-gold/40 shadow-md' : 'border-gray-200'
+                    }`}
+                  >
+                    <div className="h-28 bg-gray-50 overflow-hidden flex items-center justify-center relative">
+                      <img
+                        src={cat.img}
+                        alt={cat.name}
+                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="p-2 sm:p-2.5 flex items-center justify-between bg-white text-gray-900 border-t border-gray-100">
+                      <span
+                        className={`text-[11px] sm:text-xs font-bold leading-tight ${
+                          cat.active ? 'text-watch-gold' : ''
+                        }`}
+                      >
+                        {cat.name}
+                      </span>
+                      <div
+                        className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ml-1 ${
+                          cat.active ? 'bg-watch-gold text-black' : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        <ArrowRight className="w-3 h-3" />
+                      </div>
+                    </div>
+                  </div>
 
-                {/* Footer Label with Arrow */}
-                <div className="p-2 sm:p-2.5 flex items-center justify-between bg-white text-gray-900 group-hover:text-watch-gold transition-colors">
-                  <span className="text-[11.5px] sm:text-xs font-bold truncate leading-tight">
-                    {cat.name}
-                  </span>
-                  <div className="w-5 h-5 rounded-full bg-gray-100 group-hover:bg-watch-gold group-hover:text-black flex items-center justify-center transition-colors flex-shrink-0 ml-1">
-                    <ArrowRight className="w-3 h-3" />
+                  {/* Back Side (3D Hover Flip): Luxury Midnight Navy Card */}
+                  <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-[#070B12] via-[#0B121C] to-[#111D2E] rounded-2xl border-1.5 border-watch-gold/70 shadow-2xl p-2.5 flex flex-col items-center justify-between text-center text-white">
+                    <span className="text-xl mt-1">{cat.icon}</span>
+                    <div>
+                      <h4 className="text-[12px] font-bold text-watch-gold leading-tight">{cat.name}</h4>
+                      <span className="inline-block mt-0.5 text-[9px] font-bold px-1.5 py-0.5 bg-watch-gold/20 text-yellow-300 rounded-full border border-watch-gold/30">
+                        {cat.styles}
+                      </span>
+                      <p className="text-[8.5px] text-gray-400 mt-1 line-clamp-1">{cat.desc}</p>
+                    </div>
+                    <div className="w-full py-1 bg-gradient-to-r from-watch-gold to-yellow-600 text-black text-[10px] font-extrabold rounded-lg flex items-center justify-center gap-1 shadow-md">
+                      <span>Explore</span>
+                      <ArrowRight className="w-2.5 h-2.5" />
+                    </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </section>
