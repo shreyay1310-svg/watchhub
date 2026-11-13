@@ -55,6 +55,14 @@ export const AppRoutes = () => {
           </StaffProtectedRoute>
         }
       />
+      <Route
+        path="/admin/products"
+        element={
+          <StaffProtectedRoute>
+            <RoleDashboard initialTab="products" />
+          </StaffProtectedRoute>
+        }
+      />
 
       {/* Fallback Redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />

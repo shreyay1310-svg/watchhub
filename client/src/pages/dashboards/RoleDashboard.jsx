@@ -185,12 +185,19 @@ const TOP_SELLING_PRODUCTS = [
   },
 ];
 
-export const RoleDashboard = () => {
+export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
   const { user, switchRole, logout } = useAuth();
   const navigate = useNavigate();
 
   // Active navigation tab
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [productsExpanded, setProductsExpanded] = useState(true);
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
@@ -845,49 +852,87 @@ export const RoleDashboard = () => {
         <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1 scrollbar-thin scrollbar-thumb-white/10">
           {SIDEBAR_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
+            const isProducts = item.id === 'products';
+            const isActive = activeTab === item.id || (isProducts && ['products', 'add_product', 'variants', 'import_export', 'product_reviews'].includes(activeTab));
 
             return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setMobileSidebarOpen(false);
-                }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer group ${
-                  isActive
-                    ? 'bg-[#D6A63C] text-black font-bold shadow-md shadow-[#D6A63C]/20'
-                    : 'text-gray-300 hover:text-white hover:bg-white/5'
-                }`}
-                title={sidebarCollapsed ? item.label : undefined}
-              >
-                <div className="flex items-center gap-3 truncate">
-                  <Icon
-                    className={`w-4 h-4 flex-shrink-0 ${
-                      isActive ? 'text-black' : 'text-gray-400 group-hover:text-[#D6A63C]'
-                    }`}
-                  />
-                  {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
-                </div>
+              <div key={item.id} className="space-y-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isProducts) {
+                      setProductsExpanded(!productsExpanded);
+                    }
+                    setActiveTab(item.id);
+                    setMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer group ${
+                    isActive
+                      ? 'bg-[#D6A63C] text-black font-bold shadow-md shadow-[#D6A63C]/20'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`}
+                  title={sidebarCollapsed ? item.label : undefined}
+                >
+                  <div className="flex items-center gap-3 truncate">
+                    <Icon
+                      className={`w-4 h-4 flex-shrink-0 ${
+                        isActive ? 'text-black' : 'text-gray-400 group-hover:text-[#D6A63C]'
+                      }`}
+                    />
+                    {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
+                  </div>
 
-                {!sidebarCollapsed && (
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    {item.badge && (
-                      <span className="bg-rose-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">
-                        {item.badge}
-                      </span>
-                    )}
-                    {item.hasChevron && (
-                      <ChevronDown
-                        className={`w-3.5 h-3.5 ${
-                          isActive ? 'text-black' : 'text-gray-500 group-hover:text-gray-300'
-                        }`}
-                      />
-                    )}
+                  {!sidebarCollapsed && (
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {item.badge && (
+                        <span className="bg-rose-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">
+                          {item.badge}
+                        </span>
+                      )}
+                      {item.hasChevron && (
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 transition-transform ${
+                            productsExpanded ? 'rotate-180' : ''
+                          } ${isActive ? 'text-black' : 'text-gray-500 group-hover:text-gray-300'}`}
+                        />
+                      )}
+                    </div>
+                  )}
+                </button>
+
+                {/* Products Sub-Menu (Exact Match to Reference UI) */}
+                {isProducts && productsExpanded && !sidebarCollapsed && (
+                  <div className="pl-7 pr-2 py-1 space-y-1 text-xs animate-fadeIn">
+                    {[
+                      { id: 'products', label: 'All Products' },
+                      { id: 'add_product', label: 'Add Product' },
+                      { id: 'variants', label: 'Product Variants' },
+                      { id: 'import_export', label: 'Bulk Import / Export' },
+                      { id: 'product_reviews', label: 'Product Reviews' },
+                    ].map((sub) => {
+                      const isSubActive = activeTab === sub.id || (sub.id === 'products' && activeTab === 'products');
+                      return (
+                        <button
+                          key={sub.id}
+                          type="button"
+                          onClick={() => {
+                            setActiveTab('products');
+                            setMobileSidebarOpen(false);
+                          }}
+                          className={`w-full text-left py-1.5 px-2.5 rounded-lg flex items-center gap-2 transition-colors cursor-pointer text-[11px] ${
+                            isSubActive
+                              ? 'text-[#D6A63C] font-bold bg-white/5'
+                              : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          }`}
+                        >
+                          <span className={`w-1.5 h-1.5 rounded-full ${isSubActive ? 'bg-[#D6A63C]' : 'bg-gray-500'}`} />
+                          <span>{sub.label}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
-              </button>
+              </div>
             );
           })}
 
