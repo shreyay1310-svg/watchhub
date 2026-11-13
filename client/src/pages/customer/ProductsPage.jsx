@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
+import ProductCard from '../../components/common/ProductCard';
 import { useCart } from '../../context/CartContext';
 import { MOCK_PRODUCTS, GLOBAL_WATCH_BRANDS } from '../../data/mockProducts';
 import {
@@ -513,93 +514,18 @@ export const ProductsPage = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filteredProducts.map((p) => {
-                  const inWish = isInWishlist(p.id);
-                  const isAdded = addedItem === p.id;
-                  return (
-                    <div key={p.id} className="card-luxury overflow-hidden flex flex-col justify-between group bg-white rounded-2xl border border-gray-200 hover:shadow-luxury-lg transition-all">
-                      {/* Product Image */}
-                      <div className="h-56 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden">
-                        {p.image ? (
-                          <img
-                            src={p.image}
-                            alt={p.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = '/images/ref_crops/hero-watch-center.jpg';
-                            }}
-                          />
-                        ) : (
-                          <span className="text-6xl">⌚</span>
-                        )}
-
-                        {/* Discount Badge */}
-                        <span className="absolute top-3 left-3 bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
-                          -{p.discount}% OFF
-                        </span>
-
-                        {/* Brand Badge */}
-                        <span className="absolute bottom-2 left-3 bg-watch-navy-dark/90 backdrop-blur-sm text-watch-gold text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border border-watch-gold/30">
-                          {p.brand}
-                        </span>
-
-                        {/* Wishlist Button */}
-                        <button
-                          onClick={() => toggleWishlist(p)}
-                          className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center transition-all ${
-                            inWish ? 'text-rose-600 fill-rose-600' : 'text-gray-400 hover:text-rose-600'
-                          }`}
-                        >
-                          <Heart className={`w-4 h-4 ${inWish ? 'fill-rose-600' : ''}`} />
-                        </button>
-                      </div>
-
-                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                        <div>
-                          <div className="flex justify-between items-center text-[10.5px] text-gray-500 font-bold mb-1">
-                            <span className="text-watch-gold font-extrabold uppercase">{p.category}</span>
-                            <span>{p.gender}</span>
-                          </div>
-                          <h4 className="text-xs font-bold text-gray-900 group-hover:text-watch-gold transition-colors line-clamp-1">
-                            {p.name}
-                          </h4>
-                          <div className="flex items-center gap-1.5 mt-1 text-xs">
-                            <span className="flex items-center text-amber-500 font-bold">
-                              <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400 mr-0.5" />
-                              {p.rating}
-                            </span>
-                            <span className="text-gray-400 text-[11px]">({p.reviewsCount})</span>
-                          </div>
-                        </div>
-
-                        <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-                          <div>
-                            <span className="text-sm font-black text-gray-900 block">
-                              ₹{p.price.toLocaleString('en-IN')}
-                            </span>
-                            <span className="text-[11px] text-gray-400 line-through">
-                              ₹{p.originalPrice.toLocaleString('en-IN')}
-                            </span>
-                          </div>
-
-                          <button
-                            onClick={() => handleAddToCart(p)}
-                            className={`text-xs font-extrabold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-sm ${
-                              isAdded
-                                ? 'bg-emerald-600 text-white'
-                                : 'bg-watch-navy-dark text-white hover:bg-watch-gold hover:text-watch-navy-dark'
-                            }`}
-                          >
-                            <ShoppingCart className="w-3.5 h-3.5" />
-                            <span>{isAdded ? 'Added!' : 'Add to Cart'}</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                {filteredProducts.map((p) => (
+                  <ProductCard
+                    key={p.id}
+                    product={p}
+                    onAddToCart={handleAddToCart}
+                    onToggleWishlist={toggleWishlist}
+                    onQuickView={setSelectedProduct}
+                    onNavigate={(prod) => setSelectedProduct(prod)}
+                    isInWishlist={isInWishlist(p.id)}
+                    isAdded={addedItem === p.id}
+                  />
+                ))}
               </div>
             )}
           </div>

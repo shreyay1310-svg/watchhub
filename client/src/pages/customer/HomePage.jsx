@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
+import ProductCard from '../../components/common/ProductCard';
 import { useCart } from '../../context/CartContext';
 import { MOCK_PRODUCTS, brandLinks } from '../../data/mockProducts';
 import {
@@ -722,117 +723,18 @@ export const HomePage = () => {
 
           {/* Product Grid - 4 columns on desktop matching reference */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {filteredProducts.map((p) => {
-              const inWish = isInWishlist(p.id);
-              const isAdded = addedItem === p.id;
-              return (
-                <div key={p.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-watch-gold hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-                  {/* Image Container with Badges */}
-                  <div
-                    onClick={() => navigate(`/products?q=${encodeURIComponent(p.name)}`)}
-                    className="aspect-[16/11] bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden cursor-pointer"
-                  >
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.src = '/images/ref_crops/hero-watch-center.jpg';
-                      }}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-
-                    {/* Discount Badge */}
-                    <span className="absolute top-3 left-3 bg-[#EE3B3B] text-white text-[10.5px] font-black px-2.5 py-0.5 rounded shadow-sm">
-                      -{p.discount}% OFF
-                    </span>
-
-                    {/* Brand Insignia Pill */}
-                    <span className="absolute bottom-2.5 left-3 bg-[#0B121C]/90 backdrop-blur-sm text-watch-gold text-[10px] font-bold px-2.5 py-0.5 rounded border border-watch-gold/30 shadow flex items-center gap-1">
-                      {renderBrandInsignia(p.brand)}
-                    </span>
-
-                    {/* Wishlist Button */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleWishlist(p);
-                      }}
-                      className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transition-all cursor-pointer ${
-                        inWish ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-500'
-                      }`}
-                      title={inWish ? "Remove from Wishlist" : "Add to Wishlist"}
-                    >
-                      <Heart className={`w-4 h-4 ${inWish ? 'fill-red-500 text-red-500' : ''}`} />
-                    </button>
-                  </div>
-
-                  {/* Body Details */}
-                  <div className="p-4 flex-1 flex flex-col justify-between">
-                    <div>
-                      <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">
-                        {p.category}
-                      </span>
-                      <h4
-                        onClick={() => navigate(`/products?q=${encodeURIComponent(p.name)}`)}
-                        className="text-[14px] font-bold text-gray-900 group-hover:text-watch-gold transition-colors line-clamp-1 cursor-pointer"
-                        title={p.name}
-                      >
-                        {p.name}
-                      </h4>
-                      <div className="flex items-center gap-1.5 mt-1 text-xs">
-                        <span className="flex items-center text-amber-500 font-bold">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400 mr-0.5" />
-                          {p.rating}
-                        </span>
-                        <span className="text-gray-400 text-[11px]">({p.reviewsCount.toLocaleString('en-IN')} Reviews)</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 pt-3 border-t border-gray-100">
-                      {/* Price row */}
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="text-base font-extrabold text-gray-900">
-                            ₹{p.price.toLocaleString('en-IN')}
-                          </span>
-                          <span className="text-xs text-gray-400 line-through">
-                            ₹{p.originalPrice.toLocaleString('en-IN')}
-                          </span>
-                        </div>
-                        <span className="bg-red-50 text-red-600 border border-red-100 text-[10px] font-extrabold px-2 py-0.5 rounded">
-                          {p.discount}% OFF
-                        </span>
-                      </div>
-
-                      {/* Action Buttons: Add to Cart & Quick View */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => handleAddToCart(p)}
-                          className={`py-2 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer ${
-                            isAdded
-                              ? 'bg-emerald-600 text-white'
-                              : 'bg-[#0B121C] text-white hover:bg-watch-gold hover:text-black'
-                          }`}
-                        >
-                          <ShoppingCart className="w-3.5 h-3.5 text-watch-gold" />
-                          <span>{isAdded ? 'Added!' : 'Add to Cart'}</span>
-                        </button>
-
-                        <button
-                          onClick={() => setQuickViewProduct(p)}
-                          className="py-2 px-2 rounded-lg text-[11px] font-bold text-gray-700 bg-white border border-gray-200 hover:border-watch-gold hover:text-watch-gold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
-                        >
-                          <Eye className="w-3.5 h-3.5 text-gray-500" />
-                          <span>Quick View</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {filteredProducts.map((p) => (
+              <ProductCard
+                key={p.id}
+                product={p}
+                onAddToCart={handleAddToCart}
+                onToggleWishlist={handleToggleWishlist}
+                onQuickView={setQuickViewProduct}
+                onNavigate={(prod) => navigate(`/products?q=${encodeURIComponent(prod.name)}`)}
+                isInWishlist={isInWishlist(p.id)}
+                isAdded={addedItem === p.id}
+              />
+            ))}
           </div>
         </section>
       </main>

@@ -1137,20 +1137,27 @@
     }
 
     .prod-img-wrap {
+      width: 100%;
       height: 240px;
-      background: #F9FAFB;
-      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
+      background: #f8f8f8;
+      padding: 12px;
+      position: relative;
     }
 
     .prod-img-wrap img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      transition: transform 0.3s;
     }
 
-    .prod-card:hover .prod-img-wrap img { transform: scale(1.08); }
+    .prod-card:hover .prod-img-wrap img { transform: scale(1.05); }
 
     .discount-tag {
       position: absolute;
