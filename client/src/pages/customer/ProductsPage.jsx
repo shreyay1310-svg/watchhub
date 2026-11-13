@@ -156,6 +156,8 @@ export const ProductsPage = () => {
   const categoryParam = searchParams.get('cat') || '';
   const tagParam = searchParams.get('tag') || '';
   const brandParam = searchParams.get('brand') || '';
+  const minPriceParam = searchParams.get('minPrice') || '';
+  const maxPriceParam = searchParams.get('maxPrice') || '';
 
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
 
@@ -164,7 +166,8 @@ export const ProductsPage = () => {
   const [selectedTag, setSelectedTag] = useState(tagParam || '');
   const [selectedBrand, setSelectedBrand] = useState(brandParam ? brandParam.charAt(0).toUpperCase() + brandParam.slice(1) : 'All Brands');
   const [selectedGender, setSelectedGender] = useState('all');
-  const [maxPrice, setMaxPrice] = useState(5000000); // 50 Lakhs max for luxury pieces
+  const [minPrice, setMinPrice] = useState(minPriceParam ? Number(minPriceParam) : 0);
+  const [maxPrice, setMaxPrice] = useState(maxPriceParam ? Number(maxPriceParam) : 5000000); // 50 Lakhs max for luxury pieces
   const [sortBy, setSortBy] = useState('popular');
   const [addedItem, setAddedItem] = useState(null);
 
@@ -188,7 +191,18 @@ export const ProductsPage = () => {
       setSelectedCategory('all');
       setSelectedTag('');
     }
-  }, [categoryParam, tagParam, brandParam]);
+
+    if (maxPriceParam) {
+      setMaxPrice(Number(maxPriceParam));
+    } else {
+      setMaxPrice(5000000);
+    }
+    if (minPriceParam) {
+      setMinPrice(Number(minPriceParam));
+    } else {
+      setMinPrice(0);
+    }
+  }, [categoryParam, tagParam, brandParam, minPriceParam, maxPriceParam]);
 
   // Determine current active category meta
   const currentMetaKey = selectedTag || (selectedCategory !== 'all' ? selectedCategory : 'all');
@@ -251,7 +265,7 @@ export const ProductsPage = () => {
       }
 
       // Price match
-      if (p.price > maxPrice) return false;
+      if (p.price > maxPrice || p.price < minPrice) return false;
 
       // Search query match
       if (queryParam) {
@@ -270,7 +284,7 @@ export const ProductsPage = () => {
       if (sortBy === 'discount') return b.discount - a.discount;
       return b.reviewsCount - a.reviewsCount;
     });
-  }, [selectedCategory, selectedTag, selectedBrand, selectedGender, maxPrice, sortBy, queryParam]);
+  }, [selectedCategory, selectedTag, selectedBrand, selectedGender, minPrice, maxPrice, sortBy, queryParam]);
 
   const handleAddToCart = (product) => {
     addToCart(product);

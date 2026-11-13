@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -6,9 +6,9 @@ import {
   ShoppingBag,
   User,
   ChevronDown,
+  ChevronRight,
   LogOut,
   Camera,
-  Globe,
   Headphones,
   Phone,
   Tag,
@@ -21,38 +21,84 @@ import {
   X,
   Scan,
   CheckCircle2,
+  Menu,
 } from 'lucide-react';
-import { useAuth, ROLES } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { MEGA_MENU_CONFIG } from '../../data/megaMenuData';
 
 export const CustomerNavbar = () => {
   const { user, logout } = useAuth();
   const { cartCount, wishlistCount } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [profileOpen, setProfileOpen] = useState(false);
-  const [activeNavDropdown, setActiveNavDropdown] = useState(null);
+  const [activeMegaMenu, setActiveMegaMenu] = useState(null);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [mobileAccordion, setMobileAccordion] = useState(null);
   const [showVisualSearch, setShowVisualSearch] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [detectedWatch, setDetectedWatch] = useState(null);
+  const menuTimeoutRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (!e.target.closest('.nav-dropdown-item-wrap')) {
-        setActiveNavDropdown(null);
-      }
-    };
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, []);
+  const navTabs = [
+    { id: 'brands', label: 'Brands' },
+    { id: 'men', label: 'Men' },
+    { id: 'women', label: 'Women' },
+    { id: 'kids', label: 'Kids' },
+    { id: 'smartwatches', label: 'Smartwatches' },
+    { id: 'luxury', label: 'Luxury' },
+    { id: 'sports', label: 'Sports' },
+    { id: 'collections', label: 'Collections' },
+  ];
 
-  const toggleDropdown = (name, e) => {
+  const handleMenuEnter = (id) => {
+    if (menuTimeoutRef.current) {
+      clearTimeout(menuTimeoutRef.current);
+      menuTimeoutRef.current = null;
+    }
+    setActiveMegaMenu(id);
+  };
+
+  const handleMenuLeave = () => {
+    if (menuTimeoutRef.current) {
+      clearTimeout(menuTimeoutRef.current);
+    }
+    menuTimeoutRef.current = setTimeout(() => {
+      setActiveMegaMenu(null);
+    }, 180);
+  };
+
+  const handleMenuToggle = (id, e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    setActiveNavDropdown(prev => prev === name ? null : name);
+    if (menuTimeoutRef.current) clearTimeout(menuTimeoutRef.current);
+    setActiveMegaMenu((prev) => (prev === id ? null : id));
   };
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('.mega-menu-trigger') && !e.target.closest('.mega-menu-dropdown-panel')) {
+        setActiveMegaMenu(null);
+      }
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setActiveMegaMenu(null);
+        setProfileOpen(false);
+        setMobileDrawerOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+      window.removeEventListener('keydown', handleKeyDown);
+      if (menuTimeoutRef.current) clearTimeout(menuTimeoutRef.current);
+    };
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -61,22 +107,23 @@ export const CustomerNavbar = () => {
     }
   };
 
-  const handleSampleScan = (watchName, searchQuery) => {
+  const handleSampleScan = (watchName, scanQuery) => {
     setIsScanning(true);
     setDetectedWatch(null);
     setTimeout(() => {
       setIsScanning(false);
-      setDetectedWatch({ name: watchName, query: searchQuery });
+      setDetectedWatch({ name: watchName, query: scanQuery });
     }, 900);
   };
 
   const displayName = user?.name ? user.name.split(' ')[0] : 'Shreya';
   const isGoogleUser = user?.provider === 'Google OAuth 2.0' || user?.isGoogleUser || user?.provider === 'Google';
+  const currentMenu = activeMegaMenu ? MEGA_MENU_CONFIG[activeMegaMenu] : null;
 
   return (
     <header className="sticky top-0 z-50 shadow-md font-poppins select-none">
       {/* ════════════════════════════════════════════════════════════════
-          1. TOP UTILITY BAR (Exact Match to Image 2 Reference UI)
+          1. TOP UTILITY BAR (Exact Match to Reference UI)
           ════════════════════════════════════════════════════════════════ */}
       <div className="bg-[#070B12] text-gray-300 text-[11px] py-1.5 px-4 sm:px-8 border-b border-white/5 hidden md:flex justify-between items-center">
         {/* Left Information */}
@@ -114,20 +161,32 @@ export const CustomerNavbar = () => {
           2. MAIN LUXURY NAVBAR (Midnight Navy + Crisp White Search)
           ════════════════════════════════════════════════════════════════ */}
       <div className="bg-[#0B121C] border-b border-white/10 px-4 sm:px-8 h-[68px] flex items-center justify-between gap-4 sm:gap-8">
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
-          <div className="w-10 h-10 rounded-full border border-watch-gold/40 flex items-center justify-center text-xl text-watch-gold shadow-sm bg-black/30 group-hover:border-watch-gold transition-colors">
-            ⌚
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold font-serif text-white tracking-tight leading-none">
-              Watch<span className="text-watch-gold">Hub</span>
-            </h1>
-            <p className="text-[8.5px] font-bold tracking-[0.22em] text-watch-gold uppercase mt-0.5">
-              THE WORLD OF WATCHES
-            </p>
-          </div>
-        </Link>
+        <div className="flex items-center gap-3">
+          {/* Mobile Menu Hamburger */}
+          <button
+            type="button"
+            onClick={() => setMobileDrawerOpen(true)}
+            className="md:hidden p-1 text-gray-300 hover:text-watch-gold transition-colors cursor-pointer"
+            aria-label="Open Navigation Menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+
+          {/* Brand Logo */}
+          <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
+            <div className="w-10 h-10 rounded-full border border-watch-gold/40 flex items-center justify-center text-xl text-watch-gold shadow-sm bg-black/30 group-hover:border-watch-gold transition-colors">
+              ⌚
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold font-serif text-white tracking-tight leading-none">
+                Watch<span className="text-watch-gold">Hub</span>
+              </h1>
+              <p className="text-[8.5px] font-bold tracking-[0.22em] text-watch-gold uppercase mt-0.5">
+                THE WORLD OF WATCHES
+              </p>
+            </div>
+          </Link>
+        </div>
 
         {/* Center Pill Search Bar with Camera Icon */}
         <form onSubmit={handleSearch} className="flex-1 max-w-xl relative hidden md:block">
@@ -136,7 +195,7 @@ export const CustomerNavbar = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search for brands, watches, collections..."
+            placeholder="Search for brands, watches, categories..."
             className="w-full h-11 pl-11 pr-11 text-xs rounded-full bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-watch-gold/40 shadow-xs transition-all font-medium"
           />
           <button
@@ -150,7 +209,7 @@ export const CustomerNavbar = () => {
         </form>
 
         {/* Right Actions: Wishlist, Cart & Profile Dropdown */}
-        <div className="flex items-center gap-5 sm:gap-6 text-white text-xs font-semibold">
+        <div className="flex items-center gap-4 sm:gap-6 text-white text-xs font-semibold">
           {/* Wishlist Link */}
           <Link
             to="/wishlist"
@@ -280,222 +339,329 @@ export const CustomerNavbar = () => {
       </div>
 
       {/* ════════════════════════════════════════════════════════════════
-          3. SECONDARY CATEGORY & DEALS MENU BAR (Interactive Dropdowns)
+          3. SECONDARY CATEGORY & MEGA MENU BAR
           ════════════════════════════════════════════════════════════════ */}
       <div className="bg-[#070C14] border-b border-white/5 px-4 sm:px-8 py-2 relative z-40 overflow-visible">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4 text-xs relative">
           {/* Home Solid Golden Pill Button */}
           <Link
             to="/"
-            className="bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:opacity-95 transition-all flex-shrink-0"
+            className="bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs px-3.5 sm:px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:opacity-95 transition-all flex-shrink-0"
           >
             <Home className="w-3.5 h-3.5 fill-black" />
             <span>Home</span>
           </Link>
 
-          {/* Nav Categories with Dropdown Carets */}
-          <nav className="flex items-center gap-3 sm:gap-6 text-gray-300 font-medium whitespace-nowrap relative z-40 overflow-visible">
-            
-            {/* 1. Brands Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('brands', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Brands</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'brands' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute left-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'brands' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl grid grid-cols-2 gap-2 w-72 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?brand=rolex" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>👑</span> Rolex</Link>
-                  <Link to="/products?brand=omega" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>Ω</span> Omega</Link>
-                  <Link to="/products?brand=casio" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>⌚</span> Casio</Link>
-                  <Link to="/products?brand=seiko" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>✨</span> Seiko</Link>
-                  <Link to="/products?brand=titan" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>🏆</span> Titan</Link>
-                  <Link to="/products?brand=fossil" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>💼</span> Fossil</Link>
-                  <Link to="/products?brand=timex" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>⏱️</span> Timex</Link>
-                  <Link to="/products?brand=tissot" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>🇨🇭</span> Tissot</Link>
-                  <div className="col-span-2 pt-2 border-t border-white/10 mt-1">
-                    <Link
-                      to="/brands"
-                      onClick={() => setActiveNavDropdown(null)}
-                      className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs py-2 rounded-xl shadow-xs hover:opacity-95 transition-all text-center"
-                    >
-                      <span>👑 View All 60 Brands Directory →</span>
-                    </Link>
-                  </div>
+          {/* Nav Categories with Interactive Mega Menu Carets */}
+          <nav className="flex items-center gap-1 sm:gap-2 lg:gap-3 text-gray-300 font-medium whitespace-nowrap overflow-x-auto sm:overflow-visible scrollbar-none py-0.5">
+            {navTabs.map((tab) => {
+              const isActive = activeMegaMenu === tab.id;
+              return (
+                <div
+                  key={tab.id}
+                  className="relative mega-menu-trigger"
+                  onMouseEnter={() => handleMenuEnter(tab.id)}
+                  onMouseLeave={handleMenuLeave}
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => handleMenuToggle(tab.id, e)}
+                    className={`flex items-center gap-1 py-1 cursor-pointer transition-all text-xs font-semibold ${
+                      isActive
+                        ? 'border border-[#D4A84F] text-[#D4A84F] bg-[#D4A84F]/10 rounded-lg px-2.5 shadow-xs'
+                        : 'border border-transparent text-gray-300 hover:text-watch-gold px-2 sm:px-2.5'
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <ChevronDown
+                      className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${
+                        isActive ? 'rotate-180 text-watch-gold' : 'group-hover:text-watch-gold'
+                      }`}
+                    />
+                  </button>
                 </div>
-              </div>
-            </div>
-
-            {/* 2. Men Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('men', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Men</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'men' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute left-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'men' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?cat=men" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Men's Watches</Link>
-                  <Link to="/products?cat=men&q=chronograph" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Chronographs</Link>
-                  <Link to="/products?cat=luxury&q=automatic" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Automatic Mechanical</Link>
-                  <Link to="/products?cat=men&q=steel" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Stainless Steel Bracelets</Link>
-                  <Link to="/products?cat=men&q=leather" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Italian Leather Straps</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Women Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('women', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Women</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'women' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute left-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'women' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?cat=women" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Women's Watches</Link>
-                  <Link to="/products?cat=women&q=rose+gold" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Rose Gold Collection</Link>
-                  <Link to="/products?cat=partywear" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Diamond & Pearl Dials</Link>
-                  <Link to="/products?cat=women&q=mesh" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Minimalist Mesh Straps</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. Kids Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('kids', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Kids</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'kids' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute left-1/2 -translate-x-1/2 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'kids' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-48 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?cat=kids" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Kids Watches</Link>
-                  <Link to="/products?cat=digital" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Shock-Proof Digital</Link>
-                  <Link to="/products?cat=smartwatches" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Kids Smart Trackers</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Smartwatches Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('smartwatches', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Smartwatches</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'smartwatches' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute left-1/2 -translate-x-1/2 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'smartwatches' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-56 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?cat=smartwatches" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Smartwatches</Link>
-                  <Link to="/products?cat=smartwatches&q=calling" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">AMOLED Bluetooth Calling</Link>
-                  <Link to="/products?cat=smartwatches&q=fitness" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Fitness & 120+ Sports Modes</Link>
-                  <Link to="/products?cat=smartwatches&q=health" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">24/7 SpO2 & Heart Rate Vitals</Link>
-                  <Link to="/products?cat=smartwatches&q=rugged" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">IP68 / 5ATM Military Rugged</Link>
-                  <Link to="/products?cat=smartwatches&q=battery" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">14+ Days Ultra Battery Life</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* 6. Luxury Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('luxury', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Luxury</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'luxury' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute left-1/2 -translate-x-1/2 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'luxury' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-56 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?cat=luxury" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-watch-gold">👑 Swiss Haute Horlogerie</Link>
-                  <Link to="/products?brand=rolex" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Rolex Submariner & Daytona</Link>
-                  <Link to="/products?brand=omega" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Omega Moonwatch Masters</Link>
-                  <Link to="/products?cat=luxury&q=tourbillon" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Tourbillon & Skeleton Art</Link>
-                  <Link to="/products?cat=luxury&q=gold" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">18K Solid Gold Vault Editions</Link>
-                  <Link to="/products?cat=luxury&q=diamond" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Hand-Set Diamond Bezels</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* 7. Sports Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('sports', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Sports</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'sports' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute right-0 sm:left-auto top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'sports' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-52 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?cat=sports" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 font-bold text-white">All Sports Watches</Link>
-                  <Link to="/products?cat=waterproof" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">200M Certified Divers</Link>
-                  <Link to="/products?cat=digital" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">Military Tactical Shock</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* 8. Collections Dropdown */}
-            <div className="relative group nav-dropdown-item-wrap">
-              <button
-                type="button"
-                onClick={(e) => toggleDropdown('collections', e)}
-                className="flex items-center gap-1 hover:text-watch-gold transition-colors py-1 cursor-pointer bg-transparent border-0 text-inherit font-inherit"
-              >
-                <span>Collections</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 group-hover:text-watch-gold transition-transform duration-200 ${activeNavDropdown === 'collections' ? 'rotate-180 text-watch-gold' : ''}`} />
-              </button>
-              <div className={`absolute right-0 top-full pt-2 z-[100] animate-fade-in ${activeNavDropdown === 'collections' ? 'block' : 'hidden group-hover:block'}`}>
-                <div className="bg-[#0B121C] border border-watch-gold/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 w-56 text-xs text-gray-300 backdrop-blur-xl">
-                  <Link to="/products?tag=new" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 text-emerald-400 font-bold">✨ 2026 Vault Arrivals</Link>
-                  <Link to="/products?cat=couple" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">💑 His & Hers Couple Sets</Link>
-                  <Link to="/products?cat=combo" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">🎁 Value Combo Packs</Link>
-                  <Link to="/manufacturing-hub" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 text-watch-gold">🏭 3D Manufacturing Hub</Link>
-                  <div className="pt-2 border-t border-white/10 mt-1">
-                    <Link
-                      to="/categories"
-                      onClick={() => setActiveNavDropdown(null)}
-                      className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs py-2 rounded-xl shadow-xs hover:opacity-95 transition-all text-center"
-                    >
-                      <span>✨ View All 12 Categories →</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+              );
+            })}
           </nav>
 
           {/* Deals & Offers Solid Gold Button */}
           <Link
             to="/products?tag=deals"
-            className="bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:opacity-95 transition-all flex-shrink-0 ml-auto"
+            className="bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs px-3 sm:px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:opacity-95 transition-all flex-shrink-0 ml-auto"
           >
             <Tag className="w-3.5 h-3.5 fill-black" />
-            <span>Deals & Offers</span>
+            <span className="hidden sm:inline">Deals & Offers</span>
+            <span className="sm:hidden">Deals</span>
           </Link>
+
+          {/* ══════════════════════════════════════════════════════════════
+              FULL-WIDTH MEGA MENU DROPDOWN PANEL (Exact Match to Mockup)
+              ══════════════════════════════════════════════════════════════ */}
+          {currentMenu && (
+            <div
+              onMouseEnter={() => {
+                if (menuTimeoutRef.current) clearTimeout(menuTimeoutRef.current);
+              }}
+              onMouseLeave={handleMenuLeave}
+              className="mega-menu-dropdown-panel absolute left-1/2 -translate-x-1/2 top-full w-[96vw] max-w-7xl pt-2 z-50 animate-fade-in"
+            >
+              <div className="bg-[#09111E]/95 backdrop-blur-2xl border border-watch-gold/40 rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] p-5 text-gray-200">
+                <div className="flex flex-col lg:flex-row gap-5 items-stretch">
+                  {/* Left Column: Featured Showcase Card */}
+                  <div className="w-full lg:w-56 xl:w-60 flex-shrink-0 bg-gradient-to-br from-[#101D30] via-[#0A1320] to-[#050B13] border border-watch-gold/30 rounded-xl p-4 flex flex-col justify-between relative overflow-hidden group">
+                    <div>
+                      <h3 className="text-lg font-bold text-white tracking-wide">
+                        {currentMenu.featured.title}{' '}
+                        <span className="text-watch-gold block">{currentMenu.featured.highlight}</span>
+                      </h3>
+                      <p className="text-[11px] text-gray-400 mt-1 leading-snug">
+                        {currentMenu.featured.subtitle}
+                      </p>
+                    </div>
+
+                    <div className="my-3 flex items-center justify-center relative">
+                      <div className="absolute inset-0 bg-watch-gold/10 blur-xl rounded-full scale-75 group-hover:scale-95 transition-transform" />
+                      <img
+                        src={currentMenu.featured.image}
+                        alt={currentMenu.featured.title}
+                        className="w-36 h-36 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)] group-hover:scale-105 transition-transform duration-300 relative z-10"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/images/products/featured_rolex_daytona.jpg';
+                        }}
+                      />
+                    </div>
+
+                    <Link
+                      to={currentMenu.featured.link}
+                      onClick={() => setActiveMegaMenu(null)}
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-watch-gold hover:text-white transition-colors"
+                    >
+                      <span>{currentMenu.featured.ctaText || 'Explore Now'}</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+
+                  {/* Right Columns: 5 Structured Category Columns */}
+                  <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6 pl-0 lg:pl-5 border-t lg:border-t-0 lg:border-l border-white/10 pt-4 lg:pt-0">
+                    {currentMenu.columns.map((col, colIdx) => (
+                      <div key={colIdx} className="space-y-2">
+                        <div className="flex items-center gap-1.5 text-watch-gold font-bold text-xs pb-1.5 border-b border-white/10">
+                          <span className="text-sm">{col.icon}</span>
+                          <span className="truncate">{col.title}</span>
+                        </div>
+                        <ul className="space-y-1">
+                          {col.items.map((item, itemIdx) => (
+                            <li key={itemIdx}>
+                              <Link
+                                to={item.link}
+                                onClick={() => setActiveMegaMenu(null)}
+                                className="group flex items-center justify-between text-[11px] text-gray-300 hover:text-white hover:bg-white/5 py-1 px-1.5 rounded-md transition-colors"
+                              >
+                                <span className="flex items-center gap-1.5 truncate">
+                                  {item.badge && (
+                                    <span className="text-[10px] text-amber-400 font-bold flex-shrink-0">
+                                      {item.badge}
+                                    </span>
+                                  )}
+                                  <span className="group-hover:text-amber-300 transition-colors truncate">
+                                    {item.label}
+                                  </span>
+                                </span>
+                                <ChevronRight className="w-3 h-3 text-gray-500 opacity-60 group-hover:opacity-100 group-hover:text-watch-gold group-hover:translate-x-0.5 transition-all flex-shrink-0 ml-1" />
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom Strip: Badges & Solid Gold CTA Button */}
+                <div className="border-t border-white/10 mt-5 pt-3.5 flex flex-wrap items-center justify-between gap-3">
+                  {/* Left Badges */}
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-xs">
+                    {currentMenu.bottomBadges?.map((badge, bIdx) => (
+                      <Link
+                        key={bIdx}
+                        to={badge.link}
+                        onClick={() => setActiveMegaMenu(null)}
+                        className="flex items-center gap-1.5 text-gray-300 hover:text-watch-gold transition-colors text-xs"
+                      >
+                        <span className="text-amber-400">{badge.label.split(' ')[0]}</span>
+                        <span className="font-medium text-[11px]">
+                          {badge.label.substring(badge.label.indexOf(' ') + 1)}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Right CTA Button */}
+                  <Link
+                    to={currentMenu.bottomCta?.link || '/products'}
+                    onClick={() => setActiveMegaMenu(null)}
+                    className="bg-gradient-to-r from-[#F4B333] to-[#D99A1E] text-black font-extrabold text-xs px-5 py-2 rounded-xl flex items-center gap-1.5 shadow-md hover:brightness-110 transition-all ml-auto"
+                  >
+                    <span>{currentMenu.bottomCta?.text || 'Explore All Timepieces →'}</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* ════════════════════════════════════════════════════════════════
-          VISUAL WATCH SEARCH (CAMERA SCANNER MODAL)
+          4. MOBILE SLIDE-OVER NAVIGATION DRAWER
+          ════════════════════════════════════════════════════════════════ */}
+      {mobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex font-poppins md:hidden animate-fade-in">
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setMobileDrawerOpen(false)}
+          />
+
+          {/* Drawer content */}
+          <div className="relative w-4/5 max-w-sm bg-[#09111E] text-white h-full overflow-y-auto p-5 z-50 border-r border-watch-gold/30 flex flex-col justify-between shadow-2xl">
+            <div>
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full border border-watch-gold/40 flex items-center justify-center text-watch-gold bg-black/30">
+                    ⌚
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold font-serif text-white">WatchHub</h2>
+                    <p className="text-[8px] text-watch-gold tracking-widest font-sans uppercase">Categories & Brands</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Mobile Search */}
+              <form onSubmit={(e) => { handleSearch(e); setMobileDrawerOpen(false); }} className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search 1,200+ watches..."
+                  className="w-full h-10 pl-9 pr-3 text-xs rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-watch-gold"
+                />
+              </form>
+
+              {/* Accordion Categories */}
+              <div className="space-y-1 text-xs">
+                {navTabs.map((tab) => {
+                  const isExpanded = mobileAccordion === tab.id;
+                  const menuObj = MEGA_MENU_CONFIG[tab.id];
+                  return (
+                    <div key={tab.id} className="border-b border-white/5 py-1">
+                      <button
+                        type="button"
+                        onClick={() => setMobileAccordion(isExpanded ? null : tab.id)}
+                        className="w-full flex items-center justify-between py-2 text-left text-gray-200 hover:text-watch-gold font-medium"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-watch-gold">
+                            {tab.id === 'brands' ? '👑' : tab.id === 'smartwatches' ? '📱' : tab.id === 'luxury' ? '💎' : '⌚'}
+                          </span>
+                          <span>{tab.label}</span>
+                        </span>
+                        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180 text-watch-gold' : ''}`} />
+                      </button>
+
+                      {isExpanded && menuObj && (
+                        <div className="pl-4 pr-1 py-2 space-y-3 bg-white/5 rounded-xl mt-1 text-[11px] animate-fade-in">
+                          {menuObj.columns.map((col, idx) => (
+                            <div key={idx} className="space-y-1">
+                              <p className="text-watch-gold font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
+                                <span>{col.icon}</span> {col.title}
+                              </p>
+                              <div className="grid grid-cols-2 gap-1 pl-1">
+                                {col.items.slice(0, 4).map((it, iIdx) => (
+                                  <Link
+                                    key={iIdx}
+                                    to={it.link}
+                                    onClick={() => setMobileDrawerOpen(false)}
+                                    className="text-gray-300 hover:text-white py-0.5 truncate"
+                                  >
+                                    • {it.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+
+                          <Link
+                            to={menuObj.bottomCta?.link || '/products'}
+                            onClick={() => setMobileDrawerOpen(false)}
+                            className="block w-full py-2 text-center bg-watch-gold text-black font-extrabold rounded-lg mt-2 text-xs"
+                          >
+                            {menuObj.bottomCta?.text || 'Explore All →'}
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Direct Quick Links */}
+              <div className="mt-4 pt-3 border-t border-white/10 space-y-2 text-xs">
+                <Link
+                  to="/brands"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="flex items-center justify-between py-1.5 text-watch-gold font-semibold"
+                >
+                  <span>👑 Global 60+ Brands Directory</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  to="/categories"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="flex items-center justify-between py-1.5 text-gray-300 hover:text-white"
+                >
+                  <span>✨ All 12 Watch Categories</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  to="/manufacturing-hub"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="flex items-center justify-between py-1.5 text-gray-300 hover:text-white"
+                >
+                  <span>🏭 3D Manufacturing Hub</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  to="/mobile-app"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="flex items-center justify-between py-1.5 text-gray-300 hover:text-white"
+                >
+                  <span>📱 Download Android App</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Drawer Bottom */}
+            <div className="pt-4 border-t border-white/10 text-center text-[10px] text-gray-500">
+              <p>© 2026 WatchHub – The World of Watches</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════════
+          5. VISUAL WATCH SEARCH (CAMERA SCANNER MODAL)
           ════════════════════════════════════════════════════════════════ */}
       {showVisualSearch && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in font-poppins text-gray-800">
@@ -506,7 +672,7 @@ export const CustomerNavbar = () => {
                 setDetectedWatch(null);
                 setIsScanning(false);
               }}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -535,7 +701,7 @@ export const CustomerNavbar = () => {
                 <button
                   type="button"
                   onClick={() => handleSampleScan('Rolex Submariner Oystersteel', 'Rolex Submariner')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
                   <span className="font-semibold text-gray-800 truncate">Rolex Submariner</span>
@@ -544,7 +710,7 @@ export const CustomerNavbar = () => {
                 <button
                   type="button"
                   onClick={() => handleSampleScan('Omega Speedmaster Moonwatch', 'Omega Speedmaster')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
                   <span className="font-semibold text-gray-800 truncate">Omega Moonwatch</span>
@@ -553,7 +719,7 @@ export const CustomerNavbar = () => {
                 <button
                   type="button"
                   onClick={() => handleSampleScan('AMOLED Ultra Smartwatch', 'Smartwatches')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
                   <span className="font-semibold text-gray-800 truncate">AMOLED Smartwatch</span>
@@ -562,7 +728,7 @@ export const CustomerNavbar = () => {
                 <button
                   type="button"
                   onClick={() => handleSampleScan('Patek Philippe Nautilus Selfwinding', 'Patek Philippe')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2"
+                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
                   <span className="font-semibold text-gray-800 truncate">Patek Nautilus</span>
@@ -590,7 +756,7 @@ export const CustomerNavbar = () => {
                     setShowVisualSearch(false);
                     navigate(`/products?q=${encodeURIComponent(detectedWatch.query)}`);
                   }}
-                  className="w-full bg-gradient-to-r from-watch-gold to-amber-500 text-black font-extrabold py-2 px-3 rounded-lg shadow-sm hover:opacity-95 transition-all text-xs"
+                  className="w-full bg-gradient-to-r from-watch-gold to-amber-500 text-black font-extrabold py-2 px-3 rounded-lg shadow-sm hover:opacity-95 transition-all text-xs cursor-pointer"
                 >
                   View Matching Watches in Vault →
                 </button>
