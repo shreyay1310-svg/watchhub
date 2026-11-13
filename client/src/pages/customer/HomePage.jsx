@@ -588,7 +588,7 @@ export const HomePage = () => {
               Shop by Category
             </h3>
             <Link
-              to="/products"
+              to="/categories"
               className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-watch-gold flex items-center gap-1 transition-colors"
             >
               <span>View All Categories</span>

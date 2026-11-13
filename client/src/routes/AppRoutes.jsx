@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '../pages/customer/HomePage';
 import ProductsPage from '../pages/customer/ProductsPage';
 import BrandsPage from '../pages/customer/BrandsPage';
+import CategoriesPage from '../pages/customer/CategoriesPage';
 import CartPage from '../pages/customer/CartPage';
 import WishlistPage from '../pages/customer/WishlistPage';
 import LoginPage from '../pages/auth/LoginPage';
@@ -26,6 +27,7 @@ export const AppRoutes = () => {
     <Routes>
       {/* Customer Routes */}
       <Route path="/" element={<HomePage />} />
+      <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/brands" element={<BrandsPage />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/cart" element={<CartPage />} />

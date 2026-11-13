@@ -468,6 +468,15 @@ export const CustomerNavbar = () => {
                   <Link to="/products?cat=couple" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">💑 His & Hers Couple Sets</Link>
                   <Link to="/products?cat=combo" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5">🎁 Value Combo Packs</Link>
                   <Link to="/manufacturing-hub" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 text-watch-gold">🏭 3D Manufacturing Hub</Link>
+                  <div className="pt-2 border-t border-white/10 mt-1">
+                    <Link
+                      to="/categories"
+                      onClick={() => setActiveNavDropdown(null)}
+                      className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs py-2 rounded-xl shadow-xs hover:opacity-95 transition-all text-center"
+                    >
+                      <span>✨ View All 12 Categories →</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

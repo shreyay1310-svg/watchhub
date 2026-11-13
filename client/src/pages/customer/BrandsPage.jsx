@@ -547,3 +547,4 @@ const BrandCard = ({ brand, onVisit }) => {
 };
 
 export default BrandsPage;
+

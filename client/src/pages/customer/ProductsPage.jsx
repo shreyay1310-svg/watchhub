@@ -118,6 +118,20 @@ const CATEGORY_META = {
     badge: 'KIDS HOROLOGY',
     gradient: 'from-indigo-950 via-purple-900 to-slate-900',
     icon: '👦'
+  },
+  analog: {
+    title: 'Classic Analog Dress & Everyday Timepieces',
+    subtitle: 'Timeless three-hand analog dials, Roman numerals, and refined elegance for formal and casual wear.',
+    badge: 'TIMELESS ANALOG HOROLOGY',
+    gradient: 'from-blue-950 via-slate-900 to-gray-900',
+    icon: '🕒'
+  },
+  automatic: {
+    title: 'Automatic Mechanical & Skeleton Timepieces',
+    subtitle: 'Kinetic self-winding rotor movements, open-heart escapements, and exhibition sapphire casebacks.',
+    badge: 'PRECISION MECHANICAL AUTOMATIC',
+    gradient: 'from-amber-950 via-neutral-900 to-yellow-950',
+    icon: '⚙️'
   }
 };
 
@@ -192,19 +206,36 @@ export const ProductsPage = () => {
 
       // Category match
       if (selectedCategory !== 'all') {
-        let catMatch = p.category.toLowerCase().includes(selectedCategory.toLowerCase());
-        if (selectedCategory === 'sports') {
+        const catLower = selectedCategory.toLowerCase();
+        let catMatch = p.category.toLowerCase().includes(catLower);
+        if (catLower === 'sports') {
           catMatch = p.category.toLowerCase().includes('waterproof') ||
                      p.category.toLowerCase().includes('digital') ||
                      p.name.toLowerCase().includes('diver') ||
                      p.name.toLowerCase().includes('sports') ||
                      p.description?.toLowerCase().includes('diver');
-        }
-        if (selectedCategory === 'kids') {
+        } else if (catLower === 'kids') {
           catMatch = p.category.toLowerCase().includes('digital') || p.price < 5000;
+        } else if (catLower === 'analog') {
+          catMatch = !p.category.toLowerCase().includes('digital') &&
+                     !p.category.toLowerCase().includes('smartwatch');
+        } else if (catLower === 'automatic') {
+          catMatch = p.name.toLowerCase().includes('automatic') ||
+                     p.name.toLowerCase().includes('mechanical') ||
+                     p.category.toLowerCase().includes('luxury') ||
+                     p.description?.toLowerCase().includes('automatic');
+        } else if (catLower === 'partywear') {
+          catMatch = p.category.toLowerCase().includes('party') ||
+                     p.category.toLowerCase().includes('luxury') ||
+                     p.gender.toLowerCase() === 'women';
+        } else if (catLower === 'combo' || catLower === 'couple') {
+          catMatch = p.category.toLowerCase().includes('combo') ||
+                     p.category.toLowerCase().includes('couple') ||
+                     p.name.toLowerCase().includes('pair') ||
+                     p.name.toLowerCase().includes('couple');
         }
-        const genderMatch = selectedCategory === 'men' ? p.gender.toLowerCase() === 'men' :
-                            selectedCategory === 'women' ? p.gender.toLowerCase() === 'women' : true;
+        const genderMatch = catLower === 'men' ? p.gender.toLowerCase() === 'men' :
+                            catLower === 'women' ? p.gender.toLowerCase() === 'women' : true;
         if (!catMatch && !genderMatch) return false;
       }
 

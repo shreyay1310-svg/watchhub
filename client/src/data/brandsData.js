@@ -813,3 +813,4 @@ export const REGIONAL_SECTIONS = [
   { id: 'european', title: 'European Watchmakers', flag: '🇪🇺', count: 7 },
   { id: 'indian', title: 'Indian Watch Brands', flag: '🇮🇳', count: 5 },
 ];
+

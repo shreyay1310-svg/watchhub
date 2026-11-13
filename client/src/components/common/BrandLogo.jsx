@@ -655,3 +655,4 @@ export const BrandLogo = ({ logoType, brandName, className = 'h-7 w-auto' }) => 
 };
 
 export default BrandLogo;
+
