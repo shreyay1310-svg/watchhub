@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Watch Brands Directory (60 Brands) | WatchHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A15B;
+      --gold-bright: #D9A441;
+      --gold-dark: #A37930;
+      --navy: #0B121C;
+      --navy-dark: #070B12;
+      --navy-light: #16202E;
+      --text-muted: #8E9BAE;
+      --bg-page: #F8FAFC;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-page);
+      color: #0F172A;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* Top Utility Bar */
+    .top-bar {
+      background: var(--navy-dark);
+      color: #94A3B8;
+      font-size: 11px;
+      padding: 7px 32px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .top-bar-left, .top-bar-right { display: flex; align-items: center; gap: 16px; }
+    .top-bar span.gold { color: var(--gold-bright); }
+
+    /* Main Navbar */
+    .main-nav {
+      background: var(--navy);
+      height: 68px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; }
+    .nav-logo-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid rgba(201,161,91,0.4);
+      background: rgba(0,0,0,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: var(--gold);
+    }
+    .nav-logo-text h1 {
+      font-family: 'Cinzel', serif; font-size: 24px; color: #fff; line-height: 1;
+    }
+    .nav-logo-text h1 span { color: var(--gold-bright); }
+    .nav-logo-text p {
+      font-size: 8.5px; font-weight: 800; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-top: 2px;
+    }
+    .nav-search-bar {
+      flex: 1; max-width: 540px; position: relative; margin: 0 24px;
+    }
+    .nav-search-bar input {
+      width: 100%; height: 42px; border-radius: 9999px; border: none; outline: none;
+      padding: 0 44px; font-size: 13px; background: #fff; color: #1E293B;
+    }
+    .nav-search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 14px; }
+    .nav-cam-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 14px; cursor: pointer; }
+
+    .nav-actions { display: flex; align-items: center; gap: 20px; color: #fff; font-size: 12px; font-weight: 600; }
+    .user-pill {
+      display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 9999px;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(217,164,65,0.4); color: #fff;
+    }
+
+    /* Secondary Nav Bar */
+    .sec-nav {
+      background: #070C14;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 12px;
+      color: #CBD5E1;
+      font-weight: 500;
+    }
+    .home-btn {
+      background: linear-gradient(135deg, #D9A441, #B98332);
+      color: #000; font-weight: 800; padding: 6px 16px; border-radius: 9999px; display: flex; align-items: center; gap: 6px;
+    }
+    .sec-nav a:hover { color: var(--gold-bright); }
+    .sec-nav a.active { color: var(--gold-bright); font-weight: 700; }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(180deg, #070C14 0%, #0B121C 60%, #0D1623 100%);
+      color: #fff;
+      padding: 32px 32px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .hero-inner { max-width: 1260px; margin: 0 auto; }
+    .breadcrumbs { font-size: 12px; color: #94A3B8; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .breadcrumbs span.cur { color: var(--gold-bright); font-weight: 600; }
+
+    .hero-title {
+      font-family: 'Cinzel', serif; font-size: 44px; font-weight: 700; line-height: 1.15; margin-bottom: 12px;
+    }
+    .hero-title span {
+      background: linear-gradient(90deg, #E5B04E, #F2D082, #C9A15B);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub { font-size: 15px; color: #CBD5E1; font-weight: 300; margin-bottom: 24px; }
+    .stat-pills { display: flex; flex-wrap: wrap; gap: 12px; }
+    .stat-pill {
+      display: flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 9999px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); font-size: 12px; color: #E2E8F0;
+    }
+
+    /* Sticky Controls Bar */
+    .controls-bar {
+      background: #fff; border-bottom: 1px solid #E2E8F0; padding: 14px 32px;
+      position: sticky; top: 68px; z-index: 90; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .controls-inner { max-width: 1260px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .controls-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .search-wrap { position: relative; flex: 1; max-width: 480px; }
+    .search-wrap input {
+      width: 100%; height: 40px; border-radius: 9999px; border: 1px solid #CBD5E1;
+      padding: 0 16px 0 38px; font-size: 13px; background: #F8FAFC; outline: none;
+    }
+    .search-wrap input:focus { border-color: var(--gold); background: #fff; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 14px; }
+
+    .filter-selects { display: flex; align-items: center; gap: 10px; }
+    .select-pill {
+      height: 40px; border-radius: 9999px; border: 1px solid #CBD5E1; background: #F8FAFC;
+      padding: 0 16px; font-size: 12px; font-weight: 600; color: #334155; outline: none; cursor: pointer;
+    }
+    .clear-btn {
+      height: 40px; padding: 0 16px; border-radius: 9999px; border: 1px solid #FECACA; background: #FEF2F2;
+      color: #DC2626; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;
+    }
+
+    /* Alphabet bar */
+    .alpha-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding-top: 8px; border-top: 1px solid #F1F5F9;
+    }
+    .alpha-list { display: flex; align-items: center; gap: 4px; overflow-x: auto; }
+    .alpha-btn {
+      min-width: 28px; height: 28px; border-radius: 9999px; border: none; background: transparent;
+      font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .alpha-btn.active {
+      background: linear-gradient(135deg, #D9A441, #B98332); color: #000; font-weight: 800;
+    }
+    .alpha-btn.all-btn { padding: 0 12px; }
+    .counter-pill {
+      background: var(--navy); color: #fff; font-size: 12px; font-weight: 700;
+      padding: 6px 16px; border-radius: 9999px; border: 1px solid rgba(201,161,91,0.4); white-space: nowrap;
+    }
+    .counter-pill span { color: var(--gold-bright); }
+
+    /* Catalog Sections */
+    .catalog-wrap { max-width: 1260px; margin: 32px auto; padding: 0 32px; display: flex; flex-direction: column; gap: 32px; }
+    .brand-section-card {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 24px; padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .brand-section-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+      padding-bottom: 14px; border-bottom: 1px solid #F1F5F9;
+    }
+    .b-sec-title { display: flex; align-items: center; gap: 10px; }
+    .b-sec-title h2 { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: #0F172A; }
+    .sec-badge {
+      background: #F1F5F9; color: #475569; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px;
+    }
+    .sec-subtext { font-size: 12px; color: #94A3B8; font-weight: 600; }
+
+    /* Grid of Brand Cards (5 columns desktop) */
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 1100px) { .brands-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 850px) { .brands-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 580px) { .brands-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .brand-tile {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 16px;
+      padding: 16px 12px; display: flex; flex-direction: column; align-items: center;
+      justify-content: space-between; text-align: center; position: relative;
+      transition: all 0.2s ease; cursor: pointer; min-height: 130px;
+    }
+    .brand-tile:hover {
+      border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(201,161,91,0.15);
+    }
+    .tile-ext-icon {
+      position: absolute; top: 10px; right: 10px; font-size: 12px; color: #94A3B8; transition: color 0.2s;
+    }
+    .brand-tile:hover .tile-ext-icon { color: var(--gold-dark); }
+    .tile-logo-wrap {
+      height: 52px; display: flex; align-items: center; justify-content: center; width: 100%; margin-bottom: 8px;
+    }
+    .tile-name {
+      font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 4px; line-height: 1.2;
+    }
+    .tile-country {
+      font-size: 11px; color: #64748B; font-weight: 500; display: flex; align-items: center; gap: 4px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy-dark); color: #94A3B8; font-size: 12px; padding: 48px 32px 24px;
+      border-top: 1px solid rgba(255,255,255,0.08); margin-top: 48px;
+    }
+    .footer-inner {
+      max-width: 1260px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin-bottom: 32px;
+    }
+    .footer-col h5 { color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col a:hover { color: var(--gold-bright); }
+    .footer-bottom {
+      max-width: 1260px; margin: 0 auto; text-align: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; font-size: 11px; color: #64748B;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Utility Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span>🛡️ <span class="gold">100% Authentic</span></span>
+      <span>|</span>
+      <span>🚚 Free Shipping Above ₹999</span>
+      <span>|</span>
+      <span>🔄 7-Day Easy Returns</span>
+      <span>|</span>
+      <span>🎧 24x7 Support</span>
+    </div>
+    <div class="top-bar-right">
+      <span>📞 +91 98765 43210</span>
+      <span>|</span>
+      <span>✉ support@watchhub.com</span>
+    </div>
+  </div>
+
+  <!-- Main Navbar -->
+  <header class="main-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">⌚</div>
+      <div class="nav-logo-text">
+        <h1>Watch<span>Hub</span></h1>
+        <p>THE WORLD OF WATCHES</p>
+      </div>
+    </a>
+
+    <div class="nav-search-bar">
+      <span class="nav-search-icon">🔍</span>
+      <input type="text" id="navGlobalSearch" placeholder="Search for brands, watches, collections..." onkeyup="handleQuickSearch(this.value)" />
+      <span class="nav-cam-icon" title="Scan Watch">📷</span>
+    </div>
+
+    <div class="nav-actions">
+      <a href="products.html" style="display:flex;align-items:center;gap:6px;">❤️ <span>Wishlist</span></a>
+      <a href="products.html" style="display:flex;align-items:center;gap:6px;">🛍️ <span>Cart (0)</span></a>
+      <div class="user-pill">
+        <span>👤</span>
+        <span>Hi, Shreya</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Secondary Category Menu -->
+  <nav class="sec-nav">
+    <a href="index.html" class="home-btn"><span>🏠</span> <span>Home</span></a>
+    <a href="brands.html" class="active">Brands ▾</a>
+    <a href="products.html?cat=men">Men ▾</a>
+    <a href="products.html?cat=women">Women ▾</a>
+    <a href="products.html?cat=kids">Kids ▾</a>
+    <a href="products.html?cat=smartwatches">Smartwatches ▾</a>
+    <a href="products.html?cat=luxury">Luxury ▾</a>
+    <a href="products.html?cat=sports">Sports ▾</a>
+    <a href="products.html?cat=collections">Collections ▾</a>
+  </nav>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-inner">
+      <div class="breadcrumbs">
+        <a href="index.html">Home</a>
+        <span>&gt;</span>
+        <span class="cur">Brands</span>
+      </div>
+
+      <h1 class="hero-title">Explore the World's Finest<br><span>Watch Brands</span></h1>
+      <p class="hero-sub">Discover 60 iconic watchmakers from around the world, all in one destination.</p>
+
+      <div class="stat-pills">
+        <div class="stat-pill"><span>👑</span> <strong>60 Global Brands</strong></div>
+        <div class="stat-pill"><span>🌐</span> <strong>6 Regions</strong></div>
+        <div class="stat-pill"><span>🛡️</span> <strong>Official Websites</strong></div>
+        <div class="stat-pill"><span>✔️</span> <strong>Trusted & Authentic</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky Controls Bar -->
+  <div class="controls-bar">
+    <div class="controls-inner">
+      <div class="controls-top">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="brandSearchInput" placeholder="Search brands (e.g. Rolex, Casio, Seiko...)" onkeyup="filterBrands()" />
+        </div>
+
+        <div class="filter-selects">
+          <select id="countryFilter" class="select-pill" onchange="filterBrands()">
+            <option value="All">🌐 All Countries</option>
+            <option value="Switzerland">Switzerland (🇨🇭)</option>
+            <option value="Japan">Japan (🇯🇵)</option>
+            <option value="USA">USA (🇺🇸)</option>
+            <option value="India">India (🇮🇳)</option>
+            <option value="Finland">Finland (🇫🇮)</option>
+            <option value="China">China (🇨🇳)</option>
+            <option value="South Korea">South Korea (🇰🇷)</option>
+          </select>
+
+          <select id="categoryFilter" class="select-pill" onchange="filterBrands()">
+            <option value="All">🏷️ All Categories</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Premium">Premium</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Sports">Sports</option>
+            <option value="Smartwatch">Smartwatch</option>
+            <option value="Heritage">Heritage</option>
+          </select>
+
+          <button type="button" class="clear-btn" onclick="resetAllFilters()">🔄 Clear All</button>
+        </div>
+      </div>
+
+      <div class="alpha-bar">
+        <div class="alpha-list" id="alphaList">
+          <button type="button" class="alpha-btn all-btn active" onclick="selectLetter('All', this)">All</button>
+        </div>
+        <div class="counter-pill">Total Brands: <span id="totalCountDisplay">60</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Catalog Wrap -->
+  <main class="catalog-wrap" id="catalogContainer">
+    
+    <div class="brand-section-card" data-section="swiss">
+      <div class="brand-section-header">
+        <div class="b-sec-title">
+          <span class="sec-flag">🇨🇭</span>
+          <h2>Swiss Luxury Watches</h2>
+          <span class="sec-badge">25 Brands</span>
+        </div>
+        <span class="sec-subtext">Official Manufacturer Portals</span>
+      </div>
+      <div class="brands-grid">
+    
+        <a href="https://www.rolex.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="rolex" data-country="Switzerland" data-category="Luxury" title="Visit Official Rolex Website (https://www.rolex.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#006039;font-weight:900;letter-spacing:2px;font-family:serif;">👑 ROLEX</div></div>
+          <div class="tile-name">Rolex</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.omegawatches.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="omega" data-country="Switzerland" data-category="Luxury" title="Visit Official Omega Website (https://www.omegawatches.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#C41230;font-weight:900;letter-spacing:2px;"><span style="font-size:16px;">Ω</span> OMEGA</div></div>
+          <div class="tile-name">Omega</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.patek.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="patek philippe" data-country="Switzerland" data-category="Luxury" title="Visit Official Patek Philippe Website (https://www.patek.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:11px;letter-spacing:1px;color:#111;">PATEK PHILIPPE<br><span style="font-size:8px;color:#666;font-family:sans-serif;">GENEVE</span></div></div>
+          <div class="tile-name">Patek Philippe</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.audemarspiguet.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="audemars piguet" data-country="Switzerland" data-category="Luxury" title="Visit Official Audemars Piguet Website (https://www.audemarspiguet.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:11px;letter-spacing:1px;color:#111;">AUDEMARS PIGUET</div></div>
+          <div class="tile-name">Audemars Piguet</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.vacheron-constantin.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="vacheron constantin" data-country="Switzerland" data-category="Luxury" title="Visit Official Vacheron Constantin Website (https://www.vacheron-constantin.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#8B6B2B;font-size:11px;font-weight:900;">✠ VACHERON CONSTANTIN</div></div>
+          <div class="tile-name">Vacheron Constantin</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.jaeger-lecoultre.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="jaeger-lecoultre" data-country="Switzerland" data-category="Luxury" title="Visit Official Jaeger-LeCoultre Website (https://www.jaeger-lecoultre.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:11px;color:#111;">JAEGER-LECOULTRE</div></div>
+          <div class="tile-name">Jaeger-LeCoultre</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.iwc.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="iwc schaffhausen" data-country="Switzerland" data-category="Luxury" title="Visit Official IWC Schaffhausen Website (https://www.iwc.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">IWC<br><span style="font-size:8px;letter-spacing:1px;color:#666;">SCHAFFHAUSEN</span></div></div>
+          <div class="tile-name">IWC Schaffhausen</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.breitling.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="breitling" data-country="Switzerland" data-category="Luxury" title="Visit Official Breitling Website (https://www.breitling.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:1px;color:#111;"><span style="color:#E6A100;">🪽 B 🪽</span><br>BREITLING</div></div>
+          <div class="tile-name">Breitling</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.tagheuer.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="tag heuer" data-country="Switzerland" data-category="Luxury" title="Visit Official TAG Heuer Website (https://www.tagheuer.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="background:#000;color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:900;border:1px solid #d00;"><span style="background:#00875a;padding:1px 3px;border-radius:2px;">TAG</span> HEUER</div></div>
+          <div class="tile-name">TAG Heuer</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.hublot.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="hublot" data-country="Switzerland" data-category="Luxury" title="Visit Official Hublot Website (https://www.hublot.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">H HUBLOT</div></div>
+          <div class="tile-name">Hublot</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.longines.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="longines" data-country="Switzerland" data-category="Premium" title="Visit Official Longines Website (https://www.longines.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#00205B;font-weight:900;font-size:11px;letter-spacing:2px;font-family:serif;">⏳ LONGINES</div></div>
+          <div class="tile-name">Longines</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.tissotwatches.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="tissot" data-country="Switzerland" data-category="Premium" title="Visit Official Tissot Website (https://www.tissotwatches.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;"><span style="background:#C41230;color:#fff;padding:1px 4px;border-radius:2px;">+</span> TISSOT</div></div>
+          <div class="tile-name">Tissot</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.rado.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="rado" data-country="Switzerland" data-category="Premium" title="Visit Official Rado Website (https://www.rado.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:3px;color:#111;">RADO</div></div>
+          <div class="tile-name">Rado</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.zenith-watches.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="zenith" data-country="Switzerland" data-category="Luxury" title="Visit Official Zenith Website (https://www.zenith-watches.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">★ ZENITH</div></div>
+          <div class="tile-name">Zenith</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.blancpain.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="blancpain" data-country="Switzerland" data-category="Luxury" title="Visit Official Blancpain Website (https://www.blancpain.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:12px;letter-spacing:1px;color:#111;">BLANCPAIN</div></div>
+          <div class="tile-name">Blancpain</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.breguet.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="breguet" data-country="Switzerland" data-category="Luxury" title="Visit Official Breguet Website (https://www.breguet.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-style:italic;font-weight:900;font-size:14px;color:#111;">Breguet</div></div>
+          <div class="tile-name">Breguet</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.panerai.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="panerai" data-country="Switzerland" data-category="Luxury" title="Visit Official Panerai Website (https://www.panerai.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:3px;color:#111;">PANERAI</div></div>
+          <div class="tile-name">Panerai</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.tudorwatch.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="tudor" data-country="Switzerland" data-category="Luxury" title="Visit Official Tudor Website (https://www.tudorwatch.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">🛡️ TUDOR</div></div>
+          <div class="tile-name">Tudor</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.oris.ch/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="oris" data-country="Switzerland" data-category="Premium" title="Visit Official Oris Website (https://www.oris.ch/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#B01B1B;font-weight:900;font-size:13px;letter-spacing:3px;">ORIS</div></div>
+          <div class="tile-name">Oris</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.swatch.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="swatch" data-country="Switzerland" data-category="Fashion" title="Visit Official Swatch Website (https://www.swatch.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;color:#111;">swatch <span style="color:#ED1C24;">+</span></div></div>
+          <div class="tile-name">Swatch</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://frederiqueconstant.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="frederique constant" data-country="Switzerland" data-category="Premium" title="Visit Official Frederique Constant Website (https://frederiqueconstant.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:10px;color:#111;">FREDERIQUE CONSTANT</div></div>
+          <div class="tile-name">Frederique Constant</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.raymond-weil.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="raymond weil" data-country="Switzerland" data-category="Premium" title="Visit Official Raymond Weil Website (https://www.raymond-weil.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:10px;letter-spacing:1px;color:#111;">RAYMOND WEIL</div></div>
+          <div class="tile-name">Raymond Weil</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.maurice-lacroix.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="maurice lacroix" data-country="Switzerland" data-category="Premium" title="Visit Official Maurice Lacroix Website (https://www.maurice-lacroix.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:10px;letter-spacing:1px;color:#111;">⋈ MAURICE LACROIX</div></div>
+          <div class="tile-name">Maurice Lacroix</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.chopard.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="chopard" data-country="Switzerland" data-category="Luxury" title="Visit Official Chopard Website (https://www.chopard.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-style:italic;font-weight:900;font-size:14px;color:#111;">Chopard</div></div>
+          <div class="tile-name">Chopard</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.cartier.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="cartier" data-country="Switzerland" data-category="Luxury" title="Visit Official Cartier Website (https://www.cartier.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-style:italic;font-weight:900;font-size:14px;color:#C41230;">Cartier</div></div>
+          <div class="tile-name">Cartier</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        </div></div>
+    <div class="brand-section-card" data-section="japanese">
+      <div class="brand-section-header">
+        <div class="b-sec-title">
+          <span class="sec-flag">🇯🇵</span>
+          <h2>Japanese Watch Collection</h2>
+          <span class="sec-badge">5 Brands</span>
+        </div>
+        <span class="sec-subtext">Official Manufacturer Portals</span>
+      </div>
+      <div class="brands-grid">
+    
+        <a href="https://www.seikowatches.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="seiko" data-country="Japan" data-category="Premium" title="Visit Official Seiko Website (https://www.seikowatches.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:14px;letter-spacing:2px;color:#111;">SEIKO</div></div>
+          <div class="tile-name">Seiko</div>
+          <div class="tile-country"><span>🇯🇵</span> <span>Japan</span></div>
+        </a>
+        
+        <a href="https://www.grand-seiko.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="grand seiko" data-country="Japan" data-category="Luxury" title="Visit Official Grand Seiko Website (https://www.grand-seiko.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:11px;color:#111;">GS Grand Seiko</div></div>
+          <div class="tile-name">Grand Seiko</div>
+          <div class="tile-country"><span>🇯🇵</span> <span>Japan</span></div>
+        </a>
+        
+        <a href="https://www.citizenwatch.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="citizen" data-country="Japan" data-category="Premium" title="Visit Official Citizen Website (https://www.citizenwatch.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;letter-spacing:3px;color:#111;">CITIZEN</div></div>
+          <div class="tile-name">Citizen</div>
+          <div class="tile-country"><span>🇯🇵</span> <span>Japan</span></div>
+        </a>
+        
+        <a href="https://www.casio.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="casio" data-country="Japan" data-category="Sports" title="Visit Official Casio Website (https://www.casio.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#003882;font-weight:900;font-size:14px;letter-spacing:2px;">CASIO</div></div>
+          <div class="tile-name">Casio</div>
+          <div class="tile-country"><span>🇯🇵</span> <span>Japan</span></div>
+        </a>
+        
+        <a href="https://orient-watch.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="orient" data-country="Japan" data-category="Heritage" title="Visit Official Orient Website (https://orient-watch.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">👑 ORIENT</div></div>
+          <div class="tile-name">Orient</div>
+          <div class="tile-country"><span>🇯🇵</span> <span>Japan</span></div>
+        </a>
+        </div></div>
+    <div class="brand-section-card" data-section="american">
+      <div class="brand-section-header">
+        <div class="b-sec-title">
+          <span class="sec-flag">🇺🇸</span>
+          <h2>American & Fashion Watches</h2>
+          <span class="sec-badge">10 Brands</span>
+        </div>
+        <span class="sec-subtext">Official Manufacturer Portals</span>
+      </div>
+      <div class="brands-grid">
+    
+        <a href="https://www.timex.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="timex" data-country="USA" data-category="Heritage" title="Visit Official Timex Website (https://www.timex.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#E4002B;font-weight:900;font-size:14px;letter-spacing:2px;">TIMEX</div></div>
+          <div class="tile-name">Timex</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.fossil.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="fossil" data-country="USA" data-category="Fashion" title="Visit Official Fossil Website (https://www.fossil.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">FOSSIL</div></div>
+          <div class="tile-name">Fossil</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.bulova.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="bulova" data-country="USA" data-category="Heritage" title="Visit Official Bulova Website (https://www.bulova.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">⚙️ BULOVA</div></div>
+          <div class="tile-name">Bulova</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.hamiltonwatch.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="hamilton" data-country="USA" data-category="Premium" title="Visit Official Hamilton Website (https://www.hamiltonwatch.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">⚓ HAMILTON</div></div>
+          <div class="tile-name">Hamilton</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.shinola.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="shinola" data-country="USA" data-category="Heritage" title="Visit Official Shinola Website (https://www.shinola.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">SHINOLA<br><span style="font-size:7px;color:#666;">DETROIT</span></div></div>
+          <div class="tile-name">Shinola</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.movado.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="movado" data-country="USA" data-category="Fashion" title="Visit Official Movado Website (https://www.movado.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;"><span style="color:#E5B04E;">●</span> MOVADO</div></div>
+          <div class="tile-name">Movado</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.kennethcole.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="kenneth cole" data-country="USA" data-category="Fashion" title="Visit Official Kenneth Cole Website (https://www.kennethcole.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:11px;color:#111;">Kenneth Cole</div></div>
+          <div class="tile-name">Kenneth Cole</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.guess.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="guess" data-country="USA" data-category="Fashion" title="Visit Official Guess Website (https://www.guess.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">GUESS <span style="color:#d00;">?</span></div></div>
+          <div class="tile-name">Guess</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://usa.tommy.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="tommy hilfiger" data-country="USA" data-category="Fashion" title="Visit Official Tommy Hilfiger Website (https://usa.tommy.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#00174F;font-weight:900;font-size:10px;letter-spacing:1px;">TOMMY HILFIGER</div></div>
+          <div class="tile-name">Tommy Hilfiger</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.michaelkors.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="michael kors" data-country="USA" data-category="Fashion" title="Visit Official Michael Kors Website (https://www.michaelkors.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:11px;letter-spacing:1px;color:#111;">MICHAEL KORS</div></div>
+          <div class="tile-name">Michael Kors</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        </div></div>
+    <div class="brand-section-card" data-section="smartwatch">
+      <div class="brand-section-header">
+        <div class="b-sec-title">
+          <span class="sec-flag">⌚</span>
+          <h2>Smartwatch & Sports Brands</h2>
+          <span class="sec-badge">8 Brands</span>
+        </div>
+        <span class="sec-subtext">Official Manufacturer Portals</span>
+      </div>
+      <div class="brands-grid">
+    
+        <a href="https://www.apple.com/watch/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="apple" data-country="USA" data-category="Smartwatch" title="Visit Official Apple Website (https://www.apple.com/watch/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:15px;color:#111;"> Apple</div></div>
+          <div class="tile-name">Apple</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://www.samsung.com/galaxy-watch/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="samsung" data-country="South Korea" data-category="Smartwatch" title="Visit Official Samsung Website (https://www.samsung.com/galaxy-watch/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#1428A0;font-weight:900;font-size:13px;letter-spacing:2px;">SAMSUNG</div></div>
+          <div class="tile-name">Samsung</div>
+          <div class="tile-country"><span>🇰🇷</span> <span>South Korea</span></div>
+        </a>
+        
+        <a href="https://www.garmin.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="garmin" data-country="USA" data-category="Sports" title="Visit Official Garmin Website (https://www.garmin.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">▲ GARMIN</div></div>
+          <div class="tile-name">Garmin</div>
+          <div class="tile-country"><span>🇺🇸</span> <span>USA</span></div>
+        </a>
+        
+        <a href="https://consumer.huawei.com/en/wearables/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="huawei" data-country="China" data-category="Smartwatch" title="Visit Official Huawei Website (https://consumer.huawei.com/en/wearables/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#CF0A2C;font-weight:900;font-size:11px;letter-spacing:1px;">🌸 HUAWEI</div></div>
+          <div class="tile-name">Huawei</div>
+          <div class="tile-country"><span>🇨🇳</span> <span>China</span></div>
+        </a>
+        
+        <a href="https://www.mi.com/global/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="xiaomi" data-country="China" data-category="Smartwatch" title="Visit Official Xiaomi Website (https://www.mi.com/global/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;color:#111;"><span style="background:#FF6900;color:#fff;padding:1px 3px;border-radius:2px;">mi</span> Xiaomi</div></div>
+          <div class="tile-name">Xiaomi</div>
+          <div class="tile-country"><span>🇨🇳</span> <span>China</span></div>
+        </a>
+        
+        <a href="https://www.amazfit.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="amazfit" data-country="China" data-category="Sports" title="Visit Official Amazfit Website (https://www.amazfit.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">amazfit</div></div>
+          <div class="tile-name">Amazfit</div>
+          <div class="tile-country"><span>🇨🇳</span> <span>China</span></div>
+        </a>
+        
+        <a href="https://www.suunto.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="suunto" data-country="Finland" data-category="Sports" title="Visit Official Suunto Website (https://www.suunto.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">SUUNTO</div></div>
+          <div class="tile-name">Suunto</div>
+          <div class="tile-country"><span>🇫🇮</span> <span>Finland</span></div>
+        </a>
+        
+        <a href="https://www.polar.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="polar" data-country="Finland" data-category="Sports" title="Visit Official Polar Website (https://www.polar.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">POLAR</div></div>
+          <div class="tile-name">Polar</div>
+          <div class="tile-country"><span>🇫🇮</span> <span>Finland</span></div>
+        </a>
+        </div></div>
+    <div class="brand-section-card" data-section="european">
+      <div class="brand-section-header">
+        <div class="b-sec-title">
+          <span class="sec-flag">🇪🇺</span>
+          <h2>European Watchmakers</h2>
+          <span class="sec-badge">7 Brands</span>
+        </div>
+        <span class="sec-subtext">Official Manufacturer Portals</span>
+      </div>
+      <div class="brands-grid">
+    
+        <a href="https://mondaine.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="mondaine" data-country="Switzerland" data-category="Heritage" title="Visit Official Mondaine Website (https://mondaine.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:11px;letter-spacing:2px;color:#111;">MONDAINE</div></div>
+          <div class="tile-name">Mondaine</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.victorinox.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="victorinox" data-country="Switzerland" data-category="Sports" title="Visit Official Victorinox Website (https://www.victorinox.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:11px;letter-spacing:1px;color:#111;"><span style="background:#D32F2F;color:#fff;padding:1px 3px;border-radius:2px;">+</span> VICTORINOX</div></div>
+          <div class="tile-name">Victorinox</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://alpinawatches.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="alpina" data-country="Switzerland" data-category="Sports" title="Visit Official Alpina Website (https://alpinawatches.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:12px;letter-spacing:2px;color:#111;"><span style="color:#E31B23;">▲</span> Alpina</div></div>
+          <div class="tile-name">Alpina</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.certina.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="certina" data-country="Switzerland" data-category="Sports" title="Visit Official Certina Website (https://www.certina.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;"><span style="background:#008559;color:#fff;padding:1px 3px;border-radius:2px;font-size:9px;">DS</span> CERTINA</div></div>
+          <div class="tile-name">Certina</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.midowatches.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="mido" data-country="Switzerland" data-category="Premium" title="Visit Official Mido Website (https://www.midowatches.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#E66212;font-weight:900;font-size:13px;letter-spacing:2px;">MIDO</div></div>
+          <div class="tile-name">Mido</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://www.edox.ch/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="edox" data-country="Switzerland" data-category="Sports" title="Visit Official Edox Website (https://www.edox.ch/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-weight:900;font-size:12px;letter-spacing:2px;color:#111;">⌛ EDOX</div></div>
+          <div class="tile-name">Edox</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        
+        <a href="https://doxawatches.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="doxa" data-country="Switzerland" data-category="Heritage" title="Visit Official Doxa Website (https://doxawatches.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#FF5A00;font-family:serif;font-weight:900;font-size:13px;letter-spacing:2px;">DOXA</div></div>
+          <div class="tile-name">Doxa</div>
+          <div class="tile-country"><span>🇨🇭</span> <span>Switzerland</span></div>
+        </a>
+        </div></div>
+    <div class="brand-section-card" data-section="indian">
+      <div class="brand-section-header">
+        <div class="b-sec-title">
+          <span class="sec-flag">🇮🇳</span>
+          <h2>Indian Watch Brands</h2>
+          <span class="sec-badge">5 Brands</span>
+        </div>
+        <span class="sec-subtext">Official Manufacturer Portals</span>
+      </div>
+      <div class="brands-grid">
+    
+        <a href="https://www.titan.co.in/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="titan" data-country="India" data-category="Premium" title="Visit Official Titan Website (https://www.titan.co.in/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:13px;letter-spacing:2px;color:#111;">👑 TITAN</div></div>
+          <div class="tile-name">Titan</div>
+          <div class="tile-country"><span>🇮🇳</span> <span>India</span></div>
+        </a>
+        
+        <a href="https://www.fastrack.in/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="fastrack" data-country="India" data-category="Fashion" title="Visit Official Fastrack Website (https://www.fastrack.in/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-style:italic;font-weight:900;font-size:13px;color:#111;"><span style="color:#FF4800;">⚡</span> fastrack</div></div>
+          <div class="tile-name">Fastrack</div>
+          <div class="tile-country"><span>🇮🇳</span> <span>India</span></div>
+        </a>
+        
+        <a href="https://www.hmtwatches.in/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="hmt" data-country="India" data-category="Heritage" title="Visit Official HMT Website (https://www.hmtwatches.in/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#002D62;font-family:serif;font-weight:900;font-size:15px;letter-spacing:2px;">hmt</div></div>
+          <div class="tile-name">HMT</div>
+          <div class="tile-country"><span>🇮🇳</span> <span>India</span></div>
+        </a>
+        
+        <a href="https://jaipur.watch/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="jaipur watch co." data-country="India" data-category="Luxury" title="Visit Official Jaipur Watch Co. Website (https://jaipur.watch/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="color:#936A34;font-family:serif;font-weight:900;font-size:11px;">JAIPUR WATCH CO.</div></div>
+          <div class="tile-name">Jaipur Watch Co.</div>
+          <div class="tile-country"><span>🇮🇳</span> <span>India</span></div>
+        </a>
+        
+        <a href="https://www.bangalorewatchco.com/" target="_blank" rel="noopener noreferrer" class="brand-tile" data-name="bangalore watch co." data-country="India" data-category="Premium" title="Visit Official Bangalore Watch Co. Website (https://www.bangalorewatchco.com/)">
+          <div class="tile-ext-icon">↗</div>
+          <div class="tile-logo-wrap"><div style="font-family:serif;font-weight:900;font-size:10px;color:#111;">BANGALORE WATCH CO.</div></div>
+          <div class="tile-name">Bangalore Watch Co.</div>
+          <div class="tile-country"><span>🇮🇳</span> <span>India</span></div>
+        </a>
+        </div></div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h4 style="color:#fff;font-family:'Cinzel',serif;font-size:18px;margin-bottom:12px;">Watch<span style="color:var(--gold-bright);">Hub</span></h4>
+        <p style="line-height:1.6;">India's premier destination for genuine luxury, sports and fashion wristwatches.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Navigation</h5>
+        <ul>
+          <li><a href="brands.html" style="color:var(--gold-bright);font-weight:700;">👑 Global Watch Brands (60)</a></li>
+          <li><a href="products.html">All Watches</a></li>
+          <li><a href="products.html?cat=luxury">Swiss Haute Horlogerie</a></li>
+          <li><a href="products.html?cat=men">Men's Watches</a></li>
+          <li><a href="manufacturing-hub.html">🏭 Manufacturing Hub</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Customer Support</h5>
+        <ul>
+          <li><a href="products.html">Track Your Order</a></li>
+          <li><a href="mobile-app.html">Download Android APK</a></li>
+          <li><a href="dashboard.html">👑 Employee Staff Portal</a></li>
+          <li><a href="login.html">Account Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>VIP Newsletter</h5>
+        <p style="margin-bottom:12px;">Subscribe for exclusive releases and manufacturer updates.</p>
+        <div style="display:flex;gap:6px;">
+          <input type="email" placeholder="Your email address" style="padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-size:12px;flex:1;outline:none;" />
+          <button style="background:linear-gradient(135deg,#D9A441,#B98332);color:#000;font-weight:800;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Join</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 WatchHub – The World of Watches. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    let activeLetter = 'All';
+
+    // Populate Alphabet Bar
+    const alphaContainer = document.getElementById('alphaList');
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    letters.forEach(letter => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'alpha-btn';
+      btn.innerText = letter;
+      btn.onclick = () => selectLetter(letter, btn);
+      alphaContainer.appendChild(btn);
+    });
+
+    function selectLetter(letter, btnElement) {
+      activeLetter = letter;
+      document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+      filterBrands();
+    }
+
+    function handleQuickSearch(val) {
+      document.getElementById('brandSearchInput').value = val;
+      filterBrands();
+    }
+
+    function resetAllFilters() {
+      document.getElementById('brandSearchInput').value = '';
+      document.getElementById('countryFilter').value = 'All';
+      document.getElementById('categoryFilter').value = 'All';
+      activeLetter = 'All';
+      document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.alpha-btn.all-btn').classList.add('active');
+      filterBrands();
+    }
+
+    function filterBrands() {
+      const searchVal = document.getElementById('brandSearchInput').value.toLowerCase().trim();
+      const countryVal = document.getElementById('countryFilter').value;
+      const catVal = document.getElementById('categoryFilter').value;
+
+      const tiles = document.querySelectorAll('.brand-tile');
+      let visibleCount = 0;
+
+      tiles.forEach(tile => {
+        const name = tile.getAttribute('data-name');
+        const country = tile.getAttribute('data-country');
+        const cat = tile.getAttribute('data-category');
+
+        let matchesSearch = !searchVal || name.includes(searchVal) || country.toLowerCase().includes(searchVal);
+        let matchesCountry = countryVal === 'All' || country === countryVal;
+        let matchesCat = catVal === 'All' || cat === catVal;
+        let matchesLetter = activeLetter === 'All' || name.toUpperCase().startsWith(activeLetter);
+
+        if (matchesSearch && matchesCountry && matchesCat && matchesLetter) {
+          tile.style.display = 'flex';
+          visibleCount++;
+        } else {
+          tile.style.display = 'none';
+        }
+      });
+
+      // Toggle section headers if all cards inside are hidden
+      document.querySelectorAll('.brand-section-card').forEach(sec => {
+        const visibleInSec = sec.querySelectorAll('.brand-tile[style*="display: flex"]').length;
+        if (visibleInSec === 0 && (searchVal || countryVal !== 'All' || catVal !== 'All' || activeLetter !== 'All')) {
+          sec.style.display = 'none';
+        } else {
+          sec.style.display = 'block';
+        }
+      });
+
+      document.getElementById('totalCountDisplay').innerText = visibleCount;
+    }
+  </script>
+</body>
+</html>

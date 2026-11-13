@@ -523,7 +523,7 @@ export const HomePage = () => {
               <div className="w-12 h-1 bg-[#D9A441] rounded-full mt-1.5" />
             </div>
             <Link
-              to="/products"
+              to="/brands"
               className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-watch-gold flex items-center gap-1 transition-colors"
             >
               <span>View All Brands</span>
@@ -817,6 +817,7 @@ export const HomePage = () => {
           <div>
             <h5 className="font-bold text-white mb-3">Quick Navigation</h5>
             <ul className="space-y-1.5 text-gray-400">
+              <li><Link to="/brands" className="text-watch-gold font-bold hover:underline">👑 Global Watch Brands (60)</Link></li>
               <li><Link to="/products" className="hover:text-watch-gold">All Watches</Link></li>
               <li><Link to="/products?cat=luxury" className="hover:text-watch-gold">Swiss Haute Horlogerie</Link></li>
               <li><Link to="/products?cat=men" className="hover:text-watch-gold">Men's Watches</Link></li>

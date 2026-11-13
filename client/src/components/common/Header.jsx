@@ -316,6 +316,15 @@ export const CustomerNavbar = () => {
                   <Link to="/products?brand=fossil" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>💼</span> Fossil</Link>
                   <Link to="/products?brand=timex" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>⏱️</span> Timex</Link>
                   <Link to="/products?brand=tissot" onClick={() => setActiveNavDropdown(null)} className="hover:text-watch-gold p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-2"><span>🇨🇭</span> Tissot</Link>
+                  <div className="col-span-2 pt-2 border-t border-white/10 mt-1">
+                    <Link
+                      to="/brands"
+                      onClick={() => setActiveNavDropdown(null)}
+                      className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#D9A441] to-[#B98332] text-black font-extrabold text-xs py-2 rounded-xl shadow-xs hover:opacity-95 transition-all text-center"
+                    >
+                      <span>👑 View All 60 Brands Directory →</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
