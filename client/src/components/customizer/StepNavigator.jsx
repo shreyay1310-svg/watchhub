@@ -64,3 +64,4 @@ export const StepNavigator = ({ currentStep, onSelectStep, completedSteps = [] }
 };
 
 export default StepNavigator;
+

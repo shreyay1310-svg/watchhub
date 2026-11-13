@@ -265,3 +265,4 @@ export const DesignSummarySidebar = ({
 };
 
 export default DesignSummarySidebar;
+
