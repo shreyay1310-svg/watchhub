@@ -393,4 +393,37 @@ export const GLOBAL_WATCH_BRANDS = [
   { name: 'boAt', country: 'India' }
 ];
 
+// Centralized Official Brand Website Links
+export const brandLinks = {
+  Rolex: 'https://www.rolex.com/',
+  Omega: 'https://www.omegawatches.com/',
+  Tissot: 'https://www.tissotwatches.com/',
+  Fossil: 'https://www.fossil.com/',
+  Seiko: 'https://www.seikowatches.com/',
+  Casio: 'https://www.casio.com/',
+  Citizen: 'https://www.citizenwatch.com/',
+  Titan: 'https://www.titan.co.in/',
+  Timex: 'https://www.timex.com/',
+  Fastrack: 'https://www.fastrack.in/',
+  Poise: 'https://www.titan.co.in/',
+  'Tag Heuer': 'https://www.tagheuer.com/',
+  Hublot: 'https://www.hublot.com/',
+  'Patek Philippe': 'https://www.patek.com/',
+  'Audemars Piguet': 'https://www.audemarspiguet.com/',
+  Cartier: 'https://www.cartier.com/',
+  Breitling: 'https://www.breitling.com/',
+  Rado: 'https://www.rado.com/',
+  Longines: 'https://www.longines.com/',
+  'Armani Exchange': 'https://www.armaniexchange.com/',
+  'Tommy Hilfiger': 'https://www.tommy.com/',
+  'Michael Kors': 'https://www.michaelkors.com/',
+  Garmin: 'https://www.garmin.com/',
+  Apple: 'https://www.apple.com/watch/',
+  Samsung: 'https://www.samsung.com/galaxy-watch/',
+  Noise: 'https://www.gonoise.com/',
+  boAt: 'https://www.boat-lifestyle.com/'
+};
+
+export const BRAND_LINKS = brandLinks;
+
 export default MOCK_PRODUCTS;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import { useCart } from '../../context/CartContext';
-import { MOCK_PRODUCTS } from '../../data/mockProducts';
+import { MOCK_PRODUCTS, brandLinks } from '../../data/mockProducts';
 import {
   Truck,
   ShieldCheck,
@@ -545,20 +545,26 @@ export const HomePage = () => {
 
             {/* Brands Row */}
             <div ref={brandsRowRef} className="flex items-center gap-2.5 sm:gap-3.5 overflow-x-auto scrollbar-none scroll-smooth py-1 flex-1">
-              {POPULAR_BRANDS.map((b) => (
-                <Link
-                  key={b.slug}
-                  to={`/products?brand=${b.slug}`}
-                  className="bg-white hover:bg-amber-50/40 border border-gray-200 hover:border-watch-gold rounded-2xl p-2 sm:p-2.5 flex items-center justify-center shadow-xs hover:shadow-md transition-all flex-shrink-0 w-24 sm:w-28 h-12"
-                  title={`Shop ${b.name} watches`}
-                >
-                  <img
-                    src={b.img}
-                    alt={b.name}
-                    className="max-h-7 max-w-[85%] object-contain"
-                  />
-                </Link>
-              ))}
+              {POPULAR_BRANDS.map((b) => {
+                const officialUrl = brandLinks[b.name] || `https://www.${b.slug}.com/`;
+                return (
+                  <a
+                    key={b.slug}
+                    href={officialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white hover:bg-amber-50/40 border border-gray-200 hover:border-watch-gold rounded-2xl p-2 sm:p-2.5 flex items-center justify-center shadow-xs hover:shadow-md transition-all duration-300 flex-shrink-0 w-24 sm:w-28 h-12 cursor-pointer group"
+                    title={`${b.name} - Visit Official Website`}
+                    aria-label={`Visit official ${b.name} website`}
+                  >
+                    <img
+                      src={b.img}
+                      alt={`${b.name} Official Logo`}
+                      className="max-h-7 max-w-[85%] object-contain pointer-events-none group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </a>
+                );
+              })}
             </div>
 
             {/* Circular Next Arrow */}

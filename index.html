@@ -864,20 +864,27 @@
       justify-content: center;
       flex-shrink: 0;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
+      text-decoration: none;
     }
 
     .brand-card-pill:hover {
       transform: translateY(-2px);
       border-color: var(--gold);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      box-shadow: 0 6px 14px rgba(217, 164, 65, 0.22);
     }
 
     .brand-card-pill img {
       max-height: 28px;
       max-width: 85px;
       object-fit: contain;
+      pointer-events: none;
+      transition: transform 0.25s ease;
+    }
+
+    .brand-card-pill:hover img {
+      transform: scale(1.05);
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -2105,36 +2112,36 @@
       </button>
 
       <div class="brands-track" id="brandsTrack">
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=rolex'" title="Rolex">
+        <a href="https://www.rolex.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Rolex - Visit Official Website">
           <img src="images/ref_crops/brand-rolex.jpg" alt="Rolex" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=omega'" title="Omega">
+        </a>
+        <a href="https://www.omegawatches.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Omega - Visit Official Website">
           <img src="images/ref_crops/brand-omega.jpg" alt="Omega" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=tissot'" title="Tissot">
+        </a>
+        <a href="https://www.tissotwatches.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Tissot - Visit Official Website">
           <img src="images/ref_crops/brand-tissot.jpg" alt="Tissot" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=fossil'" title="Fossil">
+        </a>
+        <a href="https://www.fossil.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Fossil - Visit Official Website">
           <img src="images/ref_crops/brand-fossil.jpg" alt="Fossil" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=seiko'" title="Seiko">
+        </a>
+        <a href="https://www.seikowatches.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Seiko - Visit Official Website">
           <img src="images/ref_crops/brand-seiko.jpg" alt="Seiko" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=casio'" title="Casio">
+        </a>
+        <a href="https://www.casio.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Casio - Visit Official Website">
           <img src="images/ref_crops/brand-casio.jpg" alt="Casio" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=citizen'" title="Citizen">
+        </a>
+        <a href="https://www.citizenwatch.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Citizen - Visit Official Website">
           <img src="images/ref_crops/brand-citizen.jpg" alt="Citizen" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=titan'" title="Titan">
+        </a>
+        <a href="https://www.titan.co.in/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Titan - Visit Official Website">
           <img src="images/ref_crops/brand-titan.jpg" alt="Titan" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=timex'" title="Timex">
+        </a>
+        <a href="https://www.timex.com/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Timex - Visit Official Website">
           <img src="images/ref_crops/brand-timex.jpg" alt="Timex" />
-        </div>
-        <div class="brand-card-pill" onclick="window.location.href='products.html?brand=fastrack'" title="Fastrack">
+        </a>
+        <a href="https://www.fastrack.in/" target="_blank" rel="noopener noreferrer" class="brand-card-pill" title="Fastrack - Visit Official Website">
           <img src="images/ref_crops/brand-fastrack.jpg" alt="Fastrack" />
-        </div>
+        </a>
       </div>
 
       <button type="button" class="brands-arrow" onclick="scrollBrands(240)" title="Scroll Right">
@@ -2743,6 +2750,20 @@
       currentSlideIdx = (currentSlideIdx + 1) % slides.length;
       updateSlide();
     }
+
+    // Centralized Official Brand Website Links
+    const brandLinks = {
+      Rolex: 'https://www.rolex.com/',
+      Omega: 'https://www.omegawatches.com/',
+      Tissot: 'https://www.tissotwatches.com/',
+      Fossil: 'https://www.fossil.com/',
+      Seiko: 'https://www.seikowatches.com/',
+      Casio: 'https://www.casio.com/',
+      Citizen: 'https://www.citizenwatch.com/',
+      Titan: 'https://www.titan.co.in/',
+      Timex: 'https://www.timex.com/',
+      Fastrack: 'https://www.fastrack.in/'
+    };
 
     function scrollBrands(delta) {
       const track = document.getElementById('brandsTrack');
