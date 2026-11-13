@@ -214,7 +214,7 @@ export const Footer = () => {
             </div>
             <ul className="space-y-2 text-xs">
               {[
-                { name: 'Track Your Order', link: '/cart', icon: '📦' },
+                { name: 'Track Your Order', link: '/track-parcel', icon: '📦' },
                 { name: 'Help & FAQs', action: () => setActiveModal('faq'), icon: '❓' },
                 { name: 'Returns & Exchanges', action: () => setActiveModal('returns'), icon: '🔄' },
                 { name: 'Warranty & Service', action: () => setActiveModal('warranty'), icon: '🛡️' },

@@ -12,6 +12,7 @@ import RoleDashboard from '../pages/dashboards/RoleDashboard';
 import ManufacturingHubPage from '../pages/customer/ManufacturingHubPage';
 import MobileAppHubPage from '../pages/mobile/MobileAppHubPage';
 import CustomizeWatchPage from '../pages/customer/CustomizeWatchPage';
+import TrackParcelPage from '../pages/customer/TrackParcelPage';
 import { useAuth, ROLES } from '../context/AuthContext';
 
 // Protected Route Component for Staff Dashboards
@@ -33,8 +34,9 @@ export const AppRoutes = () => {
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
-      <Route path="/track-order" element={<CartPage />} />
-      <Route path="/my-orders" element={<CartPage />} />
+      <Route path="/track-parcel" element={<TrackParcelPage />} />
+      <Route path="/track-order" element={<TrackParcelPage />} />
+      <Route path="/my-orders" element={<TrackParcelPage />} />
       <Route path="/manufacturing-hub" element={<ManufacturingHubPage />} />
       <Route path="/mobile-app" element={<MobileAppHubPage />} />
       <Route path="/download-app" element={<MobileAppHubPage />} />

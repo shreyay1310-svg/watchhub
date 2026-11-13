@@ -4,6 +4,7 @@ import {
   Search,
   Heart,
   ShoppingBag,
+  Package,
   User,
   ChevronDown,
   ChevronRight,
@@ -222,6 +223,15 @@ export const CustomerNavbar = () => {
                 {wishlistCount}
               </span>
             )}
+          </Link>
+
+          {/* Track Parcel Button (Exact Match to Mockup) */}
+          <Link
+            to="/track-parcel"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-watch-gold/40 bg-white/5 hover:bg-white/10 hover:border-watch-gold text-white text-xs font-semibold transition-all cursor-pointer shadow-xs group"
+          >
+            <Package className="w-4 h-4 text-watch-gold group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline">Track Parcel</span>
           </Link>
 
           {/* Cart Link with Gold Badge */}
@@ -642,6 +652,17 @@ export const CustomerNavbar = () => {
                     <span>Customize Your Watch</span>
                   </span>
                   <span className="text-[9px] bg-watch-gold text-black font-extrabold px-1.5 py-0.5 rounded-full uppercase">NEW</span>
+                </Link>
+                <Link
+                  to="/track-parcel"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="flex items-center justify-between py-2 px-3 rounded-xl bg-white/5 border border-white/10 hover:border-watch-gold text-white font-semibold shadow-xs"
+                >
+                  <span className="flex items-center gap-2">
+                    <Package className="w-4 h-4 text-watch-gold" />
+                    <span>Track Your Parcel</span>
+                  </span>
+                  <span className="text-[10px] font-bold text-watch-gold">Live GPS →</span>
                 </Link>
                 <Link
                   to="/brands"
