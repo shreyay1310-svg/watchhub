@@ -226,16 +226,16 @@ export const HomePage = () => {
     { name: 'Poise', img: brandPoise, slug: 'poise' },
   ];
 
-  // 8 Category Visual Cards from Reference UI
+  // 8 Category Visual Cards from Reference UI with Crystal-Clear 1200x1200 HD Watch Photography
   const CATEGORY_CARDS = [
-    { name: "Men's Watches", img: '/images/hd_categories/cat_men.jpg', cat: 'men', icon: '👔', styles: '1,240+ Styles', desc: 'Chronos, Automatics & Steel' },
-    { name: "Women's Watches", img: '/images/hd_categories/cat_women.jpg', cat: 'women', icon: '🌸', styles: '980+ Styles', desc: 'Rose Gold, Diamond & Chic' },
-    { name: 'Smartwatches', img: '/images/hd_categories/cat_smartwatches.jpg', cat: 'smartwatches', icon: '⌚', styles: '650+ Styles', desc: 'AMOLED, BT Calling & Health', active: true },
-    { name: 'Sports Watches', img: '/images/hd_categories/cat_sports.jpg', cat: 'sports', icon: '🏃', styles: '720+ Styles', desc: 'Rugged Shock-Proof & Outdoor' },
-    { name: 'Luxury Watches', img: '/images/hd_categories/cat_luxury.jpg', cat: 'luxury', icon: '👑', styles: '410+ Styles', desc: 'Certified Swiss Haute Horlogerie' },
-    { name: 'Party Wear', img: '/images/hd_categories/cat_party.jpg', cat: 'partywear', icon: '🥂', styles: '360+ Styles', desc: 'Cocktail & Evening Statements' },
-    { name: 'Waterproof', img: '/images/hd_categories/cat_waterproof.jpg', cat: 'waterproof', icon: '💧', styles: '540+ Styles', desc: '100M-300M Deep Diver Grade' },
-    { name: 'Combo Offers', img: '/images/hd_categories/cat_combo.jpg', cat: 'combo', icon: '💑', styles: '320+ Styles', desc: 'Synchronized Twin Couple Sets' },
+    { name: "Men's Watches", img: '/images/hd_categories/cat_men.webp', fallback: '/images/hd_categories/cat_men.jpg', cat: 'men', icon: '👔', styles: '1,240+ Styles', desc: 'Chronos, Automatics & Steel' },
+    { name: "Women's Watches", img: '/images/hd_categories/cat_women.webp', fallback: '/images/hd_categories/cat_women.jpg', cat: 'women', icon: '🌸', styles: '980+ Styles', desc: 'Rose Gold, Diamond & Chic' },
+    { name: 'Smartwatches', img: '/images/hd_categories/cat_smartwatches.webp', fallback: '/images/hd_categories/cat_smartwatches.jpg', cat: 'smartwatches', icon: '⌚', styles: '650+ Styles', desc: 'AMOLED, BT Calling & Health', active: true },
+    { name: 'Sports Watches', img: '/images/hd_categories/cat_sports.webp', fallback: '/images/hd_categories/cat_sports.jpg', cat: 'sports', icon: '🏃', styles: '720+ Styles', desc: 'Rugged Shock-Proof & Outdoor' },
+    { name: 'Luxury Watches', img: '/images/hd_categories/cat_luxury.webp', fallback: '/images/hd_categories/cat_luxury.jpg', cat: 'luxury', icon: '👑', styles: '410+ Styles', desc: 'Certified Swiss Haute Horlogerie' },
+    { name: 'Party Wear', img: '/images/hd_categories/cat_party.webp', fallback: '/images/hd_categories/cat_party.jpg', cat: 'partywear', icon: '🥂', styles: '360+ Styles', desc: 'Cocktail & Evening Statements' },
+    { name: 'Waterproof', img: '/images/hd_categories/cat_waterproof.webp', fallback: '/images/hd_categories/cat_waterproof.jpg', cat: 'waterproof', icon: '💧', styles: '540+ Styles', desc: '100M-300M Deep Diver Grade' },
+    { name: 'Combo Offers', img: '/images/hd_categories/cat_combo.webp', fallback: '/images/hd_categories/cat_combo.jpg', cat: 'combo', icon: '💑', styles: '320+ Styles', desc: 'Synchronized Twin Couple Sets' },
   ];
 
   const handleAddToCart = (product) => {
@@ -611,11 +611,19 @@ export const HomePage = () => {
                       cat.active ? 'border-watch-gold ring-1 ring-watch-gold/40 shadow-md' : 'border-gray-200'
                     }`}
                   >
-                    <div className="h-28 bg-gray-50 overflow-hidden flex items-center justify-center relative">
+                    <div className="h-28 aspect-square mx-auto w-full bg-gray-50 overflow-hidden flex items-center justify-center relative">
                       <img
                         src={cat.img}
                         alt={cat.name}
-                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
+                        loading="lazy"
+                        width="1200"
+                        height="1200"
+                        onError={(e) => {
+                          if (cat.fallback && e.target.src !== cat.fallback) {
+                            e.target.src = cat.fallback;
+                          }
+                        }}
+                        className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
                       />
                     </div>
                     <div className="p-2 sm:p-2.5 flex items-center justify-between bg-white text-gray-900 border-t border-gray-100">
