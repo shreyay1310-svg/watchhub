@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
+import Footer from '../../components/common/Footer';
 import { useCart } from '../../context/CartContext';
 import { MOCK_PRODUCTS, GLOBAL_WATCH_BRANDS } from '../../data/mockProducts';
 import {
@@ -590,6 +591,9 @@ export const ProductsPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Luxury WatchHub Footer */}
+      <Footer />
     </div>
   );
 };

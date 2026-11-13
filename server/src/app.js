@@ -43,6 +43,22 @@ app.get('/api', (req, res) => {
   });
 });
 
+// Newsletter Subscription API
+app.post('/api/newsletter', (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Please enter a valid email address.',
+    });
+  }
+  return res.status(200).json({
+    status: 'success',
+    message: `Welcome to the WatchHub Community! A 10% welcome voucher has been sent to ${email}.`,
+    email,
+  });
+});
+
 // Routes
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';

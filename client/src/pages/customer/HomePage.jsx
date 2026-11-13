@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
+import Footer from '../../components/common/Footer';
 import { useCart } from '../../context/CartContext';
 import { MOCK_PRODUCTS, brandLinks } from '../../data/mockProducts';
 import {
@@ -836,68 +837,8 @@ export const HomePage = () => {
         </section>
       </main>
 
-      {/* 7. Footer */}
-      <footer className="bg-[#070B12] text-gray-300 text-xs py-10 px-4 sm:px-8 border-t border-white/10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xl">⌚</span>
-              <h4 className="text-lg font-bold text-white font-serif">
-                Watch<span className="text-watch-gold">Hub</span>
-              </h4>
-            </div>
-            <p className="text-gray-400 text-xs leading-relaxed mb-3">
-              India's premier destination for genuine luxury, sports and fashion wristwatches.
-            </p>
-            <div className="flex items-center gap-3 text-base">
-              <span>📘</span> <span>📸</span> <span>🐦</span> <span>▶️</span>
-            </div>
-          </div>
-
-          <div>
-            <h5 className="font-bold text-white mb-3">Quick Navigation</h5>
-            <ul className="space-y-1.5 text-gray-400">
-              <li><Link to="/brands" className="text-watch-gold font-bold hover:underline">👑 Global Watch Brands (60)</Link></li>
-              <li><Link to="/products" className="hover:text-watch-gold">All Watches</Link></li>
-              <li><Link to="/products?cat=luxury" className="hover:text-watch-gold">Swiss Haute Horlogerie</Link></li>
-              <li><Link to="/products?cat=men" className="hover:text-watch-gold">Men's Watches</Link></li>
-              <li><Link to="/products?cat=women" className="hover:text-watch-gold">Women's Watches</Link></li>
-              <li><Link to="/manufacturing-hub" className="text-watch-gold font-bold hover:underline">🏭 Manufacturing Hub</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="font-bold text-white mb-3">Customer Support</h5>
-            <ul className="space-y-1.5 text-gray-400">
-              <li><Link to="/cart" className="hover:text-watch-gold">Track Your Order</Link></li>
-              <li><Link to="/mobile-app" className="hover:text-watch-gold">Download Android APK</Link></li>
-              <li><Link to="/dashboard" className="text-watch-gold font-bold hover:underline">👑 Employee Staff Portal</Link></li>
-              <li><Link to="/login" className="hover:text-watch-gold">Account Login</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="font-bold text-white mb-3">VIP Newsletter</h5>
-            <p className="text-[11px] text-gray-400 mb-2">Subscribe to receive exclusive drops & festival vouchers.</p>
-            <form onSubmit={handleNewsletterSubmit} className="flex gap-1.5">
-              <input
-                type="email"
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="bg-white/10 text-white text-xs px-3 py-2 rounded-lg outline-none border border-white/20 flex-1 placeholder:text-gray-500"
-              />
-              <button type="submit" className="btn-gold text-xs px-3 py-2 cursor-pointer font-bold">
-                Join
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto pt-6 border-t border-white/10 text-center text-gray-500 text-[11px]">
-          © 2026 WatchHub – The World of Watches. All rights reserved.
-        </div>
-      </footer>
+      {/* 7. Redesigned Luxury WatchHub Footer */}
+      <Footer />
 
       {/* 8. LUXURY QUICK VIEW MODAL */}
       {quickViewProduct && (

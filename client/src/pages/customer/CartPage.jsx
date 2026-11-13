@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
+import Footer from '../../components/common/Footer';
 import { useCart } from '../../context/CartContext';
 import { Trash2, Plus, Minus, Tag, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 
@@ -251,6 +252,9 @@ export const CartPage = () => {
           </div>
         )}
       </main>
+
+      {/* Luxury WatchHub Footer */}
+      <Footer />
     </div>
   );
 };
