@@ -1269,6 +1269,38 @@
       color: #ffffff !important;
     }
 
+    .btn-quickview {
+      background: #ffffff;
+      color: #374151;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-quickview:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .discount-pill {
+      background: #FEF2F2;
+      color: #DC2626;
+      border: 1px solid #FEE2E2;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: auto;
+    }
+
     .filter-pills-bar {
       display: flex;
       align-items: center;
@@ -2396,9 +2428,12 @@
   <!-- ════ 8. FEATURED PRODUCTS CATALOG ════ -->
   <section class="prods-section">
     <div class="section-head" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 22px;">
-      <div class="head-title-wrap">
-        <h3>Featured Timepieces</h3>
-        <p style="font-size: 12px; color: #6B7280; margin-top: 2px;">Handpicked Swiss mechanical movements, smart wear &amp; diver chronographs</p>
+      <div class="head-title-wrap" style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 5px; height: 30px; background: var(--gold); border-radius: 99px;"></div>
+        <div>
+          <h3 style="margin: 0; font-size: 22px; font-weight: 800; color: #111827;">Featured <span style="color: var(--gold); font-family: serif;">Timepieces</span></h3>
+          <p style="font-size: 12px; color: #6B7280; margin: 3px 0 0 0;">Handpicked Swiss mechanical movements, smart wear &amp; diver chronographs.</p>
+        </div>
       </div>
 
       <!-- Filter Pills -->
@@ -2416,29 +2451,38 @@
       <!-- 1. Rolex Submariner -->
       <div class="prod-card" data-category="luxury waterproof">
         <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Rolex+Submariner'" style="cursor: pointer;">
-          <img src="images/products/rolex_submariner.jpg" alt="Rolex Submariner Date 41mm" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <img src="images/products/featured_rolex_submariner.jpg" alt="Rolex Submariner Date 41mm" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
           <span class="discount-tag">-24% OFF</span>
-          <span class="brand-tag">ROLEX</span>
+          <span class="brand-tag">👑 Rolex</span>
           <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Rolex Submariner Date 41mm')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Luxury • Professional Diver</div>
+            <div class="prod-cat">LUXURY</div>
             <h4 class="prod-name" onclick="window.location.href='products.html?q=Rolex+Submariner'" style="cursor: pointer;">Rolex Submariner Date 41mm</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 4.9</span>
-              <span class="rating-count">(3,840)</span>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.9</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(3,840 Reviews)</span>
             </div>
           </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹18,999</span>
-              <span class="price-orig">₹24,999</span>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹18,999</span>
+                <span class="price-orig">₹24,999</span>
+              </div>
+              <span class="discount-pill">24% OFF</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Rolex Submariner Date 41mm', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Rolex Submariner Date 41mm', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Rolex Submariner Date 41mm', 'Rolex', 'LUXURY', '₹18,999', '₹24,999', '24%', '4.9', '3,840', 'images/products/featured_rolex_submariner.jpg', '300M / 30 ATM Oystersteel Diver')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2446,29 +2490,38 @@
       <!-- 2. Rolex Daytona -->
       <div class="prod-card" data-category="luxury">
         <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Rolex+Daytona'" style="cursor: pointer;">
-          <img src="images/products/rolex_daytona.jpg" alt="Rolex Cosmograph Daytona Gold" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <img src="images/products/featured_rolex_daytona.jpg" alt="Rolex Cosmograph Daytona Gold" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
           <span class="discount-tag">-27% OFF</span>
-          <span class="brand-tag">ROLEX</span>
+          <span class="brand-tag">👑 Rolex</span>
           <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Rolex Cosmograph Daytona Gold')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Luxury • Gold Chronograph</div>
+            <div class="prod-cat">LUXURY</div>
             <h4 class="prod-name" onclick="window.location.href='products.html?q=Rolex+Daytona'" style="cursor: pointer;">Rolex Cosmograph Daytona Gold</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 4.9</span>
-              <span class="rating-count">(4,120)</span>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.9</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(4,120 Reviews)</span>
             </div>
           </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹21,999</span>
-              <span class="price-orig">₹29,999</span>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹21,999</span>
+                <span class="price-orig">₹29,999</span>
+              </div>
+              <span class="discount-pill">27% OFF</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Rolex Cosmograph Daytona Gold', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Rolex Cosmograph Daytona Gold', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Rolex Cosmograph Daytona Gold', 'Rolex', 'LUXURY', '₹21,999', '₹29,999', '27%', '4.9', '4,120', 'images/products/featured_rolex_daytona.jpg', '100M Water Resistant Tachymeter Chronograph')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2476,29 +2529,38 @@
       <!-- 3. Omega Speedmaster -->
       <div class="prod-card" data-category="luxury">
         <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Omega+Speedmaster'" style="cursor: pointer;">
-          <img src="images/products/omega_speedmaster.jpg" alt="Omega Speedmaster Moonwatch" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <img src="images/products/featured_omega_speedmaster.jpg" alt="Omega Speedmaster Professional" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
           <span class="discount-tag">-25% OFF</span>
-          <span class="brand-tag">OMEGA</span>
-          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Omega Speedmaster Professional Moonwatch')" title="Wishlist">♥</button>
+          <span class="brand-tag">Ω Omega</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Omega Speedmaster Professional')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Luxury • Moonwatch Chrono</div>
+            <div class="prod-cat">LUXURY</div>
             <h4 class="prod-name" onclick="window.location.href='products.html?q=Omega+Speedmaster'" style="cursor: pointer;">Omega Speedmaster Professional</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 4.8</span>
-              <span class="rating-count">(2,950)</span>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.8</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(2,950 Reviews)</span>
             </div>
           </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹16,499</span>
-              <span class="price-orig">₹22,000</span>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹16,499</span>
+                <span class="price-orig">₹22,000</span>
+              </div>
+              <span class="discount-pill">25% OFF</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Omega Speedmaster Professional', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Omega Speedmaster Professional', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Omega Speedmaster Professional', 'Omega', 'LUXURY', '₹16,499', '₹22,000', '25%', '4.8', '2,950', 'images/products/featured_omega_speedmaster.jpg', '50M Water Resistant Moonwatch Manual Wind')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2506,29 +2568,38 @@
       <!-- 4. Omega Seamaster Diver -->
       <div class="prod-card" data-category="waterproof luxury">
         <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Omega+Seamaster'" style="cursor: pointer;">
-          <img src="images/products/omega_seamaster.jpg" alt="Omega Seamaster Diver 300M" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <img src="images/products/featured_omega_seamaster.jpg" alt="Omega Seamaster Diver 300M" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
           <span class="discount-tag">-25% OFF</span>
-          <span class="brand-tag">OMEGA</span>
+          <span class="brand-tag">Ω Omega</span>
           <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Omega Seamaster Diver 300M')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Waterproof • 300M Certified</div>
-            <h4 class="prod-name" onclick="window.location.href='products.html?q=Omega+Seamaster'" style="cursor: pointer;">Omega Seamaster Diver 300M Co-Axial</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 4.8</span>
-              <span class="rating-count">(2,100)</span>
+            <div class="prod-cat">WATERPROOF</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Omega+Seamaster'" style="cursor: pointer;">Omega Seamaster Diver 300M</h4>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.8</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(2,100 Reviews)</span>
             </div>
           </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹14,999</span>
-              <span class="price-orig">₹19,999</span>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹14,999</span>
+                <span class="price-orig">₹19,999</span>
+              </div>
+              <span class="discount-pill">25% OFF</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Omega Seamaster Diver 300M', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Omega Seamaster Diver 300M', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Omega Seamaster Diver 300M', 'Omega', 'WATERPROOF', '₹14,999', '₹19,999', '25%', '4.8', '2,100', 'images/products/featured_omega_seamaster.jpg', '300M Co-Axial Master Chronometer Ceramic')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2536,124 +2607,199 @@
       <!-- 5. Patek Philippe Nautilus -->
       <div class="prod-card" data-category="luxury">
         <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Patek+Philippe'" style="cursor: pointer;">
-          <img src="images/products/patek_nautilus.jpg" alt="Patek Philippe Nautilus" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <img src="images/products/featured_patek_nautilus.jpg" alt="Patek Philippe Nautilus 5711" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
           <span class="discount-tag">-28% OFF</span>
-          <span class="brand-tag">PATEK</span>
+          <span class="brand-tag">❖ Patek Philippe</span>
           <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Patek Philippe Nautilus 5711')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Luxury • Haute Horlogerie</div>
-            <h4 class="prod-name" onclick="window.location.href='products.html?q=Patek+Philippe'" style="cursor: pointer;">Patek Philippe Nautilus Selfwinding</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 5.0</span>
-              <span class="rating-count">(1,890)</span>
+            <div class="prod-cat">LUXURY</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Patek+Philippe'" style="cursor: pointer;">Patek Philippe Nautilus 5711</h4>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.9</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(1,980 Reviews)</span>
             </div>
           </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹24,999</span>
-              <span class="price-orig">₹34,999</span>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹75,999</span>
+                <span class="price-orig">₹1,05,999</span>
+              </div>
+              <span class="discount-pill">28% OFF</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Patek Philippe Nautilus', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Patek Philippe Nautilus 5711', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Patek Philippe Nautilus 5711', 'Patek Philippe', 'LUXURY', '₹75,999', '₹1,05,999', '28%', '4.9', '1,980', 'images/products/featured_patek_nautilus.jpg', '120M Water Resistant Automatic Caliber 324 S C')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 6. Apple Watch Ultra -->
+      <!-- 6. Audemars Piguet Royal Oak -->
+      <div class="prod-card" data-category="luxury">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Audemars+Piguet'" style="cursor: pointer;">
+          <img src="images/products/featured_ap_royal_oak.jpg" alt="Audemars Piguet Royal Oak" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-25% OFF</span>
+          <span class="brand-tag">AP Audemars Piguet</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Audemars Piguet Royal Oak')" title="Wishlist">♥</button>
+        </div>
+        <div class="prod-body">
+          <div>
+            <div class="prod-cat">LUXURY</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Audemars+Piguet'" style="cursor: pointer;">Audemars Piguet Royal Oak</h4>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.8</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(1,760 Reviews)</span>
+            </div>
+          </div>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹62,999</span>
+                <span class="price-orig">₹83,999</span>
+              </div>
+              <span class="discount-pill">25% OFF</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Audemars Piguet Royal Oak', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Audemars Piguet Royal Oak', 'Audemars Piguet', 'LUXURY', '₹62,999', '₹83,999', '25%', '4.8', '1,760', 'images/products/featured_ap_royal_oak.jpg', '50M Water Resistant Grande Tapisserie Dial')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Cartier Tank Must -->
+      <div class="prod-card" data-category="luxury">
+        <div class="prod-img-wrap" onclick="window.location.href='products.html?q=Cartier+Tank'" style="cursor: pointer;">
+          <img src="images/products/featured_cartier_tank.jpg" alt="Cartier Tank Must" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-24% OFF</span>
+          <span class="brand-tag">Cartier</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Cartier Tank Must')" title="Wishlist">♥</button>
+        </div>
+        <div class="prod-body">
+          <div>
+            <div class="prod-cat">LUXURY</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?q=Cartier+Tank'" style="cursor: pointer;">Cartier Tank Must</h4>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.8</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(2,340 Reviews)</span>
+            </div>
+          </div>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹32,999</span>
+                <span class="price-orig">₹42,999</span>
+              </div>
+              <span class="discount-pill">24% OFF</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Cartier Tank Must', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Cartier Tank Must', 'Cartier', 'LUXURY', '₹32,999', '₹42,999', '24%', '4.8', '2,340', 'images/products/featured_cartier_tank.jpg', '30M Water Resistant Roman Numerals Leather Strap')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. Apple Watch Series 10 -->
       <div class="prod-card" data-category="smartwatches digital">
         <div class="prod-img-wrap" onclick="window.location.href='products.html?cat=smartwatches'" style="cursor: pointer;">
-          <img src="images/products/smartwatch_apple.jpg" alt="Apple Watch Ultra AMOLED" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
-          <span class="discount-tag">-25% OFF</span>
-          <span class="brand-tag">APPLE</span>
-          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Apple Watch Ultra GPS')" title="Wishlist">♥</button>
+          <img src="images/products/featured_apple_watch.jpg" alt="Apple Watch Series 10" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
+          <span class="discount-tag">-29% OFF</span>
+          <span class="brand-tag"> Apple</span>
+          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Apple Watch Series 10')" title="Wishlist">♥</button>
         </div>
         <div class="prod-body">
           <div>
-            <div class="prod-cat">Smartwatches • GPS Calling</div>
-            <h4 class="prod-name" onclick="window.location.href='products.html?cat=smartwatches'" style="cursor: pointer;">Apple Watch Ultra AMOLED Pro</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 4.9</span>
-              <span class="rating-count">(5,310)</span>
+            <div class="prod-cat">SMARTWATCH</div>
+            <h4 class="prod-name" onclick="window.location.href='products.html?cat=smartwatches'" style="cursor: pointer;">Apple Watch Series 10</h4>
+            <div class="rating-row" style="display: flex; align-items: center; gap: 5px; margin-top: 4px;">
+              <span class="rating-star" style="color: #F59E0B; font-weight: 700; font-size: 12px;">★ 4.7</span>
+              <span class="rating-count" style="color: #9CA3AF; font-size: 11px;">(8,560 Reviews)</span>
             </div>
           </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹12,499</span>
-              <span class="price-orig">₹16,999</span>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #F3F4F6;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <div>
+                <span class="price-curr">₹38,999</span>
+                <span class="price-orig">₹54,999</span>
+              </div>
+              <span class="discount-pill">29% OFF</span>
             </div>
-            <button class="btn-add" onclick="addToCart('Apple Watch Ultra AMOLED', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7. Casio G-Shock Mudmaster -->
-      <div class="prod-card" data-category="digital waterproof">
-        <div class="prod-img-wrap" onclick="window.location.href='products.html?cat=sports'" style="cursor: pointer;">
-          <img src="images/products/gshock_digital.jpg" alt="Casio G-Shock Mudmaster" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
-          <span class="discount-tag">-24% OFF</span>
-          <span class="brand-tag">CASIO</span>
-          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Casio G-Shock Mudmaster')" title="Wishlist">♥</button>
-        </div>
-        <div class="prod-body">
-          <div>
-            <div class="prod-cat">Digital • 200M Shock Resist</div>
-            <h4 class="prod-name" onclick="window.location.href='products.html?cat=sports'" style="cursor: pointer;">Casio G-Shock Mudmaster Digital</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 4.8</span>
-              <span class="rating-count">(3,450)</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-add" onclick="addToCart('Apple Watch Series 10', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Add to Cart</span>
+              </button>
+              <button class="btn-quickview" onclick="openQuickView('Apple Watch Series 10', 'Apple', 'SMARTWATCH', '₹38,999', '₹54,999', '29%', '4.7', '8,560', 'images/products/featured_apple_watch.jpg', '50M Swimproof OLED Retina Cellular + GPS')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View</span>
+              </button>
             </div>
-          </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹7,999</span>
-              <span class="price-orig">₹10,500</span>
-            </div>
-            <button class="btn-add" onclick="addToCart('Casio G-Shock Mudmaster', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 8. Titan Bandhan Combo Pair -->
-      <div class="prod-card" data-category="combo">
-        <div class="prod-img-wrap" onclick="window.location.href='products.html?cat=combo'" style="cursor: pointer;">
-          <img src="images/products/couple_pair.jpg" alt="Titan Bandhan Luxury Pair" onerror="this.src='images/ref_crops/hero-watch-center.jpg'" />
-          <span class="discount-tag">-24% OFF</span>
-          <span class="brand-tag">TITAN</span>
-          <button class="wish-btn" onclick="event.stopPropagation(); toggleWish(this, 'Titan Bandhan Luxury Pair')" title="Wishlist">♥</button>
-        </div>
-        <div class="prod-body">
-          <div>
-            <div class="prod-cat">Combo • His &amp; Hers Set</div>
-            <h4 class="prod-name" onclick="window.location.href='products.html?cat=combo'" style="cursor: pointer;">Titan Bandhan Luxury Pair Collection</h4>
-            <div class="rating-row">
-              <span class="rating-star">★ 4.8</span>
-              <span class="rating-count">(1,980)</span>
-            </div>
-          </div>
-          <div class="prod-foot">
-            <div>
-              <span class="price-curr">₹9,499</span>
-              <span class="price-orig">₹12,500</span>
-            </div>
-            <button class="btn-add" onclick="addToCart('Titan Bandhan Luxury Pair', this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Add</span>
-            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Luxury Quick View Modal in static index.html -->
+  <div id="staticQuickViewModal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 20px;" onclick="closeQuickView()">
+    <div style="background: #ffffff; border-radius: 24px; max-width: 760px; width: 100%; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.3); border: 1px solid rgba(217,164,65,0.4); display: flex; flex-wrap: wrap; position: relative;" onclick="event.stopPropagation()">
+      <button onclick="closeQuickView()" style="position: absolute; top: 14px; right: 14px; z-index: 10; width: 36px; height: 36px; border-radius: 50%; border: none; background: #F3F4F6; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;">✕</button>
+      <div style="flex: 1; min-width: 280px; background: #F9FAFB; padding: 30px; display: flex; align-items: center; justify-content: center; position: relative;">
+        <span id="modalDiscountTag" style="position: absolute; top: 16px; left: 16px; background: #EE3B3B; color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;">-24% OFF</span>
+        <img id="modalImg" src="" alt="Watch" style="max-width: 100%; max-height: 280px; object-fit: contain; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));" />
+      </div>
+      <div style="flex: 1.2; min-width: 300px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <span id="modalCategory" style="font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 0.05em; text-transform: uppercase;">LUXURY</span>
+          <h3 id="modalTitle" style="font-size: 20px; font-weight: 800; color: #111827; margin: 4px 0 8px 0;">Rolex Submariner</h3>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span id="modalRating" style="color: #F59E0B; font-weight: 700; font-size: 13px;">★ 4.9</span>
+            <span id="modalReviews" style="color: #9CA3AF; font-size: 12px;">(3,840 Reviews)</span>
+            <span style="margin-left: auto; color: #059669; font-size: 11px; font-weight: 700; background: #ECFDF5; padding: 2px 8px; border-radius: 4px;">✓ In Stock</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #F3F4F6;">
+            <span id="modalPrice" style="font-size: 24px; font-weight: 800; color: #111827;">₹18,999</span>
+            <span id="modalOrigPrice" style="font-size: 14px; color: #9CA3AF; text-decoration: line-through;">₹24,999</span>
+            <span id="modalSave" style="background: #FEF2F2; color: #DC2626; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px;">Save 24%</span>
+          </div>
+          <div style="background: #F9FAFB; border-radius: 12px; padding: 12px; margin-top: 14px; font-size: 11px; color: #4B5563;">
+            <div style="margin-bottom: 6px;"><strong style="color: #111827;">Movement &amp; Spec:</strong> <span id="modalSpec">Automatic Mechanical Movement</span></div>
+            <div style="margin-bottom: 6px;"><strong style="color: #111827;">Warranty:</strong> 2 Years Official Brand Warranty</div>
+            <div><strong style="color: #111827;">Shipping:</strong> Free Express Insured Delivery (2-3 Days)</div>
+          </div>
+        </div>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button id="modalAddBtn" onclick="" style="background: var(--navy-main); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer;">Add to Cart</button>
+            <button onclick="toggleWish(this, document.getElementById('modalTitle').textContent)" style="background: #fff; border: 1px solid #E5E7EB; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; color: #374151;">♥ Add to Wishlist</button>
+          </div>
+          <a id="modalViewMoreLink" href="products.html" style="text-align: center; font-size: 12px; font-weight: 700; color: var(--gold); text-decoration: none; padding: 6px 0;">View Full Product Specifications →</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Floating Toast Container -->
   <div id="actionToast">
@@ -2895,6 +3041,35 @@
           card.style.display = 'none';
         }
       });
+    }
+
+    function openQuickView(title, brand, cat, price, origPrice, discount, rating, reviews, img, spec) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalCategory').textContent = cat;
+      document.getElementById('modalPrice').textContent = price;
+      document.getElementById('modalOrigPrice').textContent = origPrice;
+      document.getElementById('modalDiscountTag').textContent = '-' + discount + ' OFF';
+      document.getElementById('modalSave').textContent = 'Save ' + discount;
+      document.getElementById('modalRating').textContent = '★ ' + rating;
+      document.getElementById('modalReviews').textContent = '(' + reviews + ' Reviews)';
+      document.getElementById('modalImg').src = img;
+      document.getElementById('modalSpec').textContent = spec || 'Swiss Movement • Sapphire Crystal';
+      document.getElementById('modalViewMoreLink').href = 'products.html?q=' + encodeURIComponent(title);
+      document.getElementById('modalAddBtn').onclick = function() {
+        addToCart(title, this);
+        closeQuickView();
+      };
+      const modal = document.getElementById('staticQuickViewModal');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    }
+
+    function closeQuickView() {
+      const modal = document.getElementById('staticQuickViewModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
     }
 
     // Dropdown toggle on click & close on outside click

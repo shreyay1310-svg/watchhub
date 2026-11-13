@@ -20,6 +20,8 @@ import {
   Tag,
   Zap,
   Clock,
+  Eye,
+  X,
 } from 'lucide-react';
 
 // Banners cropped from user reference design
@@ -65,6 +67,7 @@ export const HomePage = () => {
   const [activeFilterTab, setActiveFilterTab] = useState('All');
   const [addedItem, setAddedItem] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const brandsRowRef = useRef(null);
 
@@ -296,6 +299,22 @@ export const HomePage = () => {
         }
         return cat.includes(tab);
       }).slice(0, 8);
+
+  const renderBrandInsignia = (brand) => {
+    const b = (brand || '').toLowerCase();
+    if (b.includes('rolex')) return '👑 Rolex';
+    if (b.includes('omega')) return 'Ω Omega';
+    if (b.includes('patek')) return '❖ Patek Philippe';
+    if (b.includes('audemars') || b.includes('ap')) return 'AP Audemars Piguet';
+    if (b.includes('cartier')) return 'Cartier';
+    if (b.includes('apple')) return ' Apple';
+    if (b.includes('fossil')) return 'Fossil';
+    if (b.includes('seiko')) return 'Seiko';
+    if (b.includes('tissot')) return 'T+ Tissot';
+    if (b.includes('casio')) return 'Casio';
+    if (b.includes('citizen')) return 'Citizen';
+    return brand;
+  };
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
@@ -669,14 +688,17 @@ export const HomePage = () => {
             6. FEATURED CATALOG WITH TABS & QUICK-ADD
             ════════════════════════════════════════════════════════════════ */}
         <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-            <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
-                Featured Timepieces
-              </h3>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Handpicked Swiss mechanical movements, smart wear & diver chronographs
-              </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-7 bg-watch-gold rounded-full" />
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                  Featured <span className="text-watch-gold font-serif">Timepieces</span>
+                </h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Handpicked Swiss mechanical movements, smart wear &amp; diver chronographs.
+                </p>
+              </div>
             </div>
 
             {/* Filter Pills */}
@@ -685,7 +707,7 @@ export const HomePage = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveFilterTab(tab)}
-                  className={`px-3.5 py-1.5 rounded-full font-bold transition-all whitespace-nowrap cursor-pointer ${
+                  className={`px-4 py-1.5 rounded-full font-bold transition-all whitespace-nowrap cursor-pointer ${
                     activeFilterTab === tab
                       ? 'bg-[#0B121C] text-white shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -697,17 +719,17 @@ export const HomePage = () => {
             </div>
           </div>
 
-          {/* Product Grid */}
+          {/* Product Grid - 4 columns on desktop matching reference */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {filteredProducts.map((p) => {
               const inWish = isInWishlist(p.id);
               const isAdded = addedItem === p.id;
               return (
-                <div key={p.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-watch-gold hover:shadow-xl transition-all flex flex-col justify-between group">
+                <div key={p.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-watch-gold hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
                   {/* Image Container with Badges */}
                   <div
                     onClick={() => navigate(`/products?q=${encodeURIComponent(p.name)}`)}
-                    className="h-60 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden cursor-pointer"
+                    className="aspect-[16/11] bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden cursor-pointer"
                   >
                     <img
                       src={p.image}
@@ -716,17 +738,17 @@ export const HomePage = () => {
                       onError={(e) => {
                         e.target.src = '/images/ref_crops/hero-watch-center.jpg';
                       }}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
 
                     {/* Discount Badge */}
-                    <span className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow">
+                    <span className="absolute top-3 left-3 bg-[#EE3B3B] text-white text-[10.5px] font-black px-2.5 py-0.5 rounded shadow-sm">
                       -{p.discount}% OFF
                     </span>
 
-                    {/* Brand Pill */}
-                    <span className="absolute bottom-2 left-3 bg-[#0B121C]/85 backdrop-blur-sm text-watch-gold text-[9.5px] font-black px-2.5 py-0.5 rounded-md border border-watch-gold/30">
-                      {p.brand}
+                    {/* Brand Insignia Pill */}
+                    <span className="absolute bottom-2.5 left-3 bg-[#0B121C]/90 backdrop-blur-sm text-watch-gold text-[10px] font-bold px-2.5 py-0.5 rounded border border-watch-gold/30 shadow flex items-center gap-1">
+                      {renderBrandInsignia(p.brand)}
                     </span>
 
                     {/* Wishlist Button */}
@@ -736,12 +758,12 @@ export const HomePage = () => {
                         e.stopPropagation();
                         handleToggleWishlist(p);
                       }}
-                      className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center transition-all cursor-pointer ${
+                      className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transition-all cursor-pointer ${
                         inWish ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-500'
                       }`}
                       title={inWish ? "Remove from Wishlist" : "Add to Wishlist"}
                     >
-                      <Heart className={`w-4 h-4 ${inWish ? 'fill-red-500' : ''}`} />
+                      <Heart className={`w-4 h-4 ${inWish ? 'fill-red-500 text-red-500' : ''}`} />
                     </button>
                   </div>
 
@@ -753,7 +775,8 @@ export const HomePage = () => {
                       </span>
                       <h4
                         onClick={() => navigate(`/products?q=${encodeURIComponent(p.name)}`)}
-                        className="text-sm font-bold text-gray-900 group-hover:text-watch-gold transition-colors line-clamp-1 cursor-pointer"
+                        className="text-[14px] font-bold text-gray-900 group-hover:text-watch-gold transition-colors line-clamp-1 cursor-pointer"
+                        title={p.name}
                       >
                         {p.name}
                       </h4>
@@ -762,31 +785,48 @@ export const HomePage = () => {
                           <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400 mr-0.5" />
                           {p.rating}
                         </span>
-                        <span className="text-gray-400 text-[11px]">({p.reviewsCount})</span>
+                        <span className="text-gray-400 text-[11px]">({p.reviewsCount.toLocaleString('en-IN')} Reviews)</span>
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-                      <div>
-                        <span className="text-base font-extrabold text-gray-900">
-                          ₹{p.price.toLocaleString('en-IN')}
-                        </span>
-                        <span className="text-xs text-gray-400 line-through ml-2">
-                          ₹{p.originalPrice.toLocaleString('en-IN')}
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      {/* Price row */}
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-base font-extrabold text-gray-900">
+                            ₹{p.price.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-xs text-gray-400 line-through">
+                            ₹{p.originalPrice.toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                        <span className="bg-red-50 text-red-600 border border-red-100 text-[10px] font-extrabold px-2 py-0.5 rounded">
+                          {p.discount}% OFF
                         </span>
                       </div>
 
-                      <button
-                        onClick={() => handleAddToCart(p)}
-                        className={`text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ${
-                          isAdded
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-[#0B121C] text-white hover:bg-watch-gold hover:text-black'
-                        }`}
-                      >
-                        <ShoppingCart className="w-3.5 h-3.5" />
-                        <span>{isAdded ? 'Added!' : 'Add'}</span>
-                      </button>
+                      {/* Action Buttons: Add to Cart & Quick View */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => handleAddToCart(p)}
+                          className={`py-2 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer ${
+                            isAdded
+                              ? 'bg-emerald-600 text-white'
+                              : 'bg-[#0B121C] text-white hover:bg-watch-gold hover:text-black'
+                          }`}
+                        >
+                          <ShoppingCart className="w-3.5 h-3.5 text-watch-gold" />
+                          <span>{isAdded ? 'Added!' : 'Add to Cart'}</span>
+                        </button>
+
+                        <button
+                          onClick={() => setQuickViewProduct(p)}
+                          className="py-2 px-2 rounded-lg text-[11px] font-bold text-gray-700 bg-white border border-gray-200 hover:border-watch-gold hover:text-watch-gold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                        >
+                          <Eye className="w-3.5 h-3.5 text-gray-500" />
+                          <span>Quick View</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -858,6 +898,145 @@ export const HomePage = () => {
           © 2026 WatchHub – The World of Watches. All rights reserved.
         </div>
       </footer>
+
+      {/* 8. LUXURY QUICK VIEW MODAL */}
+      {quickViewProduct && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fade-in"
+          onClick={() => setQuickViewProduct(null)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-watch-gold/40 relative flex flex-col md:flex-row max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setQuickViewProduct(null)}
+              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-all cursor-pointer shadow"
+              title="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Left: Product Image */}
+            <div className="md:w-1/2 bg-gradient-to-br from-gray-50 to-gray-100 relative p-6 flex items-center justify-center">
+              <span className="absolute top-4 left-4 bg-[#EE3B3B] text-white text-xs font-black px-3 py-1 rounded-md shadow">
+                -{quickViewProduct.discount}% OFF
+              </span>
+              <span className="absolute bottom-4 left-4 bg-[#0B121C] text-watch-gold text-xs font-bold px-3 py-1 rounded-md border border-watch-gold/30 shadow">
+                {renderBrandInsignia(quickViewProduct.brand)}
+              </span>
+              <img
+                src={quickViewProduct.image}
+                alt={quickViewProduct.name}
+                className="w-full max-h-72 object-contain drop-shadow-xl"
+                onError={(e) => {
+                  e.target.src = '/images/ref_crops/hero-watch-center.jpg';
+                }}
+              />
+            </div>
+
+            {/* Right: Product Information & Actions */}
+            <div className="md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto">
+              <div>
+                <span className="text-[11px] font-extrabold text-watch-gold uppercase tracking-wider block mb-1">
+                  {quickViewProduct.category}
+                </span>
+                <h3 className="text-xl font-bold text-gray-900 leading-tight">
+                  {quickViewProduct.name}
+                </h3>
+
+                {/* Rating */}
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center text-amber-500 font-bold text-sm">
+                    <Star className="w-4 h-4 fill-amber-400 stroke-amber-400 mr-1" />
+                    {quickViewProduct.rating}
+                  </div>
+                  <span className="text-gray-400 text-xs">
+                    ({quickViewProduct.reviewsCount?.toLocaleString('en-IN') || '2,500'} Reviews)
+                  </span>
+                  <span className="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded ml-auto">
+                    ✓ In Stock
+                  </span>
+                </div>
+
+                {/* Pricing */}
+                <div className="flex items-baseline gap-2 mt-4 pt-3 border-t border-gray-100">
+                  <span className="text-2xl font-black text-gray-900">
+                    ₹{quickViewProduct.price?.toLocaleString('en-IN')}
+                  </span>
+                  <span className="text-sm text-gray-400 line-through">
+                    ₹{quickViewProduct.originalPrice?.toLocaleString('en-IN')}
+                  </span>
+                  <span className="bg-red-50 text-red-600 border border-red-100 text-xs font-bold px-2 py-0.5 rounded">
+                    Save {quickViewProduct.discount}%
+                  </span>
+                </div>
+
+                {/* Specs Highlights */}
+                <div className="grid grid-cols-2 gap-2 mt-4 bg-gray-50 p-3 rounded-xl text-[11px] text-gray-700">
+                  <div>
+                    <span className="text-gray-400 block text-[10px]">Brand</span>
+                    <strong className="text-gray-900">{quickViewProduct.brand}</strong>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[10px]">Water Resistance</span>
+                    <strong className="text-gray-900">{quickViewProduct.waterproof || '100M / 10 ATM'}</strong>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[10px]">Warranty</span>
+                    <strong className="text-gray-900">2 Years Official</strong>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[10px]">Delivery</span>
+                    <strong className="text-gray-900">Free Express (2-3 Days)</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-2 mt-6 pt-4 border-t border-gray-100">
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => {
+                      handleAddToCart(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                    className="py-2.5 px-3 rounded-xl text-xs font-bold bg-[#0B121C] text-white hover:bg-watch-gold hover:text-black transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer"
+                  >
+                    <ShoppingCart className="w-4 h-4 text-watch-gold" />
+                    <span>Add to Cart</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleToggleWishlist(quickViewProduct)}
+                    className={`py-2.5 px-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                      isInWishlist(quickViewProduct.id)
+                        ? 'bg-red-50 border-red-200 text-red-600'
+                        : 'bg-white border-gray-200 text-gray-700 hover:border-watch-gold'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${isInWishlist(quickViewProduct.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                    <span>{isInWishlist(quickViewProduct.id) ? 'Wishlisted' : 'Add to Wishlist'}</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => {
+                    navigate(`/products?q=${encodeURIComponent(quickViewProduct.name)}`);
+                    setQuickViewProduct(null);
+                  }}
+                  className="w-full py-2 text-center text-xs font-bold text-gray-600 hover:text-watch-gold hover:underline transition-colors block cursor-pointer"
+                >
+                  View Full Product Details &amp; Specifications →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating Interactive Toast Notification */}
       {toastMessage && (
