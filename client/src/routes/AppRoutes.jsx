@@ -11,6 +11,7 @@ import SignupPage from '../pages/auth/SignupPage';
 import RoleDashboard from '../pages/dashboards/RoleDashboard';
 import ManufacturingHubPage from '../pages/customer/ManufacturingHubPage';
 import MobileAppHubPage from '../pages/mobile/MobileAppHubPage';
+import CustomizeWatchPage from '../pages/customer/CustomizeWatchPage';
 import { useAuth, ROLES } from '../context/AuthContext';
 
 // Protected Route Component for Staff Dashboards
@@ -37,6 +38,7 @@ export const AppRoutes = () => {
       <Route path="/manufacturing-hub" element={<ManufacturingHubPage />} />
       <Route path="/mobile-app" element={<MobileAppHubPage />} />
       <Route path="/download-app" element={<MobileAppHubPage />} />
+      <Route path="/customize-watch" element={<CustomizeWatchPage />} />
 
       {/* Auth Routes */}
       <Route path="/login" element={<LoginPage />} />

@@ -357,29 +357,44 @@ export const CustomerNavbar = () => {
             {navTabs.map((tab) => {
               const isActive = activeMegaMenu === tab.id;
               return (
-                <div
-                  key={tab.id}
-                  className="relative mega-menu-trigger"
-                  onMouseEnter={() => handleMenuEnter(tab.id)}
-                  onMouseLeave={handleMenuLeave}
-                >
-                  <button
-                    type="button"
-                    onClick={(e) => handleMenuToggle(tab.id, e)}
-                    className={`flex items-center gap-1 py-1 cursor-pointer transition-all text-xs font-semibold ${
-                      isActive
-                        ? 'border border-[#D4A84F] text-[#D4A84F] bg-[#D4A84F]/10 rounded-lg px-2.5 shadow-xs'
-                        : 'border border-transparent text-gray-300 hover:text-watch-gold px-2 sm:px-2.5'
-                    }`}
+                <React.Fragment key={tab.id}>
+                  <div
+                    className="relative mega-menu-trigger"
+                    onMouseEnter={() => handleMenuEnter(tab.id)}
+                    onMouseLeave={handleMenuLeave}
                   >
-                    <span>{tab.label}</span>
-                    <ChevronDown
-                      className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${
-                        isActive ? 'rotate-180 text-watch-gold' : 'group-hover:text-watch-gold'
+                    <button
+                      type="button"
+                      onClick={(e) => handleMenuToggle(tab.id, e)}
+                      className={`flex items-center gap-1 py-1 cursor-pointer transition-all text-xs font-semibold ${
+                        isActive
+                          ? 'border border-[#D4A84F] text-[#D4A84F] bg-[#D4A84F]/10 rounded-lg px-2.5 shadow-xs'
+                          : 'border border-transparent text-gray-300 hover:text-watch-gold px-2 sm:px-2.5'
                       }`}
-                    />
-                  </button>
-                </div>
+                    >
+                      <span>{tab.label}</span>
+                      <ChevronDown
+                        className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${
+                          isActive ? 'rotate-180 text-watch-gold' : 'group-hover:text-watch-gold'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* ── Positioned after Sports and before Collections ── */}
+                  {tab.id === 'sports' && (
+                    <Link
+                      to="/customize-watch"
+                      className="border border-[#D4A84F] text-[#D4A84F] bg-[#D4A84F]/10 hover:bg-[#D4A84F]/25 font-bold px-3 py-1 rounded-full flex items-center gap-1.5 transition-all shadow-xs text-xs whitespace-nowrap group/custom"
+                    >
+                      <span className="text-[9px] bg-watch-gold text-black font-extrabold px-1.5 py-0.2 rounded-full uppercase leading-tight">
+                        NEW
+                      </span>
+                      <span>Customize Your Watch</span>
+                      <span className="text-sm group-hover/custom:rotate-12 transition-transform">✏️</span>
+                    </Link>
+                  )}
+                </React.Fragment>
               );
             })}
           </nav>
@@ -617,6 +632,17 @@ export const CustomerNavbar = () => {
 
               {/* Direct Quick Links */}
               <div className="mt-4 pt-3 border-t border-white/10 space-y-2 text-xs">
+                <Link
+                  to="/customize-watch"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="flex items-center justify-between py-2 px-3 rounded-xl bg-watch-gold/15 border border-watch-gold/40 text-watch-gold font-bold shadow-xs"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>✏️</span>
+                    <span>Customize Your Watch</span>
+                  </span>
+                  <span className="text-[9px] bg-watch-gold text-black font-extrabold px-1.5 py-0.5 rounded-full uppercase">NEW</span>
+                </Link>
                 <Link
                   to="/brands"
                   onClick={() => setMobileDrawerOpen(false)}

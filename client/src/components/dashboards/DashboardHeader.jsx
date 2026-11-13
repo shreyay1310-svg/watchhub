@@ -8,6 +8,7 @@ export const DASHBOARD_MODULES = {
   [ROLES.SUPER_ADMIN]: [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'manufacturing_hub', label: 'Manufacturing Hub', icon: '🏭' },
+    { id: 'custom_watches', label: 'Custom Watches', icon: '✏️' },
     { id: 'users', label: 'Users & Roles', icon: '👥' },
     { id: 'products', label: 'Products', icon: '⌚' },
     { id: 'categories', label: 'Categories', icon: '📁' },
@@ -23,6 +24,7 @@ export const DASHBOARD_MODULES = {
   [ROLES.STORE_ADMIN]: [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'manufacturing_hub', label: 'Manufacturing Hub', icon: '🏭' },
+    { id: 'custom_watches', label: 'Custom Watches', icon: '✏️' },
     { id: 'products', label: 'Products', icon: '⌚' },
     { id: 'categories', label: 'Categories', icon: '📁' },
     { id: 'inventory', label: 'Inventory', icon: '📦' },

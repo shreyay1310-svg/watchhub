@@ -31,6 +31,7 @@ import CategoriesBrandsModule from '../../components/dashboards/modules/Categori
 import DeliveryModule from '../../components/dashboards/modules/DeliveryModule';
 import ReportsAnalyticsModule from '../../components/dashboards/modules/ReportsAnalyticsModule';
 import ManufacturingHubModule from '../../components/dashboards/modules/ManufacturingHubModule';
+import CustomizationManagementModule from '../../components/dashboards/modules/CustomizationManagementModule';
 
 export const ROLE_CONFIGS = {
   [ROLES.SUPER_ADMIN]: {
@@ -376,6 +377,8 @@ export const RoleDashboard = () => {
     switch (activeTab) {
       case 'manufacturing_hub':
         return <ManufacturingHubModule />;
+      case 'custom_watches':
+        return <CustomizationManagementModule />;
       case 'users':
         return <UsersManagementModule />;
       case 'products':
