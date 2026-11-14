@@ -387,6 +387,32 @@ export const NAVBAR_PAGES_CONFIG = {
     baseFilter: (p) => Boolean(p.isNewArrival || p.isNew || p.id === 'omega-speedmaster' || p.id === 'rolex-submariner' || p.id === 'tissot-prx'),
     subFilter: (p, sub) => true,
   },
+
+  'best-sellers': {
+    key: 'best-sellers',
+    route: '/best-sellers',
+    title: 'Most Coveted Best Selling Timepieces',
+    subtitle: 'Our most loved and sought-after watches, chosen by horological connoisseurs and collectors worldwide.',
+    badge: 'MOST COVETED • GLOBAL BEST SELLERS',
+    gradient: 'from-[#140E04] via-[#2A1D08] to-[#0A0702]',
+    subcategories: [
+      { id: 'all', label: 'All Best Sellers', icon: '👑' },
+      { id: 'automatic', label: 'Automatic Classics', icon: '⚙️' },
+      { id: 'chronograph', label: 'Chronographs', icon: '⏱️' },
+      { id: 'diver', label: 'Diving & Waterproof', icon: '🤿' },
+      { id: 'quartz', label: 'Precision Quartz', icon: '⚡' },
+    ],
+    baseFilter: (p) => Boolean(p.rating >= 4.5 || p.reviewsCount >= 100 || p.isBestseller),
+    subFilter: (p, sub) => {
+      if (!sub || sub === 'all') return true;
+      const s = sub.toLowerCase();
+      if (s === 'automatic') return p.movement?.toLowerCase().includes('automatic') || p.category?.toLowerCase().includes('automatic');
+      if (s === 'chronograph') return p.name?.toLowerCase().includes('chronograph') || p.name?.toLowerCase().includes('speedmaster') || p.name?.toLowerCase().includes('carrera');
+      if (s === 'diver') return p.name?.toLowerCase().includes('submariner') || p.name?.toLowerCase().includes('diver') || p.name?.toLowerCase().includes('seamaster') || p.name?.toLowerCase().includes('prospex');
+      if (s === 'quartz') return p.movement?.toLowerCase().includes('quartz') || p.name?.toLowerCase().includes('prx');
+      return true;
+    },
+  },
 };
 
 export default NAVBAR_PAGES_CONFIG;

@@ -9,6 +9,7 @@ import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
 import { GLOBAL_BRANDS_60, getBrandDescription } from '../../data/brandsData';
 import CustomizeAndNewArrivalsSection from '../../components/home/CustomizeAndNewArrivalsSection';
+import BestSellersSection from '../../components/home/BestSellersSection';
 import {
   ShieldCheck,
   Award,
@@ -204,59 +205,6 @@ export const HomePage = () => {
     },
   ];
 
-  // Best Sellers (From Reference Image 1)
-  const bestSellers = [
-    {
-      id: 'rolex-submariner',
-      name: 'Rolex Submariner',
-      category: 'Automatic • 41mm',
-      price: 980000,
-      rating: 4.8,
-      reviewsCount: 320,
-      image: '/images/products/featured_rolex_submariner.jpg',
-      brand: 'Rolex',
-    },
-    {
-      id: 'omega-speedmaster',
-      name: 'Omega Speedmaster',
-      category: 'Chronograph • 42mm',
-      price: 725000,
-      rating: 4.7,
-      reviewsCount: 189,
-      image: '/images/products/featured_omega_speedmaster.jpg',
-      brand: 'Omega',
-    },
-    {
-      id: 'tag-carrera',
-      name: 'TAG Heuer Carrera',
-      category: 'Automatic • 39mm',
-      price: 490000,
-      rating: 4.6,
-      reviewsCount: 142,
-      image: '/images/products/breitling_pilot.jpg',
-      brand: 'TAG Heuer',
-    },
-    {
-      id: 'seiko-prospex',
-      name: 'Seiko Prospex',
-      category: 'Diver • 44mm',
-      price: 185000,
-      rating: 4.5,
-      reviewsCount: 276,
-      image: '/images/products/seiko_diver_waterproof.jpg',
-      brand: 'Seiko',
-    },
-    {
-      id: 'tissot-prx',
-      name: 'Tissot PRX',
-      category: 'Quartz • 40mm',
-      price: 42500,
-      rating: 4.6,
-      reviewsCount: 511,
-      image: '/images/products/tissot_prx.jpg',
-      brand: 'Tissot',
-    },
-  ];
 
   // Interactive 60+ Global Watch Brands State & Filtering
   const [brandSearch, setBrandSearch] = useState('');
@@ -623,94 +571,9 @@ export const HomePage = () => {
 
         {/* ════════════════════════════════════════════════════════════════
             5. BEST SELLERS TIMEPIECES ROW
-            (Rolex, Omega, TAG Heuer, Seiko, Tissot from Image 1)
+            (Rolex, Omega, TAG Heuer, Seiko, Tissot - HD Reference Match)
             ════════════════════════════════════════════════════════════════ */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-xs font-bold text-[#F4B942] uppercase tracking-wider block">
-                MOST COVETED
-              </span>
-              <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
-                Best Sellers
-              </h3>
-            </div>
-            <Link
-              to="/watches?filter=bestseller"
-              className="text-xs font-bold text-[#00CFFF] hover:underline flex items-center gap-1"
-            >
-              <span>View All</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {bestSellers.map((item) => (
-              <div
-                key={item.id}
-                className="bg-[#040C1A] border border-white/10 rounded-2xl p-4 flex flex-col justify-between hover:border-[#00CFFF]/40 hover:shadow-[0_0_20px_rgba(0,207,255,0.2)] transition-all group"
-              >
-                {/* Top image container */}
-                <div
-                  onClick={() => navigate(`/product/${item.id}`)}
-                  className="w-full h-44 rounded-xl bg-[#020813] border border-white/5 p-2 flex items-center justify-center cursor-pointer overflow-hidden relative mb-3"
-                >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="max-h-full max-w-full object-contain filter drop-shadow group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleWishlist(item);
-                    }}
-                    className={`absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-xs transition-colors ${
-                      isInWishlist(item.id) ? 'text-[#FF35C8]' : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    <span className="text-xs">♥</span>
-                  </button>
-                </div>
-
-                {/* Details */}
-                <div className="space-y-1">
-                  <h4
-                    onClick={() => navigate(`/product/${item.id}`)}
-                    className="text-xs font-bold text-white group-hover:text-[#00CFFF] transition-colors truncate cursor-pointer"
-                  >
-                    {item.name}
-                  </h4>
-                  <p className="text-[10.5px] text-[#A6B1C8]">{item.category}</p>
-                  <div className="flex items-center gap-1 text-[11px] text-[#F4B942]">
-                    <Star className="w-3 h-3 fill-current" />
-                    <span className="font-bold">{item.rating}</span>
-                    <span className="text-gray-500">({item.reviewsCount})</span>
-                  </div>
-                </div>
-
-                {/* Price and Cart Button */}
-                <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-white/5">
-                  <span className="font-mono font-bold text-sm text-white">
-                    {formatPrice(item.price)}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      addToCart(item, 1);
-                      showToast(`✨ ${item.name} added to shopping bag!`);
-                    }}
-                    className="w-8 h-8 rounded-xl bg-white/5 hover:bg-[#F4B942] hover:text-black text-[#F4B942] border border-white/10 flex items-center justify-center transition-all cursor-pointer shadow-sm"
-                    title="Add to Cart"
-                  >
-                    <ShoppingBag className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <BestSellersSection onToast={showToast} />
 
         {/* ════════════════════════════════════════════════════════════════
             6. EDITORIAL SECTIONS (Craftsmanship, Heritage, Watchmaking Stories)

@@ -37,6 +37,7 @@ import SportsPage from '../pages/customer/SportsPage';
 import CollectionsPage from '../pages/customer/CollectionsPage';
 import LimitedEditionPage from '../pages/customer/LimitedEditionPage';
 import NewArrivalsPage from '../pages/customer/NewArrivalsPage';
+import BestSellersPage from '../pages/customer/BestSellersPage';
 import { useAuth, ROLES } from '../context/AuthContext';
 
 // Role-Based Guarded Route Component
@@ -125,6 +126,7 @@ export const AppRoutes = () => {
       <Route path="/collections" element={<CollectionsPage />} />
       <Route path="/limited-edition" element={<LimitedEditionPage />} />
       <Route path="/new-arrivals" element={<NewArrivalsPage />} />
+      <Route path="/best-sellers" element={<BestSellersPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/categories/:categorySlug" element={<CategoryDetailPage />} />
       <Route path="/brands" element={<BrandsPage />} />
