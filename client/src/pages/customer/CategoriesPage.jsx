@@ -364,8 +364,8 @@ export const CategoriesPage = () => {
                   className="group bg-white border border-white/10/90 hover:border-[#D9A441] rounded-2xl p-2.5 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer overflow-hidden"
                   title={`Browse ${cat.name} Collection (${cat.styles})`}
                 >
-                  {/* Top: 1:1 / 4:3 Aspect Ratio Product Photo */}
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 mb-2.5">
+                  {/* Top: 1:1 / 4:3 Aspect Ratio Product Photo (100% Uncropped with object-fit: contain) */}
+                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#040C1A] p-2 flex items-center justify-center mb-2.5 border border-white/5">
                     <img
                       src={cat.image}
                       alt={cat.name}
@@ -373,7 +373,7 @@ export const CategoriesPage = () => {
                         e.target.onerror = null;
                         e.target.src = cat.fallbackImage;
                       }}
-                      className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
+                      className="max-h-full max-w-full object-contain object-center group-hover:scale-105 transition-transform duration-500 filter drop-shadow"
                     />
                     {/* Subtle Hover Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

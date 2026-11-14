@@ -28,12 +28,12 @@ export const WishlistPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {wishlist.map((p) => (
               <div key={p.id} className="card-luxury overflow-hidden flex flex-col justify-between group">
-                <div className="h-48 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden">
+                <div className="h-52 bg-[#040C1A] flex items-center justify-center relative overflow-hidden p-3 border-b border-white/10">
                   {p.image ? (
                     <img
                       src={p.image}
                       alt={p.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="max-h-full max-w-full object-contain object-center group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     <span className="text-6xl">⌚</span>

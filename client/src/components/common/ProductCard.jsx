@@ -62,11 +62,11 @@ export const ProductCard = ({
       className={`neon-glass-card rounded-2xl overflow-hidden border border-white/10 hover:border-[#00F0FF]/50 hover:shadow-[0_0_25px_rgba(0,240,255,0.2)] transition-all duration-300 flex flex-col justify-between group h-full ${className}`}
     >
       {/* ════════════════════════════════════════════════════════════════
-          1. PRODUCT IMAGE CONTAINER (Fixed 240px, object-fit: contain)
+          1. PRODUCT IMAGE CONTAINER (Guaranteed 100% Uncropped Watch View)
           ════════════════════════════════════════════════════════════════ */}
       <div
         onClick={handleCardClick}
-        className="product-image-container w-full h-[230px] sm:h-[240px] bg-[#0B1022]/80 flex items-center justify-center relative overflow-hidden p-3 cursor-pointer select-none"
+        className="product-image-container w-full h-[250px] sm:h-[260px] bg-gradient-to-b from-[#060D1A] via-[#040914] to-[#02060F] flex items-center justify-center relative overflow-hidden p-4 cursor-pointer select-none"
       >
         <img
           src={product.image}
@@ -74,9 +74,9 @@ export const ProductCard = ({
           loading="lazy"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = '/images/ref_crops/hero-watch-center.jpg';
+            e.target.src = '/images/products/featured_rolex_submariner.jpg';
           }}
-          className="w-full h-full object-contain object-center block transition-transform duration-300 group-hover:scale-105"
+          className="max-h-full max-w-full w-auto h-auto object-contain object-center block mx-auto filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] transition-transform duration-300 group-hover:scale-105"
         />
 
         {/* Discount Badge (Top-Left, non-blocking) */}

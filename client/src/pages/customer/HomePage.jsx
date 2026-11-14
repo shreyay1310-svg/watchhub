@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import ProductCard from '../../components/common/ProductCard';
+import BrandLogo from '../../components/common/BrandLogo';
 import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
-import { GLOBAL_BRANDS_60 } from '../../data/brandsData';
+import { GLOBAL_BRANDS_60, getBrandDescription } from '../../data/brandsData';
 import {
   ShieldCheck,
   Award,
@@ -26,7 +27,8 @@ import {
   Watch,
   Star,
   Eye,
-  ShoppingBag
+  ShoppingBag,
+  Search,
 } from 'lucide-react';
 
 export const HomePage = () => {
@@ -165,8 +167,43 @@ export const HomePage = () => {
     },
   ];
 
-  // Top 16 Global Brands Showcase
-  const topBrands = GLOBAL_BRANDS_60.slice(0, 16);
+  // Interactive 60+ Global Watch Brands State & Filtering
+  const [brandSearch, setBrandSearch] = useState('');
+  const [brandCountry, setBrandCountry] = useState('All');
+  const [brandSort, setBrandSort] = useState('asc');
+  const [showAllBrands, setShowAllBrands] = useState(false);
+
+  const brandCountries = useMemo(() => {
+    const list = Array.from(new Set(GLOBAL_BRANDS_60.map((b) => b.country)));
+    return ['All', ...list.sort()];
+  }, []);
+
+  const filteredHomeBrands = useMemo(() => {
+    return GLOBAL_BRANDS_60.filter((b) => {
+      if (brandSearch.trim()) {
+        const q = brandSearch.toLowerCase().trim();
+        if (
+          !b.name.toLowerCase().includes(q) &&
+          !b.country.toLowerCase().includes(q) &&
+          !b.category.toLowerCase().includes(q)
+        ) {
+          return false;
+        }
+      }
+      if (brandCountry !== 'All' && b.country !== brandCountry) {
+        return false;
+      }
+      return true;
+    }).sort((a, b) => {
+      if (brandSort === 'asc') return a.name.localeCompare(b.name);
+      return b.name.localeCompare(a.name);
+    });
+  }, [brandSearch, brandCountry, brandSort]);
+
+  const displayedHomeBrands =
+    showAllBrands || brandSearch.trim() || brandCountry !== 'All'
+      ? filteredHomeBrands
+      : filteredHomeBrands.slice(0, 24);
 
   return (
     <div className="min-h-screen bg-[#020813] text-[#F8FAFC] flex flex-col font-sans selection:bg-[#F4B942] selection:text-black">
@@ -707,62 +744,149 @@ export const HomePage = () => {
         </section>
 
         {/* ════════════════════════════════════════════════════════════════
-            7. GLOBAL WATCH BRANDS SHOWCASE (60+ BRANDS)
+            7. GLOBAL WATCH BRANDS SHOWCASE (60+ BRANDS WITH ORIGINAL LOGOS)
             (Rolex, Omega, Chronoswiss, Patek, Audemars, Cartier, etc.)
             ════════════════════════════════════════════════════════════════ */}
         <section className="space-y-6 pt-6 border-t border-white/10">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <span className="text-xs font-bold text-[#F4B942] uppercase tracking-wider block">
-                WORLD CLASS HOROLOGY
+                WORLD CLASS HOROLOGY DIRECTORY
               </span>
               <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
-                Global Watch Brands
+                Global Watch Brands ({GLOBAL_BRANDS_60.length}+ Iconic Houses)
               </h3>
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
+                Explore authentic manufacture ateliers across Switzerland, Japan, Germany, India, and the UK.
+              </p>
             </div>
             <Link
               to="/brands"
-              className="text-xs font-bold text-[#00CFFF] hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-[#00CFFF] hover:underline flex items-center gap-1.5 bg-[#00CFFF]/10 border border-[#00CFFF]/30 px-4 py-2 rounded-xl transition-all shadow-sm"
             >
-              <span>Explore All 60+ Brands</span>
+              <span>Explore All {GLOBAL_BRANDS_60.length}+ Brands</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-            {topBrands.map((b) => (
+          {/* Interactive Search, Country Filter, and Sort Controls */}
+          <div className="bg-[#040C1A] border border-white/10 rounded-2xl p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+            {/* Search Input */}
+            <div className="relative flex-1 min-w-[220px] max-w-md">
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={brandSearch}
+                onChange={(e) => setBrandSearch(e.target.value)}
+                placeholder="Search 60+ brands (Rolex, Omega, Casio, Titan, etc.)..."
+                className="w-full bg-[#020813] border border-white/10 rounded-xl pl-9 pr-7 py-2 text-white placeholder-slate-500 outline-none focus:border-[#00CFFF]"
+              />
+              {brandSearch && (
+                <button
+                  type="button"
+                  onClick={() => setBrandSearch('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Country Pills / Select */}
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400 font-semibold text-[11px] hidden sm:inline">Country:</span>
+              <select
+                value={brandCountry}
+                onChange={(e) => setBrandCountry(e.target.value)}
+                className="bg-[#020813] border border-white/10 rounded-xl px-3 py-2 text-white outline-none cursor-pointer focus:border-[#00CFFF] text-xs"
+              >
+                {brandCountries.map((c) => (
+                  <option key={c} value={c}>
+                    {c === 'All' ? '🌐 All Countries' : c}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                onClick={() => setBrandSort(brandSort === 'asc' ? 'desc' : 'asc')}
+                className="bg-[#020813] border border-white/10 hover:border-white/20 rounded-xl px-3 py-2 text-white flex items-center gap-1 cursor-pointer"
+                title="Alphabetical Sorting"
+              >
+                <span>{brandSort === 'asc' ? 'A → Z' : 'Z → A'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 8 Cards Per Row Grid on Large Screens (PART 6 Specification) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 gap-3">
+            {displayedHomeBrands.map((b) => (
               <div
                 key={b.id}
-                className="p-3.5 rounded-2xl bg-[#040C1A] border border-white/10 hover:border-[#F4B942]/50 flex flex-col items-center justify-between text-center transition-all group"
+                className="group relative bg-[#040C1A] border border-white/10 hover:border-[#F4B942]/60 rounded-2xl p-3 flex flex-col justify-between text-center transition-all duration-300 hover:shadow-[0_0_20px_rgba(244,185,66,0.25)] hover:-translate-y-1 select-none overflow-hidden"
               >
-                <span className="text-lg mb-1">{b.flag || '🇨🇭'}</span>
-                <Link
-                  to={`/products?brand=${encodeURIComponent(b.name)}`}
-                  className="text-xs font-bold text-white group-hover:text-[#F4B942] transition-colors truncate w-full"
+                {/* Corner Official Website Link (PART 5) */}
+                <a
+                  href={b.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  title={`Open official ${b.name} website (${b.website})`}
+                  className="absolute top-2 right-2 text-slate-500 hover:text-[#F4B942] z-10 p-0.5 cursor-pointer"
                 >
-                  {b.name}
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+
+                {/* Clickable Brand Area linking to /brands/:slug (PART 4) */}
+                <Link
+                  to={`/brands/${b.id}`}
+                  className="w-full flex flex-col items-center flex-1 cursor-pointer"
+                >
+                  {/* Authentic Brand Logo in Clean Luxury Pedestal (PART 3) */}
+                  <div className="w-full h-14 rounded-xl bg-white/95 border border-white/15 p-1.5 flex items-center justify-center mb-2 shadow-inner group-hover:bg-white transition-colors">
+                    <BrandLogo logoType={b.logoType} brandName={b.name} />
+                  </div>
+
+                  {/* Brand Name */}
+                  <h4 className="text-xs font-bold text-white group-hover:text-[#F4B942] transition-colors truncate w-full">
+                    {b.name}
+                  </h4>
+
+                  {/* Country Badge */}
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-slate-400 mt-0.5">
+                    <span>{b.flag}</span>
+                    <span className="truncate">{b.country}</span>
+                  </div>
+
+                  {/* Short Brand Description (PART 2) */}
+                  <p className="text-[9.5px] text-slate-400 font-light line-clamp-2 mt-1 leading-snug min-h-[24px]">
+                    {getBrandDescription(b)}
+                  </p>
+
+                  {/* Shop Brand Link with Small Arrow (PART 2) */}
+                  <div className="mt-2.5 pt-2 border-t border-white/5 w-full flex items-center justify-center gap-1 text-[10.5px] font-bold text-[#00CFFF] group-hover:text-[#F4B942] transition-colors">
+                    <span>Shop Brand</span>
+                    <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
                 </Link>
-                <p className="text-[9px] text-[#A6B1C8] mt-0.5">Est. {b.founded}</p>
-                <div className="mt-2 pt-2 border-t border-white/5 w-full flex items-center justify-between text-[10px]">
-                  <Link
-                    to={`/products?brand=${encodeURIComponent(b.name)}`}
-                    className="text-[#00CFFF] hover:underline"
-                  >
-                    Shop
-                  </Link>
-                  <a
-                    href={b.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-500 hover:text-white"
-                    title={`Official ${b.name} website`}
-                  >
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                </div>
               </div>
             ))}
           </div>
+
+          {/* Toggle View All / Load More Button */}
+          {!brandSearch && brandCountry === 'All' && (
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={() => setShowAllBrands(!showAllBrands)}
+                className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-[#00CFFF]/20 to-[#1265FF]/20 hover:from-[#00CFFF]/30 hover:to-[#1265FF]/30 border border-[#00CFFF]/40 text-[#00CFFF] font-bold text-xs shadow-md transition-all cursor-pointer"
+              >
+                {showAllBrands
+                  ? 'Show Less Brands'
+                  : `View All ${GLOBAL_BRANDS_60.length}+ International Brands`}
+              </button>
+            </div>
+          )}
         </section>
       </main>
 

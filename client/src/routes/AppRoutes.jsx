@@ -4,6 +4,7 @@ import HomePage from '../pages/customer/HomePage';
 import ProductsPage from '../pages/customer/ProductsPage';
 import ProductDetailsPage from '../pages/customer/ProductDetailsPage';
 import BrandsPage from '../pages/customer/BrandsPage';
+import BrandListingPage from '../pages/customer/BrandListingPage';
 import CategoriesPage from '../pages/customer/CategoriesPage';
 import CartPage from '../pages/customer/CartPage';
 import CheckoutPage from '../pages/customer/CheckoutPage';
@@ -105,6 +106,7 @@ export const AppRoutes = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/brands" element={<BrandsPage />} />
+      <Route path="/brands/:slug" element={<BrandListingPage />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/product/:id" element={<ProductDetailsPage />} />
       <Route path="/cart" element={<CartPage />} />

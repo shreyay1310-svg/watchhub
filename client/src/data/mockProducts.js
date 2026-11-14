@@ -352,7 +352,7 @@ export const MOCK_PRODUCTS = [
     rating: 4.8,
     reviewsCount: 2100,
     stock: 18,
-    image: '/images/banners/banner-couples.jpg',
+    image: '/images/products/couple_pair.jpg',
     isTrending: true,
     isNew: false,
     warranty: '2 Years Fossil Warranty',

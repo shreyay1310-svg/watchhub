@@ -447,35 +447,55 @@ const SectionBlock = ({ section, brands, onVisit, columns = 'grid-cols-2 sm:grid
  */
 const BrandCard = ({ brand, onVisit }) => {
   return (
-    <a
-      href={brand.website}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={() => onVisit && onVisit(`Opening official website for ${brand.name}...`)}
-      title={`Visit Official ${brand.name} Website (${brand.website})`}
-      className="group relative bg-white border border-white/10/80 hover:border-watch-gold rounded-2xl p-4 flex flex-col items-center justify-between text-center transition-all duration-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer select-none overflow-hidden"
-    >
-      {/* Corner External Link Icon */}
-      <div className="absolute top-2.5 right-2.5 text-gray-300 group-hover:text-watch-gold transition-colors">
-        <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100" />
-      </div>
+    <div className="group relative bg-[#0B1426] border border-white/10 hover:border-[#F4B942]/60 rounded-2xl p-4 flex flex-col items-center justify-between text-center transition-all duration-300 hover:shadow-[0_0_25px_rgba(244,185,66,0.2)] hover:-translate-y-1 select-none overflow-hidden">
+      {/* Corner External Link to Official Brand Website (PART 5) */}
+      <a
+        href={brand.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => {
+          e.stopPropagation();
+          onVisit && onVisit(`Opening official ${brand.name} website (${brand.website})...`);
+        }}
+        title={`Visit Official ${brand.name} Website (${brand.website})`}
+        className="absolute top-2.5 right-2.5 text-slate-400 hover:text-[#F4B942] transition-colors p-1 z-10 cursor-pointer"
+      >
+        <ExternalLink className="w-3.5 h-3.5" />
+      </a>
 
-      {/* Centered Brand Logo */}
-      <div className="w-full h-14 flex items-center justify-center mb-2 px-1">
-        <BrandLogo logoType={brand.logoType} brandName={brand.name} />
-      </div>
+      {/* Clickable Brand Area linking to /brands/:slug (PART 4) */}
+      <Link
+        to={`/brands/${brand.id}`}
+        className="w-full flex flex-col items-center flex-1 cursor-pointer"
+      >
+        {/* Centered Brand Logo */}
+        <div className="w-full h-16 rounded-xl bg-white/95 border border-white/20 p-2 flex items-center justify-center mb-3 shadow-inner group-hover:bg-white transition-colors">
+          <BrandLogo logoType={brand.logoType} brandName={brand.name} />
+        </div>
 
-      {/* Brand Name */}
-      <h3 className="text-xs sm:text-[13px] font-bold text-[#F8FAFC] group-hover:text-[#00F0FF] tracking-tight leading-snug line-clamp-1 mb-1">
-        {brand.name}
-      </h3>
+        {/* Brand Name */}
+        <h3 className="text-xs sm:text-[13px] font-bold text-white group-hover:text-[#F4B942] tracking-tight leading-snug line-clamp-1 mb-1 transition-colors">
+          {brand.name}
+        </h3>
 
-      {/* Country Badge */}
-      <div className="flex items-center justify-center gap-1 text-[11px] text-[#A6B1C8]">
-        <span className="text-xs">{brand.flag}</span>
-        <span className="font-medium">{brand.country}</span>
-      </div>
-    </a>
+        {/* Country Badge */}
+        <div className="flex items-center justify-center gap-1 text-[11px] text-slate-400">
+          <span className="text-xs">{brand.flag}</span>
+          <span className="font-medium">{brand.country}</span>
+        </div>
+
+        {/* Tagline / Category */}
+        <p className="text-[10px] text-slate-400 line-clamp-1 mt-1 font-light italic">
+          {brand.tagline || brand.category}
+        </p>
+
+        {/* Shop Brand Link */}
+        <div className="mt-3 pt-2 border-t border-white/5 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-[#00CFFF] group-hover:text-[#F4B942] transition-colors">
+          <span>Shop {brand.name}</span>
+          <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+        </div>
+      </Link>
+    </div>
   );
 };
 

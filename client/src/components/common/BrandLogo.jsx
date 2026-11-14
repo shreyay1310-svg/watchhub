@@ -645,6 +645,98 @@ export const BrandLogo = ({ logoType, brandName, className = 'h-7 w-auto' }) => 
         </div>
       );
 
+    case 'chronoswiss':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-1 mb-0.5">
+            <span className="text-xs text-[#00CFFF]">🇨🇭</span>
+            <span className="text-[12px] font-serif font-black tracking-[0.22em] text-gray-900 leading-none">
+              CHRONOSWISS
+            </span>
+          </div>
+          <span className="text-[6.5px] tracking-[0.25em] text-gray-500 font-sans">LUCERNE • 1983</span>
+        </div>
+      );
+
+    case 'richardmille':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <span className="text-[11px] font-mono font-black tracking-[0.28em] text-gray-900 leading-none">
+            RICHARD MILLE
+          </span>
+          <span className="text-[6.5px] tracking-[0.18em] text-gray-500 mt-0.5">SWISS MANUFACTURE</span>
+        </div>
+      );
+
+    case 'bellross':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-1">
+            <div className="w-4 h-4 rounded-full border border-black flex items-center justify-center font-bold text-[9px] leading-none">
+              &
+            </div>
+            <span className="text-[11.5px] font-sans font-black tracking-[0.2em] text-gray-900 leading-none">
+              BELL & ROSS
+            </span>
+          </div>
+          <span className="text-[6.5px] tracking-[0.15em] text-gray-500 mt-0.5">TIME INSTRUMENTS</span>
+        </div>
+      );
+
+    case 'montblanc':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <span className="text-xs text-gray-900 leading-none mb-0.5">❄</span>
+          <span className="text-[11px] font-serif font-black tracking-[0.26em] text-gray-900 leading-none">
+            MONTBLANC
+          </span>
+        </div>
+      );
+
+    case 'nomos':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <span className="text-[12px] font-sans font-black tracking-[0.3em] text-gray-900 leading-none">
+            NOMOS
+          </span>
+          <span className="text-[7px] tracking-[0.25em] text-gray-500 mt-0.5">GLASHÜTTE</span>
+        </div>
+      );
+
+    case 'junghans':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <span className="text-xs text-amber-700 leading-none mb-0.5">✹</span>
+          <span className="text-[11px] font-serif font-black tracking-[0.22em] text-gray-900 leading-none">
+            JUNGHANS
+          </span>
+          <span className="text-[6.5px] tracking-[0.2em] text-gray-500 mt-0.5">GERMANY • SINCE 1861</span>
+        </div>
+      );
+
+    case 'christopherward':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-1 mb-0.5">
+            <span className="text-[9px] font-bold text-blue-700">⚑⚑</span>
+            <span className="text-[10px] font-serif font-bold tracking-[0.16em] text-gray-900">
+              Christopher Ward
+            </span>
+          </div>
+          <span className="text-[6px] tracking-[0.2em] text-gray-500">LONDON</span>
+        </div>
+      );
+
+    case 'sinn':
+      return (
+        <div className="flex flex-col items-center justify-center text-center">
+          <span className="text-[14px] font-serif italic font-black tracking-[0.12em] text-gray-900 leading-none">
+            Sinn
+          </span>
+          <span className="text-[6.5px] tracking-[0.18em] text-gray-600 mt-0.5">SPEZIALUHREN ZU FRANKFURT</span>
+        </div>
+      );
+
     default:
       return (
         <span className="text-sm font-bold tracking-wider text-gray-800">

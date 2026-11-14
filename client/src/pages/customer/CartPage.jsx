@@ -102,9 +102,9 @@ export const CartPage = () => {
             <div className="lg:col-span-8 space-y-4">
               {cart.map((item) => (
                 <div key={item.id} className="bg-white p-4 rounded-xl border border-white/10 shadow-sm flex items-center justify-between gap-4">
-                  <div className="w-20 h-20 bg-[#0B1022]/80 rounded-lg flex items-center justify-center flex-shrink-0 border border-white/10 overflow-hidden">
+                  <div className="w-20 h-20 bg-[#040C1A] rounded-xl flex items-center justify-center flex-shrink-0 border border-white/10 overflow-hidden p-1.5">
                     {item.image ? (
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain object-center" />
                     ) : (
                       <span className="text-3xl">⌚</span>
                     )}
