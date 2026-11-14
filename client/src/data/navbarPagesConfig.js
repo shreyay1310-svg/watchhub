@@ -266,6 +266,109 @@ export const NAVBAR_PAGES_CONFIG = {
       return true;
     },
   },
+
+  'party-wear': {
+    key: 'party-wear',
+    route: '/categories/party-wear',
+    title: 'Party Wear & Evening Statement Timepieces',
+    subtitle: 'Diamond-studded bezels, rose-gold finishes, and iridescent dials designed to shine at every celebration.',
+    badge: 'EVENING GLAMOUR & SOIREE',
+    gradient: 'from-[#1A0A1C] via-[#2D1030] to-[#0A040D]',
+    subcategories: [
+      { id: 'all', label: 'All Party Watches', icon: '🍸' },
+      { id: 'diamond', label: 'Diamond Encrusted', icon: '💎' },
+      { id: 'rose-gold', label: 'Rose Gold Shimmer', icon: '✨' },
+      { id: 'cocktail', label: 'Cocktail Dress', icon: '🥂' },
+      { id: 'minimal', label: 'Minimal Luxury', icon: '🪞' },
+    ],
+    baseFilter: (p) => Boolean(p.category === "Women's" || p.category === 'Luxury' || p.gender === 'Women' || p.price > 50000),
+    subFilter: (p, sub) => true,
+  },
+
+  waterproof: {
+    key: 'waterproof',
+    route: '/categories/waterproof',
+    title: 'Professional Diver & Waterproof Watches (200M–300M)',
+    subtitle: 'Engineered with helium escape valves, screw-down crowns, unidirectional ceramic bezels, and deep-sea luminescence.',
+    badge: 'SUB-AQUATIC RESILIENCE',
+    gradient: 'from-[#021A2A] via-[#052C42] to-[#010C14]',
+    subcategories: [
+      { id: 'all', label: 'All Waterproof', icon: '💧' },
+      { id: 'diver-300m', label: '300M Diver', icon: '🤿' },
+      { id: 'chrono-dive', label: 'Diving Chronograph', icon: '⏱️' },
+      { id: 'ceramic', label: 'Cerachrom Bezel', icon: '🛡️' },
+    ],
+    baseFilter: (p) => Boolean(p.category === 'Sports' || p.name?.toLowerCase().includes('submariner') || p.name?.toLowerCase().includes('seamaster') || p.waterResistance),
+    subFilter: (p, sub) => true,
+  },
+
+  couple: {
+    key: 'couple',
+    route: '/categories/couple',
+    title: 'His & Hers Matching Luxury Couple Watches',
+    subtitle: 'Coordinated twin luxury timepieces crafted for weddings, anniversaries, and shared lifelong milestones.',
+    badge: 'TWIN TIMEPIECE SETS',
+    gradient: 'from-[#1E0E18] via-[#35152A] to-[#0E050B]',
+    subcategories: [
+      { id: 'all', label: 'All Couple Sets', icon: '💖' },
+      { id: 'two-tone', label: 'Two-Tone Gold & Steel', icon: '👑' },
+      { id: 'classic-pairs', label: 'Classic Leather Pairs', icon: '💼' },
+      { id: 'luxury-anniversary', label: 'Anniversary Special', icon: '🎁' },
+    ],
+    baseFilter: (p) => true,
+    subFilter: (p, sub) => true,
+  },
+
+  digital: {
+    key: 'digital',
+    route: '/categories/digital',
+    title: 'Precision Digital & Tactical Wristwatches',
+    subtitle: 'Classic retro LCD digital wristwatches, military shock-proof chronographs, countdown alarms, and night-glow displays.',
+    badge: 'DIGITAL CHRONOMETRY',
+    gradient: 'from-[#051824] via-[#0B2536] to-[#020A0F]',
+    subcategories: [
+      { id: 'all', label: 'All Digital Watches', icon: '🔲' },
+      { id: 'vintage', label: 'Vintage Retro LCD', icon: '📟' },
+      { id: 'tactical', label: 'Military Shock Resistant', icon: '⚡' },
+      { id: 'sports-digital', label: 'Split Lap Timers', icon: '⏱️' },
+    ],
+    baseFilter: (p) => Boolean(p.category === 'Digital' || p.movement?.toLowerCase().includes('digital') || p.movement?.toLowerCase().includes('quartz') || p.type === 'Digital'),
+    subFilter: (p, sub) => true,
+  },
+
+  analog: {
+    key: 'analog',
+    route: '/categories/analog',
+    title: 'Classic Three-Hand Analog Horology',
+    subtitle: 'Timeless Roman and Baton hour markers, sunburst lacquered dials, flame-blued hands, and scratch-resistant sapphire crystals.',
+    badge: 'HERITAGE ANALOG DIALS',
+    gradient: 'from-[#041226] via-[#082042] to-[#020712]',
+    subcategories: [
+      { id: 'all', label: 'All Analog Watches', icon: '🕒' },
+      { id: 'sunburst', label: 'Sunburst Blue Dials', icon: '🔵' },
+      { id: 'minimalist', label: 'Ultra-Slim Minimalist', icon: '📏' },
+      { id: 'leather', label: 'Italian Leather Bands', icon: '🏷️' },
+    ],
+    baseFilter: (p) => Boolean(p.category !== 'Smartwatches' && p.type !== 'Smartwatch'),
+    subFilter: (p, sub) => true,
+  },
+
+  automatic: {
+    key: 'automatic',
+    route: '/categories/automatic',
+    title: 'Self-Winding Automatic Mechanical Calibres',
+    subtitle: 'No batteries required. Powered by the natural movement of your wrist with exhibition glass casebacks and decorated rotors.',
+    badge: 'KINETIC MECHANICAL ENERGY',
+    gradient: 'from-[#1C1205] via-[#33200A] to-[#0D0802]',
+    subcategories: [
+      { id: 'all', label: 'All Automatic Watches', icon: '⚙️' },
+      { id: 'skeleton', label: 'Openwork Skeletons', icon: '🪞' },
+      { id: 'swiss', label: 'COSC Certified Swiss', icon: '🇨🇭' },
+      { id: 'power-reserve', label: '70H Power Reserve', icon: '🔋' },
+    ],
+    baseFilter: (p) => Boolean(p.movement?.toLowerCase().includes('automatic') || p.category === 'Luxury' || p.category === "Men's"),
+    subFilter: (p, sub) => true,
+  },
 };
 
 export default NAVBAR_PAGES_CONFIG;

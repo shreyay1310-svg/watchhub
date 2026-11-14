@@ -6,6 +6,7 @@ import ProductDetailsPage from '../pages/customer/ProductDetailsPage';
 import BrandsPage from '../pages/customer/BrandsPage';
 import BrandListingPage from '../pages/customer/BrandListingPage';
 import CategoriesPage from '../pages/customer/CategoriesPage';
+import CategoryDetailPage from '../pages/customer/CategoryDetailPage';
 import CartPage from '../pages/customer/CartPage';
 import CheckoutPage from '../pages/customer/CheckoutPage';
 import WishlistPage from '../pages/customer/WishlistPage';
@@ -123,6 +124,7 @@ export const AppRoutes = () => {
       <Route path="/collections" element={<CollectionsPage />} />
       <Route path="/limited-edition" element={<LimitedEditionPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
+      <Route path="/categories/:categorySlug" element={<CategoryDetailPage />} />
       <Route path="/brands" element={<BrandsPage />} />
       <Route path="/brands/:slug" element={<BrandListingPage />} />
       <Route path="/products" element={<ProductsPage />} />
