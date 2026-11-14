@@ -1115,6 +1115,8 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                               navigate('/inventory-manager/dashboard');
                             } else if (r === ROLES.DELIVERY_MANAGER) {
                               navigate('/delivery-manager/dashboard');
+                            } else if (r === ROLES.CUSTOMER_SUPPORT) {
+                              navigate('/customer-support/dashboard');
                             }
                           }}
                           className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-amber-50 transition-colors cursor-pointer ${

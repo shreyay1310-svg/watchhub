@@ -68,6 +68,7 @@ import customWatchRoutes from './routes/customWatchRoutes.js';
 import trackingRoutes from './routes/trackingRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
 import deliveryRoutes from './routes/deliveryRoutes.js';
+import supportRoutes from './routes/supportRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -77,6 +78,7 @@ app.use('/api/custom-watch', customWatchRoutes);
 app.use('/api/tracking', trackingRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/delivery', deliveryRoutes);
+app.use('/api/support', supportRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {

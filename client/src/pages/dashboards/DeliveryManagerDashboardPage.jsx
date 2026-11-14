@@ -543,6 +543,7 @@ export default function DeliveryManagerDashboardPage() {
                             setRoleMenuOpen(false);
                             if (r === ROLES.STORE_ADMIN) navigate('/dashboard');
                             if (r === ROLES.INVENTORY_MANAGER) navigate('/inventory-manager/dashboard');
+                            if (r === ROLES.CUSTOMER_SUPPORT) navigate('/customer-support/dashboard');
                           }}
                           className={`w-full text-left px-4 py-2 flex items-center justify-between hover:bg-amber-50 transition-colors cursor-pointer ${
                             isActive ? 'bg-amber-50/70 text-[#D6A63C] font-bold' : 'text-gray-700'
