@@ -16,6 +16,7 @@ import ReturnsRefundsPage from '../pages/customer/ReturnsRefundsPage';
 import StoreLocatorPage from '../pages/customer/StoreLocatorPage';
 import CustomerSupportPage from '../pages/customer/CustomerSupportPage';
 import EditorialStoriesPage from '../pages/customer/EditorialStoriesPage';
+import StoryDetailPage from '../pages/customer/StoryDetailPage';
 import LoginPage from '../pages/auth/LoginPage';
 import SignupPage from '../pages/auth/SignupPage';
 import RoleDashboard from '../pages/dashboards/RoleDashboard';
@@ -142,7 +143,11 @@ export const AppRoutes = () => {
       <Route path="/returns-refunds" element={<ReturnsRefundsPage />} />
       <Route path="/store-locator" element={<StoreLocatorPage />} />
       <Route path="/support" element={<CustomerSupportPage />} />
-      <Route path="/stories" element={<EditorialStoriesPage />} />
+      <Route path="/stories" element={<StoryDetailPage initialSlug="craftsmanship" />} />
+      <Route path="/stories/craftsmanship" element={<StoryDetailPage initialSlug="craftsmanship" />} />
+      <Route path="/stories/heritage" element={<StoryDetailPage initialSlug="heritage" />} />
+      <Route path="/stories/collectors-journal" element={<StoryDetailPage initialSlug="collectors-journal" />} />
+      <Route path="/stories/:slug" element={<StoryDetailPage />} />
       <Route path="/track-parcel" element={<TrackParcelPage />} />
       <Route path="/track-order" element={<TrackParcelPage />} />
       <Route path="/my-orders" element={<TrackParcelPage />} />

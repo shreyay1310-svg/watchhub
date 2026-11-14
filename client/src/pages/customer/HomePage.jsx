@@ -10,6 +10,7 @@ import { MOCK_PRODUCTS } from '../../data/mockProducts';
 import { GLOBAL_BRANDS_60, getBrandDescription } from '../../data/brandsData';
 import CustomizeAndNewArrivalsSection from '../../components/home/CustomizeAndNewArrivalsSection';
 import BestSellersSection from '../../components/home/BestSellersSection';
+import CraftsmanshipStoriesSection from '../../components/home/CraftsmanshipStoriesSection';
 import {
   ShieldCheck,
   Award,
@@ -576,108 +577,11 @@ export const HomePage = () => {
         <BestSellersSection onToast={showToast} />
 
         {/* ════════════════════════════════════════════════════════════════
-            6. EDITORIAL SECTIONS (Craftsmanship, Heritage, Watchmaking Stories)
-            (Exact Match to Chronoswiss Reference Image 2)
+            6. EDITORIAL SECTIONS (Craftsmanship, Heritage & Inspiring Stories)
+            (Exact Match to WatchHub Swiss Horology Reference Image)
             ════════════════════════════════════════════════════════════════ */}
-        <section className="space-y-6 pt-6 border-t border-white/10">
-          <div className="text-center max-w-xl mx-auto space-y-1">
-            <span className="text-xs font-bold text-[#F4B942] uppercase tracking-wider block">
-              SWISS HOROLOGY EXCELLENCE
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white">
-              Craftsmanship, Heritage & Stories
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Card A: Craftsmanship */}
-            <div className="rounded-3xl bg-[#040C1A] border border-white/10 p-6 space-y-4 hover:border-[#00CFFF]/40 transition-all flex flex-col justify-between group">
-              <div className="space-y-3">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-black relative">
-                  <img
-                    src="/images/hero/chronoswiss_website_ref.jpg"
-                    alt="Master Watchmaker with Loupe"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80"
-                  />
-                  <span className="absolute top-3 left-3 bg-black/70 text-[#00CFFF] text-[9.5px] font-bold px-2.5 py-0.5 rounded-full border border-[#00CFFF]/30">
-                    CRAFTSMANSHIP
-                  </span>
-                </div>
-                <h4 className="text-base font-serif font-bold text-white">
-                  The Hand of the Master Watchmaker
-                </h4>
-                <p className="text-xs text-[#A6B1C8] leading-relaxed">
-                  Every tourbillon escapement and regulator bridge is chamfered, mirror-polished, and calibrated under optical magnification in our Lucerne ateliers.
-                </p>
-              </div>
-              <Link
-                to="/stories"
-                className="text-xs font-bold text-[#00CFFF] hover:underline flex items-center gap-1 pt-2"
-              >
-                <span>Read Craftsmanship Story</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            {/* Card B: Heritage */}
-            <div className="rounded-3xl bg-[#040C1A] border border-white/10 p-6 space-y-4 hover:border-[#F4B942]/40 transition-all flex flex-col justify-between group">
-              <div className="space-y-3">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-black relative">
-                  <img
-                    src="/images/hero/chronoswiss_tourbillon.jpg"
-                    alt="Tourbillon Mechanical Movement"
-                    className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <span className="absolute top-3 left-3 bg-black/70 text-[#F4B942] text-[9.5px] font-bold px-2.5 py-0.5 rounded-full border border-[#F4B942]/30">
-                    HERITAGE
-                  </span>
-                </div>
-                <h4 className="text-base font-serif font-bold text-white">
-                  The Historic Regulator Legacy
-                </h4>
-                <p className="text-xs text-[#A6B1C8] leading-relaxed">
-                  From 18th-century observatory wall clocks to revolutionary modern wrist regulators, explore the heritage of non-overlapping dial architecture.
-                </p>
-              </div>
-              <Link
-                to="/stories"
-                className="text-xs font-bold text-[#F4B942] hover:underline flex items-center gap-1 pt-2"
-              >
-                <span>Explore Atelier History</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            {/* Card C: Watchmaking Stories */}
-            <div className="rounded-3xl bg-[#040C1A] border border-white/10 p-6 space-y-4 hover:border-[#39F5A5]/40 transition-all flex flex-col justify-between group">
-              <div className="space-y-3">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-black relative">
-                  <img
-                    src="/images/hero/chronoswiss_website_ref.jpg"
-                    alt="Watchmaker Journal and Sketches"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80"
-                  />
-                  <span className="absolute top-3 left-3 bg-black/70 text-[#39F5A5] text-[9.5px] font-bold px-2.5 py-0.5 rounded-full border border-[#39F5A5]/30">
-                    WATCHMAKING STORIES
-                  </span>
-                </div>
-                <h4 className="text-base font-serif font-bold text-white">
-                  Architectural Sketches & Journals
-                </h4>
-                <p className="text-xs text-[#A6B1C8] leading-relaxed">
-                  Handwritten horologist notes and geometric blueprints detailing the calculations behind inverted balance wheels and Paraiba color science.
-                </p>
-              </div>
-              <Link
-                to="/stories"
-                className="text-xs font-bold text-[#39F5A5] hover:underline flex items-center gap-1 pt-2"
-              >
-                <span>Read Collector's Journal</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
+        <section className="pt-6 border-t border-white/10">
+          <CraftsmanshipStoriesSection />
         </section>
 
         {/* ════════════════════════════════════════════════════════════════
