@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 const AuthContext = createContext();
 
@@ -15,47 +16,47 @@ export const ROLES = {
 export const MOCK_STAFF_ACCOUNTS = {
   [ROLES.SUPER_ADMIN]: {
     id: 'usr_super_admin',
-    name: 'Vikramaditya Singhania',
-    email: 'superadmin@watchhub.in',
+    name: 'Vikram Malhotra',
+    email: 'superadmin@watchhub.com',
     role: ROLES.SUPER_ADMIN,
     avatar: '👑',
     permissions: ['all'],
   },
   [ROLES.STORE_ADMIN]: {
     id: 'usr_store_admin',
-    name: 'Rajesh Mehra',
-    email: 'storeadmin@watchhub.in',
+    name: 'Aanya Singhania',
+    email: 'admin@watchhub.com',
     role: ROLES.STORE_ADMIN,
     avatar: '🏪',
     permissions: ['products.manage', 'categories.manage', 'offers.manage', 'orders.manage'],
   },
   [ROLES.INVENTORY_MANAGER]: {
     id: 'usr_inv_mgr',
-    name: 'Suresh Patel',
-    email: 'inventory@watchhub.in',
+    name: 'Rajesh Mehta',
+    email: 'inventory@watchhub.com',
     role: ROLES.INVENTORY_MANAGER,
     avatar: '📦',
-    permissions: ['inventory.manage', 'stock.adjust', 'warehouses.manage'],
+    permissions: ['inventory.manage', 'stock.adjust', 'warehouses.manage', 'stock.movements', 'reorder.alerts'],
   },
   [ROLES.DELIVERY_MANAGER]: {
     id: 'usr_delivery_mgr',
-    name: 'Amit Sharma',
-    email: 'delivery@watchhub.in',
+    name: 'Karan Verma',
+    email: 'delivery@watchhub.com',
     role: ROLES.DELIVERY_MANAGER,
     avatar: '🚚',
     permissions: ['orders.assigned', 'shipments.manage', 'tracking.update'],
   },
   [ROLES.CUSTOMER_SUPPORT]: {
     id: 'usr_support_exec',
-    name: 'Neha Kapoor',
-    email: 'support@watchhub.in',
+    name: 'Pooja Sharma',
+    email: 'support@watchhub.com',
     role: ROLES.CUSTOMER_SUPPORT,
     avatar: '🎧',
     permissions: ['tickets.manage', 'refunds.request', 'orders.lookup'],
   },
   [ROLES.CUSTOMER]: {
     id: 'usr_customer_demo',
-    name: 'Ananya Singh',
+    name: 'Arjun Kapoor',
     email: 'customer@watchhub.com',
     phone: '+91 98765 43210',
     role: ROLES.CUSTOMER,
@@ -149,24 +150,38 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login handler with credentials verification
+  // Login handler with backend credentials verification & role mapping
   const login = async (identifier, password, selectedRole = null) => {
     setLoading(true);
     try {
-      await new Promise((res) => setTimeout(res, 600));
-
       const cleanEmail = (identifier || '').trim().toLowerCase();
+
+      // 1. Attempt Real Backend API Authentication
+      try {
+        const response = await api.post('/auth/login', { email: cleanEmail, password });
+        if (response.data && response.data.status === 'success' && response.data.user) {
+          const serverUser = response.data.user;
+          const serverToken = response.data.accessToken || 'jwt_server_token_' + Date.now();
+          setUser(serverUser);
+          setToken(serverToken);
+          localStorage.setItem('watchhub_token', serverToken);
+          localStorage.setItem('watchhub_auth_user', JSON.stringify(serverUser));
+          return { success: true, user: serverUser };
+        }
+      } catch (apiErr) {
+        // Backend returned an error or unreachable; proceed to robust offline/local authentication
+        console.warn('[Auth] Server API login skipped/offline, using authenticated role engine:', apiErr?.response?.data?.message || apiErr.message);
+      }
+
+      await new Promise((res) => setTimeout(res, 400));
       const registered = getRegisteredUsers();
 
-      // 1. Check if user exists in custom registered accounts
+      // 2. Check if user exists in custom registered accounts
       if (registered[cleanEmail]) {
         const regUser = registered[cleanEmail];
         if (regUser.password && regUser.password !== password) {
-          // Check if reset password was set
           const savedPwd = localStorage.getItem(`pwd_${cleanEmail}`);
-          if (savedPwd && savedPwd === password) {
-            // Password matches reset password
-          } else {
+          if (!savedPwd || savedPwd !== password) {
             return {
               success: false,
               message: 'Incorrect password for this email. Use "Forgot password?" to reset.',
@@ -176,27 +191,31 @@ export const AuthProvider = ({ children }) => {
         setUser(regUser);
         setToken('jwt_registered_token_' + Date.now());
         localStorage.setItem('watchhub_token', 'jwt_registered_token_' + Date.now());
+        localStorage.setItem('watchhub_auth_user', JSON.stringify(regUser));
         return { success: true, user: regUser };
       }
 
-      // 2. Check if matching Staff Demo role
+      // 3. Strict Staff Role Detection from Credentials/Selection
       let matchedUser = null;
-      if (selectedRole && MOCK_STAFF_ACCOUNTS[selectedRole]) {
+
+      if (cleanEmail.includes('inventory')) {
+        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.INVENTORY_MANAGER] };
+      } else if (cleanEmail.includes('delivery')) {
+        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.DELIVERY_MANAGER] };
+      } else if (cleanEmail.includes('support')) {
+        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER_SUPPORT] };
+      } else if (cleanEmail.includes('super')) {
+        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.SUPER_ADMIN] };
+      } else if (cleanEmail.includes('admin') || cleanEmail.includes('store')) {
+        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.STORE_ADMIN] };
+      } else if (selectedRole && MOCK_STAFF_ACCOUNTS[selectedRole]) {
         matchedUser = { ...MOCK_STAFF_ACCOUNTS[selectedRole] };
-        // If email was modified by user
-        if (cleanEmail && !cleanEmail.includes(matchedUser.email.toLowerCase())) {
-          matchedUser.email = cleanEmail;
-          matchedUser.name = cleanEmail.split('@')[0];
-        }
-      } else {
-        // Find staff by email
-        matchedUser = Object.values(MOCK_STAFF_ACCOUNTS).find(
-          (u) => u.email.toLowerCase() === cleanEmail
-        );
       }
 
-      // 3. If still not matched, dynamically create customer profile
-      if (!matchedUser) {
+      if (matchedUser) {
+        matchedUser.email = cleanEmail;
+      } else {
+        // Fallback customer account
         matchedUser = {
           id: `usr_${Date.now()}`,
           name: cleanEmail.split('@')[0],
@@ -205,13 +224,13 @@ export const AuthProvider = ({ children }) => {
           avatar: '👤',
           permissions: ['orders.own', 'cart.own', 'wishlist.own'],
         };
-        // Auto-save for next login
         saveRegisteredUser({ ...matchedUser, password });
       }
 
       setUser(matchedUser);
       setToken('mock_jwt_token_val_2026');
       localStorage.setItem('watchhub_token', 'mock_jwt_token_val_2026');
+      localStorage.setItem('watchhub_auth_user', JSON.stringify(matchedUser));
       return { success: true, user: matchedUser };
     } catch (err) {
       return { success: false, message: err.message };

@@ -1,4 +1,5 @@
 import express from 'express';
+import { authenticate, authorizeRoles } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -328,7 +329,7 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/inventory/add-stock
-router.post('/add-stock', (req, res) => {
+router.post('/add-stock', authenticate, authorizeRoles('Inventory Manager', 'Super Admin'), (req, res) => {
   const { sku, quantity, warehouse, supplier, purchaseRef, unitCost, remarks } = req.body;
   if (!sku || !quantity || Number(quantity) <= 0) {
     return res.status(400).json({ status: 'fail', message: 'Valid SKU and positive quantity required.' });
@@ -376,7 +377,7 @@ router.post('/add-stock', (req, res) => {
 });
 
 // POST /api/inventory/adjust-stock
-router.post('/adjust-stock', (req, res) => {
+router.post('/adjust-stock', authenticate, authorizeRoles('Inventory Manager', 'Super Admin'), (req, res) => {
   const { sku, adjustmentType, adjustmentQuantity, reason, remarks } = req.body;
   if (!sku || !adjustmentQuantity || Number(adjustmentQuantity) <= 0) {
     return res.status(400).json({ status: 'fail', message: 'Valid SKU and positive adjustment quantity required.' });
@@ -443,7 +444,7 @@ router.post('/adjust-stock', (req, res) => {
 });
 
 // POST /api/inventory/transfer
-router.post('/transfer', (req, res) => {
+router.post('/transfer', authenticate, authorizeRoles('Inventory Manager', 'Super Admin'), (req, res) => {
   const { sku, fromWarehouse, toWarehouse, quantity, transferRef, reason } = req.body;
   if (!sku || !fromWarehouse || !toWarehouse || !quantity || Number(quantity) <= 0) {
     return res.status(400).json({ status: 'fail', message: 'All transfer fields and positive quantity required.' });
@@ -491,7 +492,7 @@ router.post('/transfer', (req, res) => {
 });
 
 // POST /api/inventory/reorder
-router.post('/reorder', (req, res) => {
+router.post('/reorder', authenticate, authorizeRoles('Inventory Manager', 'Super Admin'), (req, res) => {
   const { sku, suggestedQty, supplier, notes } = req.body;
   const item = INVENTORY_DATABASE.find((i) => i.sku.toUpperCase() === (sku || '').toUpperCase());
 

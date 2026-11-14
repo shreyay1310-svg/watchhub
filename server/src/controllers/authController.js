@@ -37,15 +37,46 @@ export const login = async (req, res) => {
     }
 
     if (!user) {
-      // Fallback mock staff accounts or demo customer
-      const isStaff = email.includes('admin') || email.includes('manager') || email.includes('support');
+      const cleanEmail = email.toLowerCase().trim();
+      let role = 'Customer';
+      let permissions = ['orders.own', 'cart.own', 'wishlist.own'];
+      let avatar = '👤';
+      let name = email.split('@')[0];
+
+      if (cleanEmail.includes('super')) {
+        role = 'Super Admin';
+        permissions = ['all'];
+        avatar = '👑';
+        name = 'Vikram Malhotra';
+      } else if (cleanEmail.includes('inventory')) {
+        role = 'Inventory Manager';
+        permissions = ['manage_stock', 'receive_shipments', 'update_low_stock', 'view_reports'];
+        avatar = '📦';
+        name = 'Rajesh Mehta';
+      } else if (cleanEmail.includes('delivery')) {
+        role = 'Delivery Manager';
+        permissions = ['assign_courier', 'update_tracking', 'manage_returns', 'confirm_dispatch'];
+        avatar = '🚚';
+        name = 'Karan Verma';
+      } else if (cleanEmail.includes('support')) {
+        role = 'Customer Support Executive';
+        permissions = ['view_tickets', 'resolve_complaints', 'initiate_refund', 'live_chat'];
+        avatar = '🎧';
+        name = 'Pooja Sharma';
+      } else if (cleanEmail.includes('admin') || cleanEmail.includes('store')) {
+        role = 'Store Admin';
+        permissions = ['manage_products', 'manage_orders', 'view_analytics', 'manage_discounts'];
+        avatar = '💼';
+        name = 'Aanya Singhania';
+      }
+
       user = {
-        id: `demo_${Date.now()}`,
-        name: email.split('@')[0],
-        email: email,
-        role: isStaff ? (email.includes('super') ? 'Super Admin' : 'Store Admin') : 'Customer',
-        permissions: isStaff ? ['all'] : ['orders.own'],
-        avatar: isStaff ? '👑' : '👤',
+        id: `usr_${Date.now()}`,
+        name,
+        email: cleanEmail,
+        role,
+        permissions,
+        avatar,
       };
     }
 

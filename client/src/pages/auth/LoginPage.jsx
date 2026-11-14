@@ -162,10 +162,19 @@ export const LoginPage = () => {
     if (res.success) {
       setSuccessMessage(`Welcome back! Logged in as ${res.user.name || selectedRole}.`);
       setTimeout(() => {
-        if (res.user.role === ROLES.CUSTOMER) {
-          navigate('/');
+        const userRole = res.user.role;
+        if (userRole === ROLES.INVENTORY_MANAGER || userRole === 'Inventory Manager') {
+          navigate('/inventory-manager/dashboard');
+        } else if (userRole === ROLES.DELIVERY_MANAGER || userRole === 'Delivery Manager') {
+          navigate('/delivery-manager/dashboard');
+        } else if (userRole === ROLES.CUSTOMER_SUPPORT || userRole === 'Customer Support Executive' || userRole === 'Customer Support') {
+          navigate('/customer-support/dashboard');
+        } else if (userRole === ROLES.SUPER_ADMIN || userRole === 'Super Admin') {
+          navigate('/super-admin/dashboard');
+        } else if (userRole === ROLES.STORE_ADMIN || userRole === 'Store Admin') {
+          navigate('/store-admin/dashboard');
         } else {
-          navigate('/dashboard');
+          navigate('/');
         }
       }, 700);
     } else {
