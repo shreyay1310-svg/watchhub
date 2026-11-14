@@ -939,10 +939,9 @@ export const StoreAdminShopmaxDashboard = ({
                 <button
                   type="button"
                   onClick={onOpenAddProduct}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#741BFF] to-[#1265FF] hover:opacity-95 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-[#741BFF] hover:bg-[#6515dd] text-white font-semibold text-xs shadow-lg shadow-[#741BFF]/30 transition-all cursor-pointer inline-block"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Add New Products</span>
+                  Add New Products
                 </button>
               </div>
             </div>

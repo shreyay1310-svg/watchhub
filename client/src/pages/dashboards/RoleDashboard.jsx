@@ -317,8 +317,21 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
             className="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#1265FF] to-[#741BFF] flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0">
-                SY
+              <div className="relative w-9 h-9 rounded-full overflow-hidden flex-shrink-0 border border-[#1E2968]">
+                <img
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80"
+                  alt="Shreya Yadav"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    if (e.currentTarget.nextElementSibling) {
+                      e.currentTarget.nextElementSibling.style.display = 'flex';
+                    }
+                  }}
+                />
+                <div className="w-full h-full bg-gradient-to-tr from-[#1265FF] to-[#741BFF] items-center justify-center text-white font-bold text-xs hidden">
+                  SY
+                </div>
               </div>
               {!sidebarCollapsed && (
                 <div>
