@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Menu,
   Search,
@@ -44,19 +44,20 @@ export const CustomerNavbar = () => {
 
   const dropdownTimeoutRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navLinks = [
     {
       id: 'watches',
       label: 'Watches',
-      path: '/products',
+      path: '/watches',
       dropdown: [
-        { label: 'All Timepieces', path: '/products' },
-        { label: 'Flying Tourbillons', path: '/products?q=tourbillon' },
-        { label: 'Mechanical Chronographs', path: '/products?q=chronograph' },
-        { label: 'Skeletonized Movements', path: '/products?q=skeleton' },
-        { label: 'Automatic Dress Watches', path: '/products?category=Luxury' },
-        { label: 'Professional Divers (300M+)', path: '/products?category=Waterproof' },
+        { label: 'All Watches', path: '/watches' },
+        { label: 'New Arrivals', path: '/watches?filter=new' },
+        { label: 'Best Sellers', path: '/watches?filter=bestseller' },
+        { label: 'Limited Edition', path: '/watches?filter=limited' },
+        { label: 'Pre-Owned Certified', path: '/watches?filter=preowned' },
+        { label: '🎨 Customize Your Watch', path: '/customize-watch' },
       ],
     },
     {
@@ -64,44 +65,105 @@ export const CustomerNavbar = () => {
       label: 'Brands',
       path: '/brands',
       dropdown: [
-        { label: '🇨🇭 Chronoswiss (Atelier Lucerne)', path: '/products?brand=Chronoswiss' },
-        { label: '🇨🇭 Rolex', path: '/products?brand=Rolex' },
-        { label: '🇨🇭 Patek Philippe', path: '/products?brand=Patek%20Philippe' },
-        { label: '🇨🇭 Audemars Piguet', path: '/products?brand=Audemars%20Piguet' },
-        { label: '🇨🇭 Omega', path: '/products?brand=Omega' },
-        { label: '🇫🇷 Cartier', path: '/products?brand=Cartier' },
-        { label: '🇨🇭 TAG Heuer', path: '/products?brand=TAG%20Heuer' },
-        { label: '🇨🇭 Breitling', path: '/products?brand=Breitling' },
+        { label: '🇨🇭 Chronoswiss (Lucerne)', path: '/brands/chronoswiss' },
+        { label: '👑 Rolex', path: '/brands/rolex' },
+        { label: '❖ Patek Philippe', path: '/brands/patek-philippe' },
+        { label: 'AP Audemars Piguet', path: '/brands/audemars-piguet' },
+        { label: 'Ω Omega', path: '/brands/omega' },
+        { label: 'Cartier', path: '/brands/cartier' },
+        { label: 'TAG Heuer', path: '/brands/tag-heuer' },
+        { label: 'Breitling', path: '/brands/breitling' },
         { label: '✨ View All 60+ Global Brands →', path: '/brands' },
       ],
     },
     {
       id: 'men',
       label: 'Men',
-      path: '/products?gender=Men',
+      path: '/men',
       dropdown: [
-        { label: 'Luxury Mechanical', path: '/products?gender=Men&category=Luxury' },
-        { label: 'Sports & Diving', path: '/products?gender=Men&category=Sports' },
-        { label: 'Chronographs', path: '/products?gender=Men&q=chronograph' },
-        { label: 'Titanium & Carbon', path: '/products?gender=Men' },
+        { label: 'Classic Timepieces', path: '/men?style=classic' },
+        { label: 'Precision Chronographs', path: '/men?style=chronograph' },
+        { label: 'Professional Divers (300M+)', path: '/men?style=diver' },
+        { label: 'Sports & High Performance', path: '/men?style=sports' },
+        { label: 'Automatic Analog', path: '/men?style=analog' },
+        { label: 'Rugged Digital', path: '/men?style=digital' },
       ],
     },
     {
       id: 'women',
       label: 'Women',
-      path: '/products?gender=Women',
+      path: '/women',
       dropdown: [
-        { label: 'Diamond & Gem-Set', path: '/products?gender=Women&category=Luxury' },
-        { label: 'Rose Gold & Steel', path: '/products?gender=Women' },
-        { label: 'Automatic Complications', path: '/products?gender=Women' },
-        { label: 'Petite Dials (28–34mm)', path: '/products?gender=Women' },
+        { label: 'Elegant Mother of Pearl', path: '/women?style=elegant' },
+        { label: 'Fashion & Runway Glamour', path: '/women?style=fashion' },
+        { label: 'Diamond & Gem-Set Bezels', path: '/women?style=diamond' },
+        { label: 'Minimalist Dials', path: '/women?style=minimal' },
+        { label: 'Haute Luxury Swiss', path: '/women?style=luxury' },
+        { label: 'Smart & Connected Wear', path: '/women?style=smart' },
       ],
     },
-    { id: 'kids', label: 'Kids', path: '/products?gender=Kids' },
-    { id: 'smartwatches', label: 'Smartwatches', path: '/products?category=Smartwatches' },
-    { id: 'luxury', label: 'Luxury', path: '/products?category=Luxury' },
-    { id: 'sports', label: 'Sports', path: '/products?category=Sports' },
-    { id: 'collections', label: 'Collections', path: '/products?tag=collections' },
+    {
+      id: 'kids',
+      label: 'Kids',
+      path: '/kids',
+      dropdown: [
+        { label: 'Rugged Digital Shockproof', path: '/kids?style=digital' },
+        { label: 'Educational Time-Teaching Analog', path: '/kids?style=analog' },
+        { label: 'Cartoon & Superhero Editions', path: '/kids?style=cartoon' },
+        { label: 'Sports & Swimproof (100M)', path: '/kids?style=sports' },
+        { label: 'Ages 5–9 Years', path: '/kids?style=age-5-9' },
+        { label: 'Ages 10–15 Years', path: '/kids?style=age-10-15' },
+      ],
+    },
+    {
+      id: 'smartwatches',
+      label: 'Smartwatches',
+      path: '/smartwatches',
+      dropdown: [
+        { label: ' Apple Watch Series & Ultra', path: '/smartwatches?style=apple' },
+        { label: '⭐ Samsung Galaxy Watch', path: '/smartwatches?style=samsung' },
+        { label: '🧭 Garmin Solar & Multisport', path: '/smartwatches?style=garmin' },
+        { label: '🏃 Fitness & Activity Trackers', path: '/smartwatches?style=fitness' },
+        { label: '📞 Bluetooth Calling Watches', path: '/smartwatches?style=calling' },
+        { label: '❤️ Health & ECG Monitoring', path: '/smartwatches?style=health' },
+      ],
+    },
+    {
+      id: 'luxury',
+      label: 'Luxury',
+      path: '/luxury',
+      dropdown: [
+        { label: '🇨🇭 Swiss Atelier Watches', path: '/luxury?style=swiss' },
+        { label: '👑 Haute Horlogerie Complications', path: '/luxury?style=haute' },
+        { label: '💎 Numbered Limited Editions', path: '/luxury?style=limited' },
+        { label: '⚙️ Premium Mechanical Movements', path: '/luxury?style=mechanical' },
+        { label: '🔄 In-House Automatic Calibres', path: '/luxury?style=automatic' },
+      ],
+    },
+    {
+      id: 'sports',
+      label: 'Sports',
+      path: '/sports',
+      dropdown: [
+        { label: '🤿 Deep Ocean Diving (300M+)', path: '/sports?style=diving' },
+        { label: '🏎️ Trackside Racing Tachymeters', path: '/sports?style=racing' },
+        { label: '🏔️ Expedition Outdoor Watches', path: '/sports?style=outdoor' },
+        { label: '🏋️ Multisport Fitness Watches', path: '/sports?style=fitness' },
+        { label: '💧 Waterproof ISO 6425 Certified', path: '/sports?style=waterproof' },
+      ],
+    },
+    {
+      id: 'collections',
+      label: 'Collections',
+      path: '/collections',
+      dropdown: [
+        { label: '📜 Heritage Collection 1926', path: '/collections?style=heritage' },
+        { label: '🏆 Iconic Masterpiece Series', path: '/collections?style=iconic' },
+        { label: '💎 Numbered Limited Vault', path: '/collections?style=limited' },
+        { label: '🤝 Atelier Collaborations', path: '/collections?style=collaboration' },
+        { label: '❄️ Winter Frost Seasonal Drop', path: '/collections?style=seasonal' },
+      ],
+    },
   ];
 
   const handleDropdownEnter = (id) => {
@@ -178,6 +240,9 @@ export const CustomerNavbar = () => {
             {navLinks.map((link) => {
               const hasDropdown = Boolean(link.dropdown);
               const isOpen = activeDropdown === link.id;
+              const isCurrentRoute =
+                location.pathname === link.path ||
+                (link.path !== '/' && location.pathname.startsWith(link.path));
 
               return (
                 <div
@@ -189,8 +254,10 @@ export const CustomerNavbar = () => {
                   <Link
                     to={link.path}
                     className={`py-2 px-2.5 xl:px-3 rounded-lg flex items-center gap-1 transition-all ${
-                      isOpen
-                        ? 'text-[#00CFFF] bg-white/5 shadow-xs'
+                      isCurrentRoute
+                        ? 'text-[#00CFFF] font-bold bg-[#00CFFF]/15 border border-[#00CFFF]/30 shadow-[0_0_15px_rgba(0,207,255,0.25)]'
+                        : isOpen
+                        ? 'text-[#00CFFF] bg-white/5'
                         : 'hover:text-white hover:bg-white/[0.04]'
                     }`}
                   >

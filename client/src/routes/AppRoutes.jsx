@@ -26,6 +26,14 @@ import ManufacturingHubPage from '../pages/customer/ManufacturingHubPage';
 import MobileAppHubPage from '../pages/mobile/MobileAppHubPage';
 import CustomizeWatchPage from '../pages/customer/CustomizeWatchPage';
 import TrackParcelPage from '../pages/customer/TrackParcelPage';
+import WatchesPage from '../pages/customer/WatchesPage';
+import MenPage from '../pages/customer/MenPage';
+import WomenPage from '../pages/customer/WomenPage';
+import KidsPage from '../pages/customer/KidsPage';
+import SmartwatchesPage from '../pages/customer/SmartwatchesPage';
+import LuxuryPage from '../pages/customer/LuxuryPage';
+import SportsPage from '../pages/customer/SportsPage';
+import CollectionsPage from '../pages/customer/CollectionsPage';
 import { useAuth, ROLES } from '../context/AuthContext';
 
 // Role-Based Guarded Route Component
@@ -104,6 +112,14 @@ export const AppRoutes = () => {
     <Routes>
       {/* Customer Storefront Routes */}
       <Route path="/" element={<HomePage />} />
+      <Route path="/watches" element={<WatchesPage />} />
+      <Route path="/men" element={<MenPage />} />
+      <Route path="/women" element={<WomenPage />} />
+      <Route path="/kids" element={<KidsPage />} />
+      <Route path="/smartwatches" element={<SmartwatchesPage />} />
+      <Route path="/luxury" element={<LuxuryPage />} />
+      <Route path="/sports" element={<SportsPage />} />
+      <Route path="/collections" element={<CollectionsPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/brands" element={<BrandsPage />} />
       <Route path="/brands/:slug" element={<BrandListingPage />} />

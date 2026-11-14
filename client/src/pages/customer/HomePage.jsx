@@ -104,13 +104,13 @@ export const HomePage = () => {
 
   // Luxury Arched Category Pedestals (Matching Reference Image 1)
   const categoryPedestals = [
-    { name: 'Men', label: "Men's Watches", link: '/products?gender=Men', image: '/images/products/featured_rolex_submariner.jpg' },
-    { name: 'Women', label: "Women's Watches", link: '/products?gender=Women', image: '/images/products/featured_cartier_tank.jpg' },
-    { name: 'Kids', label: "Kids' Watches", link: '/products?gender=Kids', image: '/images/hd_categories/cat_kids.jpg' },
-    { name: 'Smartwatches', label: 'Smartwatches', link: '/products?category=Smartwatches', image: '/images/products/featured_apple_watch.jpg' },
-    { name: 'Luxury', label: 'Luxury Watches', link: '/products?category=Luxury', image: '/images/products/featured_rolex_daytona.jpg' },
-    { name: 'Sports', label: 'Sports Watches', link: '/products?category=Sports', image: '/images/products/featured_omega_seamaster.jpg' },
-    { name: 'Limited Edition', label: 'Limited Edition', link: '/products?tag=limited', image: '/images/hero/chronoswiss_tourbillon.jpg' },
+    { name: 'Men', label: "Men's Watches", link: '/men', image: '/images/products/featured_rolex_submariner.jpg' },
+    { name: 'Women', label: "Women's Watches", link: '/women', image: '/images/products/featured_cartier_tank.jpg' },
+    { name: 'Kids', label: "Kids' Watches", link: '/kids', image: '/images/hd_categories/cat_kids.jpg' },
+    { name: 'Smartwatches', label: 'Smartwatches', link: '/smartwatches', image: '/images/products/featured_apple_watch.jpg' },
+    { name: 'Luxury', label: 'Luxury Watches', link: '/luxury', image: '/images/products/featured_rolex_daytona.jpg' },
+    { name: 'Sports', label: 'Sports Watches', link: '/sports', image: '/images/products/featured_omega_seamaster.jpg' },
+    { name: 'Limited Edition', label: 'Limited Edition', link: '/collections?style=limited', image: '/images/hero/chronoswiss_tourbillon.jpg' },
   ];
 
   // Best Sellers (From Reference Image 1)
@@ -537,7 +537,7 @@ export const HomePage = () => {
 
             <div>
               <Link
-                to="/products?tag=new"
+                to="/watches?filter=new"
                 className="py-3 px-6 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white font-bold text-xs inline-flex items-center gap-2 transition-all"
               >
                 <span>Explore Now</span>
@@ -562,7 +562,7 @@ export const HomePage = () => {
               </h3>
             </div>
             <Link
-              to="/products?tag=bestseller"
+              to="/watches?filter=bestseller"
               className="text-xs font-bold text-[#00CFFF] hover:underline flex items-center gap-1"
             >
               <span>View All</span>

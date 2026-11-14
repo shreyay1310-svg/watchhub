@@ -97,6 +97,19 @@ export const CustomerDrawer = ({ isOpen, onClose }) => {
               <ChevronRight className="w-3.5 h-3.5 opacity-60" />
             </Link>
 
+            {/* Watches */}
+            <Link
+              to="/watches"
+              onClick={onClose}
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Watch className="w-4 h-4 text-[#F4B942]" />
+                <span>All Watches</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+            </Link>
+
             {/* Brands */}
             <Link
               to="/brands"
@@ -110,57 +123,48 @@ export const CustomerDrawer = ({ isOpen, onClose }) => {
               <ChevronRight className="w-3.5 h-3.5 opacity-40" />
             </Link>
 
-            {/* Categories */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setCategoriesOpen(!categoriesOpen)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <FolderTree className="w-4 h-4 text-[#F4B942]" />
-                  <span>Categories</span>
-                </div>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${categoriesOpen ? 'rotate-180' : ''}`} />
-              </button>
+            {/* Men */}
+            <Link
+              to="/men"
+              onClick={onClose}
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <User className="w-4 h-4 text-[#1265FF]" />
+                <span>Men's Watches</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+            </Link>
 
-              {categoriesOpen && (
-                <div className="pl-9 pr-3 py-1.5 space-y-1 text-xs text-[#A6B1C8]">
-                  <Link
-                    to="/products?gender=Men"
-                    onClick={onClose}
-                    className="block py-1 hover:text-[#00CFFF]"
-                  >
-                    • Men's Watches
-                  </Link>
-                  <Link
-                    to="/products?gender=Women"
-                    onClick={onClose}
-                    className="block py-1 hover:text-[#00CFFF]"
-                  >
-                    • Women's Watches
-                  </Link>
-                  <Link
-                    to="/products?gender=Kids"
-                    onClick={onClose}
-                    className="block py-1 hover:text-[#00CFFF]"
-                  >
-                    • Kids' Watches
-                  </Link>
-                  <Link
-                    to="/categories"
-                    onClick={onClose}
-                    className="block py-1 text-[#F4B942] font-semibold"
-                  >
-                    • View All Categories →
-                  </Link>
-                </div>
-              )}
-            </div>
+            {/* Women */}
+            <Link
+              to="/women"
+              onClick={onClose}
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Sparkles className="w-4 h-4 text-[#FF35C8]" />
+                <span>Women's Watches</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+            </Link>
+
+            {/* Kids */}
+            <Link
+              to="/kids"
+              onClick={onClose}
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-sm">🎈</span>
+                <span>Kids' Watches</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+            </Link>
 
             {/* Smartwatches */}
             <Link
-              to="/products?category=Smartwatches"
+              to="/smartwatches"
               onClick={onClose}
               className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
             >
@@ -173,12 +177,12 @@ export const CustomerDrawer = ({ isOpen, onClose }) => {
 
             {/* Luxury Collection */}
             <Link
-              to="/products?category=Luxury"
+              to="/luxury"
               onClick={onClose}
               className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
             >
               <div className="flex items-center gap-3">
-                <Sparkles className="w-4 h-4 text-[#F4B942]" />
+                <Crown className="w-4 h-4 text-[#F4B942]" />
                 <span>Luxury Collection</span>
               </div>
               <ChevronRight className="w-3.5 h-3.5 opacity-40" />
@@ -186,13 +190,39 @@ export const CustomerDrawer = ({ isOpen, onClose }) => {
 
             {/* Sports Collection */}
             <Link
-              to="/products?category=Sports"
+              to="/sports"
               onClick={onClose}
               className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
             >
               <div className="flex items-center gap-3">
                 <Watch className="w-4 h-4 text-[#00CFFF]" />
-                <span>Sports Collection</span>
+                <span>Sports & Divers</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+            </Link>
+
+            {/* Collections */}
+            <Link
+              to="/collections"
+              onClick={onClose}
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <FolderTree className="w-4 h-4 text-[#A855F7]" />
+                <span>Signature Collections</span>
+              </div>
+              <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+            </Link>
+
+            {/* Categories Overview */}
+            <Link
+              to="/categories"
+              onClick={onClose}
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-white/5 text-[#A6B1C8] hover:text-white font-medium text-xs transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Tag className="w-4 h-4 text-[#F4B942]" />
+                <span>All 12 Categories Directory</span>
               </div>
               <ChevronRight className="w-3.5 h-3.5 opacity-40" />
             </Link>
