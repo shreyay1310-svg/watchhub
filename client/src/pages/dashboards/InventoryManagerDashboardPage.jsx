@@ -836,6 +836,7 @@ export default function InventoryManagerDashboardPage() {
                             switchRole(r);
                             setRoleMenuOpen(false);
                             if (r === ROLES.STORE_ADMIN) navigate('/dashboard');
+                            if (r === ROLES.DELIVERY_MANAGER) navigate('/delivery-manager/dashboard');
                           }}
                           className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-amber-50 transition-colors cursor-pointer ${
                             isActive ? 'bg-amber-50/70 text-[#D6A63C] font-bold' : ''

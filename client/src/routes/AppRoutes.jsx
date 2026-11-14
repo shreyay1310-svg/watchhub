@@ -10,6 +10,7 @@ import LoginPage from '../pages/auth/LoginPage';
 import SignupPage from '../pages/auth/SignupPage';
 import RoleDashboard from '../pages/dashboards/RoleDashboard';
 import InventoryManagerDashboardPage from '../pages/dashboards/InventoryManagerDashboardPage';
+import DeliveryManagerDashboardPage from '../pages/dashboards/DeliveryManagerDashboardPage';
 import ManufacturingHubPage from '../pages/customer/ManufacturingHubPage';
 import MobileAppHubPage from '../pages/mobile/MobileAppHubPage';
 import CustomizeWatchPage from '../pages/customer/CustomizeWatchPage';
@@ -79,6 +80,24 @@ export const AppRoutes = () => {
         element={
           <StaffProtectedRoute>
             <InventoryManagerDashboardPage />
+          </StaffProtectedRoute>
+        }
+      />
+
+      {/* Dedicated Role-Based Delivery Manager Dashboard */}
+      <Route
+        path="/delivery-manager/dashboard"
+        element={
+          <StaffProtectedRoute>
+            <DeliveryManagerDashboardPage />
+          </StaffProtectedRoute>
+        }
+      />
+      <Route
+        path="/delivery-manager"
+        element={
+          <StaffProtectedRoute>
+            <DeliveryManagerDashboardPage />
           </StaffProtectedRoute>
         }
       />
