@@ -29,7 +29,6 @@ import {
   Eye,
   MoreVertical,
   X,
-  Filter,
   Users,
   Calendar,
   Layers,
@@ -44,23 +43,21 @@ import {
   RefreshCw,
   Navigation,
   Send,
-  MessageSquare,
-  Building,
-  UserCheck,
-  Maximize2,
-  ZoomIn,
-  ZoomOut,
+  HelpCircle,
   Crosshair,
-  BadgeAlert,
   SlidersHorizontal,
+  Bike,
+  Route,
+  Map,
+  Lock,
 } from 'lucide-react';
 
-// Status colors
+// Status colors matching reference UI
 const STATUS_COLORS = {
   'Delivered': '#10B981',
-  'Out for Delivery': '#3B82F6',
-  'In Transit': '#F59E0B',
-  'Assigned': '#D97706',
+  'Out for Delivery': '#10B981', // green pill in table
+  'In Transit': '#3B82F6',       // blue pill
+  'Assigned': '#D97706',         // amber pill
   'Picked Up': '#8B5CF6',
   'Failed': '#EF4444',
   'Returned': '#6B7280',
@@ -69,6 +66,10 @@ const STATUS_COLORS = {
 export default function DeliveryManagerDashboardPage() {
   const { user, switchRole, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Role Verification Check
+  const currentRole = user?.role || ROLES.DELIVERY_MANAGER;
+  const isAuthorizedRole = currentRole === ROLES.DELIVERY_MANAGER || currentRole === ROLES.SUPER_ADMIN;
 
   // Navigation tab state
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -80,18 +81,17 @@ export default function DeliveryManagerDashboardPage() {
   // Filter state for orders table
   const [orderFilterTab, setOrderFilterTab] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
   const [areaFilter, setAreaFilter] = useState('All');
   const [riderFilter, setRiderFilter] = useState('All');
-  const [paymentFilter, setPaymentFilter] = useState('All');
+  const [courierFilter, setCourierFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('All');
 
-  // Selected orders for bulk action
+  // Selected orders for batch action
   const [selectedOrderIds, setSelectedOrderIds] = useState([]);
 
   // Data states from backend
   const [loading, setLoading] = useState(true);
   const [deliveryData, setDeliveryData] = useState(null);
-  const [errorMsg, setErrorMsg] = useState('');
   const [toastMessage, setToastMessage] = useState('');
 
   // Modals state
@@ -107,6 +107,7 @@ export default function DeliveryManagerDashboardPage() {
   const [showFullMapModal, setShowFullMapModal] = useState(false);
   const [showSupportModal, setShowSupportModal] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [showServiceAreasModal, setShowServiceAreasModal] = useState(false);
 
   // Forms state
   const [shipmentForm, setShipmentForm] = useState({
@@ -136,7 +137,7 @@ export default function DeliveryManagerDashboardPage() {
     name: '',
     phone: '',
     area: 'Gomti Nagar, Lucknow',
-    vehicle: 'Two Wheeler (Motorcycle)',
+    vehicle: 'Honda Activa',
     status: 'Available',
   });
 
@@ -164,7 +165,6 @@ export default function DeliveryManagerDashboardPage() {
       }
     } catch (err) {
       console.error(err);
-      setErrorMsg('Could not fetch delivery details from backend.');
     } finally {
       setLoading(false);
     }
@@ -206,8 +206,8 @@ export default function DeliveryManagerDashboardPage() {
       // Rider dropdown
       if (riderFilter !== 'All' && order.riderId !== riderFilter) return false;
 
-      // Payment dropdown
-      if (paymentFilter !== 'All' && order.paymentType.toLowerCase() !== paymentFilter.toLowerCase()) return false;
+      // Courier partner dropdown
+      if (courierFilter !== 'All' && !order.courierPartner.toLowerCase().includes(courierFilter.toLowerCase())) return false;
 
       // Search Query
       if (searchQuery.trim()) {
@@ -217,6 +217,7 @@ export default function DeliveryManagerDashboardPage() {
           order.customer.toLowerCase().includes(q) ||
           order.awbNumber.toLowerCase().includes(q) ||
           order.productName.toLowerCase().includes(q) ||
+          order.productShortName.toLowerCase().includes(q) ||
           order.riderName.toLowerCase().includes(q) ||
           order.area.toLowerCase().includes(q);
         if (!matches) return false;
@@ -224,7 +225,7 @@ export default function DeliveryManagerDashboardPage() {
 
       return true;
     });
-  }, [deliveryData, orderFilterTab, statusFilter, areaFilter, riderFilter, paymentFilter, searchQuery]);
+  }, [deliveryData, orderFilterTab, statusFilter, areaFilter, riderFilter, courierFilter, searchQuery]);
 
   // Handle Order Selection
   const handleSelectOrder = (orderId) => {
@@ -368,32 +369,62 @@ export default function DeliveryManagerDashboardPage() {
     triggerToast('Delivery records exported to CSV successfully.');
   };
 
-  // KPI Mini Wave Chart Mock Data
+  // KPI Mini Wave Chart Data
   const waveDataTotal = [{ v: 20 }, { v: 25 }, { v: 22 }, { v: 30 }, { v: 28 }, { v: 35 }, { v: 40 }];
   const waveDataOut = [{ v: 12 }, { v: 18 }, { v: 15 }, { v: 22 }, { v: 24 }, { v: 28 }, { v: 32 }];
   const waveDataDelivered = [{ v: 35 }, { v: 38 }, { v: 42 }, { v: 48 }, { v: 52 }, { v: 55 }, { v: 62 }];
   const waveDataAttempts = [{ v: 18 }, { v: 15 }, { v: 16 }, { v: 12 }, { v: 10 }, { v: 9 }, { v: 8 }];
   const waveDataReturns = [{ v: 10 }, { v: 8 }, { v: 9 }, { v: 7 }, { v: 6 }, { v: 5 }, { v: 4 }];
 
-  // Sidebar navigation menu
+  // Dedicated Logistics Sidebar Navigation Menu (Matching image media_1794640028779_2daa6b18.jpg exactly)
   const SIDEBAR_ITEMS = [
-    { id: 'dashboard', label: 'Dashboard', icon: Compass },
+    { id: 'dashboard', label: 'Dashboard', icon: Package },
     { id: 'orders', label: 'Delivery Orders', icon: Truck, badge: '28' },
+    { id: 'assign', label: 'Assign Deliveries', icon: Bike },
     { id: 'tracking', label: 'Shipment Tracking', icon: MapPin },
-    { id: 'assign', label: 'Assign Deliveries', icon: Navigation },
     { id: 'partners', label: 'Delivery Partners', icon: Users },
-    { id: 'routes', label: 'Route Planning', icon: Navigation },
-    { id: 'attempts', label: 'Delivery Attempts', icon: RotateCcw },
-    { id: 'returns', label: 'Returns & Pickups', icon: Package },
+    { id: 'routes', label: 'Route Planning', icon: Compass },
+    { id: 'attempts', label: 'Delivery Attempts', icon: AlertTriangle },
+    { id: 'returns', label: 'Returns & Pickups', icon: RotateCcw },
     { id: 'reports', label: 'Delivery Reports', icon: FileText },
+    { id: 'areas', label: 'Service Areas', icon: Layers },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
-  const currentRole = user?.role || ROLES.DELIVERY_MANAGER;
+  // RBAC Permission Gate check: If user role is NOT Delivery Manager and NOT Super Admin, prompt role verification
+  if (!isAuthorizedRole) {
+    return (
+      <div className="min-h-screen bg-[#071426] flex items-center justify-center p-4 text-white font-poppins">
+        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 max-w-md w-full text-center backdrop-blur-md shadow-2xl">
+          <div className="w-16 h-16 rounded-2xl bg-[#D6A63C]/10 border border-[#D6A63C]/30 text-[#D6A63C] text-3xl flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8 text-[#D6A63C]" />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Delivery Operations Portal</h2>
+          <p className="text-xs text-gray-300 mb-6 leading-relaxed">
+            This dashboard is restricted to the <span className="text-[#D6A63C] font-bold">Delivery Manager</span> role for shipment dispatch, live GPS tracking and rider fleet allocation.
+          </p>
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-left mb-6 space-y-1.5">
+            <p className="text-gray-400">Current Logged-in Role: <span className="text-white font-bold">{currentRole}</span></p>
+            <p className="text-gray-400">Required Role: <span className="text-[#D6A63C] font-bold">Delivery Manager</span></p>
+          </div>
+          <button
+            onClick={() => {
+              switchRole(ROLES.DELIVERY_MANAGER);
+              triggerToast('Role verified: Switched to Delivery Manager (Amit Sharma)');
+            }}
+            className="w-full py-3 rounded-xl bg-[#D6A63C] hover:bg-[#c49533] text-[#071426] font-bold text-xs shadow-lg shadow-[#D6A63C]/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span>Verify & Enter Delivery Manager Portal</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F4F6F8] text-gray-800 flex flex-col font-poppins antialiased selection:bg-[#D6A63C]/30 selection:text-black">
-      {/* Toast Notification */}
+      {/* Toast Alert */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#071426] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-[#D6A63C]/40 flex items-center gap-3 animate-fade-in text-sm">
           <CheckCircle className="w-5 h-5 text-[#D6A63C]" />
@@ -404,7 +435,7 @@ export default function DeliveryManagerDashboardPage() {
       {/* TOP HEADER */}
       <header className="bg-[#071426] text-white sticky top-0 z-40 border-b border-white/10 shadow-md">
         <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          {/* Logo & Toggle */}
+          {/* Logo & Toggle with Delivery Truck Icon in gold box */}
           <div className="flex items-center gap-3.5">
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -414,9 +445,9 @@ export default function DeliveryManagerDashboardPage() {
               <SlidersHorizontal className="w-5 h-5" />
             </button>
 
-            <Link to="/" className="flex items-center gap-2.5">
+            <Link to="/delivery-manager/dashboard" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#D6A63C] to-[#F3D78E] flex items-center justify-center text-[#071426] font-bold shadow-md">
-                ⌚
+                🚚
               </div>
               <div className="flex flex-col">
                 <span className="font-cinzel text-lg font-bold tracking-wider text-white leading-tight">
@@ -447,7 +478,7 @@ export default function DeliveryManagerDashboardPage() {
             </div>
           </div>
 
-          {/* Top Actions: Store Link, Alerts, Settings, Profile */}
+          {/* Top Actions: View Store, Alerts, Question (Help), Profile */}
           <div className="flex items-center gap-2.5 sm:gap-3">
             <Link
               to="/"
@@ -459,7 +490,7 @@ export default function DeliveryManagerDashboardPage() {
               <span>View Store ↗</span>
             </Link>
 
-            {/* Notifications Dropdown */}
+            {/* Notification Bell */}
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
@@ -472,9 +503,9 @@ export default function DeliveryManagerDashboardPage() {
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 text-gray-800 z-50 animate-fade-in">
-                  <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                    <span className="font-bold text-sm text-[#071426]">Delivery Alerts</span>
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 text-gray-800 z-50 animate-fade-in text-xs">
+                  <div className="flex items-center justify-between pb-3 border-b border-gray-100 font-bold">
+                    <span>Logistics Real-Time Alerts</span>
                     <span className="text-[11px] text-[#D6A63C] font-semibold cursor-pointer">Mark all as read</span>
                   </div>
                   <div className="space-y-3 mt-3 max-h-72 overflow-y-auto">
@@ -492,13 +523,13 @@ export default function DeliveryManagerDashboardPage() {
               )}
             </div>
 
-            {/* Settings Cog */}
+            {/* Help Question Circle (?) */}
             <button
-              onClick={() => setActiveTab('settings')}
+              onClick={() => setShowSupportModal(true)}
               className="p-2 rounded-xl bg-white/10 hover:bg-white/15 text-gray-300 hover:text-white transition-colors cursor-pointer"
-              title="Delivery Settings"
+              title="Help & Support Desk"
             >
-              <Settings className="w-4 h-4" />
+              <HelpCircle className="w-4 h-4" />
             </button>
 
             {/* Role Profile Dropdown */}
@@ -507,9 +538,11 @@ export default function DeliveryManagerDashboardPage() {
                 onClick={() => setRoleMenuOpen(!roleMenuOpen)}
                 className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 transition-all cursor-pointer"
               >
-                <div className="w-7 h-7 rounded-lg bg-[#D6A63C] text-[#071426] font-bold text-xs flex items-center justify-center">
-                  🚚
-                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80"
+                  alt="Delivery Manager"
+                  className="w-7 h-7 rounded-lg object-cover border border-[#D6A63C]"
+                />
                 <div className="text-left hidden sm:block">
                   <p className="text-xs font-bold text-white leading-none">Delivery Manager</p>
                 </div>
@@ -522,7 +555,7 @@ export default function DeliveryManagerDashboardPage() {
                     <p className="font-bold text-sm text-[#071426]">Amit Sharma</p>
                     <p className="text-[11px] text-gray-500">delivery@watchhub.in</p>
                     <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-amber-50 text-[#D6A63C] text-[10px] font-bold border border-[#D6A63C]/30">
-                      Verified Delivery Manager
+                      Verified Logistics Lead
                     </span>
                   </div>
 
@@ -593,7 +626,10 @@ export default function DeliveryManagerDashboardPage() {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    if (item.id === 'areas') setShowServiceAreasModal(true);
+                  }}
                   className={`w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     isActive
                       ? 'bg-[#D6A63C] text-[#071426] shadow-lg font-bold shadow-[#D6A63C]/20'
@@ -603,7 +639,7 @@ export default function DeliveryManagerDashboardPage() {
                   <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#071426]' : 'text-gray-400'}`} />
                   {!sidebarCollapsed && <span className="flex-1 text-left">{item.label}</span>}
                   {!sidebarCollapsed && item.badge && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E65100] text-white">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EF4444] text-white">
                       {item.badge}
                     </span>
                   )}
@@ -617,11 +653,13 @@ export default function DeliveryManagerDashboardPage() {
             <div className="p-4 border-t border-white/10">
               <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs">
                 <div className="flex items-center gap-2 font-bold text-white mb-1">
-                  <Package className="w-4 h-4 text-[#D6A63C]" />
+                  <div className="w-5 h-5 rounded-full bg-[#D6A63C]/20 text-[#D6A63C] flex items-center justify-center text-xs">
+                    🎧
+                  </div>
                   <span>Need Help?</span>
                 </div>
                 <p className="text-[11px] text-gray-400 mb-3 leading-relaxed">
-                  Delivery operations, partner support & tracking.
+                  Delivery operations, rider support & route planning.
                 </p>
                 <button
                   onClick={() => setShowSupportModal(true)}
@@ -647,13 +685,13 @@ export default function DeliveryManagerDashboardPage() {
                   Delivery Manager Dashboard
                 </h1>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Manage shipments, delivery partners, routes and last-mile delivery for WatchHub.
+                  Control shipments, assign riders, track deliveries and ensure on-time delivery for WatchHub.
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Date Range Selector */}
+              {/* Date Filter Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setDateRangeOpen(!dateRangeOpen)}
@@ -666,7 +704,7 @@ export default function DeliveryManagerDashboardPage() {
 
                 {dateRangeOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 text-xs text-gray-700 animate-fade-in">
-                    {['Today', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Custom Range'].map((r) => (
+                    {['Today', 'Last 7 Days', 'Last 30 Days', 'This Month'].map((r) => (
                       <button
                         key={r}
                         onClick={() => {
@@ -716,7 +754,6 @@ export default function DeliveryManagerDashboardPage() {
                     <span>{deliveryData?.stats?.totalShipmentsTrend || '+12%'}</span>
                   </div>
                 </div>
-                {/* Mini Wave Chart */}
                 <div className="w-16 h-8">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={waveDataTotal}>
@@ -915,16 +952,12 @@ export default function DeliveryManagerDashboardPage() {
                 </button>
               </div>
 
-              {/* Realistic Interactive Map Canvas / SVG */}
+              {/* Realistic Interactive Vector Map Graphics */}
               <div className="relative w-full h-56 rounded-xl overflow-hidden bg-[#e5ece8] border border-gray-200">
-                {/* Stylized Vector Map Graphics */}
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 500 240">
-                  {/* Water Body / River */}
                   <path d="M 0 160 Q 150 140, 260 170 T 500 130 L 500 160 L 0 200 Z" fill="#cbe3f5" opacity="0.8" />
-                  {/* Green Parks */}
                   <rect x="30" y="30" width="80" height="60" rx="10" fill="#d2e7d6" opacity="0.8" />
                   <rect x="320" y="40" width="90" height="70" rx="12" fill="#d2e7d6" opacity="0.8" />
-                  {/* Road Network Lines */}
                   <path d="M 0 60 L 500 80" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
                   <path d="M 0 120 L 500 110" stroke="#ffffff" strokeWidth="5" />
                   <path d="M 120 0 L 150 240" stroke="#ffffff" strokeWidth="7" />
@@ -932,7 +965,7 @@ export default function DeliveryManagerDashboardPage() {
                   <path d="M 420 0 L 440 240" stroke="#ffffff" strokeWidth="5" />
                   <path d="M 0 190 Q 250 180, 500 210" stroke="#f1e0c6" strokeWidth="8" />
 
-                  {/* Active Blue Delivery Route Line (Matching image) */}
+                  {/* Active Blue Delivery Route Line */}
                   <path
                     d="M 60 190 Q 140 180, 220 140 T 380 95"
                     fill="none"
@@ -951,18 +984,15 @@ export default function DeliveryManagerDashboardPage() {
                   <div className="w-6 h-6 rounded-full bg-[#071426] text-white flex items-center justify-center text-[10px] shadow-lg border-2 border-white">
                     🏠
                   </div>
-                  <span className="text-[9px] font-bold bg-[#071426] text-white px-1.5 py-0.5 rounded shadow mt-0.5">
-                    Hub
-                  </span>
                 </div>
 
-                {/* Rider Live Position Marker (scooter) */}
+                {/* Rider Live Position Marker */}
                 <div
                   className="absolute left-[260px] top-[140px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer animate-bounce"
-                  title="Rider Rohan Singh - Verified GPS 2 mins ago"
+                  title="Rider Rohan Singh - Verified GPS"
                 >
                   <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shadow-xl border-2 border-white ring-4 ring-blue-400/30">
-                    🛵
+                    🚚
                   </div>
                 </div>
 
@@ -976,17 +1006,23 @@ export default function DeliveryManagerDashboardPage() {
                   </div>
                 </div>
 
-                {/* Floating Popup Card (Matches Image Exactly) */}
-                <div className="absolute top-3 left-4 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl shadow-lg border border-gray-100 z-20 text-xs">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-base">🛵</span>
-                    <span className="font-bold text-gray-900">Order #WH12548</span>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">
-                      Out for Delivery
-                    </span>
+                {/* Floating Popup Card matching reference image exactly */}
+                <div className="absolute top-3 left-4 bg-white/95 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg border border-gray-100 z-20 text-xs flex items-center gap-2.5">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                    alt="Rohan Singh"
+                    className="w-9 h-9 rounded-full object-cover border border-[#10B981]"
+                  />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-gray-900 text-xs">Rohan Singh</span>
+                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-green-100 text-green-700">
+                        • Out for Delivery
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-gray-600 font-medium">📍 Order: #WH12548</p>
+                    <p className="text-[10px] text-gray-500 font-medium">ETA: 12:40 PM (6.2 km)</p>
                   </div>
-                  <p className="text-[11px] text-gray-600 font-medium">Rider: Rohan Singh</p>
-                  <p className="text-[11px] text-gray-600 font-medium">ETA: 12:40 PM</p>
                 </div>
 
                 {/* Map Controls */}
@@ -1027,13 +1063,11 @@ export default function DeliveryManagerDashboardPage() {
                   onClick={() => setShowAssignModal(true)}
                   className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-[#D6A63C]/10 group-hover:text-[#D6A63C] transition-colors">
-                    <Truck className="w-4 h-4" />
-                  </div>
+                  <Bike className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
                   <span className="text-xs font-semibold text-gray-700">Assign Orders</span>
                 </button>
 
-                {/* 2. Track Shipments */}
+                {/* 2. Track Shipment */}
                 <button
                   onClick={() => {
                     const firstOrder = deliveryData?.orders?.[0];
@@ -1044,10 +1078,8 @@ export default function DeliveryManagerDashboardPage() {
                   }}
                   className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-[#D6A63C]/10 group-hover:text-[#D6A63C] transition-colors">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs font-semibold text-gray-700">Track Shipments</span>
+                  <MapPin className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
+                  <span className="text-xs font-semibold text-gray-700">Track Shipment</span>
                 </button>
 
                 {/* 3. Manage Riders */}
@@ -1055,9 +1087,7 @@ export default function DeliveryManagerDashboardPage() {
                   onClick={() => setActiveTab('partners')}
                   className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-[#D6A63C]/10 group-hover:text-[#D6A63C] transition-colors">
-                    <Users className="w-4 h-4" />
-                  </div>
+                  <Users className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
                   <span className="text-xs font-semibold text-gray-700">Manage Riders</span>
                 </button>
 
@@ -1066,21 +1096,17 @@ export default function DeliveryManagerDashboardPage() {
                   onClick={() => setActiveTab('routes')}
                   className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-[#D6A63C]/10 group-hover:text-[#D6A63C] transition-colors">
-                    <Navigation className="w-4 h-4" />
-                  </div>
+                  <Compass className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
                   <span className="text-xs font-semibold text-gray-700">Plan Routes</span>
                 </button>
 
-                {/* 5. Delivery Reports */}
+                {/* 5. Create Shipment */}
                 <button
-                  onClick={handleExportCSV}
+                  onClick={() => setShowCreateShipmentModal(true)}
                   className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-[#D6A63C]/10 group-hover:text-[#D6A63C] transition-colors">
-                    <FileText className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs font-semibold text-gray-700">Delivery Reports</span>
+                  <Package className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
+                  <span className="text-xs font-semibold text-gray-700">Create Shipment</span>
                 </button>
 
                 {/* 6. Handle Returns */}
@@ -1088,23 +1114,21 @@ export default function DeliveryManagerDashboardPage() {
                   onClick={() => setActiveTab('returns')}
                   className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-[#D6A63C]/10 group-hover:text-[#D6A63C] transition-colors">
-                    <RotateCcw className="w-4 h-4" />
-                  </div>
+                  <RotateCcw className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
                   <span className="text-xs font-semibold text-gray-700">Handle Returns</span>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* BOTTOM ROW: TODAY'S DELIVERY ORDERS + DELIVERY PARTNERS WIDGET */}
+          {/* BOTTOM ROW: TODAY'S DELIVERY ORDERS + DELIVERY PARTNERS (28) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             {/* LEFT: TODAY'S DELIVERY ORDERS TABLE (lg:col-span-9) */}
             <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-9 space-y-4">
-              {/* Header with Title, Tabs, and View All link */}
+              {/* Header with Title and Tabs */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-base">🚚</span>
+                  <Truck className="w-4 h-4 text-amber-500" />
                   <h3 className="text-sm font-bold text-gray-900">
                     Today's Delivery Orders <span className="text-gray-400 font-normal">(312)</span>
                   </h3>
@@ -1132,54 +1156,28 @@ export default function DeliveryManagerDashboardPage() {
                     </button>
                   ))}
                 </div>
-
-                <button
-                  onClick={() => {
-                    setOrderFilterTab('All');
-                    setStatusFilter('All');
-                    triggerToast('Displaying all delivery orders.');
-                  }}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View All Orders →</span>
-                </button>
               </div>
 
-              {/* Filters Bar: Search, Status, City/Area, Rider, Payment */}
+              {/* Filters Bar matching reference UI */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
-                {/* Search */}
                 <div className="relative">
                   <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by Order ID, Customer, AWB..."
+                    placeholder="Search by Order ID, Customer, Product..."
                     className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-800 placeholder-gray-400 focus:border-[#D6A63C] outline-none"
                   />
                 </div>
 
-                {/* Delivery Status Dropdown */}
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
-                >
-                  <option value="All">Delivery Status: All</option>
-                  <option value="Out for Delivery">Out for Delivery</option>
-                  <option value="In Transit">In Transit</option>
-                  <option value="Assigned">Assigned</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Failed">Failed</option>
-                </select>
-
-                {/* City / Area Dropdown */}
+                {/* Area / City */}
                 <select
                   value={areaFilter}
                   onChange={(e) => setAreaFilter(e.target.value)}
                   className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
                 >
-                  <option value="All">City / Area: All</option>
+                  <option value="All">Area / City ▾</option>
                   <option value="Gomti Nagar">Gomti Nagar, Lucknow</option>
                   <option value="Indira Nagar">Indira Nagar, Lucknow</option>
                   <option value="Aliganj">Aliganj, Lucknow</option>
@@ -1187,13 +1185,13 @@ export default function DeliveryManagerDashboardPage() {
                   <option value="Jankipuram">Jankipuram, Lucknow</option>
                 </select>
 
-                {/* Rider Dropdown */}
+                {/* Rider */}
                 <select
                   value={riderFilter}
                   onChange={(e) => setRiderFilter(e.target.value)}
                   className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
                 >
-                  <option value="All">Rider: All Riders</option>
+                  <option value="All">Rider ▾</option>
                   {(deliveryData?.partners || []).map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name} ({p.status})
@@ -1201,40 +1199,33 @@ export default function DeliveryManagerDashboardPage() {
                   ))}
                 </select>
 
-                {/* Payment Type Dropdown */}
+                {/* Courier Partner */}
                 <select
-                  value={paymentFilter}
-                  onChange={(e) => setPaymentFilter(e.target.value)}
+                  value={courierFilter}
+                  onChange={(e) => setCourierFilter(e.target.value)}
                   className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
                 >
-                  <option value="All">Payment Type: All</option>
-                  <option value="Prepaid">Prepaid (100% Verified)</option>
-                  <option value="COD">Cash on Delivery (COD)</option>
+                  <option value="All">Courier Partner ▾</option>
+                  <option value="BlueDart">BlueDart Express</option>
+                  <option value="Delhivery">Delhivery</option>
+                  <option value="DTDC">DTDC Express</option>
+                  <option value="Shadowfax">Shadowfax</option>
+                </select>
+
+                {/* Status */}
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
+                >
+                  <option value="All">Status ▾</option>
+                  <option value="Out for Delivery">Out for Delivery</option>
+                  <option value="In Transit">In Transit</option>
+                  <option value="Assigned">Assigned</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Failed">Failed</option>
                 </select>
               </div>
-
-              {/* Bulk Actions Banner if any checked */}
-              {selectedOrderIds.length > 0 && (
-                <div className="p-3 bg-amber-50 rounded-xl border border-[#D6A63C]/30 flex items-center justify-between text-xs animate-fade-in">
-                  <span className="font-semibold text-gray-800">
-                    {selectedOrderIds.length} orders selected for batch assignment
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setShowAssignModal(true)}
-                      className="px-3 py-1.5 rounded-lg bg-[#D6A63C] text-[#071426] font-bold text-xs hover:bg-[#c49533] cursor-pointer"
-                    >
-                      Assign to Rider
-                    </button>
-                    <button
-                      onClick={() => setSelectedOrderIds([])}
-                      className="px-2 py-1 text-gray-500 hover:text-gray-800 cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
 
               {/* Table */}
               <div className="overflow-x-auto rounded-xl border border-gray-100">
@@ -1299,7 +1290,7 @@ export default function DeliveryManagerDashboardPage() {
                               </div>
                             </td>
                             <td className="p-3 text-gray-600 whitespace-nowrap">
-                              <div className="flex items-center gap-1 text-gray-500">
+                              <div className="flex items-center gap-1 text-gray-600">
                                 <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0" />
                                 <span>{order.area}</span>
                               </div>
@@ -1361,7 +1352,7 @@ export default function DeliveryManagerDashboardPage() {
                                   <Phone className="w-3.5 h-3.5" />
                                 </button>
 
-                                {/* Log Failure / Actions Menu */}
+                                {/* More actions */}
                                 <button
                                   onClick={() => {
                                     setSelectedOrderForFailure(order);
@@ -1381,14 +1372,36 @@ export default function DeliveryManagerDashboardPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Table Pagination matching image */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs text-gray-500">
+                <span>Showing 1–5 of 312 orders</span>
+                <div className="flex items-center gap-1">
+                  <select className="px-2 py-1 rounded-lg border border-gray-200 text-xs bg-white text-gray-700 outline-none mr-2">
+                    <option>5 per page ▾</option>
+                    <option>10 per page ▾</option>
+                    <option>25 per page ▾</option>
+                  </select>
+                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">«</button>
+                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">‹</button>
+                  <button className="px-2.5 py-1 rounded bg-[#D6A63C] text-[#071426] font-bold">1</button>
+                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">2</button>
+                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">3</button>
+                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">4</button>
+                  <span className="px-1">...</span>
+                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">63</button>
+                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">›</button>
+                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">»</button>
+                </div>
+              </div>
             </div>
 
-            {/* RIGHT: DELIVERY PARTNERS WIDGET (lg:col-span-3) */}
+            {/* RIGHT: DELIVERY PARTNERS (28) WIDGET (lg:col-span-3) */}
             <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-3 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-base">👤</span>
-                  <h3 className="text-sm font-bold text-gray-900">Delivery Partners</h3>
+                  <Users className="w-4 h-4 text-amber-500" />
+                  <h3 className="text-sm font-bold text-gray-900">Delivery Partners <span className="text-gray-400 font-normal">(28)</span></h3>
                 </div>
                 <button
                   onClick={() => setActiveTab('partners')}
@@ -1444,7 +1457,7 @@ export default function DeliveryManagerDashboardPage() {
                 ))}
               </div>
 
-              {/* Add Delivery Partner Quick Button */}
+              {/* Add Delivery Partner Button */}
               <button
                 onClick={() => setShowAddPartnerModal(true)}
                 className="w-full py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
@@ -1611,13 +1624,13 @@ export default function DeliveryManagerDashboardPage() {
         </div>
       )}
 
-      {/* 2. ASSIGN ORDERS TO RIDER MODAL */}
+      {/* 2. ASSIGN DELIVERIES MODAL */}
       {showAssignModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 text-xs">
             <div className="flex items-center justify-between pb-3 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <Navigation className="w-5 h-5 text-[#D6A63C]" />
+                <Bike className="w-5 h-5 text-[#D6A63C]" />
                 <h3 className="font-bold text-base text-[#071426]">Assign Orders to Delivery Partner</h3>
               </div>
               <button
@@ -1631,13 +1644,8 @@ export default function DeliveryManagerDashboardPage() {
             <form onSubmit={handleAssignOrders} className="space-y-4 mt-4">
               <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-100 text-blue-900">
                 <p className="font-bold">
-                  Selected Orders: {selectedOrderIds.length > 0 ? selectedOrderIds.join(', ') : 'No orders selected. Please choose below:'}
+                  Selected Orders: {selectedOrderIds.length > 0 ? selectedOrderIds.join(', ') : 'Assigning pending batch queue'}
                 </p>
-                {selectedOrderIds.length === 0 && (
-                  <p className="text-[11px] text-blue-700 mt-1">
-                    Select order checkboxes in the table or assign current pending backlog.
-                  </p>
-                )}
               </div>
 
               <div>
@@ -1702,7 +1710,7 @@ export default function DeliveryManagerDashboardPage() {
         </div>
       )}
 
-      {/* 3. SHIPMENT TRACKING 8-STAGE TIMELINE MODAL */}
+      {/* 3. SHIPMENT TRACKING MODAL */}
       {showTrackingModal && selectedOrderForTracking && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-gray-100 text-xs max-h-[90vh] overflow-y-auto">
@@ -1726,7 +1734,6 @@ export default function DeliveryManagerDashboardPage() {
               </button>
             </div>
 
-            {/* Product & Rider Card Summary */}
             <div className="grid grid-cols-2 gap-3 p-3.5 bg-gray-50 rounded-2xl border border-gray-100 my-4">
               <div className="flex items-center gap-2.5">
                 <img
@@ -1737,7 +1744,7 @@ export default function DeliveryManagerDashboardPage() {
                 <div>
                   <p className="font-bold text-gray-900">{selectedOrderForTracking.productName}</p>
                   <p className="text-[11px] text-gray-500">{selectedOrderForTracking.customer} • {selectedOrderForTracking.formattedAmount}</p>
-                  <span className="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">
+                  <span className="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">
                     {selectedOrderForTracking.status}
                   </span>
                 </div>
@@ -1751,7 +1758,6 @@ export default function DeliveryManagerDashboardPage() {
               </div>
             </div>
 
-            {/* 8-Stage Timeline */}
             <div className="space-y-4 px-2">
               <h4 className="font-bold text-xs text-gray-800 uppercase tracking-wider">
                 Full Shipment Journey (8 Milestones)
@@ -1794,7 +1800,7 @@ export default function DeliveryManagerDashboardPage() {
         </div>
       )}
 
-      {/* 4. CONTACT RIDER / CUSTOMER MODAL */}
+      {/* 4. CONTACT MODAL */}
       {showContactModal && contactTarget && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 text-xs">
@@ -1844,174 +1850,56 @@ export default function DeliveryManagerDashboardPage() {
         </div>
       )}
 
-      {/* 5. LOG DELIVERY ATTEMPT FAILURE MODAL */}
-      {showFailedAttemptModal && selectedOrderForFailure && (
+      {/* 5. SERVICE AREAS MODAL */}
+      {showServiceAreasModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 text-xs">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 text-xs">
             <div className="flex items-center justify-between pb-3 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-rose-600" />
-                <h3 className="font-bold text-base text-[#071426]">
-                  Record Failed Delivery Attempt
-                </h3>
+                <Layers className="w-5 h-5 text-[#D6A63C]" />
+                <h3 className="font-bold text-base text-[#071426]">Active Delivery Service Sectors</h3>
               </div>
               <button
-                onClick={() => setShowFailedAttemptModal(false)}
+                onClick={() => setShowServiceAreasModal(false)}
                 className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleLogFailure} className="space-y-4 mt-4">
-              <div className="p-3 bg-rose-50 rounded-xl border border-rose-100 text-rose-900">
-                <p className="font-bold">Order: {selectedOrderForFailure.orderId} — {selectedOrderForFailure.customer}</p>
-                <p className="text-[11px] text-rose-700 mt-0.5">Rider: {selectedOrderForFailure.riderName}</p>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Failure Reason *</label>
-                <select
-                  value={failureForm.reason}
-                  onChange={(e) => setFailureForm({ ...failureForm, reason: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                >
-                  <option value="Customer Unavailable">Customer Unavailable</option>
-                  <option value="Incorrect Address">Incorrect Address</option>
-                  <option value="Customer Refused">Customer Refused</option>
-                  <option value="Phone Not Reachable">Phone Not Reachable</option>
-                  <option value="Other">Other Operational Reason</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Next Re-Attempt Slot *</label>
-                <input
-                  type="text"
-                  required
-                  value={failureForm.nextAttemptDate}
-                  onChange={(e) => setFailureForm({ ...failureForm, nextAttemptDate: e.target.value })}
-                  placeholder="e.g. Today 06:00 PM or Tomorrow 11:00 AM"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Rider Contact Remarks</label>
-                <textarea
-                  rows="3"
-                  value={failureForm.remarks}
-                  onChange={(e) => setFailureForm({ ...failureForm, remarks: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                />
-              </div>
-
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowFailedAttemptModal(false)}
-                  className="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-md cursor-pointer"
-                >
-                  Log & Reschedule
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* 6. ADD DELIVERY PARTNER MODAL */}
-      {showAddPartnerModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-[#D6A63C]" />
-                <h3 className="font-bold text-base text-[#071426]">Register Delivery Partner</h3>
-              </div>
-              <button
-                onClick={() => setShowAddPartnerModal(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
+            <div className="space-y-3 my-4">
+              {[
+                { name: 'Gomti Nagar, Lucknow', pincode: '226010', riders: 'Rohan Singh, Vikas Patel', sla: 'Same Day (2h Express)' },
+                { name: 'Indira Nagar, Lucknow', pincode: '226016', riders: 'Amit Kumar', sla: 'Same Day (3h Express)' },
+                { name: 'Aliganj, Lucknow', pincode: '226024', riders: 'Neha Sharma', sla: 'Standard 4h SLA' },
+                { name: 'Hazratganj, Lucknow', pincode: '226001', riders: 'Vikas Patel', sla: 'Same Day' },
+                { name: 'Jankipuram, Lucknow', pincode: '226021', riders: 'Arjun Mishra', sla: 'Standard Next Day' },
+              ].map((area, idx) => (
+                <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-gray-900">{area.name}</p>
+                    <p className="text-gray-500 text-[10px]">Pincode: {area.pincode} • Active: {area.riders}</p>
+                  </div>
+                  <span className="px-2 py-0.5 rounded bg-green-100 text-green-700 font-bold text-[10px]">
+                    {area.sla}
+                  </span>
+                </div>
+              ))}
             </div>
 
-            <form onSubmit={handleAddPartner} className="space-y-4 mt-4">
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Rider Full Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={partnerForm.name}
-                  onChange={(e) => setPartnerForm({ ...partnerForm, name: e.target.value })}
-                  placeholder="e.g. Deepak Kumar"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Mobile Phone *</label>
-                <input
-                  type="tel"
-                  required
-                  value={partnerForm.phone}
-                  onChange={(e) => setPartnerForm({ ...partnerForm, phone: e.target.value })}
-                  placeholder="+91 98111 22334"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Assigned City & Delivery Area *</label>
-                <input
-                  type="text"
-                  required
-                  value={partnerForm.area}
-                  onChange={(e) => setPartnerForm({ ...partnerForm, area: e.target.value })}
-                  placeholder="e.g. Aliganj & Kapoorthala, Lucknow"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Vehicle Specification</label>
-                <input
-                  type="text"
-                  value={partnerForm.vehicle}
-                  onChange={(e) => setPartnerForm({ ...partnerForm, vehicle: e.target.value })}
-                  placeholder="e.g. TVS Jupiter (UP 32 CD 1234)"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                />
-              </div>
-
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowAddPartnerModal(false)}
-                  className="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#D6A63C] hover:bg-[#c49533] text-[#071426] font-bold shadow-md cursor-pointer"
-                >
-                  Save Partner
-                </button>
-              </div>
-            </form>
+            <div className="flex justify-end pt-2 border-t border-gray-100">
+              <button
+                onClick={() => setShowServiceAreasModal(false)}
+                className="px-4 py-2 rounded-xl bg-[#071426] text-white font-bold cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* 7. FULL LIVE MAP MODAL */}
+      {/* 6. FULL LIVE MAP MODAL */}
       {showFullMapModal && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-gray-100 text-xs flex flex-col h-[85vh]">
@@ -2031,7 +1919,6 @@ export default function DeliveryManagerDashboardPage() {
               </button>
             </div>
 
-            {/* Expanded Vector Map */}
             <div className="relative flex-1 my-4 rounded-2xl overflow-hidden bg-[#e5ece8] border border-gray-200">
               <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 800 450">
                 <path d="M 0 320 Q 250 280, 480 340 T 800 270 L 800 450 L 0 450 Z" fill="#cbe3f5" opacity="0.8" />
@@ -2042,13 +1929,10 @@ export default function DeliveryManagerDashboardPage() {
                 <path d="M 220 0 L 280 450" stroke="#ffffff" strokeWidth="12" />
                 <path d="M 520 0 L 490 450" stroke="#ffffff" strokeWidth="10" />
 
-                {/* Primary Route */}
                 <path d="M 120 380 Q 260 350, 420 280 T 680 180" fill="none" stroke="#2563EB" strokeWidth="6" strokeLinecap="round" strokeDasharray="6 3" />
-                {/* Secondary Route */}
                 <path d="M 120 380 Q 320 240, 520 180 T 700 80" fill="none" stroke="#10B981" strokeWidth="5" strokeLinecap="round" strokeDasharray="4 2" />
               </svg>
 
-              {/* Central Hub */}
               <div className="absolute left-[120px] top-[380px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
                 <div className="w-8 h-8 rounded-full bg-[#071426] text-white flex items-center justify-center text-sm shadow-xl border-2 border-white">
                   🏠
@@ -2058,7 +1942,6 @@ export default function DeliveryManagerDashboardPage() {
                 </span>
               </div>
 
-              {/* Rider 1: Rohan Singh */}
               <div className="absolute left-[440px] top-[270px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
                 <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm shadow-xl border-2 border-white ring-4 ring-blue-300">
                   🛵
@@ -2067,21 +1950,11 @@ export default function DeliveryManagerDashboardPage() {
                   Rohan Singh (ETA 12:40 PM)
                 </span>
               </div>
-
-              {/* Rider 2: Amit Kumar */}
-              <div className="absolute left-[540px] top-[170px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <div className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm shadow-xl border-2 border-white ring-4 ring-green-300">
-                  🛵
-                </div>
-                <span className="text-[10px] font-bold bg-green-600 text-white px-2 py-0.5 rounded shadow mt-1">
-                  Amit Kumar (ETA 01:10 PM)
-                </span>
-              </div>
             </div>
 
             <div className="flex items-center justify-between pt-2">
               <span className="text-gray-500 text-xs">
-                ℹ Verified real-time telemetry from rider Android mobile partner app.
+                ℹ Verified real-time telemetry from rider mobile app.
               </span>
               <button
                 onClick={() => setShowFullMapModal(false)}
@@ -2094,20 +1967,20 @@ export default function DeliveryManagerDashboardPage() {
         </div>
       )}
 
-      {/* 8. SUPPORT MODAL */}
+      {/* 7. SUPPORT / NEED HELP MODAL */}
       {showSupportModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 text-xs text-center">
             <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#D6A63C] text-2xl flex items-center justify-center mx-auto mb-3">
-              🎧
+              🚚
             </div>
-            <h3 className="font-bold text-base text-[#071426] mb-1">Delivery Operations Support</h3>
+            <h3 className="font-bold text-base text-[#071426] mb-1">Logistics Operations Helpdesk</h3>
             <p className="text-gray-500 mb-4 leading-relaxed">
-              24×7 internal logistics escalation desk for courier partners, routing queries and lost parcels.
+              Assistance for delivery partners, route changes, emergency vehicle breakdown and parcel tracking.
             </p>
             <div className="p-3 bg-gray-50 rounded-2xl text-left space-y-2 mb-4 border border-gray-100">
               <p className="text-gray-600">
-                <span className="font-bold text-gray-800">Helpline:</span> +91 98765 43210
+                <span className="font-bold text-gray-800">Dispatch Desk:</span> +91 98765 43210
               </p>
               <p className="text-gray-600">
                 <span className="font-bold text-gray-800">Email:</span> logistics@watchhub.in
