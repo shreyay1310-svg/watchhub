@@ -1,307 +1,247 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
-import LiveWatchPreview from '../../components/customizer/LiveWatchPreview';
-import StepNavigator from '../../components/customizer/StepNavigator';
-import CustomizationPanels from '../../components/customizer/CustomizationPanels';
-import DesignSummarySidebar, { calculateCustomWatchPrice } from '../../components/customizer/DesignSummarySidebar';
-import SavedDesignsModal from '../../components/customizer/SavedDesignsModal';
-import { DEFAULT_CUSTOM_WATCH, WATCH_TYPES } from '../../data/customWatchData';
+import DiyBraceletCanvas from '../../components/customizer/DiyBraceletCanvas';
+import DiyWristSettings from '../../components/customizer/DiyWristSettings';
+import DiyDesignSummary, { calculateDiyPrice } from '../../components/customizer/DiyDesignSummary';
+import DiyCataloguePanel from '../../components/customizer/DiyCataloguePanel';
+import DiyStepNavigator from '../../components/customizer/DiyStepNavigator';
+import DiySizeGuideModal from '../../components/customizer/DiySizeGuideModal';
+import DiyFinishPreviewModal from '../../components/customizer/DiyFinishPreviewModal';
+import { INITIAL_DIY_CONFIG } from '../../data/diyCustomizerData';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
-import { Sparkles, Bookmark, CheckCircle2, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { Gem, Box, Settings, Sparkles, ChevronRight, Home, CheckCircle2 } from 'lucide-react';
 
 export const CustomizeWatchPage = () => {
-  const navigate = useNavigate();
   const { addToCart } = useCart();
-  const { user } = useAuth();
 
-  const [currentStep, setCurrentStep] = useState(2); // Step 2 (Dial) active by default matching mockup!
-  const [customWatch, setCustomWatch] = useState(DEFAULT_CUSTOM_WATCH);
-  const [savedDesigns, setSavedDesigns] = useState([]);
-  const [isSavedModalOpen, setIsSavedModalOpen] = useState(false);
+  const [config, setConfig] = useState(INITIAL_DIY_CONFIG);
+  const [currentStep, setCurrentStep] = useState(3); // Step 3 (Choose Beads) active matching Gemloo reference
+  const [activeSlide, setActiveSlide] = useState(2); // Center dot active matching reference
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
-  // Load saved designs from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('watchhub_saved_designs');
-      if (stored) {
-        setSavedDesigns(JSON.parse(stored));
-      }
-    } catch (err) {
-      console.warn('Could not read saved designs from localStorage', err);
-    }
-  }, []);
 
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3200);
   };
 
+  // Step click handler
+  const handleStepClick = (stepId) => {
+    setCurrentStep(stepId);
+    if (stepId === 6) {
+      setIsPreviewModalOpen(true);
+    }
+  };
+
   // Add Custom Watch to Cart
   const handleAddToCart = () => {
-    const { total } = calculateCustomWatchPrice(customWatch);
-    const watchTypeName = WATCH_TYPES.find((t) => t.id === customWatch.watchType)?.name || 'Custom Watch';
+    const { grandTotal } = calculateDiyPrice(config);
 
-    const customCartProduct = {
-      id: `custom-${Date.now()}`,
-      name: `${watchTypeName} — Bespoke Edition (${customWatch.dial.size}mm)`,
-      brand: 'WatchHub Bespoke',
+    const bespokeCartProduct = {
+      id: `bespoke-diy-${Date.now()}`,
+      name: `${config.watchBase.name} — Atelier Gemstone Beaded Edition (${config.wristSizeCm}cm)`,
+      brand: 'WatchHub Bespoke Horology',
       category: 'Custom Watch',
-      price: total,
-      originalPrice: Math.round(total * 1.25),
+      price: grandTotal,
+      originalPrice: Math.round(grandTotal * 1.25),
       discount: 20,
-      image: customWatch.dial.color === 'blue'
-        ? '/images/products/featured_rolex_submariner.jpg'
-        : '/images/products/featured_rolex_daytona.jpg',
-      customConfig: customWatch,
-      stock: 1,
-      isCustom: true,
-      description: `Bespoke ${watchTypeName}: ${customWatch.dial.shape} ${customWatch.dial.size}mm dial in ${customWatch.dial.color} (${customWatch.dial.finish}), ${customWatch.case.material} case in ${customWatch.case.color}, ${customWatch.strap.material} strap in ${customWatch.strap.color}. Engraving: "${customWatch.personalization.backEngraving || 'NONE'}".`,
+      image: '/images/products/featured_rolex_submariner.jpg',
+      rating: 5.0,
+      reviewsCount: 1,
+      inStock: true,
+      customSpecs: {
+        watchBase: config.watchBase.name,
+        wristSizeCm: config.wristSizeCm,
+        bandMode: config.bandMode,
+        band1Bead: config.band1.primaryBead?.name,
+        band1BeadSize: config.band1.beadSize,
+        band1Count: config.band1.beadsCount,
+        band1Accessories: config.band1.accessories,
+        band2Bead: config.bandMode === 'double' ? config.band2.primaryBead?.name : null,
+        band2Count: config.bandMode === 'double' ? config.band2.beadsCount : null,
+      },
     };
 
-    addToCart(customCartProduct);
+    addToCart(bespokeCartProduct, 1);
     setIsAddedToCart(true);
-    showToast(`🛒 Bespoke ${watchTypeName} added to Cart!`);
-    setTimeout(() => setIsAddedToCart(false), 2400);
+    showToast('✨ Bespoke Beaded Watch successfully added to your shopping cart!');
+    setTimeout(() => setIsAddedToCart(false), 3500);
   };
 
-  // Save Design
+  // Save current design to localStorage
   const handleSaveDesign = () => {
-    const newDesign = {
-      ...customWatch,
-      id: `design-${Date.now()}`,
-      name: `Bespoke ${customWatch.dial.color.toUpperCase()} (${customWatch.dial.size}mm)`,
-      savedAt: new Date().toLocaleDateString('en-IN', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
-    };
-
-    const updated = [newDesign, ...savedDesigns];
-    setSavedDesigns(updated);
     try {
-      localStorage.setItem('watchhub_saved_designs', JSON.stringify(updated));
-    } catch (err) {
-      console.warn('Could not save design to localStorage', err);
+      const stored = localStorage.getItem('watchhub_diy_saved_designs');
+      const list = stored ? JSON.parse(stored) : [];
+      const newEntry = {
+        id: `design-${Date.now()}`,
+        savedAt: new Date().toISOString(),
+        config,
+      };
+      list.unshift(newEntry);
+      localStorage.setItem('watchhub_diy_saved_designs', JSON.stringify(list.slice(0, 15)));
+      setIsSaved(true);
+      showToast('💾 Your custom watch design has been saved to your profile!');
+      setTimeout(() => setIsSaved(false), 3000);
+    } catch (e) {
+      console.error(e);
+      showToast('Design saved locally!');
     }
-
-    setIsSaved(true);
-    showToast(`🔖 Custom watch design saved to your collection!`);
-    setTimeout(() => setIsSaved(false), 2000);
   };
 
-  const handleDeleteDesign = (id) => {
-    const updated = savedDesigns.filter((d) => d.id !== id);
-    setSavedDesigns(updated);
-    try {
-      localStorage.setItem('watchhub_saved_designs', JSON.stringify(updated));
-    } catch (err) {
-      console.warn('Could not update saved designs in localStorage', err);
-    }
-    showToast('🗑️ Saved design removed.');
-  };
-
-  const handleLoadDesign = (design) => {
-    setCustomWatch(design);
-    showToast(`✨ Loaded design "${design.name}"!`);
-  };
-
-  const handleShare = () => {
+  // Share Design
+  const handleShareDesign = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
-      showToast('📋 Custom watch configuration link copied to clipboard!');
+      showToast('🔗 Link copied to clipboard! Share your bespoke design with friends.');
     } else {
-      showToast('📋 Design URL ready to share!');
+      showToast('Share link: ' + window.location.href);
     }
+  };
+
+  // Reset to initial design
+  const handleResetDesign = () => {
+    setConfig(INITIAL_DIY_CONFIG);
+    setCurrentStep(3);
+    showToast('↺ Studio reset to default Gemloo Atelier configuration.');
   };
 
   return (
-    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
-      {/* 1. Header with Active Customize Your Watch Link */}
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex flex-col font-sans selection:bg-purple-600 selection:text-white">
+      {/* Customer Header */}
       <CustomerNavbar />
+
+      {/* Main Studio Container */}
+      <main className="flex-1 max-w-[1560px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+        {/* Breadcrumb matching "Home > Customize Your Watch" */}
+        <nav className="flex items-center gap-2 text-xs text-slate-400">
+          <Link to="/" className="hover:text-white flex items-center gap-1 transition-colors">
+            <Home className="w-3.5 h-3.5" />
+            <span>Home</span>
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+          <span className="text-purple-300 font-medium">Customize Your Watch</span>
+        </nav>
+
+        {/* 3-Column Top Studio Section: Left Step Nav, Center Canvas, Right Settings */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          {/* LEFT COLUMN: Title, Subtext, Badges & Step Navigator (cols 3) */}
+          <div className="lg:col-span-3 space-y-4">
+            {/* Header Title with purple gradient matching Gemloo Image 2 */}
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
+                Customize <br />
+                <span className="bg-gradient-to-r from-purple-400 via-fuchsia-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                  Your Watch
+                </span>
+              </h1>
+              <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                Design a watch bracelet that's uniquely yours. Choose beads, accessories, colors and bands with real-time preview.
+              </p>
+            </div>
+
+            {/* 3 Feature Bullet Points matching reference icons */}
+            <div className="space-y-2 py-1">
+              <div className="flex items-center gap-2.5 text-xs text-slate-300">
+                <div className="p-1.5 rounded-lg bg-purple-600/20 text-purple-400 border border-purple-500/30">
+                  <Gem className="w-3.5 h-3.5" />
+                </div>
+                <span>Personalized Design</span>
+              </div>
+
+              <div className="flex items-center gap-2.5 text-xs text-slate-300">
+                <div className="p-1.5 rounded-lg bg-purple-600/20 text-purple-400 border border-purple-500/30">
+                  <Box className="w-3.5 h-3.5" />
+                </div>
+                <span>Real-time Preview</span>
+              </div>
+
+              <div className="flex items-center gap-2.5 text-xs text-slate-300">
+                <div className="p-1.5 rounded-lg bg-purple-600/20 text-purple-400 border border-purple-500/30">
+                  <Settings className="w-3.5 h-3.5" />
+                </div>
+                <span>Premium Materials</span>
+              </div>
+            </div>
+
+            {/* Step Navigator (1 to 6) */}
+            <DiyStepNavigator
+              currentStep={currentStep}
+              onStepClick={handleStepClick}
+            />
+          </div>
+
+          {/* CENTER COLUMN: Central 3D Interactive Canvas & Smartwatch Beaded Ring (cols 6) */}
+          <div className="lg:col-span-6 flex flex-col items-center">
+            <DiyBraceletCanvas
+              config={config}
+              onOpenPreview={() => setIsPreviewModalOpen(true)}
+              activeSlide={activeSlide}
+              onSlideChange={setActiveSlide}
+            />
+          </div>
+
+          {/* RIGHT COLUMN: Band Configuration & Live Design Summary (cols 3) */}
+          <div className="lg:col-span-3 space-y-4">
+            <DiyWristSettings
+              config={config}
+              onChange={setConfig}
+              onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
+            />
+
+            <DiyDesignSummary
+              config={config}
+              onAddToCart={handleAddToCart}
+              onSaveDesign={handleSaveDesign}
+              onShareDesign={handleShareDesign}
+              onResetDesign={handleResetDesign}
+              isAddedToCart={isAddedToCart}
+              isSaved={isSaved}
+            />
+          </div>
+        </div>
+
+        {/* BOTTOM SECTION: Full Catalogue Panel with Tabs (Beads, Accessories, Colors, Watch Base) */}
+        <section className="pt-2">
+          <DiyCataloguePanel
+            config={config}
+            onChange={setConfig}
+          />
+        </section>
+      </main>
+
+      {/* Modals */}
+      <DiySizeGuideModal
+        isOpen={isSizeGuideOpen}
+        onClose={() => setIsSizeGuideOpen(false)}
+        onSelectSize={(sz) => setConfig((prev) => ({ ...prev, wristSizeCm: sz }))}
+      />
+
+      <DiyFinishPreviewModal
+        isOpen={isPreviewModalOpen}
+        onClose={() => setIsPreviewModalOpen(false)}
+        config={config}
+        onAddToCart={handleAddToCart}
+        isAddedToCart={isAddedToCart}
+      />
 
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#0B121C] text-white border border-watch-gold/40 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs animate-scale-up">
-          <Sparkles className="w-4 h-4 text-watch-gold flex-shrink-0" />
-          <span className="font-semibold">{toastMessage}</span>
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#090E24]/95 border border-purple-500/40 text-white text-xs shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-md animate-slideUp">
+          <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
+          <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* ════════════════════════════════════════════════════════════════
-          2. LUXURY BANNER STAGE (Exact Match to Mockup UI)
-          ════════════════════════════════════════════════════════════════ */}
-      <section className="bg-gradient-to-r from-[#060B12] via-[#0B1320] to-[#070D18] text-white py-6 sm:py-8 px-4 sm:px-8 border-b border-white/5 relative overflow-hidden">
-        {/* Glow orb */}
-        <div className="absolute right-0 top-0 w-96 h-96 bg-watch-gold/10 blur-3xl rounded-full pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold font-serif tracking-tight text-white">
-              Design Your <span className="text-watch-gold">Own Watch</span>
-            </h1>
-            <p className="text-xs sm:text-sm text-gray-300 mt-1 font-medium">
-              Your Style. Your Design. Your Timepiece.
-            </p>
-          </div>
-
-          {/* 3 Value Propositions on Right */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-8 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="text-lg p-1.5 rounded-xl bg-white/5 border border-white/10">⚙️</span>
-              <div>
-                <p className="font-bold text-white">Personalize</p>
-                <p className="text-[10px] text-gray-400">Every Detail</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-lg p-1.5 rounded-xl bg-white/5 border border-white/10">💎</span>
-              <div>
-                <p className="font-bold text-white">Premium</p>
-                <p className="text-[10px] text-gray-400">Materials</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-lg p-1.5 rounded-xl bg-white/5 border border-white/10">👑</span>
-              <div>
-                <p className="font-bold text-white">A Watch</p>
-                <p className="text-[10px] text-gray-400">Uniquely Yours</p>
-              </div>
-            </div>
-
-            {/* View Saved Designs Button */}
-            <button
-              type="button"
-              onClick={() => setIsSavedModalOpen(true)}
-              className="bg-white/10 hover:bg-white/20 border border-watch-gold/40 text-watch-gold font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ml-auto lg:ml-0"
-            >
-              <Bookmark className="w-3.5 h-3.5 text-watch-gold" />
-              <span>Saved Designs ({savedDesigns.length})</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════════════
-          3. MAIN CUSTOMIZATION STUDIO WORKSPACE (3-Column Layout)
-          ════════════════════════════════════════════════════════════════ */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex-1 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Column 1: Step Navigator (2.5 cols on desktop) */}
-          <div className="lg:col-span-3 order-1">
-            <StepNavigator
-              currentStep={currentStep}
-              onSelectStep={(step) => setCurrentStep(step)}
-              completedSteps={[1, 2, 3, 4, 5, 6, 7].filter((s) => s < currentStep)}
-            />
-          </div>
-
-          {/* Column 2: Live Watch Preview (4.5 cols on desktop) */}
-          <div className="lg:col-span-5 order-2">
-            <LiveWatchPreview
-              customWatch={customWatch}
-              onSelectAngle={(angle) => {
-                if (angle === 'back') {
-                  showToast('🔍 Viewing exhibition sapphire case-back & engraving');
-                }
-              }}
-            />
-          </div>
-
-          {/* Column 3: Active Customization Controls (4 cols on desktop) */}
-          <div className="lg:col-span-4 order-3">
-            <CustomizationPanels
-              currentStep={currentStep}
-              customWatch={customWatch}
-              onChange={(updated) => setCustomWatch(updated)}
-              onNext={() => setCurrentStep((prev) => Math.min(prev + 1, 8))}
-              onPrev={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
-            />
-          </div>
-        </div>
-
-        {/* ════════════════════════════════════════════════════════════════
-            SUMMARY SIDEBAR ROW & PRICING CARD (Directly below workspace)
-            ════════════════════════════════════════════════════════════════ */}
-        <div className="mt-8">
-          <DesignSummarySidebar
-            customWatch={customWatch}
-            onAddToCart={handleAddToCart}
-            onSaveDesign={handleSaveDesign}
-            onShare={handleShare}
-            isAddedToCart={isAddedToCart}
-            isSaved={isSaved}
-          />
-        </div>
-
-        {/* ════════════════════════════════════════════════════════════════
-            4. BOTTOM TRUST & CRAFTSMANSHIP STRIP (Matching Reference UI)
-            ════════════════════════════════════════════════════════════════ */}
-        <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pt-6 border-t border-gray-200">
-          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
-            <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">⚙️</span>
-            <div>
-              <h5 className="text-xs font-bold text-[#F8FAFC]">Full Customization</h5>
-              <p className="text-[10px] text-[#A6B1C8]">Dial, Case, Strap & More</p>
-            </div>
-          </div>
-
-          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
-            <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">👁️</span>
-            <div>
-              <h5 className="text-xs font-bold text-[#F8FAFC]">Live 360° Preview</h5>
-              <p className="text-[10px] text-[#A6B1C8]">See Your Watch in Real Time</p>
-            </div>
-          </div>
-
-          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
-            <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">₹</span>
-            <div>
-              <h5 className="text-xs font-bold text-[#F8FAFC]">Transparent Pricing</h5>
-              <p className="text-[10px] text-[#A6B1C8]">Know the Cost Instantly</p>
-            </div>
-          </div>
-
-          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
-            <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">💾</span>
-            <div>
-              <h5 className="text-xs font-bold text-[#F8FAFC]">Save &amp; Revisit</h5>
-              <p className="text-[10px] text-[#A6B1C8]">Keep Your Designs Anytime</p>
-            </div>
-          </div>
-
-          <div className="p-3.5 rounded-2xl bg-white border border-gray-200 flex items-center gap-3 shadow-xs col-span-2 sm:col-span-1">
-            <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">🚚</span>
-            <div>
-              <h5 className="text-xs font-bold text-[#F8FAFC]">Made for You</h5>
-              <p className="text-[10px] text-[#A6B1C8]">Custom Built &amp; Delivered</p>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* 5. Saved Designs Modal */}
-      <SavedDesignsModal
-        isOpen={isSavedModalOpen}
-        onClose={() => setIsSavedModalOpen(false)}
-        savedDesigns={savedDesigns}
-        onLoadDesign={handleLoadDesign}
-        onDeleteDesign={handleDeleteDesign}
-      />
-
-      {/* 6. Footer */}
+      {/* Footer */}
       <Footer />
     </div>
   );
 };
 
 export default CustomizeWatchPage;
-
