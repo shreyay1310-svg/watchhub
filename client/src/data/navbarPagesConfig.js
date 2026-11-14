@@ -238,6 +238,34 @@ export const NAVBAR_PAGES_CONFIG = {
       return true;
     },
   },
+
+  'limited-edition': {
+    key: 'limited-edition',
+    route: '/limited-edition',
+    title: 'Limited Edition & Haute Horlogerie Masterpieces',
+    subtitle: 'Exclusive skeleton dials, flying tourbillons, perpetual calendars, and strictly numbered rare artisan collector timepieces.',
+    badge: 'HAUTE HORLOGERIE • NUMBERED EDITIONS',
+    gradient: 'from-[#170B04] via-[#2D1607] to-[#0D0502]',
+    subcategories: [
+      { id: 'all', label: 'All Limited Editions', icon: '💎' },
+      { id: 'tourbillon', label: 'Flying Tourbillon', icon: '⚙️' },
+      { id: 'skeleton', label: 'Skeleton & Openwork', icon: '🪞' },
+      { id: 'numbered', label: 'Numbered Pieces', icon: '🔢' },
+      { id: 'meteorite', label: 'Meteorite & Rare Dials', icon: '☄️' },
+      { id: 'haute', label: 'Grand Complications', icon: '👑' },
+    ],
+    baseFilter: (p) => Boolean(p.isLimitedEdition || p.category === 'Luxury' || p.price > 400000 || p.collection === 'Limited Collection'),
+    subFilter: (p, sub) => {
+      if (!sub || sub === 'all') return true;
+      const s = sub.toLowerCase();
+      if (s === 'tourbillon') return p.name?.toLowerCase().includes('tourbillon') || p.movement?.toLowerCase().includes('tourbillon');
+      if (s === 'skeleton') return p.name?.toLowerCase().includes('skeleton') || p.description?.toLowerCase().includes('skeleton');
+      if (s === 'numbered') return p.isLimitedEdition === true;
+      if (s === 'meteorite') return p.name?.toLowerCase().includes('meteorite') || p.description?.toLowerCase().includes('meteorite');
+      if (s === 'haute') return p.price > 500000;
+      return true;
+    },
+  },
 };
 
 export default NAVBAR_PAGES_CONFIG;

@@ -150,15 +150,57 @@ export const HomePage = () => {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Luxury Arched Category Pedestals (Matching Reference Image 1)
+  // Luxury Arched Category Pedestals (Matching Reference Screenshot)
   const categoryPedestals = [
-    { name: 'Men', label: "Men's Watches", link: '/men', image: '/images/products/featured_rolex_submariner.jpg' },
-    { name: 'Women', label: "Women's Watches", link: '/women', image: '/images/products/featured_cartier_tank.jpg' },
-    { name: 'Kids', label: "Kids' Watches", link: '/kids', image: '/images/hd_categories/cat_kids.jpg' },
-    { name: 'Smartwatches', label: 'Smartwatches', link: '/smartwatches', image: '/images/products/featured_apple_watch.jpg' },
-    { name: 'Luxury', label: 'Luxury Watches', link: '/luxury', image: '/images/products/featured_rolex_daytona.jpg' },
-    { name: 'Sports', label: 'Sports Watches', link: '/sports', image: '/images/products/featured_omega_seamaster.jpg' },
-    { name: 'Limited Edition', label: 'Limited Edition', link: '/collections?style=limited', image: '/images/hero/chronoswiss_tourbillon.jpg' },
+    {
+      name: 'Men',
+      label: "Men's Watches",
+      description: "Premium men's analog and chronograph watches.",
+      link: '/men',
+      image: '/images/hd_categories/cat_men.jpg',
+    },
+    {
+      name: 'Women',
+      label: "Women's Watches",
+      description: 'Elegant rose-gold, diamond and minimalist watches.',
+      link: '/women',
+      image: '/images/hd_categories/cat_women.jpg',
+    },
+    {
+      name: 'Kids',
+      label: "Kids' Watches",
+      description: "Colourful, durable children's watches.",
+      link: '/kids',
+      image: '/images/hd_categories/cat_kids.jpg',
+    },
+    {
+      name: 'Smartwatches',
+      label: 'Smartwatches',
+      description: 'Modern touchscreen smartwatches.',
+      link: '/smartwatches',
+      image: '/images/hd_categories/cat_smartwatches.jpg',
+    },
+    {
+      name: 'Luxury',
+      label: 'Luxury Watches',
+      description: 'Premium mechanical and automatic watches.',
+      link: '/luxury',
+      image: '/images/hd_categories/cat_luxury.jpg',
+    },
+    {
+      name: 'Sports',
+      label: 'Sports Watches',
+      description: 'Rugged sports, diving and chronograph watches.',
+      link: '/sports',
+      image: '/images/hd_categories/cat_sports.jpg',
+    },
+    {
+      name: 'Limited Edition',
+      label: 'Limited Edition',
+      description: 'Exclusive skeleton and tourbillon watches.',
+      link: '/limited-edition',
+      image: '/images/hd_categories/cat_limited_edition.jpg',
+    },
   ];
 
   // Best Sellers (From Reference Image 1)
@@ -545,24 +587,26 @@ export const HomePage = () => {
             </Link>
           </div>
 
-          {/* 7 Arched Pedestal Cards Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5">
+          {/* 7 Arched Pedestal Cards Grid (Exact Match to User Reference Screenshot) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5 sm:gap-4">
             {categoryPedestals.map((cat, idx) => (
               <Link
                 key={idx}
                 to={cat.link}
-                className="group p-3 rounded-3xl bg-[#040C1A] border border-white/10 hover:border-[#00CFFF]/50 hover:shadow-[0_0_25px_rgba(0,207,255,0.2)] flex flex-col items-center justify-between text-center transition-all duration-300"
+                className="group p-3 sm:p-3.5 rounded-2xl sm:rounded-3xl bg-[#040C1A] border border-[#00CFFF]/20 hover:border-[#00CFFF]/70 hover:shadow-[0_0_25px_rgba(0,207,255,0.25)] flex flex-col items-center justify-between text-center transition-all duration-300 transform hover:-translate-y-1.5 cursor-pointer"
+                title={`${cat.name} — ${cat.description}`}
               >
                 {/* Arched image container */}
-                <div className="w-full aspect-[4/5] rounded-2xl bg-[#020813] border border-white/5 p-2 flex items-center justify-center overflow-hidden relative mb-2">
-                  <div className="absolute inset-0 bg-radial from-[#00CFFF]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="w-full aspect-[4/5] rounded-xl sm:rounded-2xl bg-[#020813] border border-white/5 p-2 flex items-center justify-center overflow-hidden relative mb-2.5">
+                  <div className="absolute inset-0 bg-radial from-[#00CFFF]/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <img
                     src={cat.image}
                     alt={cat.label}
-                    className="h-full w-full object-contain filter drop-shadow group-hover:scale-105 transition-transform duration-300"
+                    className="h-full w-full object-contain object-center filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
                   />
                 </div>
-                <span className="text-xs font-bold text-white group-hover:text-[#00CFFF] transition-colors">
+                <span className="text-xs sm:text-[13px] font-bold text-white group-hover:text-[#00CFFF] transition-colors tracking-wide">
                   {cat.name}
                 </span>
               </Link>
