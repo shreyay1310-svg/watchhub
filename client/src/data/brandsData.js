@@ -1,5 +1,21 @@
 // 60 Verified International Watch Brands Data
 export const GLOBAL_BRANDS_60 = [
+  {
+    id: 'chronoswiss',
+    name: 'Chronoswiss',
+    section: 'swiss',
+    sectionTitle: 'Swiss Luxury Watches',
+    country: 'Switzerland',
+    flag: '🇨🇭',
+    category: 'Luxury',
+    website: 'https://chronoswiss.com/',
+    founded: '1983',
+    tagline: 'Modern Mechanical Horology',
+    logoType: 'chronoswiss',
+    description: 'Founded in 1983 by Gerd-R. Lang and headquartered in Lucerne, Switzerland, Chronoswiss revolutionized modern horology with the iconic regulator dial, hand-guilloché ateliers, and groundbreaking flying tourbillons.',
+    featuredWatch: 'Open Gear Flying Tourbillon Paraiba',
+    headquarters: 'Lucerne, Switzerland',
+  },
   // ─────────────────────────────────────────────────────────────
   // 1. SWISS LUXURY WATCHES (25 Brands)
   // ─────────────────────────────────────────────────────────────

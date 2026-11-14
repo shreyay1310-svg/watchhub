@@ -215,36 +215,24 @@ export const Footer = () => {
             <ul className="space-y-2 text-xs">
               {[
                 { name: 'Track Your Order', link: '/track-parcel', icon: '📦' },
-                { name: 'Help & FAQs', action: () => setActiveModal('faq'), icon: '❓' },
-                { name: 'Returns & Exchanges', action: () => setActiveModal('returns'), icon: '🔄' },
-                { name: 'Warranty & Service', action: () => setActiveModal('warranty'), icon: '🛡️' },
-                { name: 'Contact Us', action: () => setActiveModal('contact'), icon: '📞' },
-                { name: 'Account Login', link: '/login', icon: '👤' },
+                { name: 'Warranty & Service', link: '/warranty-service', icon: '🛡️' },
+                { name: 'Returns & Refunds', link: '/returns-refunds', icon: '🔄' },
+                { name: 'Store Locator (Boutiques)', link: '/store-locator', icon: '📍' },
+                { name: 'Watchmaking Stories', link: '/stories', icon: '📖' },
+                { name: 'Customer Support / Help', link: '/support', icon: '🎧' },
+                { name: 'My Account Dossier', link: '/account', icon: '👤' },
               ].map((item) => (
                 <li key={item.name}>
-                  {item.link ? (
-                    <Link
-                      to={item.link}
-                      className="group flex items-center justify-between text-gray-400 hover:text-white transition-colors py-0.5"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-[11px] text-[#D4A84F]/80">{item.icon}</span>
-                        <span>{item.name}</span>
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8] group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={item.action}
-                      className="w-full text-left group flex items-center justify-between text-gray-400 hover:text-white transition-colors py-0.5 cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-[11px] text-[#D4A84F]/80">{item.icon}</span>
-                        <span>{item.name}</span>
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8] group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
-                    </button>
-                  )}
+                  <Link
+                    to={item.link}
+                    className="group flex items-center justify-between text-gray-400 hover:text-white transition-colors py-0.5"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-[11px] text-[#D4A84F]/80">{item.icon}</span>
+                      <span>{item.name}</span>
+                    </span>
+                    <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8] group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
+                  </Link>
                 </li>
               ))}
             </ul>

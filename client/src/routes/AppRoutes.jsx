@@ -2,10 +2,18 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '../pages/customer/HomePage';
 import ProductsPage from '../pages/customer/ProductsPage';
+import ProductDetailsPage from '../pages/customer/ProductDetailsPage';
 import BrandsPage from '../pages/customer/BrandsPage';
 import CategoriesPage from '../pages/customer/CategoriesPage';
 import CartPage from '../pages/customer/CartPage';
+import CheckoutPage from '../pages/customer/CheckoutPage';
 import WishlistPage from '../pages/customer/WishlistPage';
+import CustomerAccountPage from '../pages/customer/CustomerAccountPage';
+import WarrantyServicePage from '../pages/customer/WarrantyServicePage';
+import ReturnsRefundsPage from '../pages/customer/ReturnsRefundsPage';
+import StoreLocatorPage from '../pages/customer/StoreLocatorPage';
+import CustomerSupportPage from '../pages/customer/CustomerSupportPage';
+import EditorialStoriesPage from '../pages/customer/EditorialStoriesPage';
 import LoginPage from '../pages/auth/LoginPage';
 import SignupPage from '../pages/auth/SignupPage';
 import RoleDashboard from '../pages/dashboards/RoleDashboard';
@@ -98,8 +106,17 @@ export const AppRoutes = () => {
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/brands" element={<BrandsPage />} />
       <Route path="/products" element={<ProductsPage />} />
+      <Route path="/product/:id" element={<ProductDetailsPage />} />
       <Route path="/cart" element={<CartPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
+      <Route path="/account" element={<CustomerAccountPage />} />
+      <Route path="/orders" element={<CustomerAccountPage />} />
+      <Route path="/warranty-service" element={<WarrantyServicePage />} />
+      <Route path="/returns-refunds" element={<ReturnsRefundsPage />} />
+      <Route path="/store-locator" element={<StoreLocatorPage />} />
+      <Route path="/support" element={<CustomerSupportPage />} />
+      <Route path="/stories" element={<EditorialStoriesPage />} />
       <Route path="/track-parcel" element={<TrackParcelPage />} />
       <Route path="/track-order" element={<TrackParcelPage />} />
       <Route path="/my-orders" element={<TrackParcelPage />} />

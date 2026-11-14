@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import { useCart } from '../../context/CartContext';
+import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { Trash2, Plus, Minus, Tag, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const CartPage = () => {
@@ -21,6 +22,7 @@ export const CartPage = () => {
     applyCoupon,
     removeCoupon,
   } = useCart();
+  const { formatPrice } = useCurrencyLanguage();
 
   const [couponInput, setCouponInput] = useState('');
   const [couponMsg, setCouponMsg] = useState(null);
@@ -36,12 +38,7 @@ export const CartPage = () => {
   };
 
   const handleCheckout = () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setCheckoutSuccess(true);
-      clearCart();
-    }, 1500);
+    navigate('/checkout');
   };
 
   if (checkoutSuccess) {
@@ -117,10 +114,10 @@ export const CartPage = () => {
                     <span className="text-[10px] text-gray-400 font-bold uppercase">{item.category}</span>
                     <h4 className="text-sm font-bold text-[#F8FAFC] truncate">{item.name}</h4>
                     <p className="text-xs text-[#A6B1C8]">{item.warranty || '2 Years Warranty'}</p>
-                    <div className="mt-2 text-sm font-extrabold text-[#F8FAFC]">
-                      ₹{item.price.toLocaleString('en-IN')}{' '}
+                    <div className="mt-2 text-sm font-extrabold text-[#F8FAFC] font-mono">
+                      {formatPrice(item.price)}{' '}
                       <span className="text-xs text-gray-400 line-through font-normal ml-1">
-                        ₹{(item.originalPrice || item.price * 1.4).toLocaleString('en-IN')}
+                        {formatPrice(item.originalPrice || item.price * 1.4)}
                       </span>
                     </div>
                   </div>
@@ -129,14 +126,14 @@ export const CartPage = () => {
                   <div className="flex items-center gap-2 border border-white/10 rounded-lg p-1 bg-[#0B1022]/80">
                     <button
                       onClick={() => updateQuantity(item.id, -1)}
-                      className="w-7 h-7 bg-white rounded flex items-center justify-center text-[#A6B1C8] hover:bg-gray-100 shadow-sm"
+                      className="w-7 h-7 bg-white/10 rounded flex items-center justify-center text-white hover:bg-white/20 shadow-sm"
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="w-8 text-center text-xs font-bold">{item.quantity}</span>
+                    <span className="w-8 text-center text-xs font-bold font-mono">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.id, 1)}
-                      className="w-7 h-7 bg-white rounded flex items-center justify-center text-[#A6B1C8] hover:bg-gray-100 shadow-sm"
+                      className="w-7 h-7 bg-white/10 rounded flex items-center justify-center text-white hover:bg-white/20 shadow-sm"
                     >
                       <Plus className="w-3.5 h-3.5" />
                     </button>
@@ -144,8 +141,8 @@ export const CartPage = () => {
 
                   {/* Subtotal & Delete */}
                   <div className="text-right">
-                    <p className="text-sm font-extrabold text-[#F8FAFC]">
-                      ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                    <p className="text-sm font-extrabold text-[#F8FAFC] font-mono">
+                      {formatPrice(item.price * item.quantity)}
                     </p>
                     <button
                       onClick={() => removeFromCart(item.id)}
@@ -204,35 +201,35 @@ export const CartPage = () => {
               <div className="bg-[#10182D]/85 p-5 rounded-xl border border-white/10 shadow-sm space-y-3 text-xs text-[#F8FAFC]">
                 <h3 className="text-sm font-bold text-[#F8FAFC] border-b border-white/10 pb-2">Order Summary</h3>
 
-                <div className="flex justify-between text-[#A6B1C8]">
+                <div className="flex justify-between text-[#A6B1C8] font-mono">
                   <span>Total MRP</span>
-                  <span>₹{mrpTotal.toLocaleString('en-IN')}</span>
+                  <span>{formatPrice(mrpTotal)}</span>
                 </div>
 
-                <div className="flex justify-between text-[#A6B1C8]">
+                <div className="flex justify-between text-[#A6B1C8] font-mono">
                   <span>Product Discount</span>
-                  <span className="text-emerald-600 font-bold">-₹{(mrpTotal - subtotal).toLocaleString('en-IN')}</span>
+                  <span className="text-emerald-400 font-bold">-{formatPrice(mrpTotal - subtotal)}</span>
                 </div>
 
                 {appliedCoupon && (
-                  <div className="flex justify-between text-[#A6B1C8]">
+                  <div className="flex justify-between text-[#A6B1C8] font-mono">
                     <span>Coupon Savings ({appliedCoupon.percent}%)</span>
-                    <span className="text-emerald-600 font-bold">-₹{couponDiscount.toLocaleString('en-IN')}</span>
+                    <span className="text-emerald-400 font-bold">-{formatPrice(couponDiscount)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-[#A6B1C8]">
                   <span>Delivery Charges</span>
-                  <span>{deliveryCharges === 0 ? <strong className="text-emerald-600">FREE</strong> : `₹${deliveryCharges}`}</span>
+                  <span>{deliveryCharges === 0 ? <strong className="text-emerald-400 font-mono">FREE</strong> : <span className="font-mono">{formatPrice(deliveryCharges)}</span>}</span>
                 </div>
 
                 <div className="border-t border-white/10 pt-3 flex justify-between items-center text-sm font-extrabold text-[#F8FAFC]">
                   <span>Grand Total</span>
-                  <span className="text-lg text-watch-navy">₹{totalAmount.toLocaleString('en-IN')}</span>
+                  <span className="text-lg text-[#F4B942] font-mono">{formatPrice(totalAmount)}</span>
                 </div>
 
-                <div className="p-2.5 bg-amber-50 text-amber-900 rounded-lg text-[11px] font-semibold text-center">
-                  🎉 You are saving ₹{totalSavings.toLocaleString('en-IN')} on this order!
+                <div className="p-2.5 bg-white/5 border border-white/10 text-[#F4B942] rounded-lg text-[11px] font-semibold text-center font-mono">
+                  🎉 You are saving {formatPrice(totalSavings)} on this acquisition!
                 </div>
 
                 <button

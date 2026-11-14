@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
+import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 
 export const getBrandInsignia = (brand) => {
   const b = (brand || '').toLowerCase();
+  if (b.includes('chronoswiss')) return '🇨🇭 Chronoswiss';
   if (b.includes('rolex')) return '👑 Rolex';
   if (b.includes('omega')) return 'Ω Omega';
   if (b.includes('patek')) return '❖ Patek Philippe';
@@ -34,6 +37,9 @@ export const ProductCard = ({
   isAdded = false,
   className = '',
 }) => {
+  const navigate = useNavigate();
+  const { formatPrice } = useCurrencyLanguage();
+
   if (!product) return null;
 
   const brandLabel = getBrandInsignia(product.brand);
@@ -43,6 +49,14 @@ export const ProductCard = ({
       ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
       : 0);
 
+  const handleCardClick = () => {
+    if (onNavigate) {
+      onNavigate(product);
+    } else {
+      navigate(`/product/${product.id}`);
+    }
+  };
+
   return (
     <div
       className={`neon-glass-card rounded-2xl overflow-hidden border border-white/10 hover:border-[#00F0FF]/50 hover:shadow-[0_0_25px_rgba(0,240,255,0.2)] transition-all duration-300 flex flex-col justify-between group h-full ${className}`}
@@ -51,7 +65,7 @@ export const ProductCard = ({
           1. PRODUCT IMAGE CONTAINER (Fixed 240px, object-fit: contain)
           ════════════════════════════════════════════════════════════════ */}
       <div
-        onClick={() => onNavigate?.(product)}
+        onClick={handleCardClick}
         className="product-image-container w-full h-[230px] sm:h-[240px] bg-[#0B1022]/80 flex items-center justify-center relative overflow-hidden p-3 cursor-pointer select-none"
       >
         <img
@@ -102,8 +116,8 @@ export const ProductCard = ({
             {product.category || 'Luxury'}
           </span>
           <h4
-            onClick={() => onNavigate?.(product)}
-            className="text-[14px] font-bold text-[#F8FAFC] group-hover:text-[#00F0FF] transition-colors line-clamp-1 cursor-pointer"
+            onClick={handleCardClick}
+            className="text-[14px] font-bold text-[#F8FAFC] group-hover:text-[#00CFFF] transition-colors line-clamp-1 cursor-pointer"
             title={product.name}
           >
             {product.name}
@@ -114,7 +128,7 @@ export const ProductCard = ({
               {product.rating || 4.8}
             </span>
             <span className="text-[#A6B1C8]/80 text-[11px]">
-              ({(product.reviewsCount || 1200).toLocaleString('en-IN')} Reviews)
+              ({(product.reviewsCount || 1200).toLocaleString()} Reviews)
             </span>
           </div>
         </div>
@@ -122,13 +136,13 @@ export const ProductCard = ({
         <div className="mt-3 pt-3 border-t border-white/10">
           {/* Price Row */}
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex items-baseline gap-1.5 font-mono">
               <span className="text-base font-extrabold text-[#F8FAFC] tracking-tight">
-                ₹{product.price?.toLocaleString('en-IN')}
+                {formatPrice(product.price)}
               </span>
               {product.originalPrice && (
                 <span className="text-xs text-[#A6B1C8]/60 line-through">
-                  ₹{product.originalPrice.toLocaleString('en-IN')}
+                  {formatPrice(product.originalPrice)}
                 </span>
               )}
             </div>
