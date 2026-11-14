@@ -36,66 +36,114 @@ export const HomePage = () => {
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
   const { formatPrice } = useCurrencyLanguage();
 
-  // Hero carousel slides based on Chronoswiss collection
+  // Hero carousel slides: Rolex Submariner Date, Patek Philippe Nautilus, Omega Speedmaster Professional
   const heroSlides = [
     {
-      id: 'tourbillon',
-      badge: 'LIMITED TO 15 PIECES',
-      exclusiveTag: 'CHRONOSWISS EXCLUSIVE',
-      modelCode: 'CH-3123-PABL',
-      title: 'OPEN GEAR FLYING TOURBILLON PARAIBA',
+      id: 'rolex-submariner',
+      brand: 'ROLEX',
+      badge: 'SWISS CHRONOMETER',
+      exclusiveTag: 'OYSTER PERPETUAL',
+      modelCode: 'REF. 126610LN',
+      title: 'ROLEX SUBMARINER DATE',
+      subtitle: 'Black Dial • Oystersteel • Cerachrom Bezel',
       description:
-        'A masterpiece of precision, engineering and timeless design. The world’s first 3-D regulator with an inverted flying tourbillon cage floating over hand-guilloched Paraiba waves.',
-      price: 3450000,
-      image: '/images/hero/chronoswiss_tourbillon.jpg',
-      availability: 'AVAILABLE',
-      productId: 'chronoswiss-tourbillon',
-      modelSwitcherLabel: 'OPEN GEAR FLYING TOURBILLON',
-    },
-    {
-      id: 'opus',
-      badge: 'LIMITED TO 50 PIECES',
-      exclusiveTag: 'MANUFACTURE SKELETON',
-      modelCode: 'CH-7543T-BK',
-      title: 'OPUS CHRONOGRAPH TITANIUM',
-      description:
-        'The historic pioneer of modern skeletonized automatic chronographs. Ultra-light Grade 5 titanium case housing the hand-chamfered Calibre C.741S with exposed column wheel.',
-      price: 1450000,
-      image: '/images/hero/chronograph_black.jpg',
+        'The definitive archetype of the diver’s watch. Crafted in corrosion-resistant Oystersteel with a high-gloss black dial, unidirectional Cerachrom ceramic bezel, Chromalight blue luminescence, and solid Oyster bracelet with Glidelock extension.',
+      price: 18999,
+      image: '/images/hero/hero_rolex_submariner.jpg',
       availability: 'IN STOCK',
-      productId: 'chronoswiss-opus-chronograph',
-      modelSwitcherLabel: 'OPUS CHRONOGRAPH TITANIUM',
+      productId: 'rolex-submariner',
+      modelSwitcherLabel: 'ROLEX SUBMARINER DATE',
+      themeGlow: 'from-[#052818]/40 via-[#020813] to-[#020813]',
+      radialGlow: 'from-[#10b981]/25',
+      badgeColor: 'text-[#10B981] bg-[#10B981]/15 border-[#10B981]/30',
     },
     {
-      id: 'spacetimer',
-      badge: 'ASTRONOMICAL COMPLICATION',
-      exclusiveTag: 'METEORITE DIAL',
-      modelCode: 'CH-9343-ME',
-      title: 'SPACE TIMER JUPITER',
+      id: 'patek-nautilus',
+      brand: 'PATEK PHILIPPE',
+      badge: 'HAUTE HORLOGERIE',
+      exclusiveTag: 'GENEVA ATELIER',
+      modelCode: 'REF. 5711/1A-010',
+      title: 'PATEK PHILIPPE NAUTILUS 5711',
+      subtitle: 'Sunburst Blue Dial • Stainless Steel',
       description:
-        'Displaying astronomical moon phases with a translucent titanium dial and hand-polished floating hour rings inspired by celestial mechanics.',
-      price: 1850000,
-      image: '/images/products/featured_patek_nautilus.jpg',
+        'The undisputed holy grail of luxury sports horology. Designed by Gérald Genta, featuring the famous rounded octagonal bezel with lateral hinges, horizontally embossed azure blue dial, and ultra-thin automatic Calibre 26-330 S C.',
+      price: 5499000,
+      image: '/images/hero/hero_patek_nautilus.jpg',
       availability: 'RESERVED',
       productId: 'patek-nautilus',
-      modelSwitcherLabel: 'SPACE TIMER JUPITER',
+      modelSwitcherLabel: 'PATEK PHILIPPE NAUTILUS 5711',
+      themeGlow: 'from-[#002B4D]/40 via-[#020813] to-[#020813]',
+      radialGlow: 'from-[#00CFFF]/25',
+      badgeColor: 'text-[#00CFFF] bg-[#00CFFF]/15 border-[#00CFFF]/30',
+    },
+    {
+      id: 'omega-speedmaster',
+      brand: 'OMEGA',
+      badge: 'MOONWATCH MASTER',
+      exclusiveTag: 'NASA FLIGHT-QUALIFIED',
+      modelCode: 'REF. 310.30.42.50.01.001',
+      title: 'OMEGA SPEEDMASTER PROFESSIONAL',
+      subtitle: 'Tri-Compax Chronograph • Moonwatch',
+      description:
+        'The legendary manual-wind chronograph worn by Apollo astronauts on the Moon. Stepped black dial with dot-over-ninety anodised aluminium bezel, Hesalite crystal, and Co-Axial Master Chronometer Calibre 3861 with 15,000 gauss magnetic resistance.',
+      price: 16499,
+      image: '/images/hero/hero_omega_speedmaster.jpg',
+      availability: 'IN STOCK',
+      productId: 'omega-speedmaster',
+      modelSwitcherLabel: 'OMEGA SPEEDMASTER PRO',
+      themeGlow: 'from-[#2D0A14]/40 via-[#020813] to-[#020813]',
+      radialGlow: 'from-[#E11D48]/25',
+      badgeColor: 'text-[#F4B942] bg-[#F4B942]/15 border-[#F4B942]/30',
     },
   ];
 
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isAutoplay, setIsAutoplay] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
   const currentHero = heroSlides[activeSlide];
 
-  // Auto rotate hero every 8 seconds
+  const handleNextSlide = () => {
+    setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const handlePrevSlide = () => {
+    setActiveSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  // Optional Autoplay (strictly disabled by default per user specification)
   useEffect(() => {
+    if (!isAutoplay) return;
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 8000);
+    }, 7000);
     return () => clearInterval(timer);
-  }, [heroSlides.length]);
+  }, [isAutoplay, heroSlides.length]);
+
+  // Mobile Touch Swipe Handling
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const diff = touchStartX - touchEndX;
+    if (diff > 50) {
+      handleNextSlide();
+    } else if (diff < -50) {
+      handlePrevSlide();
+    }
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -218,22 +266,28 @@ export const HomePage = () => {
       )}
 
       {/* ════════════════════════════════════════════════════════════════
-          1. FULL-SCREEN CINEMATIC SWISS LUXURY HERO SECTION
-          (Exact 1:1 Match to Chronoswiss & Reference Image 1)
+          1. FULL-SCREEN CINEMATIC LUXURY 3-WATCH CAROUSEL HERO SECTION
+          (Rolex Submariner • Patek Philippe Nautilus • Omega Speedmaster)
           ════════════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[640px] sm:min-h-[720px] lg:min-h-[800px] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#020813] via-[#051022] to-[#020813] border-b border-white/[0.08]">
-        
-        {/* Electric Blue Lighting Curve & Vignette */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[900px] h-[700px] sm:h-[900px] bg-radial from-[#00CFFF]/20 via-[#0051B3]/10 to-transparent pointer-events-none rounded-full blur-3xl animate-pulse" />
+      <section
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className={`relative min-h-[640px] sm:min-h-[720px] lg:min-h-[820px] flex flex-col justify-between overflow-hidden bg-gradient-to-b ${currentHero.themeGlow} border-b border-white/[0.08] transition-colors duration-700 select-none`}
+      >
+        {/* Dynamic Ambient Glow matching active watch */}
+        <div
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[900px] h-[700px] sm:h-[900px] bg-radial ${currentHero.radialGlow} via-transparent to-transparent pointer-events-none rounded-full blur-3xl transition-all duration-700`}
+        />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#020813_95%)] pointer-events-none" />
 
         {/* Top Floating Content Container */}
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 pt-8 sm:pt-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-20">
           
           {/* Hero Left: Exclusive Badges, Title, Description & CTAs */}
-          <div className="lg:col-span-5 space-y-5 text-left">
+          <div className="lg:col-span-5 space-y-4 text-left">
             <div className="flex items-center gap-2.5">
-              <span className="text-[10px] font-extrabold tracking-widest uppercase text-[#00CFFF] bg-[#00CFFF]/15 border border-[#00CFFF]/30 px-3 py-1 rounded-full shadow-[0_0_15px_rgba(0,207,255,0.25)]">
+              <span className={`text-[10px] font-extrabold tracking-widest uppercase border px-3 py-1 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all ${currentHero.badgeColor}`}>
                 {currentHero.exclusiveTag}
               </span>
               <span className="text-[10px] font-mono tracking-wider text-[#A6B1C8]">
@@ -241,16 +295,26 @@ export const HomePage = () => {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl xl:text-5xl font-serif font-bold text-white tracking-tight leading-[1.15]">
-              {currentHero.title}
-            </h2>
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#F4B942] block mb-1">
+                {currentHero.brand}
+              </span>
+              <h2 className="text-3xl sm:text-4xl xl:text-5xl font-serif font-bold text-white tracking-tight leading-[1.12]">
+                {currentHero.title}
+              </h2>
+              {currentHero.subtitle && (
+                <p className="text-xs sm:text-sm font-semibold text-[#00CFFF] mt-1">
+                  {currentHero.subtitle}
+                </p>
+              )}
+            </div>
 
             <p className="text-xs sm:text-sm text-[#A6B1C8] leading-relaxed max-w-md font-light">
               {currentHero.description}
             </p>
 
-            {/* CTAs matching Chronoswiss & Reference Image 1 */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3 pt-3">
               <Link
                 to={`/product/${currentHero.productId}`}
                 className="py-3 px-6 rounded-xl bg-gradient-to-r from-[#F4B942] to-[#D4A84F] text-[#020813] font-black text-xs flex items-center gap-2 shadow-[0_0_25px_rgba(244,185,66,0.35)] hover:brightness-110 active:scale-[0.99] transition-all cursor-pointer tracking-wider uppercase"
@@ -269,27 +333,53 @@ export const HomePage = () => {
             </div>
           </div>
 
-          {/* Hero Center: Enormous Uncropped Chronoswiss Watch with Blue Light Glow */}
-          <div className="lg:col-span-5 relative flex items-center justify-center min-h-[380px] sm:min-h-[480px]">
-            {/* Ambient Cyan Radial Pedestal */}
-            <div className="absolute inset-0 bg-radial from-[#00CFFF]/25 via-transparent to-transparent blur-2xl rounded-full scale-90 pointer-events-none" />
+          {/* Hero Center: Large Individual Uncropped Watch with Left/Right Arrows */}
+          <div className="lg:col-span-5 relative flex items-center justify-center min-h-[380px] sm:min-h-[480px] xl:min-h-[520px]">
+            {/* Ambient Radial Pedestal */}
+            <div className="absolute inset-0 bg-radial from-[#00CFFF]/20 via-transparent to-transparent blur-2xl rounded-full scale-90 pointer-events-none" />
 
+            {/* Left Carousel Navigation Arrow */}
+            <button
+              type="button"
+              onClick={handlePrevSlide}
+              aria-label="Previous Watch Slide"
+              className="absolute left-0 sm:-left-3 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#040C1A]/85 hover:bg-[#00CFFF]/20 border border-white/15 hover:border-[#00CFFF]/70 text-white flex items-center justify-center transition-all shadow-[0_4px_25px_rgba(0,0,0,0.8)] backdrop-blur-md cursor-pointer group"
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-[#00CFFF] transition-colors" />
+            </button>
+
+            {/* Large Single Watch Image (100% Uncropped with Pedestal) */}
             <Link
               to={`/product/${currentHero.productId}`}
-              className="relative z-10 w-full h-[360px] sm:h-[460px] flex items-center justify-center group cursor-pointer"
+              className="relative z-10 w-full h-[360px] sm:h-[460px] xl:h-[500px] flex items-center justify-center group cursor-pointer"
+              title={`View ${currentHero.title} Details`}
             >
               <img
+                key={currentHero.id}
                 src={currentHero.image}
                 alt={currentHero.title}
-                className="max-h-full max-w-full object-contain filter drop-shadow-[0_30px_50px_rgba(0,0,0,0.95)] transition-transform duration-500 group-hover:scale-105 select-none"
+                className="max-h-full max-w-full object-contain filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.95)] transition-all duration-500 ease-out group-hover:scale-105 select-none animate-fade-in"
+                onError={(e) => {
+                  e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                }}
               />
             </Link>
+
+            {/* Right Carousel Navigation Arrow */}
+            <button
+              type="button"
+              onClick={handleNextSlide}
+              aria-label="Next Watch Slide"
+              className="absolute right-0 sm:-right-3 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#040C1A]/85 hover:bg-[#00CFFF]/20 border border-white/15 hover:border-[#00CFFF]/70 text-white flex items-center justify-center transition-all shadow-[0_4px_25px_rgba(0,0,0,0.8)] backdrop-blur-md cursor-pointer group"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#00CFFF] transition-colors" />
+            </button>
           </div>
 
-          {/* Hero Right: Atelier Video Preview Card & Status Badge */}
+          {/* Hero Right: Video Preview Card & Status Badge */}
           <div className="lg:col-span-2 hidden lg:flex flex-col items-end space-y-4">
             {/* Availability Indicator */}
-            <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-[11px] font-semibold text-emerald-400">
+            <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full text-[11px] font-semibold text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>{currentHero.availability}</span>
             </div>
@@ -319,41 +409,64 @@ export const HomePage = () => {
           </div>
         </div>
 
-        {/* Hero Bottom Carousel Model Switcher (Chronoswiss Navigation Style) */}
-        <div className="relative z-20 border-t border-white/[0.08] bg-[#020813]/80 backdrop-blur-md py-4 px-4 sm:px-8">
+        {/* Hero Bottom Carousel Controls (Model Switcher & 3 Indicator Dots) */}
+        <div className="relative z-20 border-t border-white/[0.08] bg-[#020813]/85 backdrop-blur-md py-4 px-4 sm:px-8">
           <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-            {/* Left Model Switcher */}
-            <div className="flex items-center gap-4 text-[11px] font-mono tracking-wider">
+            {/* Left: Model Names Switcher Tabs */}
+            <div className="flex items-center gap-4 text-[11px] font-mono tracking-wider overflow-x-auto max-w-full pb-1 sm:pb-0">
               {heroSlides.map((slide, idx) => (
                 <button
                   key={slide.id}
                   type="button"
                   onClick={() => setActiveSlide(idx)}
-                  className={`transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`transition-all flex items-center gap-2 cursor-pointer flex-shrink-0 ${
                     activeSlide === idx
                       ? 'text-[#00CFFF] font-bold'
                       : 'text-gray-500 hover:text-gray-300'
                   }`}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                  <span className={`w-1.5 h-1.5 rounded-full ${activeSlide === idx ? 'bg-[#00CFFF]' : 'bg-current'}`} />
                   <span>{slide.modelSwitcherLabel}</span>
                 </button>
               ))}
             </div>
 
-            {/* Slider Dots */}
-            <div className="flex items-center gap-2">
-              {heroSlides.map((_, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setActiveSlide(idx)}
-                  className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                    activeSlide === idx ? 'w-6 bg-[#00CFFF]' : 'w-2 bg-white/20'
-                  }`}
-                  aria-label={`Slide ${idx + 1}`}
-                />
-              ))}
+            {/* Right: Slide Indicator Dots & Autoplay Toggle */}
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] font-mono text-gray-500">
+                0{activeSlide + 1} / 0{heroSlides.length}
+              </span>
+
+              {/* 3 Slide Indicator Dots */}
+              <div className="flex items-center gap-2">
+                {heroSlides.map((slide, idx) => (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    onClick={() => setActiveSlide(idx)}
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                      activeSlide === idx
+                        ? 'w-8 bg-[#00CFFF] shadow-[0_0_12px_rgba(0,207,255,0.7)]'
+                        : 'w-2.5 bg-white/20 hover:bg-white/40'
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}: ${slide.title}`}
+                  />
+                ))}
+              </div>
+
+              {/* Autoplay Play/Pause Toggle */}
+              <button
+                type="button"
+                onClick={() => setIsAutoplay(!isAutoplay)}
+                className={`p-1 rounded-md text-[10px] border transition-colors cursor-pointer flex items-center gap-1 ${
+                  isAutoplay
+                    ? 'border-[#00CFFF]/40 text-[#00CFFF] bg-[#00CFFF]/10'
+                    : 'border-white/10 text-gray-400 hover:text-white'
+                }`}
+                title={isAutoplay ? 'Pause Carousel Autoplay' : 'Enable Carousel Autoplay'}
+              >
+                <span>{isAutoplay ? '⏸ Autoplay' : '▶ Autoplay'}</span>
+              </button>
             </div>
           </div>
         </div>
