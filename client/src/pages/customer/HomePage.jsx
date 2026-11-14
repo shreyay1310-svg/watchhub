@@ -8,6 +8,7 @@ import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
 import { GLOBAL_BRANDS_60, getBrandDescription } from '../../data/brandsData';
+import CustomizeAndNewArrivalsSection from '../../components/home/CustomizeAndNewArrivalsSection';
 import {
   ShieldCheck,
   Award,
@@ -616,93 +617,9 @@ export const HomePage = () => {
 
         {/* ════════════════════════════════════════════════════════════════
             4. TWO FEATURED SPOTLIGHT CARDS
-            (Customize Your Watch + New Arrivals from Image 1)
+            (Customize Your Watch & 3-Watch New Arrivals Carousel)
             ════════════════════════════════════════════════════════════════ */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          
-          {/* Spotlight 1: Customize Your Watch Studio (lg:col-span-7) */}
-          <div className="lg:col-span-7 p-7 sm:p-8 rounded-3xl bg-gradient-to-br from-[#061426] via-[#040C1A] to-[#020813] border border-[#00CFFF]/30 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.7)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-radial from-[#00CFFF]/15 via-transparent to-transparent pointer-events-none blur-3xl" />
-            
-            <div className="space-y-2 relative z-10">
-              <span className="text-[10px] font-extrabold text-[#00CFFF] tracking-widest uppercase bg-[#00CFFF]/15 border border-[#00CFFF]/30 px-3 py-0.5 rounded-full inline-block">
-                3D CONFIGURATOR STUDIO
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white">
-                Customize Your Watch
-              </h3>
-              <p className="text-xs text-[#A6B1C8] max-w-md">
-                Design your own unique timepiece with premium dial guilloché, case materials, hand-stitched alligator straps, and personalized laser engravings.
-              </p>
-            </div>
-
-            {/* Exploded Parts Visualization */}
-            <div className="my-6 py-4 flex items-center justify-around gap-2 text-center text-[10.5px] text-[#A6B1C8] border-y border-white/5 relative z-10">
-              <div className="flex flex-col items-center gap-1 group/part">
-                <span className="text-2xl group-hover/part:scale-125 transition-transform">⭕</span>
-                <span className="font-semibold text-white">Dial</span>
-              </div>
-              <span className="text-gray-600">→</span>
-              <div className="flex flex-col items-center gap-1 group/part">
-                <span className="text-2xl group-hover/part:scale-125 transition-transform">🛡️</span>
-                <span className="font-semibold text-white">Case</span>
-              </div>
-              <span className="text-gray-600">→</span>
-              <div className="flex flex-col items-center gap-1 group/part">
-                <span className="text-2xl group-hover/part:scale-125 transition-transform">🏷️</span>
-                <span className="font-semibold text-white">Strap</span>
-              </div>
-              <span className="text-gray-600">→</span>
-              <div className="flex flex-col items-center gap-1 group/part">
-                <span className="text-2xl group-hover/part:scale-125 transition-transform">✍️</span>
-                <span className="font-semibold text-white">Engraving</span>
-              </div>
-            </div>
-
-            <div className="relative z-10">
-              <Link
-                to="/customize-watch"
-                className="py-3 px-6 rounded-xl bg-gradient-to-r from-[#F4B942] to-[#D4A84F] text-black font-extrabold text-xs inline-flex items-center gap-2 shadow-[0_0_20px_rgba(244,185,66,0.3)] hover:brightness-110 transition-all cursor-pointer"
-              >
-                <span>Start Customizing</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Spotlight 2: New Arrivals Showcase (lg:col-span-5) */}
-          <div className="lg:col-span-5 p-7 sm:p-8 rounded-3xl bg-gradient-to-br from-[#10243C] to-[#040C1A] border border-white/10 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.7)] relative overflow-hidden group">
-            <div className="space-y-2">
-              <span className="text-[10px] font-extrabold text-[#F4B942] tracking-widest uppercase bg-[#F4B942]/15 border border-[#F4B942]/30 px-3 py-0.5 rounded-full inline-block">
-                LATEST RELEASES
-              </span>
-              <h3 className="text-2xl font-serif font-bold text-white">
-                New Arrivals
-              </h3>
-              <p className="text-xs text-[#A6B1C8]">
-                The latest timepieces from the world’s top horological manufactures.
-              </p>
-            </div>
-
-            <div className="my-4 h-44 flex items-center justify-center">
-              <img
-                src="/images/hero/chronograph_black.jpg"
-                alt="New Arrival Chronograph"
-                className="h-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-
-            <div>
-              <Link
-                to="/watches?filter=new"
-                className="py-3 px-6 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white font-bold text-xs inline-flex items-center gap-2 transition-all"
-              >
-                <span>Explore Now</span>
-                <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
+        <CustomizeAndNewArrivalsSection />
 
         {/* ════════════════════════════════════════════════════════════════
             5. BEST SELLERS TIMEPIECES ROW

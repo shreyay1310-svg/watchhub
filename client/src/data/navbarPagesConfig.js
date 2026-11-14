@@ -369,6 +369,24 @@ export const NAVBAR_PAGES_CONFIG = {
     baseFilter: (p) => Boolean(p.movement?.toLowerCase().includes('automatic') || p.category === 'Luxury' || p.category === "Men's"),
     subFilter: (p, sub) => true,
   },
+
+  'new-arrivals': {
+    key: 'new-arrivals',
+    route: '/new-arrivals',
+    title: 'New Arrivals & Latest Haute Horlogerie Releases',
+    subtitle: "The world's newest certified chronometers, perpetual calendars, and limited manufacture novelties.",
+    badge: 'LATEST RELEASES • 2026 EDITIONS',
+    gradient: 'from-[#071324] via-[#0E2038] to-[#040A14]',
+    subcategories: [
+      { id: 'all', label: 'All New Releases', icon: '✨' },
+      { id: 'chronograph', label: 'Novelty Chronographs', icon: '⏱️' },
+      { id: 'gold', label: 'Precious Metals', icon: '👑' },
+      { id: 'skeleton', label: 'Openwork Skeletons', icon: '🪞' },
+      { id: 'limited', label: 'Numbered Editions', icon: '💎' },
+    ],
+    baseFilter: (p) => Boolean(p.isNewArrival || p.isNew || p.id === 'omega-speedmaster' || p.id === 'rolex-submariner' || p.id === 'tissot-prx'),
+    subFilter: (p, sub) => true,
+  },
 };
 
 export default NAVBAR_PAGES_CONFIG;
