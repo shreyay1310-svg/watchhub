@@ -63,12 +63,12 @@ export const CategoriesBrandsModule = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm">
         <div>
-          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-[#F8FAFC] flex items-center gap-2">
             <span>📁</span> Categories & Brand Partnerships
           </h3>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-[#A6B1C8] mt-0.5">
             Organize store navigation hierarchies, merchandising categories and official brand partner registries.
           </p>
         </div>
@@ -80,13 +80,13 @@ export const CategoriesBrandsModule = () => {
       {/* Categories Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {categories.map((c) => (
-          <div key={c.id} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-watch-gold hover:shadow-md transition-all flex items-center justify-between">
+          <div key={c.id} className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm hover:border-watch-gold hover:shadow-md transition-all flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-2xl border border-gray-100 flex-shrink-0">
+              <span className="w-10 h-10 rounded-lg bg-[#0B1022]/80 flex items-center justify-center text-2xl border border-white/10 flex-shrink-0">
                 {c.icon}
               </span>
               <div>
-                <p className="text-xs font-bold text-gray-900">{c.name}</p>
+                <p className="text-xs font-bold text-[#F8FAFC]">{c.name}</p>
                 <p className="text-[11px] text-gray-400 font-mono">/{c.slug}</p>
               </div>
             </div>
@@ -98,16 +98,16 @@ export const CategoriesBrandsModule = () => {
       </div>
 
       {/* Brand Partners */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 space-y-4">
-        <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+      <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm p-5 space-y-4">
+        <h4 className="text-sm font-bold text-[#F8FAFC] flex items-center gap-2">
           <span>👑</span> Official Manufacturer Brands
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
           {BRANDS.map((b, i) => (
-            <div key={i} className="p-3 bg-gray-50 rounded-xl border border-gray-200">
-              <p className="font-bold text-gray-800">{b.name}</p>
-              <p className="text-gray-500 text-[11px] mt-0.5">{b.country}</p>
-              <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200/60 text-[10.5px]">
+            <div key={i} className="p-3 bg-[#0B1022]/80 rounded-xl border border-white/10">
+              <p className="font-bold text-[#F8FAFC]">{b.name}</p>
+              <p className="text-[#A6B1C8] text-[11px] mt-0.5">{b.country}</p>
+              <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/10/60 text-[10.5px]">
                 <span className="text-gray-400">{b.tier}</span>
                 <span className="font-bold text-watch-navy">{b.models} models</span>
               </div>
@@ -119,48 +119,48 @@ export const CategoriesBrandsModule = () => {
       {/* Add Category Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-gray-900 mb-1">Create Watch Category</h3>
-            <p className="text-xs text-gray-500 mb-4">Add a new merchandising group to the storefront.</p>
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <h3 className="text-base font-bold text-[#F8FAFC] mb-1">Create Watch Category</h3>
+            <p className="text-xs text-[#A6B1C8] mb-4">Add a new merchandising group to the storefront.</p>
 
             <form onSubmit={handleAddCategory} className="space-y-3 text-xs">
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Category Title</label>
+                <label className="block text-[#A6B1C8] font-semibold mb-1">Category Title</label>
                 <input
                   type="text"
                   value={newCat.name}
                   onChange={(e) => setNewCat({ ...newCat, name: e.target.value })}
                   placeholder="e.g. Vintage Mechanical Watches"
-                  className="w-full h-9 px-3 border border-gray-300 rounded-lg outline-none focus:border-watch-gold"
+                  className="w-full h-9 px-3 border border-white/15 rounded-lg outline-none focus:border-watch-gold"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">URL Slug</label>
+                  <label className="block text-[#A6B1C8] font-semibold mb-1">URL Slug</label>
                   <input
                     type="text"
                     value={newCat.slug}
                     onChange={(e) => setNewCat({ ...newCat, slug: e.target.value })}
                     placeholder="vintage-mechanical"
-                    className="w-full h-9 px-3 border border-gray-300 rounded-lg outline-none focus:border-watch-gold font-mono"
+                    className="w-full h-9 px-3 border border-white/15 rounded-lg outline-none focus:border-watch-gold font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Icon / Emoji</label>
+                  <label className="block text-[#A6B1C8] font-semibold mb-1">Icon / Emoji</label>
                   <input
                     type="text"
                     value={newCat.icon}
                     onChange={(e) => setNewCat({ ...newCat, icon: e.target.value })}
                     placeholder="🕰️"
-                    className="w-full h-9 px-3 border border-gray-300 rounded-lg outline-none focus:border-watch-gold text-center text-lg"
+                    className="w-full h-9 px-3 border border-white/15 rounded-lg outline-none focus:border-watch-gold text-center text-lg"
                   />
                 </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-3">
-                <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-50">
+                <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 border border-white/15 rounded-lg text-xs font-semibold text-[#A6B1C8] hover:bg-[#0B1022]/80">
                   Cancel
                 </button>
                 <button type="submit" className="btn-gold text-xs py-2 px-4">

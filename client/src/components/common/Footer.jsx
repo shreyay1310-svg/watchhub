@@ -164,7 +164,7 @@ export const Footer = () => {
                       <span className="text-[11px] text-[#D4A84F]/80">{item.icon}</span>
                       <span>{item.name}</span>
                     </span>
-                    <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
+                    <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8] group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
                   </Link>
                 </li>
               ))}
@@ -197,7 +197,7 @@ export const Footer = () => {
                       <span className="text-[11px] text-[#D4A84F]/80">{item.icon}</span>
                       <span>{item.name}</span>
                     </span>
-                    <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
+                    <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8] group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
                   </Link>
                 </li>
               ))}
@@ -231,7 +231,7 @@ export const Footer = () => {
                         <span className="text-[11px] text-[#D4A84F]/80">{item.icon}</span>
                         <span>{item.name}</span>
                       </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
+                      <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8] group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
                     </Link>
                   ) : (
                     <button
@@ -242,7 +242,7 @@ export const Footer = () => {
                         <span className="text-[11px] text-[#D4A84F]/80">{item.icon}</span>
                         <span>{item.name}</span>
                       </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
+                      <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8] group-hover:text-[#D4A84F] group-hover:translate-x-0.5 transition-all" />
                     </button>
                   )}
                 </li>
@@ -510,12 +510,12 @@ export const Footer = () => {
           onClick={() => setActiveModal(null)}
         >
           <div
-            className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[#D4A84F]/40 relative"
+            className="bg-[#10182D]/95 backdrop-blur-2xl rounded-2xl max-w-lg w-full p-6 shadow-[0_0_50px_rgba(0,207,255,0.2)] border border-[#00CFFF]/40 text-[#F8FAFC] relative"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setActiveModal(null)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center font-bold transition-all cursor-pointer"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-[#A6B1C8] flex items-center justify-center font-bold transition-all cursor-pointer"
             >
               ✕
             </button>
@@ -524,19 +524,19 @@ export const Footer = () => {
               <div>
                 <div className="flex items-center gap-2 text-[#D4A84F] mb-2">
                   <HelpCircle className="w-5 h-5 text-[#D4A84F]" />
-                  <h3 className="text-lg font-bold text-gray-900">Help &amp; FAQs</h3>
+                  <h3 className="text-lg font-bold text-[#F8FAFC]">Help &amp; FAQs</h3>
                 </div>
-                <div className="space-y-3 text-xs text-gray-600 mt-4 max-h-80 overflow-y-auto pr-1">
+                <div className="space-y-3 text-xs text-[#A6B1C8] mt-4 max-h-80 overflow-y-auto pr-1">
                   <div>
-                    <h5 className="font-bold text-gray-900 mb-0.5">Are all timepieces 100% authentic?</h5>
+                    <h5 className="font-bold text-[#F8FAFC] mb-0.5">Are all timepieces 100% authentic?</h5>
                     <p>Yes. Every watch sold on WatchHub comes directly from official brand manufacturers and authorized distributors, complete with genuine warranty cards and original packaging.</p>
                   </div>
                   <div>
-                    <h5 className="font-bold text-gray-900 mb-0.5">How long does shipping take?</h5>
+                    <h5 className="font-bold text-[#F8FAFC] mb-0.5">How long does shipping take?</h5>
                     <p>Standard delivery takes 2 to 4 business days across India. Express same-day dispatch is available for metro regions.</p>
                   </div>
                   <div>
-                    <h5 className="font-bold text-gray-900 mb-0.5">What payment methods are supported?</h5>
+                    <h5 className="font-bold text-[#F8FAFC] mb-0.5">What payment methods are supported?</h5>
                     <p>We accept all major Credit/Debit Cards (Visa, Mastercard, RuPay), UPI, Net Banking, and Cash on Delivery on eligible pincodes.</p>
                   </div>
                 </div>
@@ -547,9 +547,9 @@ export const Footer = () => {
               <div>
                 <div className="flex items-center gap-2 text-[#D4A84F] mb-2">
                   <RotateCcw className="w-5 h-5 text-[#D4A84F]" />
-                  <h3 className="text-lg font-bold text-gray-900">7-Day Easy Returns &amp; Exchanges</h3>
+                  <h3 className="text-lg font-bold text-[#F8FAFC]">7-Day Easy Returns &amp; Exchanges</h3>
                 </div>
-                <div className="text-xs text-gray-600 mt-4 space-y-2.5">
+                <div className="text-xs text-[#A6B1C8] mt-4 space-y-2.5">
                   <p>WatchHub offers a hassle-free 7-day return and exchange policy from the date of package delivery.</p>
                   <ul className="list-disc pl-5 space-y-1">
                     <li>Items must be unworn, undamaged, with original tags and plastic seals intact.</li>
@@ -570,9 +570,9 @@ export const Footer = () => {
               <div>
                 <div className="flex items-center gap-2 text-[#D4A84F] mb-2">
                   <ShieldCheck className="w-5 h-5 text-[#D4A84F]" />
-                  <h3 className="text-lg font-bold text-gray-900">Warranty &amp; Service Assured</h3>
+                  <h3 className="text-lg font-bold text-[#F8FAFC]">Warranty &amp; Service Assured</h3>
                 </div>
-                <div className="text-xs text-gray-600 mt-4 space-y-2.5">
+                <div className="text-xs text-[#A6B1C8] mt-4 space-y-2.5">
                   <p>Every timepiece purchased through WatchHub carries a minimum of <strong>2 Years Official Brand International Warranty</strong>.</p>
                   <p>Covered items include internal movement manufacturing defects, hands alignment, and timing accuracy.</p>
                   <p>For service inquiries, you can visit any authorized brand service boutique worldwide or contact WatchHub Concierge for insured pickup and handling.</p>
@@ -584,14 +584,14 @@ export const Footer = () => {
               <div>
                 <div className="flex items-center gap-2 text-[#D4A84F] mb-2">
                   <Phone className="w-5 h-5 text-[#D4A84F]" />
-                  <h3 className="text-lg font-bold text-gray-900">Contact WatchHub Support</h3>
+                  <h3 className="text-lg font-bold text-[#F8FAFC]">Contact WatchHub Support</h3>
                 </div>
-                <div className="text-xs text-gray-600 mt-4 space-y-3">
+                <div className="text-xs text-[#A6B1C8] mt-4 space-y-3">
                   <p>Our horological specialists and concierge team are available 24/7 to assist you.</p>
-                  <div className="bg-gray-50 p-3 rounded-xl space-y-1.5 font-medium">
-                    <p className="text-gray-900">📞 Phone: <a href="tel:+919876543210" className="text-[#D4A84F] font-bold">+91 98765 43210</a></p>
-                    <p className="text-gray-900">✉️ Email: <a href="mailto:support@watchhub.com" className="text-[#D4A84F] font-bold">support@watchhub.com</a></p>
-                    <p className="text-gray-900">🏢 Corporate HQ: WatchHub Towers, Bandra Kurla Complex, Mumbai, India</p>
+                  <div className="bg-[#0B1022]/80 border border-white/10 p-3 rounded-xl space-y-1.5 font-medium">
+                    <p className="text-[#F8FAFC]">📞 Phone: <a href="tel:+919876543210" className="text-[#D4A84F] font-bold">+91 98765 43210</a></p>
+                    <p className="text-[#F8FAFC]">✉️ Email: <a href="mailto:support@watchhub.com" className="text-[#D4A84F] font-bold">support@watchhub.com</a></p>
+                    <p className="text-[#F8FAFC]">🏢 Corporate HQ: WatchHub Towers, Bandra Kurla Complex, Mumbai, India</p>
                   </div>
                 </div>
               </div>
@@ -601,13 +601,13 @@ export const Footer = () => {
               <div>
                 <div className="flex items-center gap-2 text-[#D4A84F] mb-2">
                   <FileText className="w-5 h-5 text-[#D4A84F]" />
-                  <h3 className="text-lg font-bold text-gray-900 capitalize">
+                  <h3 className="text-lg font-bold text-[#F8FAFC] capitalize">
                     {activeModal.replace('-', ' ')}
                   </h3>
                 </div>
-                <div className="text-xs text-gray-600 mt-4 space-y-2">
+                <div className="text-xs text-[#A6B1C8] mt-4 space-y-2">
                   <p>WatchHub is committed to transparency, excellence in horology, customer trust, and ethical business standards.</p>
-                  <p>For detailed inquiries regarding our {activeModal.replace('-', ' ')} or to speak with our compliance officers, reach us at <span className="font-bold text-gray-900">legal@watchhub.com</span>.</p>
+                  <p>For detailed inquiries regarding our {activeModal.replace('-', ' ')} or to speak with our compliance officers, reach us at <span className="font-bold text-[#F8FAFC]">legal@watchhub.com</span>.</p>
                 </div>
               </div>
             )}

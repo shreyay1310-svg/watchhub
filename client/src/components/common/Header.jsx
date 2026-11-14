@@ -197,7 +197,7 @@ export const CustomerNavbar = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for brands, watches, categories..."
-            className="w-full h-11 pl-11 pr-11 text-xs rounded-full bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-watch-gold/40 shadow-xs transition-all font-medium"
+            className="w-full h-11 pl-11 pr-11 text-xs rounded-full bg-[#10182D]/90 text-[#F8FAFC] border border-white/10 placeholder-[#A6B1C8]/60 focus:outline-none focus:border-[#00F0FF]/60 focus:ring-1 focus:ring-[#00F0FF]/30 shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all font-medium"
           />
           <button
             type="button"
@@ -712,14 +712,14 @@ export const CustomerNavbar = () => {
           ════════════════════════════════════════════════════════════════ */}
       {showVisualSearch && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in font-poppins text-gray-800">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-gray-100 relative animate-scale-up">
+          <div className="bg-[#10182D]/95 backdrop-blur-2xl rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-[0_0_50px_rgba(0,207,255,0.25)] border border-[#00CFFF]/40 relative animate-scale-up text-[#F8FAFC]">
             <button
               onClick={() => {
                 setShowVisualSearch(false);
                 setDetectedWatch(null);
                 setIsScanning(false);
               }}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -728,57 +728,57 @@ export const CustomerNavbar = () => {
               <span className="w-8 h-8 rounded-xl bg-watch-gold/20 flex items-center justify-center text-watch-gold-dark font-bold text-sm">
                 📷
               </span>
-              <h3 className="text-lg font-bold text-gray-900">AI Visual Watch Recognition</h3>
+              <h3 className="text-lg font-bold text-[#F8FAFC]">AI Visual Watch Recognition</h3>
             </div>
-            <p className="text-xs text-gray-500 mb-5">
+            <p className="text-xs text-[#A6B1C8] mb-5">
               Upload a watch photo or click a sample to find matching timepieces instantly.
             </p>
 
             {/* Scanner Box */}
-            <div className="border-2 border-dashed border-gray-200 hover:border-watch-gold rounded-2xl p-6 text-center bg-gray-50/50 mb-5 transition-colors">
+            <div className="border-2 border-dashed border-white/15 hover:border-[#00F0FF]/60 rounded-2xl p-6 text-center bg-[#0B1022]/60 mb-5 transition-colors">
               <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-xs font-bold text-gray-800">Drop a watch photo here, or browse files</p>
+              <p className="text-xs font-bold text-[#F8FAFC]">Drop a watch photo here, or browse files</p>
               <p className="text-[11px] text-gray-400 mt-0.5">Supports JPG, PNG & WEBP formats up to 10MB</p>
             </div>
 
             {/* Quick Sample Detections */}
             <div className="space-y-2 mb-5">
-              <p className="text-xs font-bold text-gray-700">Or try 1-click sample watch scans:</p>
+              <p className="text-xs font-bold text-[#F8FAFC]">Or try 1-click sample watch scans:</p>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <button
                   type="button"
                   onClick={() => handleSampleScan('Rolex Submariner Oystersteel', 'Rolex Submariner')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
+                  className="p-2.5 rounded-xl border border-white/10 hover:border-[#00F0FF]/50 bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
-                  <span className="font-semibold text-gray-800 truncate">Rolex Submariner</span>
+                  <span className="font-semibold text-[#F8FAFC] truncate">Rolex Submariner</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleSampleScan('Omega Speedmaster Moonwatch', 'Omega Speedmaster')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
+                  className="p-2.5 rounded-xl border border-white/10 hover:border-[#00F0FF]/50 bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
-                  <span className="font-semibold text-gray-800 truncate">Omega Moonwatch</span>
+                  <span className="font-semibold text-[#F8FAFC] truncate">Omega Moonwatch</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleSampleScan('AMOLED Ultra Smartwatch', 'Smartwatches')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
+                  className="p-2.5 rounded-xl border border-white/10 hover:border-[#00F0FF]/50 bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
-                  <span className="font-semibold text-gray-800 truncate">AMOLED Smartwatch</span>
+                  <span className="font-semibold text-[#F8FAFC] truncate">AMOLED Smartwatch</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleSampleScan('Patek Philippe Nautilus Selfwinding', 'Patek Philippe')}
-                  className="p-2.5 rounded-xl border border-gray-200 hover:border-watch-gold hover:bg-amber-50/50 text-left transition-colors flex items-center gap-2 cursor-pointer"
+                  className="p-2.5 rounded-xl border border-white/10 hover:border-[#00F0FF]/50 bg-white/5 hover:bg-white/10 text-left transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Scan className="w-3.5 h-3.5 text-watch-gold" />
-                  <span className="font-semibold text-gray-800 truncate">Patek Nautilus</span>
+                  <span className="font-semibold text-[#F8FAFC] truncate">Patek Nautilus</span>
                 </button>
               </div>
             </div>

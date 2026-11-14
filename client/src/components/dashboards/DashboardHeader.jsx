@@ -163,8 +163,8 @@ export const DashboardHeader = ({ activeTab, onTabChange }) => {
             </button>
 
             {roleMenuOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50 text-xs text-gray-800">
-                <div className="px-3.5 py-1.5 border-b border-gray-100 text-[10.5px] font-bold text-gray-400 uppercase tracking-wider">
+              <div className="absolute right-0 mt-2 w-64 bg-[#10182D]/95 backdrop-blur-xl rounded-xl shadow-[0_0_35px_rgba(0,207,255,0.2)] border border-[#00CFFF]/30 py-2 z-50 text-xs text-[#F8FAFC]">
+                <div className="px-3.5 py-1.5 border-b border-white/10 text-[10.5px] font-bold text-[#A6B1C8] uppercase tracking-wider">
                   Switch Role Dashboard
                 </div>
 
@@ -179,7 +179,7 @@ export const DashboardHeader = ({ activeTab, onTabChange }) => {
                         setRoleMenuOpen(false);
                       }}
                       className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-amber-50 transition-colors ${
-                        isActive ? 'bg-amber-50/70 text-watch-gold-dark font-bold' : ''
+                        isActive ? 'bg-white/10 text-[#F4B942] font-bold' : 'hover:bg-white/5 text-[#F8FAFC]'
                       }`}
                     >
                       <div className="flex items-center gap-2">
@@ -191,14 +191,14 @@ export const DashboardHeader = ({ activeTab, onTabChange }) => {
                   );
                 })}
 
-                <div className="border-t border-gray-100 mt-1.5 pt-1">
+                <div className="border-t border-white/10 mt-1.5 pt-1">
                   <button
                     onClick={() => {
                       switchRole(ROLES.CUSTOMER);
                       setRoleMenuOpen(false);
                       navigate('/');
                     }}
-                    className="w-full text-left px-3.5 py-2 text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    className="w-full text-left px-3.5 py-2 text-[#A6B1C8] hover:bg-white/5 hover:text-[#F8FAFC] flex items-center gap-2"
                   >
                     <span>👤</span> Customer Storefront
                   </button>
@@ -220,7 +220,7 @@ export const DashboardHeader = ({ activeTab, onTabChange }) => {
       </div>
 
       {/* 2. Upper Horizontal Navigation Modules (Matching Reference Designs) */}
-      <div className="bg-white border-b border-gray-200 px-6 overflow-x-auto scrollbar-none flex items-center gap-2 py-1.5">
+      <div className="bg-[#0B1022] border-b border-white/10 px-6 overflow-x-auto scrollbar-none flex items-center gap-2 py-1.5">
         {modules.map((m) => {
           const isSelected = activeTab === m.id;
           return (
@@ -229,8 +229,8 @@ export const DashboardHeader = ({ activeTab, onTabChange }) => {
               onClick={() => onTabChange && onTabChange(m.id)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                 isSelected
-                  ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-[#F4B942]/15 text-[#F4B942] shadow-[0_0_12px_rgba(244,185,66,0.25)] border border-[#F4B942]/40'
+                  : 'text-[#A6B1C8] hover:text-[#F8FAFC] hover:bg-white/5'
               }`}
             >
               <span>{m.icon}</span>

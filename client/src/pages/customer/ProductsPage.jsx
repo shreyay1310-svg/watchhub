@@ -339,14 +339,14 @@ export const ProductsPage = () => {
         </div>
 
         {/* Horizontal Navigation Pills (Exact match to Screenshot 1) */}
-        <div className="bg-white p-2.5 rounded-2xl border border-gray-200 shadow-sm overflow-x-auto scrollbar-none">
+        <div className="bg-white p-2.5 rounded-2xl border border-white/10 shadow-sm overflow-x-auto scrollbar-none">
           <div className="flex items-center gap-1.5 min-w-max text-xs">
             <button
               onClick={() => setSearchParams({})}
               className={`px-3.5 py-1.5 rounded-xl font-bold transition-all ${
                 selectedCategory === 'all' && !selectedTag
                   ? 'bg-watch-navy-dark text-white shadow'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'text-[#A6B1C8] hover:bg-white/5'
               }`}
             >
               All Categories
@@ -363,12 +363,12 @@ export const ProductsPage = () => {
                     isActive
                       ? 'bg-watch-gold text-watch-navy-dark shadow-sm ring-1 ring-amber-400'
                       : item.isHot
-                      ? 'text-gray-800 hover:bg-gray-100'
+                      ? 'text-[#F8FAFC] hover:bg-white/5'
                       : item.isGreen
                       ? 'text-emerald-600 hover:bg-emerald-50'
                       : item.isRed
                       ? 'text-rose-600 hover:bg-rose-50'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      : 'text-[#A6B1C8] hover:bg-white/5'
                   }`}
                 >
                   <span>{item.label}</span>
@@ -386,9 +386,9 @@ export const ProductsPage = () => {
         {/* Content Layout: Left Sidebar Filters & Right Product Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
           {/* Left Filter Sidebar */}
-          <aside className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-6 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <h3 className="font-bold text-gray-900 flex items-center gap-1.5 text-sm">
+          <aside className="bg-white p-5 rounded-2xl border border-white/10 shadow-sm space-y-6 text-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <h3 className="font-bold text-[#F8FAFC] flex items-center gap-1.5 text-sm">
                 <SlidersHorizontal className="w-4 h-4 text-watch-gold" /> Filter Horology
               </h3>
               <button
@@ -408,7 +408,7 @@ export const ProductsPage = () => {
 
             {/* Brand Filter */}
             <div>
-              <label className="block text-gray-700 font-bold mb-2">Watch Brand</label>
+              <label className="block text-[#A6B1C8] font-bold mb-2">Watch Brand</label>
               <select
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
@@ -425,7 +425,7 @@ export const ProductsPage = () => {
 
             {/* Gender / Style Filter */}
             <div>
-              <label className="block text-gray-700 font-bold mb-2">Gender & Fitting</label>
+              <label className="block text-[#A6B1C8] font-bold mb-2">Gender & Fitting</label>
               <div className="grid grid-cols-3 gap-1.5">
                 {['all', 'Men', 'Women'].map((g) => (
                   <button
@@ -434,7 +434,7 @@ export const ProductsPage = () => {
                     className={`py-1.5 rounded-lg border text-xs font-semibold transition-all ${
                       selectedGender === g
                         ? 'bg-watch-navy-dark text-white border-watch-navy-dark'
-                        : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+                        : 'border-white/10 text-[#A6B1C8] hover:bg-[#0B1022]/80'
                     }`}
                   >
                     {g === 'all' ? 'All Styles' : g}
@@ -446,8 +446,8 @@ export const ProductsPage = () => {
             {/* Price Range Slider */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="text-gray-700 font-bold">Max Price Ceiling</label>
-                <span className="font-mono font-bold text-gray-900">
+                <label className="text-[#A6B1C8] font-bold">Max Price Ceiling</label>
+                <span className="font-mono font-bold text-[#F8FAFC]">
                   {maxPrice >= 5000000 ? 'No Limit' : `₹${maxPrice.toLocaleString('en-IN')}`}
                 </span>
               </div>
@@ -468,7 +468,7 @@ export const ProductsPage = () => {
 
             {/* Sort Options */}
             <div>
-              <label className="block text-gray-700 font-bold mb-2">Sort Order</label>
+              <label className="block text-[#A6B1C8] font-bold mb-2">Sort Order</label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -486,7 +486,7 @@ export const ProductsPage = () => {
           {/* Right Product Grid */}
           <div className="lg:col-span-3 space-y-4">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-bold text-gray-800">
+              <span className="font-bold text-[#F8FAFC]">
                 Showing {filteredProducts.length} Timepieces
               </span>
               <span className="text-gray-500 font-medium">
@@ -495,9 +495,9 @@ export const ProductsPage = () => {
             </div>
 
             {filteredProducts.length === 0 ? (
-              <div className="bg-white p-12 text-center rounded-2xl border border-gray-200 shadow-sm">
+              <div className="bg-[#10182D]/90 backdrop-blur-xl p-12 text-center rounded-2xl border border-white/10 shadow-sm text-[#F8FAFC]">
                 <span className="text-5xl block mb-3">🔍</span>
-                <h3 className="text-base font-bold text-gray-800">No matching watches found</h3>
+                <h3 className="text-base font-bold text-[#F8FAFC]">No matching watches found</h3>
                 <p className="text-xs text-gray-500 mt-1 mb-4">Try relaxing your price range or brand filters.</p>
                 <button
                   onClick={() => {

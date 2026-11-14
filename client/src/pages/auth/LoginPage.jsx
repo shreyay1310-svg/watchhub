@@ -127,6 +127,14 @@ export const LoginPage = () => {
       password: 'Admin@123',
     },
     {
+      id: ROLES.DELIVERY_PARTNER,
+      line1: 'Delivery',
+      line2: 'Partner',
+      icon: Truck,
+      email: 'rider@watchhub.com',
+      password: 'Admin@123',
+    },
+    {
       id: ROLES.CUSTOMER_SUPPORT,
       line1: 'Customer',
       line2: 'Support',
@@ -167,6 +175,8 @@ export const LoginPage = () => {
           navigate('/inventory-manager/dashboard');
         } else if (userRole === ROLES.DELIVERY_MANAGER || userRole === 'Delivery Manager') {
           navigate('/delivery-manager/dashboard');
+        } else if (userRole === ROLES.DELIVERY_PARTNER || userRole === 'Delivery Partner') {
+          navigate('/delivery-partner/dashboard');
         } else if (userRole === ROLES.CUSTOMER_SUPPORT || userRole === 'Customer Support Executive' || userRole === 'Customer Support') {
           navigate('/customer-support/dashboard');
         } else if (userRole === ROLES.SUPER_ADMIN || userRole === 'Super Admin') {
@@ -355,11 +365,11 @@ export const LoginPage = () => {
         {/* ════════════════════════════════════════════════════════════════
             RIGHT LOGIN CARD: Warm Ivory, Seamless 5-Tab Bar & Form
             ════════════════════════════════════════════════════════════════ */}
-        <div className="lg:col-span-5 bg-[#FAF7F2] lg:rounded-l-[28px] p-6 sm:p-10 flex flex-col justify-between shadow-[-15px_0_35px_rgba(0,0,0,0.25)] relative z-20">
+        <div className="lg:col-span-5 bg-[#10182D]/95 lg:rounded-l-[28px] p-6 sm:p-10 flex flex-col justify-between shadow-[-15px_0_35px_rgba(0,0,0,0.4)] border-l border-white/10 relative z-20 text-[#F8FAFC]">
           
           <div>
             {/* 1. Horizontal Segmented Role Tabs (5 Clean Segments, No Text Cut-Off) */}
-            <div className="grid grid-cols-5 gap-1.5 p-1 bg-[#F2EDE4] rounded-xl border border-[#E8E2D5] mb-6">
+            <div className="grid grid-cols-5 gap-1.5 p-1 bg-[#0B1022]/90 rounded-xl border border-white/10 mb-6">
               {ROLE_TABS.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = selectedRole === tab.id;
@@ -371,7 +381,7 @@ export const LoginPage = () => {
                     className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-lg text-center transition-all ${
                       isActive
                         ? 'bg-gradient-to-b from-[#C4913B] to-[#AD7929] text-white shadow-sm font-semibold'
-                        : 'text-[#4A5568] hover:text-[#1A202C] hover:bg-white/60'
+                        : 'text-[#A6B1C8] hover:text-[#F8FAFC] hover:bg-white/5'
                     }`}
                     title={`${tab.line1} ${tab.line2}`.trim()}
                   >
@@ -391,10 +401,10 @@ export const LoginPage = () => {
 
             {/* 2. Welcome Back Heading */}
             <div className="mb-5">
-              <h2 className="font-serif text-3xl sm:text-[34px] font-bold text-[#0E1724] tracking-tight">
+              <h2 className="font-serif text-3xl sm:text-[34px] font-bold text-[#F8FAFC] tracking-tight">
                 Welcome back
               </h2>
-              <p className="text-gray-500 text-xs sm:text-[13px] mt-1">
+              <p className="text-[#A6B1C8] text-xs sm:text-[13px] mt-1">
                 Sign in to your WatchHub account.
               </p>
             </div>
@@ -418,7 +428,7 @@ export const LoginPage = () => {
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               {/* Email Address */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-800 mb-1.5">
+                <label className="block text-[13px] font-semibold text-[#F8FAFC] mb-1.5">
                   Email Address
                 </label>
                 <div className="relative">
@@ -428,7 +438,7 @@ export const LoginPage = () => {
                     value={account}
                     onChange={(e) => setAccount(e.target.value)}
                     placeholder="Enter your email address"
-                    className="w-full h-12 pl-10 pr-4 rounded-xl border border-[#E5E0D6] bg-white text-gray-900 text-sm focus:border-[#C4913B] focus:ring-2 focus:ring-[#C4913B]/20 outline-none shadow-xs transition-all"
+                    className="w-full h-12 pl-10 pr-4 rounded-xl border border-white/10 bg-[#0B1022]/80 text-[#F8FAFC] placeholder-[#A6B1C8]/50 text-sm focus:border-[#00F0FF]/60 focus:ring-1 focus:ring-[#00F0FF]/30 outline-none shadow-xs transition-all"
                     required
                   />
                 </div>
@@ -436,7 +446,7 @@ export const LoginPage = () => {
 
               {/* Password */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-800 mb-1.5">
+                <label className="block text-[13px] font-semibold text-[#F8FAFC] mb-1.5">
                   Password
                 </label>
                 <div className="relative">
@@ -446,7 +456,7 @@ export const LoginPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full h-12 pl-10 pr-11 rounded-xl border border-[#E5E0D6] bg-white text-gray-900 text-sm focus:border-[#C4913B] focus:ring-2 focus:ring-[#C4913B]/20 outline-none shadow-xs transition-all"
+                    className="w-full h-12 pl-10 pr-11 rounded-xl border border-white/10 bg-[#0B1022]/80 text-[#F8FAFC] placeholder-[#A6B1C8]/50 text-sm focus:border-[#00F0FF]/60 focus:ring-1 focus:ring-[#00F0FF]/30 outline-none shadow-xs transition-all"
                     required
                   />
                   <button
@@ -534,14 +544,14 @@ export const LoginPage = () => {
           ════════════════════════════════════════════════════════════════ */}
       {showGoogleModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in font-poppins">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-gray-200 relative animate-scale-up">
+          <div className="bg-[#10182D]/95 backdrop-blur-2xl rounded-3xl max-w-sm w-full p-6 shadow-[0_0_50px_rgba(0,207,255,0.25)] border border-[#00CFFF]/40 text-[#F8FAFC] relative animate-scale-up">
             <button
               onClick={() => {
                 setShowGoogleModal(false);
                 setShowAddGoogleAccount(false);
                 setGoogleAddError('');
               }}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 text-[#A6B1C8] hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -554,7 +564,7 @@ export const LoginPage = () => {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
               </svg>
-              <h4 className="font-bold text-gray-900 text-base">Sign in with Google</h4>
+              <h4 className="font-bold text-[#F8FAFC] text-base">Sign in with Google</h4>
             </div>
             <p className="text-xs text-gray-500 mb-4">Choose an account to link with WatchHub</p>
 
@@ -582,13 +592,13 @@ export const LoginPage = () => {
                           {acc.initial || acc.name[0]}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xs font-bold text-gray-900 truncate group-hover:text-[#1a73e8] transition-colors">
+                          <p className="text-xs font-bold text-[#F8FAFC] truncate group-hover:text-[#1a73e8] transition-colors">
                             {acc.name}
                           </p>
                           <p className="text-[11px] text-gray-500 truncate">{acc.email}</p>
                         </div>
                       </div>
-                      <span className="text-[10px] text-gray-400 bg-gray-100 group-hover:bg-[#E8F0FE] group-hover:text-[#1967D2] px-2 py-0.5 rounded-full font-medium transition-colors flex-shrink-0 ml-2">
+                      <span className="text-[10px] text-gray-400 bg-white/5 text-[#A6B1C8] group-hover:bg-[#E8F0FE] group-hover:text-[#1967D2] px-2 py-0.5 rounded-full font-medium transition-colors flex-shrink-0 ml-2">
                         {acc.badge || 'Google'}
                       </span>
                     </button>
@@ -597,7 +607,7 @@ export const LoginPage = () => {
 
                 {/* Add/Link Another Google Account Form */}
                 {showAddGoogleAccount ? (
-                  <form onSubmit={handleAddNewGoogleAccount} className="p-3.5 bg-gray-50 rounded-2xl border border-gray-200/90 space-y-2.5 text-xs animate-fade-in">
+                  <form onSubmit={handleAddNewGoogleAccount} className="p-3.5 bg-[#0B1022]/80 rounded-2xl border border-gray-200/90 space-y-2.5 text-xs animate-fade-in">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-gray-800 text-[11px] flex items-center gap-1.5">
                         <UserPlus className="w-3.5 h-3.5 text-[#4285F4]" />
@@ -658,7 +668,7 @@ export const LoginPage = () => {
                     onClick={() => setShowAddGoogleAccount(true)}
                     className="w-full flex items-center gap-3 p-3 rounded-2xl border border-dashed border-gray-300 hover:border-[#4285F4] hover:bg-blue-50/40 text-gray-700 transition-all text-left text-xs font-medium cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                    <div className="w-8 h-8 rounded-full bg-white/5 text-[#A6B1C8] flex items-center justify-center text-gray-500">
                       <Plus className="w-4 h-4" />
                     </div>
                     <div>
@@ -727,13 +737,13 @@ export const LoginPage = () => {
           ════════════════════════════════════════════════════════════════ */}
       {showForgotModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in font-poppins">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-gray-200 relative animate-scale-up">
+          <div className="bg-[#10182D]/95 backdrop-blur-2xl rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-[0_0_50px_rgba(0,207,255,0.25)] border border-[#00CFFF]/40 text-[#F8FAFC] relative animate-scale-up">
             <button
               onClick={() => {
                 setShowForgotModal(false);
                 setSmsToast(null);
               }}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 text-[#A6B1C8] hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -742,7 +752,7 @@ export const LoginPage = () => {
               <KeyRound className="w-5 h-5" />
             </div>
 
-            <h3 className="text-xl font-bold text-gray-900">Reset Your Password</h3>
+            <h3 className="text-xl font-bold text-[#F8FAFC]">Reset Your Password</h3>
             <p className="text-xs text-gray-500 mt-0.5 mb-4">
               {forgotStep === 1
                 ? (forgotChannel === 'phone'
@@ -753,7 +763,7 @@ export const LoginPage = () => {
 
             {/* Step 1: Channel Switcher (Mobile SMS vs Email) */}
             {forgotStep === 1 && (
-              <div className="grid grid-cols-2 gap-1.5 p-1 bg-gray-100 rounded-2xl mb-4 text-xs font-semibold">
+              <div className="grid grid-cols-2 gap-1.5 p-1 bg-white/5 text-[#A6B1C8] rounded-2xl mb-4 text-xs font-semibold">
                 <button
                   type="button"
                   onClick={() => {
@@ -806,7 +816,7 @@ export const LoginPage = () => {
                   <div>
                     <label className="block text-gray-700 font-semibold mb-1.5">Customer Mobile Number</label>
                     <div className="flex rounded-xl border border-gray-300 overflow-hidden focus-within:border-[#C4913B] focus-within:ring-2 focus-within:ring-[#C4913B]/20 transition-all">
-                      <div className="bg-gray-50 border-r border-gray-300 px-3 flex items-center gap-1.5 text-gray-700 font-semibold text-xs sm:text-sm select-none">
+                      <div className="bg-[#0B1022]/80 border-r border-gray-300 px-3 flex items-center gap-1.5 text-gray-700 font-semibold text-xs sm:text-sm select-none">
                         <span>🇮🇳</span>
                         <span>+91</span>
                       </div>
@@ -816,7 +826,7 @@ export const LoginPage = () => {
                         value={forgotPhone}
                         onChange={(e) => setForgotPhone(e.target.value.replace(/[^0-9]/g, ''))}
                         placeholder="98765 43210"
-                        className="w-full h-11 px-3 text-xs sm:text-sm outline-none font-medium tracking-wide text-gray-900"
+                        className="w-full h-11 px-3 text-xs sm:text-sm outline-none font-medium tracking-wide text-[#F8FAFC]"
                         required
                         autoFocus
                       />
@@ -864,12 +874,12 @@ export const LoginPage = () => {
                         {forgotChannel === 'phone' ? (
                           <>
                             <Smartphone className="w-4 h-4 text-[#C4913B]" />
-                            <span>OTP sent via SMS to <strong className="text-gray-900">+91 {forgotPhone}</strong></span>
+                            <span>OTP sent via SMS to <strong className="text-[#F8FAFC]">+91 {forgotPhone}</strong></span>
                           </>
                         ) : (
                           <>
                             <Mail className="w-4 h-4 text-[#C4913B]" />
-                            <span>OTP sent to <strong className="text-gray-900">{forgotEmail}</strong></span>
+                            <span>OTP sent to <strong className="text-[#F8FAFC]">{forgotEmail}</strong></span>
                           </>
                         )}
                       </p>
@@ -914,7 +924,7 @@ export const LoginPage = () => {
                     value={enteredOtp}
                     onChange={(e) => setEnteredOtp(e.target.value)}
                     placeholder="e.g. 482910"
-                    className="w-full h-10 px-3 rounded-xl border border-gray-300 font-mono text-center tracking-widest text-base font-bold focus:border-[#C4913B] outline-none bg-gray-50/50"
+                    className="w-full h-10 px-3 rounded-xl border border-gray-300 font-mono text-center tracking-widest text-base font-bold focus:border-[#C4913B] outline-none bg-[#0B1022]/80/50"
                     required
                   />
                 </div>

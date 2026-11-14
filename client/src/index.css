@@ -4,21 +4,123 @@
 
 @layer base {
   body {
-    @apply bg-watch-light text-watch-dark font-poppins;
+    background-color: #050816;
+    color: #F8FAFC;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Custom Futuristic Neon Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #050816;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00CFFF;
   }
 }
 
-/* Custom Gold Button */
+/* ──────────────── UNIVERSAL NEON LUXURY GLASSMORPHISM ──────────────── */
+
+/* Glass Card */
+.neon-glass-card {
+  background: rgba(16, 24, 45, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neon-glass-card:hover {
+  border-color: rgba(0, 207, 255, 0.3);
+  box-shadow: 0 12px 40px 0 rgba(0, 207, 255, 0.12);
+}
+
+/* Neon Glow Gradients & Buttons */
 .btn-gold {
-  @apply bg-gradient-to-r from-watch-gold to-watch-gold-light text-watch-navy-dark font-bold px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 inline-flex items-center justify-center gap-2;
+  background: linear-gradient(135deg, #F4B942 0%, #D97706 100%);
+  color: #050816;
+  font-weight: 800;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 20px -3px rgba(244, 185, 66, 0.4);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-/* Luxury Card */
+.btn-gold:hover {
+  box-shadow: 0 0 25px 2px rgba(244, 185, 66, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-neon-cyan {
+  background: linear-gradient(135deg, #00F0FF 0%, #0099FF 100%);
+  color: #050816;
+  font-weight: 800;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 20px -3px rgba(0, 240, 255, 0.4);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-neon-cyan:hover {
+  box-shadow: 0 0 25px 2px rgba(0, 240, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-neon-purple {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%);
+  color: #ffffff;
+  font-weight: 800;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 20px -3px rgba(168, 85, 247, 0.4);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-neon-purple:hover {
+  box-shadow: 0 0 25px 2px rgba(168, 85, 247, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Legacy .card-luxury mapped to dark neon glass */
 .card-luxury {
-  @apply bg-white rounded-xl border border-watch-border shadow-sm hover:shadow-luxury transition-all duration-200;
+  background: rgba(16, 24, 45, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s ease;
 }
 
-/* Standardized Product Image Container — 100% Uncropped Watch Display */
+.card-luxury:hover {
+  border-color: rgba(0, 207, 255, 0.3);
+  box-shadow: 0 12px 35px rgba(0, 207, 255, 0.12);
+  transform: translateY(-3px);
+}
+
+/* ──────────────── STANDARDIZED PRODUCT IMAGE CONTAINER ──────────────── */
+/* Complete uncropped watch display with futuristic glass framing */
 .product-image-container {
   width: 100%;
   height: 240px;
@@ -26,8 +128,11 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #f8f8f8;
-  padding: 12px;
+  background: radial-gradient(circle at center, rgba(30, 41, 69, 0.6) 0%, rgba(11, 16, 34, 0.9) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .product-image-container img {
@@ -36,4 +141,29 @@
   object-fit: contain;
   object-position: center;
   display: block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6));
+}
+
+.product-image-container:hover img {
+  transform: scale(1.06);
+}
+
+/* Subtle Neon Gradient Text */
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #00F0FF 0%, #0099FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #FDE047 0%, #F4B942 50%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, #C084FC 0%, #A855F7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

@@ -11,6 +11,7 @@ import SignupPage from '../pages/auth/SignupPage';
 import RoleDashboard from '../pages/dashboards/RoleDashboard';
 import InventoryManagerDashboardPage from '../pages/dashboards/InventoryManagerDashboardPage';
 import DeliveryManagerDashboardPage from '../pages/dashboards/DeliveryManagerDashboardPage';
+import DeliveryPartnerDashboardPage from '../pages/dashboards/DeliveryPartnerDashboardPage';
 import CustomerSupportDashboardPage from '../pages/dashboards/CustomerSupportDashboardPage';
 import ManufacturingHubPage from '../pages/customer/ManufacturingHubPage';
 import MobileAppHubPage from '../pages/mobile/MobileAppHubPage';
@@ -41,6 +42,9 @@ const RoleProtectedRoute = ({ allowedRoles = [], children }) => {
       if (userRole === ROLES.DELIVERY_MANAGER || userRole === 'Delivery Manager') {
         return <Navigate to="/delivery-manager/dashboard" replace />;
       }
+      if (userRole === ROLES.DELIVERY_PARTNER || userRole === 'Delivery Partner') {
+        return <Navigate to="/delivery-partner/dashboard" replace />;
+      }
       if (userRole === ROLES.CUSTOMER_SUPPORT || userRole === 'Customer Support Executive' || userRole === 'Customer Support') {
         return <Navigate to="/customer-support/dashboard" replace />;
       }
@@ -70,6 +74,9 @@ const RoleDashboardDispatcher = () => {
   }
   if (role === ROLES.DELIVERY_MANAGER || role === 'Delivery Manager') {
     return <Navigate to="/delivery-manager/dashboard" replace />;
+  }
+  if (role === ROLES.DELIVERY_PARTNER || role === 'Delivery Partner') {
+    return <Navigate to="/delivery-partner/dashboard" replace />;
   }
   if (role === ROLES.CUSTOMER_SUPPORT || role === 'Customer Support Executive' || role === 'Customer Support') {
     return <Navigate to="/customer-support/dashboard" replace />;
@@ -188,7 +195,25 @@ export const AppRoutes = () => {
         }
       />
 
-      {/* 5. Dedicated Customer Support Dashboard Routes */}
+      {/* 5. Dedicated Delivery Partner App Routes */}
+      <Route
+        path="/delivery-partner/dashboard"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.DELIVERY_PARTNER, 'Delivery Partner', ROLES.SUPER_ADMIN, 'Super Admin']}>
+            <DeliveryPartnerDashboardPage />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/delivery-partner"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.DELIVERY_PARTNER, 'Delivery Partner', ROLES.SUPER_ADMIN, 'Super Admin']}>
+            <DeliveryPartnerDashboardPage />
+          </RoleProtectedRoute>
+        }
+      />
+
+      {/* 6. Dedicated Customer Support Dashboard Routes */}
       <Route
         path="/customer-support/dashboard"
         element={

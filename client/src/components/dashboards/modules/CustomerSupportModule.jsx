@@ -434,14 +434,14 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
   return (
     <div className="space-y-6">
       {/* Upper Module Sub-Tab Switcher Bar (Matches User Reference Screenshots) */}
-      <div className="bg-white p-2 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between overflow-x-auto">
+      <div className="bg-[#10182D]/90 backdrop-blur-md p-2 rounded-2xl border border-white/10 shadow-sm flex items-center justify-between overflow-x-auto">
         <div className="flex items-center gap-2 min-w-max">
           <button
             onClick={() => switchTab('support_tickets')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'support_tickets'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>🎫</span> Support Tickets
@@ -455,7 +455,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'customer_queries'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>💬</span> Customer Queries
@@ -469,7 +469,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'orders_lookup'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>🔍</span> Orders Lookup
@@ -480,7 +480,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'returns_refunds'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>🔄</span> Returns & Refunds
@@ -494,7 +494,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'complaints'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>⚠️</span> Complaints & Escalations
@@ -508,7 +508,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'reviews_ratings'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>⭐</span> Reviews & Ratings
@@ -519,14 +519,14 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'customer_management'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>👥</span> Customer Management
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2 text-xs text-gray-500 font-semibold pr-3">
+        <div className="hidden lg:flex items-center gap-2 text-xs text-[#A6B1C8] font-semibold pr-3">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Helpdesk SLA: 99.1% First Contact Res.</span>
         </div>
@@ -539,29 +539,29 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
         <div className="space-y-5">
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Open Tickets</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Open Tickets</span>
               <p className="text-2xl font-black text-amber-600 mt-1">
                 {tickets.filter(t => t.status === 'Open').length}
               </p>
               <span className="text-[10px] text-amber-600 font-bold">● Immediate agent pickup</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">In Progress</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">In Progress</span>
               <p className="text-2xl font-black text-blue-600 mt-1">
                 {tickets.filter(t => t.status === 'In Progress').length}
               </p>
               <span className="text-[10px] text-blue-500 font-bold">● Awaiting warehouse/courier</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Escalated</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Escalated</span>
               <p className="text-2xl font-black text-rose-600 mt-1">
                 {tickets.filter(t => t.status === 'Escalated').length}
               </p>
               <span className="text-[10px] text-rose-500 font-bold">● Direct manager attention</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Avg Resolution SLA</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Avg Resolution SLA</span>
               <p className="text-2xl font-black text-emerald-600 mt-1">18 min</p>
               <span className="text-[10px] text-emerald-500 font-bold">● Fast response guarantee</span>
             </div>
@@ -570,8 +570,8 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
           {/* Ticket Desk Split View */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             {/* Left Queue */}
-            <div className="lg:col-span-5 bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex flex-col h-[560px]">
-              <div className="space-y-3 pb-3 border-b border-gray-100">
+            <div className="lg:col-span-5 bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm p-4 flex flex-col h-[560px]">
+              <div className="space-y-3 pb-3 border-b border-white/10">
                 <div className="relative">
                   <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -579,15 +579,15 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                     value={searchTicket}
                     onChange={(e) => setSearchTicket(e.target.value)}
                     placeholder="Search ticket #, order, customer..."
-                    className="w-full h-8 pl-9 pr-3 rounded-lg border border-gray-300 text-xs outline-none focus:border-watch-gold"
+                    className="w-full h-8 pl-9 pr-3 rounded-lg border border-white/15 text-xs outline-none focus:border-watch-gold"
                   />
                 </div>
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-gray-700">{filteredTickets.length} Tickets Found</span>
+                  <span className="font-bold text-[#A6B1C8]">{filteredTickets.length} Tickets Found</span>
                   <select
                     value={filterTicketStatus}
                     onChange={(e) => setFilterTicketStatus(e.target.value)}
-                    className="border border-gray-200 rounded px-2 py-0.5 text-[11px] outline-none"
+                    className="border border-white/10 rounded px-2 py-0.5 text-[11px] outline-none"
                   >
                     <option value="All">All Statuses</option>
                     <option value="Open">Open</option>
@@ -608,7 +608,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                       className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/50 shadow-sm'
-                          : 'border-gray-100 bg-white hover:bg-gray-50'
+                          : 'border-white/10 bg-[#10182D]/90 backdrop-blur-md hover:bg-[#0B1022]/80'
                       }`}
                     >
                       <div className="flex justify-between items-start">
@@ -621,8 +621,8 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                           {t.status}
                         </span>
                       </div>
-                      <h5 className="font-bold text-gray-900 text-xs mt-1 truncate">{t.subject}</h5>
-                      <p className="text-[11px] text-gray-500 mt-0.5 truncate">{t.customer} • {t.orderId}</p>
+                      <h5 className="font-bold text-[#F8FAFC] text-xs mt-1 truncate">{t.subject}</h5>
+                      <p className="text-[11px] text-[#A6B1C8] mt-0.5 truncate">{t.customer} • {t.orderId}</p>
                       <div className="flex justify-between items-center mt-2 text-[10px] text-gray-400">
                         <span className="font-medium text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
                           {t.category}
@@ -636,18 +636,18 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             </div>
 
             {/* Right Active Ticket Detail Thread */}
-            <div className="lg:col-span-7 bg-white rounded-2xl border border-gray-200 shadow-sm p-5 flex flex-col h-[560px]">
+            <div className="lg:col-span-7 bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm p-5 flex flex-col h-[560px]">
               {activeTicket ? (
                 <>
                   {/* Top Bar */}
-                  <div className="pb-3 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                  <div className="pb-3 border-b border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-sm text-gray-900">{activeTicket.subject}</h4>
+                        <h4 className="font-bold text-sm text-[#F8FAFC]">{activeTicket.subject}</h4>
                         <span className="font-mono text-xs font-bold text-watch-gold">{activeTicket.id}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">
-                        {activeTicket.customer} ({activeTicket.email}) • Order: <span className="font-mono font-bold text-gray-800">{activeTicket.orderId}</span>
+                      <p className="text-xs text-[#A6B1C8] mt-0.5">
+                        {activeTicket.customer} ({activeTicket.email}) • Order: <span className="font-mono font-bold text-[#F8FAFC]">{activeTicket.orderId}</span>
                       </p>
                     </div>
 
@@ -659,7 +659,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                           setActiveTicket(updated);
                           setTickets(tickets.map(t => t.id === updated.id ? updated : t));
                         }}
-                        className="text-xs font-bold border border-gray-300 rounded-lg px-2.5 py-1 outline-none"
+                        className="text-xs font-bold border border-white/15 rounded-lg px-2.5 py-1 outline-none"
                       >
                         <option value="Open">Status: Open</option>
                         <option value="In Progress">Status: In Progress</option>
@@ -681,7 +681,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                           <div
                             className={`max-w-md p-3.5 rounded-2xl text-xs space-y-1 shadow-sm ${
                               isCustomer
-                                ? 'bg-gray-100 text-gray-800 rounded-tl-sm'
+                                ? 'bg-white/5 text-[#F8FAFC] rounded-tl-sm'
                                 : 'bg-watch-navy-dark text-white rounded-tr-sm'
                             }`}
                           >
@@ -695,19 +695,19 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                   </div>
 
                   {/* Quick Preset Responses */}
-                  <div className="py-2 border-t border-gray-100 flex items-center gap-2 overflow-x-auto text-[11px]">
+                  <div className="py-2 border-t border-white/10 flex items-center gap-2 overflow-x-auto text-[11px]">
                     <span className="text-[10px] font-bold text-gray-400">Quick Reply:</span>
                     <button
                       type="button"
                       onClick={() => setReplyText('Hello! Your courier shipment has been marked for priority delivery this afternoon with BlueDart. AWB is active.')}
-                      className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded-full whitespace-nowrap text-gray-700"
+                      className="px-2.5 py-1 bg-white/5 hover:bg-gray-200 rounded-full whitespace-nowrap text-[#A6B1C8]"
                     >
                       🚀 Priority Dispatch Info
                     </button>
                     <button
                       type="button"
                       onClick={() => setReplyText('Thank you for reaching out! We have authorized your refund and the bank ARN reference has been sent to your email.')}
-                      className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded-full whitespace-nowrap text-gray-700"
+                      className="px-2.5 py-1 bg-white/5 hover:bg-gray-200 rounded-full whitespace-nowrap text-[#A6B1C8]"
                     >
                       💳 Refund Authorized
                     </button>
@@ -720,7 +720,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       placeholder="Type response to customer..."
-                      className="flex-1 h-10 px-3.5 rounded-xl border border-gray-300 text-xs outline-none focus:border-watch-gold"
+                      className="flex-1 h-10 px-3.5 rounded-xl border border-white/15 text-xs outline-none focus:border-watch-gold"
                     />
                     <button
                       type="submit"
@@ -746,8 +746,8 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
       {currentTab === 'customer_queries' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Inquiries List */}
-          <div className="lg:col-span-5 bg-white p-4 rounded-2xl border border-gray-200 shadow-sm space-y-3">
-            <h4 className="text-xs font-bold text-gray-900 flex items-center justify-between">
+          <div className="lg:col-span-5 bg-[#10182D]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-sm space-y-3">
+            <h4 className="text-xs font-bold text-[#F8FAFC] flex items-center justify-between">
               <span>Live Website Customer Inquiries</span>
               <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
                 Live Chat Active
@@ -762,19 +762,19 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                   className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
                     activeQuery?.id === q.id
                       ? 'border-watch-gold bg-amber-50/60 shadow-sm'
-                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                      : 'border-white/10 bg-[#10182D]/90 backdrop-blur-md hover:bg-[#0B1022]/80'
                   }`}
                 >
                   <div className="flex justify-between items-start">
-                    <span className="font-bold text-gray-900 text-xs">{q.customer} ({q.city})</span>
+                    <span className="font-bold text-[#F8FAFC] text-xs">{q.customer} ({q.city})</span>
                     <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-full ${
                       q.status === 'Replied' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                     }`}>
                       {q.status}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-700 mt-1 font-medium">{q.query}</p>
-                  <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center text-[10.5px]">
+                  <p className="text-xs text-[#A6B1C8] mt-1 font-medium">{q.query}</p>
+                  <div className="mt-2 pt-2 border-t border-white/10 flex justify-between items-center text-[10.5px]">
                     <span className="text-watch-gold font-bold">{q.interestedWatch}</span>
                     <span className="text-gray-400 font-mono">{q.time}</span>
                   </div>
@@ -784,13 +784,13 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
           </div>
 
           {/* Active Live Query Chat & Product Recommendation */}
-          <div className="lg:col-span-7 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-            <div className="pb-3 border-b border-gray-100 flex justify-between items-center">
+          <div className="lg:col-span-7 bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-4">
+            <div className="pb-3 border-b border-white/10 flex justify-between items-center">
               <div>
-                <h4 className="text-sm font-bold text-gray-900">
+                <h4 className="text-sm font-bold text-[#F8FAFC]">
                   Pre-Purchase Consultation: {activeQuery.customer}
                 </h4>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-[#A6B1C8]">
                   Browsing product: <span className="font-bold text-watch-navy-dark">{activeQuery.interestedWatch}</span> ({activeQuery.price})
                 </p>
               </div>
@@ -800,37 +800,37 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             </div>
 
             {/* Chat Bubble Box */}
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-3 min-h-[220px]">
+            <div className="bg-[#0B1022]/80 p-4 rounded-xl border border-white/10 space-y-3 min-h-[220px]">
               <div className="flex items-start gap-2.5">
                 <div className="w-8 h-8 rounded-full bg-watch-navy-dark text-watch-gold flex items-center justify-center font-bold text-xs">
                   {activeQuery.customer.charAt(0)}
                 </div>
-                <div className="bg-white p-3 rounded-2xl border border-gray-200 text-xs max-w-md shadow-sm">
-                  <p className="font-bold text-gray-900 text-[11px] mb-1">{activeQuery.customer}:</p>
-                  <p className="text-gray-700">{activeQuery.query}</p>
+                <div className="bg-[#10182D]/90 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-xs max-w-md shadow-sm">
+                  <p className="font-bold text-[#F8FAFC] text-[11px] mb-1">{activeQuery.customer}:</p>
+                  <p className="text-[#A6B1C8]">{activeQuery.query}</p>
                 </div>
               </div>
             </div>
 
             {/* One-Click WatchHub Recommender Cards */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-bold text-gray-500">Attach Product Card & EMI Breakdown:</span>
+              <span className="text-[11px] font-bold text-[#A6B1C8]">Attach Product Card & EMI Breakdown:</span>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <button
                   type="button"
                   onClick={() => setQueryReply(`Yes, we provide 0% No-Cost EMI on HDFC & ICICI cards starting at ₹31,041/mo for the ${activeQuery.interestedWatch}. Would you like an instant approval checkout link?`)}
-                  className="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 text-left"
+                  className="p-2.5 bg-[#0B1022]/80 hover:bg-white/5 rounded-xl border border-white/10 text-left"
                 >
-                  <span className="font-bold text-gray-900 block">💳 0% EMI Offer Preset</span>
-                  <span className="text-[10.5px] text-gray-500">Insert monthly split breakdown</span>
+                  <span className="font-bold text-[#F8FAFC] block">💳 0% EMI Offer Preset</span>
+                  <span className="text-[10.5px] text-[#A6B1C8]">Insert monthly split breakdown</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setQueryReply(`100% Genuine & Brand New with official manufacturer warranty card, green hologram seal, and authorized dealer certificate stamped in Switzerland.`)}
-                  className="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 text-left"
+                  className="p-2.5 bg-[#0B1022]/80 hover:bg-white/5 rounded-xl border border-white/10 text-left"
                 >
-                  <span className="font-bold text-gray-900 block">🛡️ Authenticity Guarantee</span>
-                  <span className="text-[10.5px] text-gray-500">Insert factory certificate proof</span>
+                  <span className="font-bold text-[#F8FAFC] block">🛡️ Authenticity Guarantee</span>
+                  <span className="text-[10.5px] text-[#A6B1C8]">Insert factory certificate proof</span>
                 </button>
               </div>
             </div>
@@ -842,7 +842,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                 value={queryReply}
                 onChange={(e) => setQueryReply(e.target.value)}
                 placeholder="Type real-time response to buyer..."
-                className="flex-1 h-10 px-3.5 rounded-xl border border-gray-300 text-xs outline-none focus:border-watch-gold"
+                className="flex-1 h-10 px-3.5 rounded-xl border border-white/15 text-xs outline-none focus:border-watch-gold"
               />
               <button
                 type="submit"
@@ -861,12 +861,12 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
       {currentTab === 'orders_lookup' && (
         <div className="space-y-5">
           {/* Lookup Input Bar */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
             <div>
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
                 <Search className="w-5 h-5 text-watch-gold" /> Deep Customer Order Lookup Engine
               </h4>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
                 Search by Order ID (#WH12548), Customer Phone, Email or Courier AWB.
               </p>
             </div>
@@ -876,7 +876,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                 value={lookupQuery}
                 onChange={(e) => setLookupQuery(e.target.value)}
                 placeholder="e.g. #WH12548 or +91 98765 43210"
-                className="flex-1 h-9 px-3 rounded-lg border border-gray-300 text-xs font-mono outline-none focus:border-watch-gold"
+                className="flex-1 h-9 px-3 rounded-lg border border-white/15 text-xs font-mono outline-none focus:border-watch-gold"
               />
               <button
                 onClick={() => {
@@ -891,12 +891,12 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
 
           {/* Detailed 360-degree Order Card */}
           {orderProfile && (
-            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-sm space-y-6">
               {/* Top Banner */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-gray-100">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-white/10">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xl font-extrabold text-gray-900 font-mono">{orderProfile.id}</span>
+                    <span className="text-xl font-extrabold text-[#F8FAFC] font-mono">{orderProfile.id}</span>
                     <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">
                       {orderProfile.payment.status}
                     </span>
@@ -904,13 +904,13 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                       {orderProfile.customer.tier}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Placed on {orderProfile.date}</p>
+                  <p className="text-xs text-[#A6B1C8] mt-1">Placed on {orderProfile.date}</p>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => alert('📄 Tax Invoice PDF generated and emailed to ' + orderProfile.customer.email)}
-                    className="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-lg flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 bg-white/5 hover:bg-gray-200 text-[#F8FAFC] text-xs font-bold rounded-lg flex items-center gap-1.5"
                   >
                     <FileText className="w-3.5 h-3.5" /> Resend Invoice
                   </button>
@@ -926,46 +926,46 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
               {/* 3 Columns: Customer & Address, Watch & Serial, Payment & Carrier */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
                 {/* Col 1 */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
-                  <h5 className="font-bold text-gray-900 flex items-center gap-1.5">
+                <div className="bg-[#0B1022]/80 p-4 rounded-xl border border-white/10 space-y-2">
+                  <h5 className="font-bold text-[#F8FAFC] flex items-center gap-1.5">
                     <User className="w-4 h-4 text-watch-gold" /> Customer & Shipping
                   </h5>
-                  <p className="font-bold text-gray-800">{orderProfile.customer.name}</p>
-                  <p className="text-gray-500">{orderProfile.customer.email}</p>
-                  <p className="text-gray-500">{orderProfile.customer.phone}</p>
-                  <div className="pt-2 border-t border-gray-200">
+                  <p className="font-bold text-[#F8FAFC]">{orderProfile.customer.name}</p>
+                  <p className="text-[#A6B1C8]">{orderProfile.customer.email}</p>
+                  <p className="text-[#A6B1C8]">{orderProfile.customer.phone}</p>
+                  <div className="pt-2 border-t border-white/10">
                     <span className="text-[10px] text-gray-400 uppercase font-bold block">Delivery Address:</span>
-                    <p className="text-gray-700 mt-0.5 leading-relaxed">{orderProfile.address}</p>
+                    <p className="text-[#A6B1C8] mt-0.5 leading-relaxed">{orderProfile.address}</p>
                   </div>
                 </div>
 
                 {/* Col 2 */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
-                  <h5 className="font-bold text-gray-900 flex items-center gap-1.5">
+                <div className="bg-[#0B1022]/80 p-4 rounded-xl border border-white/10 space-y-2">
+                  <h5 className="font-bold text-[#F8FAFC] flex items-center gap-1.5">
                     <Package className="w-4 h-4 text-watch-gold" /> Watch Item & Serial
                   </h5>
                   {orderProfile.items.map((it, idx) => (
                     <div key={idx} className="space-y-1">
                       <p className="font-bold text-watch-navy-dark text-sm">{it.name}</p>
-                      <p className="font-mono text-gray-500">SKU: {it.sku}</p>
-                      <p className="font-mono text-gray-700">Serial No: {it.serial}</p>
+                      <p className="font-mono text-[#A6B1C8]">SKU: {it.sku}</p>
+                      <p className="font-mono text-[#A6B1C8]">Serial No: {it.serial}</p>
                       <p className="text-base font-extrabold text-emerald-600 pt-1">{it.price}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* Col 3 */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
-                  <h5 className="font-bold text-gray-900 flex items-center gap-1.5">
+                <div className="bg-[#0B1022]/80 p-4 rounded-xl border border-white/10 space-y-2">
+                  <h5 className="font-bold text-[#F8FAFC] flex items-center gap-1.5">
                     <CreditCard className="w-4 h-4 text-watch-gold" /> Payment & Logistics
                   </h5>
-                  <p className="text-gray-700">
+                  <p className="text-[#A6B1C8]">
                     Method: <span className="font-bold">{orderProfile.payment.method}</span>
                   </p>
-                  <p className="font-mono text-[11px] text-gray-500">Txn: {orderProfile.payment.txnId}</p>
-                  <div className="pt-2 border-t border-gray-200 space-y-1">
-                    <p className="text-gray-700">
-                      Carrier: <span className="font-bold text-gray-900">{orderProfile.shipping.carrier}</span>
+                  <p className="font-mono text-[11px] text-[#A6B1C8]">Txn: {orderProfile.payment.txnId}</p>
+                  <div className="pt-2 border-t border-white/10 space-y-1">
+                    <p className="text-[#A6B1C8]">
+                      Carrier: <span className="font-bold text-[#F8FAFC]">{orderProfile.shipping.carrier}</span>
                     </p>
                     <p className="text-watch-gold font-mono font-bold">AWB: {orderProfile.shipping.awb}</p>
                     <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-bold text-[10px]">
@@ -986,40 +986,40 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
         <div className="space-y-5">
           {/* Quick Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Pending Authorizations</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Pending Authorizations</span>
               <p className="text-2xl font-black text-rose-600 mt-1">{refunds.length}</p>
               <span className="text-[10px] text-rose-500 font-bold">● Requires finance sign-off</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Processed This Month</span>
-              <p className="text-2xl font-black text-gray-900 mt-1">₹8,34,995</p>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Processed This Month</span>
+              <p className="text-2xl font-black text-[#F8FAFC] mt-1">₹8,34,995</p>
               <span className="text-[10px] text-emerald-500 font-bold">● 100% SLA compliant</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Avg Settlement Speed</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Avg Settlement Speed</span>
               <p className="text-2xl font-black text-blue-600 mt-1">24 min</p>
               <span className="text-[10px] text-blue-500 font-bold">● Instant UPI webhook</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Gateway Failures</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Gateway Failures</span>
               <p className="text-2xl font-black text-emerald-600 mt-1">0</p>
               <span className="text-[10px] text-emerald-500 font-bold">● Razorpay healthy</span>
             </div>
           </div>
 
           {/* Refunds Management Table */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-white/10 flex justify-between items-center">
               <div>
-                <h4 className="text-xs font-bold text-gray-900">Refund Authorization & Bank ARN Tracker</h4>
-                <p className="text-[11px] text-gray-500">Trigger immediate UPI returns or bank credit for verified returns.</p>
+                <h4 className="text-xs font-bold text-[#F8FAFC]">Refund Authorization & Bank ARN Tracker</h4>
+                <p className="text-[11px] text-[#A6B1C8]">Trigger immediate UPI returns or bank credit for verified returns.</p>
               </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-100">
+                <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10px] border-b border-white/10">
                   <tr>
                     <th className="py-3 px-4">Refund ID & Order</th>
                     <th className="py-3 px-4">Customer</th>
@@ -1031,16 +1031,16 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {refunds.map((rfd) => (
-                    <tr key={rfd.id} className="hover:bg-gray-50/80 transition-colors">
+                    <tr key={rfd.id} className="hover:bg-[#0B1022]/80/80 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-mono font-bold text-gray-900 block">{rfd.id}</span>
+                        <span className="font-mono font-bold text-[#F8FAFC] block">{rfd.id}</span>
                         <span className="text-[10px] text-gray-400">Order: {rfd.orderId}</span>
                       </td>
-                      <td className="py-3 px-4 font-bold text-gray-900">{rfd.customer}</td>
+                      <td className="py-3 px-4 font-bold text-[#F8FAFC]">{rfd.customer}</td>
                       <td className="py-3 px-4 font-black text-emerald-600 text-sm">{rfd.amount}</td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-800 block">{rfd.method}</span>
-                        <span className="font-mono text-[10px] text-gray-500">ARN: {rfd.arn}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{rfd.method}</span>
+                        <span className="font-mono text-[10px] text-[#A6B1C8]">ARN: {rfd.arn}</span>
                       </td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -1079,12 +1079,12 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
           ========================================================================= */}
       {currentTab === 'complaints' && (
         <div className="space-y-5">
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex justify-between items-center">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex justify-between items-center">
             <div>
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-rose-600" /> High-Severity Customer Complaints & Escalations
               </h4>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
                 Priority P0/P1 cases requiring supervisor intervention, apologies or compensation vouchers.
               </p>
             </div>
@@ -1094,9 +1094,9 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
             {complaints.map((cmp) => (
               <div
                 key={cmp.id}
-                className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3"
+                className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-3"
               >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-gray-100">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-white/10">
                   <div className="flex items-center gap-2">
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
                       cmp.severity.includes('P0')
@@ -1107,8 +1107,8 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                     }`}>
                       {cmp.severity}
                     </span>
-                    <span className="font-mono font-bold text-gray-900 text-sm">{cmp.id}</span>
-                    <span className="text-xs text-gray-500">Order: {cmp.orderId}</span>
+                    <span className="font-mono font-bold text-[#F8FAFC] text-sm">{cmp.id}</span>
+                    <span className="text-xs text-[#A6B1C8]">Order: {cmp.orderId}</span>
                   </div>
 
                   <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
@@ -1119,17 +1119,17 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                 </div>
 
                 <div className="text-xs space-y-1">
-                  <p className="font-bold text-gray-900 text-sm">{cmp.issue}</p>
-                  <p className="text-gray-500">Customer: <span className="font-bold text-gray-800">{cmp.customer}</span> • Phone: {cmp.phone}</p>
-                  <p className="text-gray-700 bg-gray-50 p-2.5 rounded-xl border border-gray-200">
-                    <span className="font-bold text-gray-900">Action Log:</span> {cmp.actionTaken}
+                  <p className="font-bold text-[#F8FAFC] text-sm">{cmp.issue}</p>
+                  <p className="text-[#A6B1C8]">Customer: <span className="font-bold text-[#F8FAFC]">{cmp.customer}</span> • Phone: {cmp.phone}</p>
+                  <p className="text-[#A6B1C8] bg-[#0B1022]/80 p-2.5 rounded-xl border border-white/10">
+                    <span className="font-bold text-[#F8FAFC]">Action Log:</span> {cmp.actionTaken}
                   </p>
                 </div>
 
                 <div className="flex justify-end gap-2 pt-2">
                   <button
                     onClick={() => alert(`🎁 ₹1,000 compensation coupon (COMP1000) generated and emailed to ${cmp.customer}!`)}
-                    className="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-xs font-bold flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 bg-white/5 hover:bg-gray-200 text-[#F8FAFC] rounded-lg text-xs font-bold flex items-center gap-1.5"
                   >
                     <Gift className="w-3.5 h-3.5 text-watch-gold" /> Issue Goodwill Voucher
                   </button>
@@ -1153,12 +1153,12 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
           ========================================================================= */}
       {currentTab === 'reviews_ratings' && (
         <div className="space-y-5">
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex justify-between items-center">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex justify-between items-center">
             <div>
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
                 <Star className="w-5 h-5 text-watch-gold fill-watch-gold" /> Customer Review Moderation Queue
               </h4>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
                 Review, approve, or reply to authentic buyer feedback and unboxing photos.
               </p>
             </div>
@@ -1166,7 +1166,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {reviews.map((rev) => (
-              <div key={rev.id} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3 flex flex-col justify-between">
+              <div key={rev.id} className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-3 flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-start">
                     <div className="flex text-amber-500">
@@ -1181,13 +1181,13 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                     </span>
                   </div>
 
-                  <h5 className="font-bold text-gray-900 text-xs mt-2">{rev.title}</h5>
-                  <p className="text-xs text-gray-600 mt-1 leading-relaxed">"{rev.comment}"</p>
+                  <h5 className="font-bold text-[#F8FAFC] text-xs mt-2">{rev.title}</h5>
+                  <p className="text-xs text-[#A6B1C8] mt-1 leading-relaxed">"{rev.comment}"</p>
                 </div>
 
-                <div className="pt-3 border-t border-gray-100 text-xs space-y-2">
+                <div className="pt-3 border-t border-white/10 text-xs space-y-2">
                   <div className="flex justify-between items-center text-[11px]">
-                    <span className="font-bold text-gray-900">{rev.customer}</span>
+                    <span className="font-bold text-[#F8FAFC]">{rev.customer}</span>
                     <span className="text-gray-400 font-mono text-[10px]">{rev.date}</span>
                   </div>
                   <span className="text-[10.5px] font-bold text-watch-gold block truncate">{rev.watch}</span>
@@ -1203,7 +1203,7 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                     ) : (
                       <button
                         onClick={() => alert(`Replied as WatchHub Official to review ${rev.id}`)}
-                        className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg text-xs"
+                        className="px-3 py-1 bg-white/5 hover:bg-gray-200 text-[#A6B1C8] font-bold rounded-lg text-xs"
                       >
                         Reply as WatchHub
                       </button>
@@ -1221,12 +1221,12 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
           ========================================================================= */}
       {currentTab === 'customer_management' && (
         <div className="space-y-5">
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
             <div>
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
                 <User className="w-5 h-5 text-watch-gold" /> Customer 360° Directory & Lifetime Value
               </h4>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
                 Manage registered customer profiles, VIP membership tiers, and purchase histories.
               </p>
             </div>
@@ -1237,15 +1237,15 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                 value={searchCustomer}
                 onChange={(e) => setSearchCustomer(e.target.value)}
                 placeholder="Search customer, email, city..."
-                className="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-300 text-xs outline-none focus:border-watch-gold"
+                className="w-full h-9 pl-9 pr-3 rounded-lg border border-white/15 text-xs outline-none focus:border-watch-gold"
               />
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-100">
+                <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10px] border-b border-white/10">
                   <tr>
                     <th className="py-3 px-4">Customer Name & ID</th>
                     <th className="py-3 px-4">Contact Info</th>
@@ -1260,33 +1260,33 @@ export const CustomerSupportModule = ({ activeSubTab = 'support_tickets', onSubT
                   {customers
                     .filter(c => c.name.toLowerCase().includes(searchCustomer.toLowerCase()) || c.city.toLowerCase().includes(searchCustomer.toLowerCase()))
                     .map((cust) => (
-                      <tr key={cust.id} className="hover:bg-gray-50/80 transition-colors">
+                      <tr key={cust.id} className="hover:bg-[#0B1022]/80/80 transition-colors">
                         <td className="py-3 px-4">
-                          <span className="font-bold text-gray-900 block">{cust.name}</span>
+                          <span className="font-bold text-[#F8FAFC] block">{cust.name}</span>
                           <span className="font-mono text-[10px] text-gray-400">{cust.id}</span>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="text-gray-800 block">{cust.email}</span>
-                          <span className="text-gray-500 text-[10px]">{cust.phone}</span>
+                          <span className="text-[#F8FAFC] block">{cust.email}</span>
+                          <span className="text-[#A6B1C8] text-[10px]">{cust.phone}</span>
                         </td>
-                        <td className="py-3 px-4 font-medium text-gray-700">{cust.city}</td>
+                        <td className="py-3 px-4 font-medium text-[#A6B1C8]">{cust.city}</td>
                         <td className="py-3 px-4">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             cust.tier.includes('Platinum')
                               ? 'bg-purple-100 text-purple-800'
                               : cust.tier.includes('Gold')
                               ? 'bg-amber-100 text-amber-800'
-                              : 'bg-gray-100 text-gray-700'
+                              : 'bg-white/5 text-[#A6B1C8]'
                           }`}>
                             {cust.tier}
                           </span>
                         </td>
-                        <td className="py-3 px-4 font-bold text-gray-800">{cust.totalOrders} Orders</td>
+                        <td className="py-3 px-4 font-bold text-[#F8FAFC]">{cust.totalOrders} Orders</td>
                         <td className="py-3 px-4 font-black text-emerald-600 text-sm">{cust.ltv}</td>
                         <td className="py-3 px-4">
                           <button
                             onClick={() => alert(`VIP Profile for ${cust.name}: Total Spend ${cust.ltv}, 0 return disputes.`)}
-                            className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded text-xs"
+                            className="px-2.5 py-1 bg-white/5 hover:bg-gray-200 text-[#F8FAFC] font-bold rounded text-xs"
                           >
                             View 360° Profile
                           </button>

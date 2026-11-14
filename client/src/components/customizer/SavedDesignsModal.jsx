@@ -20,7 +20,7 @@ export const SavedDesignsModal = ({
               🔖
             </span>
             <div>
-              <h3 className="text-base font-bold text-gray-900">Your Saved Watch Designs</h3>
+              <h3 className="text-base font-bold text-[#F8FAFC]">Your Saved Watch Designs</h3>
               <p className="text-[11px] text-gray-400">Load or revisit previous bespoke configurations</p>
             </div>
           </div>
@@ -28,7 +28,7 @@ export const SavedDesignsModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center cursor-pointer transition-colors"
+            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-[#A6B1C8] flex items-center justify-center cursor-pointer transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -59,8 +59,8 @@ export const SavedDesignsModal = ({
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-bold text-gray-900">{design.name || 'Custom Timepiece'}</h4>
-                    <p className="text-[10.5px] text-gray-500">
+                    <h4 className="text-xs font-bold text-[#F8FAFC]">{design.name || 'Custom Timepiece'}</h4>
+                    <p className="text-[10.5px] text-[#A6B1C8]">
                       {design.dial?.shape} • {design.dial?.size}mm • {design.case?.material} • {design.strap?.material}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5 text-[10px] text-gray-400">

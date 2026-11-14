@@ -42,19 +42,19 @@ export const OrdersManagementModule = () => {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm">
         <div>
-          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-[#F8FAFC] flex items-center gap-2">
             <span>🛒</span> Orders Fulfillment & Lifecycle Management
           </h3>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-[#A6B1C8] mt-0.5">
             Monitor, pack, assign courier tracking and process customer orders across India.
           </p>
         </div>
       </div>
 
       {/* Filter and Search */}
-      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between text-xs">
+      <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between text-xs">
         <div className="relative w-full sm:w-72">
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -62,17 +62,17 @@ export const OrdersManagementModule = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search Order ID, customer, city..."
-            className="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-300 outline-none focus:border-watch-gold"
+            className="w-full h-9 pl-9 pr-3 rounded-lg border border-white/15 outline-none focus:border-watch-gold"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Filter className="w-4 h-4 text-gray-400" />
-          <span className="text-gray-500 font-semibold">Status:</span>
+          <span className="text-[#A6B1C8] font-semibold">Status:</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-9 px-3 border border-gray-300 rounded-lg outline-none focus:border-watch-gold bg-white text-gray-800"
+            className="h-9 px-3 border border-white/15 rounded-lg outline-none focus:border-watch-gold bg-[#10182D]/90 backdrop-blur-md text-[#F8FAFC]"
           >
             <option value="All">All Statuses ({orders.length})</option>
             <option value="Processing">Processing</option>
@@ -85,10 +85,10 @@ export const OrdersManagementModule = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase text-[10.5px]">
+            <thead className="bg-[#0B1022]/80 border-b border-white/10 text-[#A6B1C8] font-semibold uppercase text-[10.5px]">
               <tr>
                 <th className="py-3.5 px-4">Order ID</th>
                 <th className="py-3.5 px-4">Customer & City</th>
@@ -102,16 +102,16 @@ export const OrdersManagementModule = () => {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredOrders.map((o) => (
-                <tr key={o.id} className="hover:bg-gray-50/80 transition-colors">
-                  <td className="py-3 px-4 font-bold font-mono text-gray-900">{o.id}</td>
+                <tr key={o.id} className="hover:bg-[#0B1022]/80/80 transition-colors">
+                  <td className="py-3 px-4 font-bold font-mono text-[#F8FAFC]">{o.id}</td>
                   <td className="py-3 px-4">
-                    <p className="font-bold text-gray-900">{o.customer}</p>
-                    <p className="text-[11px] text-gray-500">{o.city}</p>
+                    <p className="font-bold text-[#F8FAFC]">{o.customer}</p>
+                    <p className="text-[11px] text-[#A6B1C8]">{o.city}</p>
                   </td>
-                  <td className="py-3 px-4 text-gray-700 max-w-[180px] truncate">{o.items}</td>
-                  <td className="py-3 px-4 font-bold text-gray-900">₹{o.amount.toLocaleString('en-IN')}</td>
+                  <td className="py-3 px-4 text-[#A6B1C8] max-w-[180px] truncate">{o.items}</td>
+                  <td className="py-3 px-4 font-bold text-[#F8FAFC]">₹{o.amount.toLocaleString('en-IN')}</td>
                   <td className="py-3 px-4">
-                    <span className="text-[10px] font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-semibold text-[#A6B1C8] bg-white/5 px-2 py-0.5 rounded-full">
                       {o.payment}
                     </span>
                   </td>
@@ -130,13 +130,13 @@ export const OrdersManagementModule = () => {
                     </select>
                   </td>
                   <td className="py-3 px-4">
-                    <p className="text-gray-800 font-medium">{o.courier}</p>
+                    <p className="text-[#F8FAFC] font-medium">{o.courier}</p>
                     <p className="text-[10px] text-gray-400 font-mono">{o.trackingId}</p>
                   </td>
                   <td className="py-3 px-4 text-right">
                     <button
                       onClick={() => setSelectedOrder(o)}
-                      className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-watch-gold"
+                      className="p-1.5 hover:bg-white/5 rounded text-[#A6B1C8] hover:text-watch-gold"
                       title="View Order Details"
                     >
                       <Eye className="w-4 h-4" />
@@ -152,10 +152,10 @@ export const OrdersManagementModule = () => {
       {/* Order Detail Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
-            <div className="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <div className="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
               <div>
-                <h3 className="text-base font-bold text-gray-900">Order Invoice {selectedOrder.id}</h3>
+                <h3 className="text-base font-bold text-[#F8FAFC]">Order Invoice {selectedOrder.id}</h3>
                 <p className="text-xs text-gray-400">Date: {selectedOrder.date}</p>
               </div>
               <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${getStatusBadge(selectedOrder.status)}`}>
@@ -164,29 +164,29 @@ export const OrdersManagementModule = () => {
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3 bg-gray-50 rounded-xl space-y-1">
-                <p className="font-bold text-gray-800">Customer Details:</p>
-                <p className="text-gray-600">{selectedOrder.customer} ({selectedOrder.email})</p>
-                <p className="text-gray-600">Shipping Location: {selectedOrder.city}, India</p>
+              <div className="p-3 bg-[#0B1022]/80 rounded-xl space-y-1">
+                <p className="font-bold text-[#F8FAFC]">Customer Details:</p>
+                <p className="text-[#A6B1C8]">{selectedOrder.customer} ({selectedOrder.email})</p>
+                <p className="text-[#A6B1C8]">Shipping Location: {selectedOrder.city}, India</p>
               </div>
 
-              <div className="p-3 bg-gray-50 rounded-xl space-y-1">
-                <p className="font-bold text-gray-800">Purchased Timepiece:</p>
-                <p className="text-gray-700">{selectedOrder.items}</p>
+              <div className="p-3 bg-[#0B1022]/80 rounded-xl space-y-1">
+                <p className="font-bold text-[#F8FAFC]">Purchased Timepiece:</p>
+                <p className="text-[#A6B1C8]">{selectedOrder.items}</p>
                 <p className="font-bold text-watch-navy mt-1">Total Paid: ₹{selectedOrder.amount.toLocaleString('en-IN')} via {selectedOrder.payment}</p>
               </div>
 
-              <div className="p-3 bg-gray-50 rounded-xl space-y-1">
-                <p className="font-bold text-gray-800">Logistics & Tracking:</p>
-                <p className="text-gray-600">Carrier: {selectedOrder.courier}</p>
-                <p className="text-gray-600 font-mono">Waybill Tracking ID: {selectedOrder.trackingId}</p>
+              <div className="p-3 bg-[#0B1022]/80 rounded-xl space-y-1">
+                <p className="font-bold text-[#F8FAFC]">Logistics & Tracking:</p>
+                <p className="text-[#A6B1C8]">Carrier: {selectedOrder.courier}</p>
+                <p className="text-[#A6B1C8] font-mono">Waybill Tracking ID: {selectedOrder.trackingId}</p>
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-5 mt-4 border-t border-gray-100">
+            <div className="flex justify-between items-center pt-5 mt-4 border-t border-white/10">
               <button
                 onClick={() => alert(`Printing official tax invoice for ${selectedOrder.id}...`)}
-                className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-watch-gold font-semibold"
+                className="flex items-center gap-1.5 text-xs text-[#A6B1C8] hover:text-watch-gold font-semibold"
               >
                 <Printer className="w-4 h-4" /> Print Tax Invoice
               </button>

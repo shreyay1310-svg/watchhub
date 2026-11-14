@@ -34,13 +34,13 @@ export const AppUpdateModal = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in font-poppins">
-      <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col relative animate-scale-up">
+      <div className="bg-[#10182D]/95 backdrop-blur-2xl rounded-3xl max-w-md w-full overflow-hidden shadow-[0_0_50px_rgba(0,207,255,0.25)] border border-[#00CFFF]/40 flex flex-col relative animate-scale-up text-[#F8FAFC]">
         {/* Luxury Navy Header Banner */}
         <div className="bg-gradient-to-r from-watch-navy-dark via-watch-navy to-gray-900 p-6 text-white relative overflow-hidden border-b border-watch-gold/20">
           {!isDownloading && (
             <button
               onClick={() => setShowUpdateModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#10182D]/10 hover:bg-[#10182D]/20 text-white flex items-center justify-center transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -68,21 +68,21 @@ export const AppUpdateModal = () => {
         {/* Content Body */}
         <div className="p-6 space-y-4 text-xs">
           {/* Status & Size Info */}
-          <div className="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
-            <span className="text-gray-600 font-medium flex items-center gap-1.5">
+          <div className="flex justify-between items-center bg-[#0B1022]/80 p-3 rounded-xl border border-white/10">
+            <span className="text-[#A6B1C8] font-medium flex items-center gap-1.5">
               <Smartphone className="w-4 h-4 text-watch-navy-dark" /> Android APK Package
             </span>
-            <span className="font-mono font-bold text-gray-900">{fileSize}</span>
+            <span className="font-mono font-bold text-[#F8FAFC]">{fileSize}</span>
           </div>
 
           {/* Changelog Section */}
           <div className="space-y-2">
-            <h4 className="font-bold text-gray-900 flex items-center gap-1.5 text-xs">
+            <h4 className="font-bold text-[#F8FAFC] flex items-center gap-1.5 text-xs">
               <Sparkles className="w-3.5 h-3.5 text-watch-gold" /> What's New in v{latestVersion}:
             </h4>
             <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
               {changelog.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2 text-gray-600 text-[11.5px]">
+                <div key={idx} className="flex items-start gap-2 text-[#A6B1C8] text-[11.5px]">
                   <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
                   <span className="leading-relaxed">{item}</span>
                 </div>
@@ -92,15 +92,15 @@ export const AppUpdateModal = () => {
 
           {/* Download Progress State */}
           {isDownloading && (
-            <div className="space-y-2 pt-2 border-t border-gray-100">
-              <div className="flex justify-between text-xs font-bold text-gray-800">
+            <div className="space-y-2 pt-2 border-t border-white/10">
+              <div className="flex justify-between text-xs font-bold text-[#F8FAFC]">
                 <span className="flex items-center gap-1.5">
                   <RefreshCw className="w-3.5 h-3.5 text-amber-500 animate-spin" />
                   Downloading WatchHub v{latestVersion}...
                 </span>
                 <span className="font-mono text-watch-navy-dark">{downloadProgress}%</span>
               </div>
-              <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden p-0.5">
+              <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden p-0.5">
                 <div
                   className="bg-gradient-to-r from-watch-navy to-watch-gold h-full rounded-full transition-all duration-300"
                   style={{ width: `${downloadProgress}%` }}
@@ -131,7 +131,7 @@ export const AppUpdateModal = () => {
                 <button
                   type="button"
                   onClick={() => setShowUpdateModal(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-bold hover:bg-gray-50 transition-colors text-xs"
+                  className="flex-1 py-2.5 rounded-xl border border-gray-300 text-[#A6B1C8] font-bold hover:bg-[#0B1022]/80 transition-colors text-xs"
                 >
                   Later
                 </button>

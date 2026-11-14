@@ -14,8 +14,8 @@ export const STEPS = [
 
 export const StepNavigator = ({ currentStep, onSelectStep, completedSteps = [] }) => {
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-4 sm:p-5 font-poppins">
-      <h3 className="text-base font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center justify-between">
+    <div className="bg-[#10182D]/90 backdrop-blur-xl rounded-3xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.6)] p-4 sm:p-5 font-poppins text-[#F8FAFC]">
+      <h3 className="text-base font-bold text-[#F8FAFC] pb-3 border-b border-white/10 flex items-center justify-between">
         <span>Build Your Watch</span>
         <span className="text-xs text-watch-gold font-semibold">Step {currentStep} of 8</span>
       </h3>
@@ -33,7 +33,7 @@ export const StepNavigator = ({ currentStep, onSelectStep, completedSteps = [] }
               className={`w-full text-left px-3.5 py-2.5 rounded-xl flex items-center justify-between transition-all cursor-pointer ${
                 isActive
                   ? 'bg-amber-50/90 text-amber-950 border border-watch-gold/40 shadow-xs font-bold'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#F8FAFC] font-medium'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -43,7 +43,7 @@ export const StepNavigator = ({ currentStep, onSelectStep, completedSteps = [] }
                       ? 'bg-watch-gold text-black shadow-xs'
                       : isDone
                       ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-gray-100 text-gray-500'
+                      : 'bg-white/5 text-[#A6B1C8] border border-white/10'
                   }`}
                 >
                   {isDone && !isActive ? <Check className="w-3.5 h-3.5 stroke-[2.5]" /> : step.id}

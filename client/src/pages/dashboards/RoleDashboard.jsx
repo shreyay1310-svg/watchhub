@@ -398,78 +398,78 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
               </div>
             </div>
 
-            {/* 3. Five KPI Metric Cards */}
+            {/* 3. Five KPI Metric Cards in Neon Luxury */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4">
               {/* Total Products */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition-shadow">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(244,185,66,0.1)] hover:border-[#F4B942]/50 hover:shadow-[0_0_25px_rgba(244,185,66,0.25)] transition-all">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-500">Total Products</span>
-                  <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
+                  <span className="text-xs font-medium text-[#A6B1C8]">Total Products</span>
+                  <div className="w-8 h-8 rounded-xl bg-[#F4B942]/15 text-[#F4B942] border border-[#F4B942]/30 flex items-center justify-center text-sm shadow-[0_0_8px_rgba(244,185,66,0.3)]">
                     <Box className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-bold font-sans text-gray-900 mt-2">320</div>
-                <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-1">
+                <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">320</div>
+                <div className="flex items-center gap-1 text-[11px] font-bold text-[#39F5A5] mt-1">
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>+8% <span className="font-normal text-gray-400">vs. last 30 days</span></span>
                 </div>
               </div>
 
               {/* Total Orders */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition-shadow">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(0,240,255,0.1)] hover:border-[#00F0FF]/50 hover:shadow-[0_0_25px_rgba(0,240,255,0.25)] transition-all">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-500">Total Orders</span>
-                  <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm">
+                  <span className="text-xs font-medium text-[#A6B1C8]">Total Orders</span>
+                  <div className="w-8 h-8 rounded-xl bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30 flex items-center justify-center text-sm shadow-[0_0_8px_rgba(0,240,255,0.3)]">
                     <ShoppingCart className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-bold font-sans text-gray-900 mt-2">1,248</div>
-                <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-1">
+                <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">1,248</div>
+                <div className="flex items-center gap-1 text-[11px] font-bold text-[#00F0FF] mt-1">
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>+12% <span className="font-normal text-gray-400">vs. last 30 days</span></span>
                 </div>
               </div>
 
               {/* Total Customers */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition-shadow">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(168,85,247,0.1)] hover:border-[#A855F7]/50 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] transition-all">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-500">Total Customers</span>
-                  <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm">
+                  <span className="text-xs font-medium text-[#A6B1C8]">Total Customers</span>
+                  <div className="w-8 h-8 rounded-xl bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30 flex items-center justify-center text-sm shadow-[0_0_8px_rgba(168,85,247,0.3)]">
                     <Users className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-bold font-sans text-gray-900 mt-2">5,320</div>
-                <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-1">
+                <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">5,320</div>
+                <div className="flex items-center gap-1 text-[11px] font-bold text-[#A855F7] mt-1">
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>+18% <span className="font-normal text-gray-400">vs. last 30 days</span></span>
                 </div>
               </div>
 
               {/* Total Sales */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition-shadow">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(244,185,66,0.1)] hover:border-[#F4B942]/50 hover:shadow-[0_0_25px_rgba(244,185,66,0.25)] transition-all">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-500">Total Sales</span>
-                  <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
+                  <span className="text-xs font-medium text-[#A6B1C8]">Total Sales</span>
+                  <div className="w-8 h-8 rounded-xl bg-[#F4B942]/15 text-[#F4B942] border border-[#F4B942]/30 flex items-center justify-center text-sm shadow-[0_0_8px_rgba(244,185,66,0.3)]">
                     <CreditCard className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-bold font-sans text-gray-900 mt-2">₹12,48,000</div>
-                <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-1">
+                <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">₹12,48,000</div>
+                <div className="flex items-center gap-1 text-[11px] font-bold text-[#39F5A5] mt-1">
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>+22% <span className="font-normal text-gray-400">vs. last 30 days</span></span>
                 </div>
               </div>
 
               {/* Active Offers */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition-shadow">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(57,245,165,0.1)] hover:border-[#39F5A5]/50 hover:shadow-[0_0_25px_rgba(57,245,165,0.25)] transition-all">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-500">Active Offers</span>
-                  <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                  <span className="text-xs font-medium text-[#A6B1C8]">Active Offers</span>
+                  <div className="w-8 h-8 rounded-xl bg-[#39F5A5]/15 text-[#39F5A5] border border-[#39F5A5]/30 flex items-center justify-center text-sm shadow-[0_0_8px_rgba(57,245,165,0.3)]">
                     <Tag className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-bold font-sans text-gray-900 mt-2">18</div>
-                <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-1">
+                <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">18</div>
+                <div className="flex items-center gap-1 text-[11px] font-bold text-[#39F5A5] mt-1">
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>+5% <span className="font-normal text-gray-400">vs. last 30 days</span></span>
                 </div>
@@ -479,15 +479,15 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
             {/* 4. Middle Row (3 Cards): Sales Overview + Orders Status + Inventory Alerts */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
               {/* Sales Overview Area Chart (lg:col-span-5) */}
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-5 flex flex-col justify-between">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-5 flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-amber-50 text-[#D6A63C] flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-[#F4B942]/15 text-[#F4B942] flex items-center justify-center">
                       <BarChart3 className="w-4 h-4" />
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">Sales Overview</h3>
+                    <h3 className="text-sm font-bold text-[#F8FAFC]">Sales Overview</h3>
                   </div>
-                  <span className="text-xs font-semibold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-100">
+                  <span className="text-xs font-semibold text-[#A6B1C8] bg-[#0B1022] px-2.5 py-1 rounded-lg border border-white/10">
                     Revenue ⌵
                   </span>
                 </div>
@@ -497,28 +497,35 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                     <AreaChart data={SALES_OVERVIEW_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <defs>
                         <linearGradient id="goldSalesGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#D6A63C" stopOpacity={0.35} />
-                          <stop offset="95%" stopColor="#D6A63C" stopOpacity={0.0} />
+                          <stop offset="5%" stopColor="#F4B942" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#F4B942" stopOpacity={0.0} />
                         </linearGradient>
                       </defs>
-                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
+                      <XAxis dataKey="date" stroke="#64748B" fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis
-                        stroke="#94a3b8"
+                        stroke="#64748B"
                         fontSize={10}
                         tickLine={false}
                         axisLine={false}
                         tickFormatter={(val) => `₹${val}L`}
                         domain={[0, 15]}
                       />
-                      <Tooltip content={<CustomChartTooltip />} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: '#10182D',
+                          borderColor: 'rgba(255,255,255,0.15)',
+                          borderRadius: '12px',
+                          color: '#F8FAFC',
+                        }}
+                      />
                       <Area
                         type="monotone"
                         dataKey="revenue"
-                        stroke="#D6A63C"
+                        stroke="#F4B942"
                         strokeWidth={2.5}
                         fill="url(#goldSalesGradient)"
-                        dot={{ r: 3, fill: '#D6A63C', strokeWidth: 1.5, stroke: '#fff' }}
-                        activeDot={{ r: 6, fill: '#D6A63C', stroke: '#0B121C', strokeWidth: 2 }}
+                        dot={{ r: 3, fill: '#F4B942', strokeWidth: 1.5, stroke: '#050816' }}
+                        activeDot={{ r: 6, fill: '#00F0FF', stroke: '#050816', strokeWidth: 2 }}
                       />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -526,12 +533,12 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
               </div>
 
               {/* Orders Status Donut Chart (lg:col-span-3) */}
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-3 flex flex-col justify-between">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-3 flex flex-col justify-between">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-[#00F0FF]/15 text-[#00F0FF] flex items-center justify-center">
                     <Box className="w-4 h-4" />
                   </div>
-                  <h3 className="text-sm font-bold text-gray-900">Orders Status</h3>
+                  <h3 className="text-sm font-bold text-[#F8FAFC]">Orders Status</h3>
                 </div>
 
                 {/* Donut Chart with Center Legend */}
@@ -544,7 +551,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                         outerRadius={56}
                         paddingAngle={3}
                         dataKey="value"
-                        stroke="#fff"
+                        stroke="#050816"
                         strokeWidth={2}
                       >
                         {ORDERS_STATUS_DATA.map((entry, index) => (
@@ -555,8 +562,8 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   </ResponsiveContainer>
                   {/* Center Total Count */}
                   <div className="absolute text-center pointer-events-none">
-                    <p className="text-xs font-black font-sans text-gray-900 leading-tight">1,248</p>
-                    <p className="text-[9px] text-gray-400 font-medium">Orders</p>
+                    <p className="text-xs font-black font-sans text-[#F8FAFC] leading-tight">1,248</p>
+                    <p className="text-[9px] text-[#A6B1C8] font-medium">Orders</p>
                   </div>
                 </div>
 
@@ -564,28 +571,28 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                 <div className="space-y-1.5 text-xs pt-1">
                   {ORDERS_STATUS_DATA.map((item, i) => (
                     <div key={i} className="flex items-center justify-between text-[11px]">
-                      <span className="flex items-center gap-1.5 text-gray-600">
+                      <span className="flex items-center gap-1.5 text-[#A6B1C8]">
                         <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
                         <span>{item.name}</span>
                       </span>
-                      <span className="font-bold text-gray-900">{item.value}%</span>
+                      <span className="font-bold text-[#F8FAFC]">{item.value}%</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Inventory Alerts List (lg:col-span-4) */}
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-4 flex flex-col justify-between">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-4 flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-[#FF4567]/15 text-[#FF4567] flex items-center justify-center">
                       <AlertTriangle className="w-4 h-4" />
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">Inventory Alerts</h3>
+                    <h3 className="text-sm font-bold text-[#F8FAFC]">Inventory Alerts</h3>
                   </div>
                   <button
                     onClick={() => setActiveTab('inventory')}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-0.5 cursor-pointer"
+                    className="text-xs font-bold text-[#00F0FF] hover:text-[#00CFFF] flex items-center gap-0.5 cursor-pointer"
                   >
                     View All →
                   </button>
@@ -595,20 +602,20 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   {INVENTORY_ALERTS.map((prod) => (
                     <div
                       key={prod.id}
-                      className="flex items-center justify-between p-2.5 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-gray-200 transition-all"
+                      className="flex items-center justify-between p-2.5 rounded-xl border border-white/10 bg-[#0B1022] hover:bg-white/5 hover:border-[#FF4567]/40 transition-all"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <img
                           src={prod.image}
                           alt={prod.name}
-                          className="w-10 h-10 object-contain rounded-lg bg-white border border-gray-100 p-0.5 flex-shrink-0"
+                          className="w-10 h-10 object-contain rounded-lg bg-[#050816] border border-white/10 p-0.5 flex-shrink-0"
                         />
                         <div className="min-w-0">
-                          <p className="text-xs font-bold text-gray-900 truncate">{prod.name}</p>
+                          <p className="text-xs font-bold text-[#F8FAFC] truncate">{prod.name}</p>
                           <p className="text-[10px] text-gray-400">Warehouse Zone A</p>
                         </div>
                       </div>
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 whitespace-nowrap shadow-[0_0_8px_rgba(244,63,94,0.3)]">
                         {prod.statusText}
                       </span>
                     </div>
@@ -620,17 +627,17 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
             {/* 5. Bottom Row (3 Cards): Recent Orders + Top Selling Products + Quick Actions */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
               {/* Recent Orders Table (lg:col-span-5) */}
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-5 flex flex-col justify-between">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-5 flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-[#F4B942]/15 text-[#F4B942] flex items-center justify-center">
                       <ShoppingBag className="w-4 h-4" />
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">Recent Orders</h3>
+                    <h3 className="text-sm font-bold text-[#F8FAFC]">Recent Orders</h3>
                   </div>
                   <button
                     onClick={() => setActiveTab('orders')}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-0.5 cursor-pointer"
+                    className="text-xs font-bold text-[#00F0FF] hover:text-[#00CFFF] flex items-center gap-0.5 cursor-pointer"
                   >
                     View All Orders →
                   </button>
@@ -639,7 +646,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                      <tr className="border-b border-white/10 text-[10px] font-bold text-[#A6B1C8] uppercase tracking-wider">
                         <th className="pb-2.5">Order ID</th>
                         <th className="pb-2.5">Customer</th>
                         <th className="pb-2.5">Amount</th>
@@ -647,19 +654,19 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                         <th className="pb-2.5 text-right">Date</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-50">
+                    <tbody className="divide-y divide-white/5">
                       {RECENT_ORDERS_DATA.map((ord, idx) => (
-                        <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
-                          <td className="py-2.5 font-bold font-mono text-gray-900">{ord.id}</td>
-                          <td className="py-2.5 text-gray-700 font-medium">
+                        <tr key={idx} className="hover:bg-white/5 transition-colors">
+                          <td className="py-2.5 font-bold font-mono text-[#F8FAFC]">{ord.id}</td>
+                          <td className="py-2.5 text-gray-300 font-medium">
                             <span className="flex items-center gap-1.5">
-                              <span className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-[10px] text-gray-600">
+                              <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-gray-300">
                                 👤
                               </span>
                               <span>{ord.customer}</span>
                             </span>
                           </td>
-                          <td className="py-2.5 font-bold text-gray-900">{ord.amount}</td>
+                          <td className="py-2.5 font-bold text-[#F8FAFC]">{ord.amount}</td>
                           <td className="py-2.5">
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${ord.statusClass}`}>
                               {ord.status}
@@ -674,17 +681,17 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
               </div>
 
               {/* Top Selling Products List (lg:col-span-3) */}
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-3 flex flex-col justify-between">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-amber-50 text-[#D6A63C] flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-[#F4B942]/15 text-[#F4B942] flex items-center justify-center">
                       <Crown className="w-4 h-4" />
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">Top Selling Products</h3>
+                    <h3 className="text-sm font-bold text-[#F8FAFC]">Top Selling Products</h3>
                   </div>
                   <button
                     onClick={() => setActiveTab('products')}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-0.5 cursor-pointer"
+                    className="text-xs font-bold text-[#00F0FF] hover:text-[#00CFFF] flex items-center gap-0.5 cursor-pointer"
                   >
                     View All →
                   </button>
@@ -694,20 +701,20 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   {TOP_SELLING_PRODUCTS.map((prod) => (
                     <div
                       key={prod.id}
-                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 transition-colors"
+                      className="flex items-center gap-3 p-2 rounded-xl bg-[#0B1022] hover:bg-white/5 border border-white/5 transition-colors"
                     >
                       <img
                         src={prod.image}
                         alt={prod.name}
-                        className="w-11 h-11 object-contain rounded-xl bg-gray-50 border border-gray-100 p-1 flex-shrink-0"
+                        className="w-11 h-11 object-contain rounded-xl bg-[#050816] border border-white/10 p-1 flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-gray-900 truncate">{prod.name}</p>
-                        <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-0.5">
-                          <span className="text-[#D6A63C]">★</span> {prod.rating} ({prod.reviews})
+                        <p className="text-xs font-bold text-[#F8FAFC] truncate">{prod.name}</p>
+                        <p className="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5">
+                          <span className="text-[#F4B942]">★</span> {prod.rating} ({prod.reviews})
                         </p>
                       </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FCF8E9] border border-[#EADBBD] text-[#8B6A1A] whitespace-nowrap">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F4B942]/15 border border-[#F4B942]/40 text-[#F4B942] whitespace-nowrap shadow-[0_0_8px_rgba(244,185,66,0.3)]">
                         {prod.soldBadge}
                       </span>
                     </div>
@@ -716,24 +723,24 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
               </div>
 
               {/* Quick Actions 2x3 Grid (lg:col-span-4) */}
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-4 flex flex-col justify-between">
+              <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-4 flex flex-col justify-between">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-7 h-7 rounded-lg bg-amber-50 text-[#D6A63C] flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-[#F4B942]/15 text-[#F4B942] flex items-center justify-center">
                     <Sparkles className="w-4 h-4" />
                   </div>
-                  <h3 className="text-sm font-bold text-gray-900">Quick Actions</h3>
+                  <h3 className="text-sm font-bold text-[#F8FAFC]">Quick Actions</h3>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2.5 flex-1">
                   {/* Add Product */}
                   <button
                     onClick={() => setActiveTab('products')}
-                    className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-2 transition-all hover:shadow-xs group cursor-pointer"
+                    className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#00F0FF] hover:shadow-[0_0_12px_rgba(0,240,255,0.25)] flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Plus className="w-4 h-4" />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 text-center leading-tight">
+                    <span className="text-[11px] font-bold text-[#F8FAFC] text-center leading-tight">
                       Add Product
                     </span>
                   </button>
@@ -741,12 +748,12 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   {/* Update Stock */}
                   <button
                     onClick={() => setActiveTab('inventory')}
-                    className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-2 transition-all hover:shadow-xs group cursor-pointer"
+                    className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#F4B942] hover:shadow-[0_0_12px_rgba(244,185,66,0.25)] flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-full bg-[#F4B942]/15 text-[#F4B942] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Boxes className="w-4 h-4" />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 text-center leading-tight">
+                    <span className="text-[11px] font-bold text-[#F8FAFC] text-center leading-tight">
                       Update Stock
                     </span>
                   </button>
@@ -754,12 +761,12 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   {/* Create Offer */}
                   <button
                     onClick={() => setActiveTab('offers')}
-                    className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-2 transition-all hover:shadow-xs group cursor-pointer"
+                    className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#39F5A5] hover:shadow-[0_0_12px_rgba(57,245,165,0.25)] flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-full bg-[#39F5A5]/15 text-[#39F5A5] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Tag className="w-4 h-4" />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 text-center leading-tight">
+                    <span className="text-[11px] font-bold text-[#F8FAFC] text-center leading-tight">
                       Create Offer
                     </span>
                   </button>
@@ -767,12 +774,12 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   {/* Upload Banner */}
                   <button
                     onClick={() => setActiveTab('banners')}
-                    className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-2 transition-all hover:shadow-xs group cursor-pointer"
+                    className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#A855F7] hover:shadow-[0_0_12px_rgba(168,85,247,0.25)] flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-full bg-[#A855F7]/15 text-[#A855F7] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <ImageIcon className="w-4 h-4" />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 text-center leading-tight">
+                    <span className="text-[11px] font-bold text-[#F8FAFC] text-center leading-tight">
                       Upload Banner
                     </span>
                   </button>
@@ -780,12 +787,12 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   {/* View Orders */}
                   <button
                     onClick={() => setActiveTab('orders')}
-                    className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-2 transition-all hover:shadow-xs group cursor-pointer"
+                    className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#00F0FF] hover:shadow-[0_0_12px_rgba(0,240,255,0.25)] flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <ShoppingBag className="w-4 h-4" />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 text-center leading-tight">
+                    <span className="text-[11px] font-bold text-[#F8FAFC] text-center leading-tight">
                       View Orders
                     </span>
                   </button>
@@ -793,12 +800,12 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   {/* Generate Report */}
                   <button
                     onClick={() => setActiveTab('reports')}
-                    className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-2 transition-all hover:shadow-xs group cursor-pointer"
+                    className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#F4B942] hover:shadow-[0_0_12px_rgba(244,185,66,0.25)] flex flex-col items-center justify-center gap-2 transition-all group cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-full bg-[#F4B942]/15 text-[#F4B942] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <BarChart3 className="w-4 h-4" />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 text-center leading-tight">
+                    <span className="text-[11px] font-bold text-[#F8FAFC] text-center leading-tight">
                       Generate Report
                     </span>
                   </button>
@@ -811,7 +818,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-gray-900 flex font-sans antialiased">
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex font-sans antialiased">
       {/* ════════════════════════════════════════════════════════════════
           1. FIXED LEFT SIDEBAR (Dark Navy #071426)
           ════════════════════════════════════════════════════════════════ */}
@@ -1165,7 +1172,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
         </main>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-gray-200 px-6 py-4 text-xs text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <footer className="bg-[#0B1022] border-t border-white/10 px-6 py-4 text-xs text-[#A6B1C8] flex flex-col sm:flex-row justify-between items-center gap-3">
           <span>WatchHub Store Admin | Enterprise E-Commerce Platform • v2.6</span>
           <div className="flex items-center gap-4 text-xs font-semibold">
             <button onClick={() => setActiveTab('settings')} className="hover:text-[#D6A63C] cursor-pointer">

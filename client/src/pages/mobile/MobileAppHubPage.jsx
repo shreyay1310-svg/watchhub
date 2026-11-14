@@ -104,7 +104,7 @@ export const MobileAppHubPage = () => {
                 </button>
               </div>
 
-              <div className="text-center text-[9px] text-gray-500 pb-1">
+              <div className="text-center text-[9px] text-[#A6B1C8] pb-1">
                 Rolex • Omega • Patek • Titan • Casio
               </div>
             </div>
@@ -114,16 +114,16 @@ export const MobileAppHubPage = () => {
         {/* =========================================================================
             IN-APP APK AUTO-UPDATE FEATURE SHOWCASE CONSOLE
             ========================================================================= */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-200 shadow-sm space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-gray-100">
+        <div className="bg-[#10182D]/90 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.6)] space-y-6 text-[#F8FAFC]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-white/10">
             <div>
               <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider block">
                 INTEGRATED FEATURE
               </span>
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-[#F8FAFC] flex items-center gap-2">
                 <Zap className="w-5 h-5 text-watch-gold" /> In-App APK Version Update & Auto-Upgrade System
               </h3>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
                 Whenever a new version of the APK is released, users get an instant in-app update prompt. Clicking "Update" upgrades the mobile app automatically.
               </p>
             </div>
@@ -131,7 +131,7 @@ export const MobileAppHubPage = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => checkForUpdates(true)}
-                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors"
+                className="px-4 py-2 bg-white/5 hover:bg-gray-200 text-[#F8FAFC] text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isChecking ? 'animate-spin' : ''}`} /> Check For Updates
               </button>
@@ -146,32 +146,32 @@ export const MobileAppHubPage = () => {
 
           {/* 3 Step Interactive Visual Explanation */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
-            <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-2">
+            <div className="bg-[#0B1022]/80 p-5 rounded-2xl border border-white/10 space-y-2">
               <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-sm">
                 1
               </div>
-              <h4 className="font-bold text-gray-900 text-sm">Automated Version Detection</h4>
-              <p className="text-gray-500 leading-relaxed">
+              <h4 className="font-bold text-[#F8FAFC] text-sm">Automated Version Detection</h4>
+              <p className="text-[#A6B1C8] leading-relaxed">
                 App checks <code className="bg-gray-200 px-1 py-0.5 rounded text-[10px]">/api/app/version</code> on startup. If a newer build exists, the luxury update prompt opens immediately.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-2">
+            <div className="bg-[#0B1022]/80 p-5 rounded-2xl border border-white/10 space-y-2">
               <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-sm">
                 2
               </div>
-              <h4 className="font-bold text-gray-900 text-sm">One-Click In-App Download</h4>
-              <p className="text-gray-500 leading-relaxed">
+              <h4 className="font-bold text-[#F8FAFC] text-sm">One-Click In-App Download</h4>
+              <p className="text-[#A6B1C8] leading-relaxed">
                 User taps <strong>"Update App Now"</strong>. A real-time progress bar downloads the APK binary with checksum validation in the background.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-2">
+            <div className="bg-[#0B1022]/80 p-5 rounded-2xl border border-white/10 space-y-2">
               <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-sm">
                 3
               </div>
-              <h4 className="font-bold text-gray-900 text-sm">Instant Upgrade & Launch</h4>
-              <p className="text-gray-500 leading-relaxed">
+              <h4 className="font-bold text-[#F8FAFC] text-sm">Instant Upgrade & Launch</h4>
+              <p className="text-[#A6B1C8] leading-relaxed">
                 Android Package Installer (<code className="bg-gray-200 px-1 py-0.5 rounded text-[10px]">ACTION_VIEW</code> intent) launches instantly, upgrading the app without losing user sessions or cart.
               </p>
             </div>
@@ -179,34 +179,34 @@ export const MobileAppHubPage = () => {
         </div>
 
         {/* Installation Instructions */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-200 shadow-sm space-y-4">
-          <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-white/10 shadow-sm space-y-4">
+          <h3 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
             <Layers className="w-4 h-4 text-watch-gold" /> How to Install the WatchHub APK on Your Android Device
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
-            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1.5">
+            <div className="p-4 bg-[#0B1022]/80 rounded-2xl border border-white/10 space-y-1.5">
               <span className="font-mono text-xs font-bold text-watch-gold">STEP 1</span>
-              <h5 className="font-bold text-gray-900">Download APK</h5>
-              <p className="text-gray-500 text-[11px]">Click the download button above to save <span className="font-mono">WatchHub-latest.apk</span> to your device.</p>
+              <h5 className="font-bold text-[#F8FAFC]">Download APK</h5>
+              <p className="text-[#A6B1C8] text-[11px]">Click the download button above to save <span className="font-mono">WatchHub-latest.apk</span> to your device.</p>
             </div>
 
-            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1.5">
+            <div className="p-4 bg-[#0B1022]/80 rounded-2xl border border-white/10 space-y-1.5">
               <span className="font-mono text-xs font-bold text-watch-gold">STEP 2</span>
-              <h5 className="font-bold text-gray-900">Allow Installation</h5>
-              <p className="text-gray-500 text-[11px]">When prompted, tap <em>Settings</em> and enable <em>"Allow from this source"</em> (standard for direct APKs).</p>
+              <h5 className="font-bold text-[#F8FAFC]">Allow Installation</h5>
+              <p className="text-[#A6B1C8] text-[11px]">When prompted, tap <em>Settings</em> and enable <em>"Allow from this source"</em> (standard for direct APKs).</p>
             </div>
 
-            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1.5">
+            <div className="p-4 bg-[#0B1022]/80 rounded-2xl border border-white/10 space-y-1.5">
               <span className="font-mono text-xs font-bold text-watch-gold">STEP 3</span>
-              <h5 className="font-bold text-gray-900">Tap Install</h5>
-              <p className="text-gray-500 text-[11px]">Tap <em>"Install"</em>. The installation completes in under 5 seconds.</p>
+              <h5 className="font-bold text-[#F8FAFC]">Tap Install</h5>
+              <p className="text-[#A6B1C8] text-[11px]">Tap <em>"Install"</em>. The installation completes in under 5 seconds.</p>
             </div>
 
-            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1.5">
+            <div className="p-4 bg-[#0B1022]/80 rounded-2xl border border-white/10 space-y-1.5">
               <span className="font-mono text-xs font-bold text-watch-gold">STEP 4</span>
-              <h5 className="font-bold text-gray-900">Open & Enjoy</h5>
-              <p className="text-gray-500 text-[11px]">Launch WatchHub from your home screen. Future updates will trigger in-app automatically!</p>
+              <h5 className="font-bold text-[#F8FAFC]">Open & Enjoy</h5>
+              <p className="text-[#A6B1C8] text-[11px]">Launch WatchHub from your home screen. Future updates will trigger in-app automatically!</p>
             </div>
           </div>
         </div>

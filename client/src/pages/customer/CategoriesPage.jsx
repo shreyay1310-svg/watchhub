@@ -139,7 +139,7 @@ export const CategoriesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-gray-900 font-poppins flex flex-col selection:bg-watch-gold selection:text-black">
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] font-poppins flex flex-col selection:bg-watch-gold selection:text-black">
       {/* 1. WatchHub Standard Luxury Navbar */}
       <CustomerNavbar />
 
@@ -161,7 +161,7 @@ export const CategoriesPage = () => {
             <Link to="/" className="hover:text-watch-gold transition-colors flex items-center gap-1">
               <span>Home</span>
             </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-gray-600" />
+            <ChevronRight className="w-3.5 h-3.5 text-[#A6B1C8]" />
             <span className="text-watch-gold font-medium">Categories</span>
           </nav>
 
@@ -192,12 +192,12 @@ export const CategoriesPage = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search categories (e.g. Smartwatch, Sports, Luxury...)"
-              className="w-full h-10 pl-11 pr-4 text-xs sm:text-sm rounded-full bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-watch-gold/50 shadow-xs font-medium"
+              className="w-full h-10 pl-11 pr-4 text-xs sm:text-sm rounded-full bg-white text-[#F8FAFC] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-watch-gold/50 shadow-xs font-medium"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#A6B1C8] text-xs font-bold"
               >
                 ✕
               </button>
@@ -323,12 +323,12 @@ export const CategoriesPage = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex-1 w-full">
         {filteredCategories.length === 0 ? (
           /* Empty State */
-          <div className="text-center py-16 bg-white rounded-3xl border border-gray-200 shadow-xs p-8 max-w-lg mx-auto">
+          <div className="text-center py-16 bg-white rounded-3xl border border-white/10 shadow-xs p-8 max-w-lg mx-auto">
             <div className="w-16 h-16 rounded-full bg-amber-50 text-watch-gold flex items-center justify-center text-2xl mx-auto mb-4 border border-watch-gold/30">
               🔍
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1">No Categories Found</h3>
-            <p className="text-xs text-gray-500 mb-5 leading-relaxed">
+            <h3 className="text-lg font-bold text-[#F8FAFC] mb-1">No Categories Found</h3>
+            <p className="text-xs text-[#A6B1C8] mb-5 leading-relaxed">
               We couldn't find any category matching "{searchQuery}". Try clearing your filters to explore all 12 watch collections.
             </p>
             <button
@@ -339,14 +339,14 @@ export const CategoriesPage = () => {
             </button>
           </div>
         ) : (
-          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-gray-200/90 shadow-sm">
+          <div className="bg-[#10182D]/85 backdrop-blur-xl rounded-3xl p-5 sm:p-7 border border-white/10 shadow-sm text-[#F8FAFC]">
             {/* Header info bar */}
             <div className="flex items-center justify-between pb-4 mb-5 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <span className="text-base font-bold text-gray-900">
+                <span className="text-base font-bold text-[#F8FAFC]">
                   {isFiltering ? 'Filtered Categories' : 'Featured Watch Categories'}
                 </span>
-                <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full">
+                <span className="text-xs font-semibold text-[#A6B1C8] bg-gray-100 px-2.5 py-0.5 rounded-full">
                   {filteredCategories.length} Categories Available
                 </span>
               </div>
@@ -361,7 +361,7 @@ export const CategoriesPage = () => {
                 <Link
                   key={cat.id}
                   to={cat.link}
-                  className="group bg-white border border-gray-200/90 hover:border-[#D9A441] rounded-2xl p-2.5 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer overflow-hidden"
+                  className="group bg-white border border-white/10/90 hover:border-[#D9A441] rounded-2xl p-2.5 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer overflow-hidden"
                   title={`Browse ${cat.name} Collection (${cat.styles})`}
                 >
                   {/* Top: 1:1 / 4:3 Aspect Ratio Product Photo */}
@@ -389,17 +389,17 @@ export const CategoriesPage = () => {
 
                       {/* Text info */}
                       <div className="min-w-0">
-                        <h3 className="text-xs font-bold text-gray-900 group-hover:text-black tracking-tight leading-tight truncate">
+                        <h3 className="text-xs font-bold text-[#F8FAFC] group-hover:text-[#00F0FF] tracking-tight leading-tight truncate">
                           {cat.name}
                         </h3>
-                        <p className="text-[10px] text-gray-500 font-medium truncate mt-0.5">
+                        <p className="text-[10px] text-[#A6B1C8] font-medium truncate mt-0.5">
                           {cat.styles}
                         </p>
                       </div>
                     </div>
 
                     {/* Right Circular Arrow Button */}
-                    <div className="w-6 h-6 rounded-full border border-gray-200 group-hover:border-watch-gold group-hover:bg-watch-gold group-hover:text-black flex items-center justify-center text-gray-400 transition-all flex-shrink-0 shadow-2xs">
+                    <div className="w-6 h-6 rounded-full border border-white/10 group-hover:border-watch-gold group-hover:bg-watch-gold group-hover:text-[#00F0FF] flex items-center justify-center text-gray-400 transition-all flex-shrink-0 shadow-2xs">
                       <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>

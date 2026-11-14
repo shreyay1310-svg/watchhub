@@ -732,11 +732,11 @@ export const ProductsManagementModule = () => {
           ════════════════════════════════════════════════════════════════ */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-sans text-gray-900 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-bold font-sans text-[#F8FAFC] tracking-tight flex items-center gap-2">
             <span>Products Management</span>
             <span className="text-xl">📦</span>
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-[#A6B1C8] mt-0.5">
             Add, edit, manage and track all your watch products in one place.
           </p>
         </div>
@@ -748,22 +748,22 @@ export const ProductsManagementModule = () => {
             <button
               type="button"
               onClick={() => setImportExportOpen(!importExportOpen)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/10 bg-[#10182D]/90 backdrop-blur-md hover:bg-[#0B1022]/80 text-[#A6B1C8] text-xs font-semibold shadow-xs transition-all cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5 text-gray-500" />
+              <Download className="w-3.5 h-3.5 text-[#A6B1C8]" />
               <span>Import / Export</span>
               <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
             </button>
 
             {importExportOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 py-1.5 z-50 text-xs animate-scaleUp">
+              <div className="absolute right-0 mt-2 w-56 bg-[#10182D]/90 backdrop-blur-md rounded-xl shadow-2xl border border-white/10 py-1.5 z-50 text-xs animate-scaleUp">
                 <button
                   type="button"
                   onClick={() => {
                     setShowImportModal(true);
                     setImportExportOpen(false);
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-amber-50 text-gray-700 flex items-center gap-2 cursor-pointer font-medium"
+                  className="w-full text-left px-4 py-2 hover:bg-amber-50 text-[#A6B1C8] flex items-center gap-2 cursor-pointer font-medium"
                 >
                   <Upload className="w-3.5 h-3.5 text-[#D6A63C]" />
                   <span>Bulk Import Products (CSV)</span>
@@ -771,16 +771,16 @@ export const ProductsManagementModule = () => {
                 <button
                   type="button"
                   onClick={handleDownloadTemplate}
-                  className="w-full text-left px-4 py-2 hover:bg-amber-50 text-gray-700 flex items-center gap-2 cursor-pointer font-medium"
+                  className="w-full text-left px-4 py-2 hover:bg-amber-50 text-[#A6B1C8] flex items-center gap-2 cursor-pointer font-medium"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5 text-[#D6A63C]" />
                   <span>Download Product Template</span>
                 </button>
-                <div className="border-t border-gray-100 my-1" />
+                <div className="border-t border-white/10 my-1" />
                 <button
                   type="button"
                   onClick={handleExportCSV}
-                  className="w-full text-left px-4 py-2 hover:bg-amber-50 text-gray-700 flex items-center gap-2 cursor-pointer font-medium"
+                  className="w-full text-left px-4 py-2 hover:bg-amber-50 text-[#A6B1C8] flex items-center gap-2 cursor-pointer font-medium"
                 >
                   <Download className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Export Filtered Products</span>
@@ -806,70 +806,70 @@ export const ProductsManagementModule = () => {
           ════════════════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4">
         {/* Total Products */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs">
+        <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Total Products</span>
+            <span className="text-xs font-medium text-[#A6B1C8]">Total Products</span>
             <div className="w-8 h-8 rounded-xl bg-amber-50 text-[#D6A63C] flex items-center justify-center text-sm">
               <Box className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-sans text-gray-900 mt-2">{stats.total}</div>
+          <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">{stats.total}</div>
           <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-1">
             <span>↑ +8%</span>
           </div>
         </div>
 
         {/* Active Products */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs">
+        <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Active Products</span>
+            <span className="text-xs font-medium text-[#A6B1C8]">Active Products</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
               <Check className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-sans text-gray-900 mt-2">{stats.active}</div>
+          <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">{stats.active}</div>
           <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-1">
             <span>↑ +10%</span>
           </div>
         </div>
 
         {/* Draft Products */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs">
+        <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Draft Products</span>
+            <span className="text-xs font-medium text-[#A6B1C8]">Draft Products</span>
             <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm">
               <Tag className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-sans text-gray-900 mt-2">{stats.draft}</div>
+          <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">{stats.draft}</div>
           <div className="flex items-center gap-1 text-[11px] font-bold text-blue-600 mt-1">
             <span>↑ +5%</span>
           </div>
         </div>
 
         {/* Out of Stock */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs">
+        <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Out of Stock</span>
+            <span className="text-xs font-medium text-[#A6B1C8]">Out of Stock</span>
             <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-sans text-gray-900 mt-2">{stats.outOfStock}</div>
+          <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">{stats.outOfStock}</div>
           <div className="flex items-center gap-1 text-[11px] font-bold text-rose-600 mt-1">
             <span>↓ -4%</span>
           </div>
         </div>
 
         {/* Average Rating */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs">
+        <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">Average Rating</span>
+            <span className="text-xs font-medium text-[#A6B1C8]">Average Rating</span>
             <div className="w-8 h-8 rounded-xl bg-amber-50 text-[#D6A63C] flex items-center justify-center text-sm">
               <Star className="w-4 h-4 fill-[#D6A63C]" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-sans text-gray-900 mt-2">{stats.rating}</div>
+          <div className="text-2xl font-bold font-sans text-[#F8FAFC] mt-2">{stats.rating}</div>
           <div className="text-[11px] text-gray-400 mt-1">
             <span>{stats.reviewsCount}</span>
           </div>
@@ -900,14 +900,14 @@ export const ProductsManagementModule = () => {
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 isSelected
                   ? 'bg-[#0B121C] text-white shadow-md'
-                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                  : 'bg-[#10182D]/90 backdrop-blur-md border border-white/10 text-[#A6B1C8] hover:bg-[#0B1022]/80'
               }`}
             >
               <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-[#D6A63C]' : 'text-gray-400'}`} />
               <span>{tab.label}</span>
               <span
                 className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
-                  isSelected ? 'bg-white/20 text-[#D6A63C]' : 'bg-gray-100 text-gray-600'
+                  isSelected ? 'bg-[#10182D]/90 backdrop-blur-md/20 text-[#D6A63C]' : 'bg-white/5 text-[#A6B1C8]'
                 }`}
               >
                 {tab.count}
@@ -920,7 +920,7 @@ export const ProductsManagementModule = () => {
       {/* ════════════════════════════════════════════════════════════════
           4. SEARCH AND FILTERS TOOLBAR
           ════════════════════════════════════════════════════════════════ */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between text-xs">
+      <div className="bg-[#10182D]/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-white/10 shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between text-xs">
         {/* Search Input */}
         <div className="relative w-full md:w-80">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -932,7 +932,7 @@ export const ProductsManagementModule = () => {
               setCurrentPage(1);
             }}
             placeholder="Search by product name, SKU or brand..."
-            className="w-full h-10 pl-9 pr-3 text-xs rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D6A63C]/40 focus:border-[#D6A63C] transition-all font-medium"
+            className="w-full h-10 pl-9 pr-3 text-xs rounded-xl border border-white/10 bg-[#0B1022]/80/50 text-[#F8FAFC] focus:bg-[#10182D]/90 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#D6A63C]/40 focus:border-[#D6A63C] transition-all font-medium"
           />
         </div>
 
@@ -945,7 +945,7 @@ export const ProductsManagementModule = () => {
               setSelectedCategory(e.target.value);
               setCurrentPage(1);
             }}
-            className="h-10 px-3 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 focus:outline-none focus:border-[#D6A63C]"
+            className="h-10 px-3 rounded-xl border border-white/10 bg-[#10182D]/90 backdrop-blur-md text-xs font-semibold text-[#A6B1C8] focus:outline-none focus:border-[#D6A63C]"
           >
             <option value="All">Category: All</option>
             <option value="Luxury Watches">Luxury Watches</option>
@@ -963,7 +963,7 @@ export const ProductsManagementModule = () => {
               setSelectedBrand(e.target.value);
               setCurrentPage(1);
             }}
-            className="h-10 px-3 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 focus:outline-none focus:border-[#D6A63C]"
+            className="h-10 px-3 rounded-xl border border-white/10 bg-[#10182D]/90 backdrop-blur-md text-xs font-semibold text-[#A6B1C8] focus:outline-none focus:border-[#D6A63C]"
           >
             <option value="All">Brand: All</option>
             <option value="Rolex">Rolex</option>
@@ -981,7 +981,7 @@ export const ProductsManagementModule = () => {
               setSelectedStatus(e.target.value);
               setCurrentPage(1);
             }}
-            className="h-10 px-3 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 focus:outline-none focus:border-[#D6A63C]"
+            className="h-10 px-3 rounded-xl border border-white/10 bg-[#10182D]/90 backdrop-blur-md text-xs font-semibold text-[#A6B1C8] focus:outline-none focus:border-[#D6A63C]"
           >
             <option value="All">Status: All</option>
             <option value="Active">Active</option>
@@ -997,7 +997,7 @@ export const ProductsManagementModule = () => {
               setSelectedPriceRange(e.target.value);
               setCurrentPage(1);
             }}
-            className="h-10 px-3 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 focus:outline-none focus:border-[#D6A63C]"
+            className="h-10 px-3 rounded-xl border border-white/10 bg-[#10182D]/90 backdrop-blur-md text-xs font-semibold text-[#A6B1C8] focus:outline-none focus:border-[#D6A63C]"
           >
             <option value="All">Price Range: All</option>
             <option value="under15k">Under ₹15,000</option>
@@ -1010,10 +1010,10 @@ export const ProductsManagementModule = () => {
           <button
             type="button"
             onClick={handleResetFilters}
-            className="h-10 px-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="h-10 px-3 rounded-xl border border-white/10 bg-[#10182D]/90 backdrop-blur-md hover:bg-[#0B1022]/80 text-[#A6B1C8] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Reset Filters"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-gray-500" />
+            <RefreshCw className="w-3.5 h-3.5 text-[#A6B1C8]" />
             <span>Reset</span>
           </button>
         </div>
@@ -1063,12 +1063,12 @@ export const ProductsManagementModule = () => {
       {/* ════════════════════════════════════════════════════════════════
           6. MAIN PRODUCT TABLE
           ════════════════════════════════════════════════════════════════ */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
+      <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             {/* Table Header */}
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+              <tr className="border-b border-white/10 bg-[#0B1022]/80/70 text-[11px] font-bold text-[#A6B1C8] uppercase tracking-wider">
                 <th className="py-3 px-4 w-10">
                   <input
                     type="checkbox"
@@ -1081,7 +1081,7 @@ export const ProductsManagementModule = () => {
                   />
                 </th>
                 <th className="py-3 px-4">
-                  <span className="flex items-center gap-1 cursor-pointer hover:text-gray-900">
+                  <span className="flex items-center gap-1 cursor-pointer hover:text-[#F8FAFC]">
                     <span>Product</span>
                     <ArrowUpDown className="w-3 h-3 text-gray-400" />
                   </span>
@@ -1090,7 +1090,7 @@ export const ProductsManagementModule = () => {
                 <th className="py-3 px-4">Category</th>
                 <th className="py-3 px-4">Brand</th>
                 <th className="py-3 px-4">
-                  <span className="flex items-center gap-1 cursor-pointer hover:text-gray-900">
+                  <span className="flex items-center gap-1 cursor-pointer hover:text-[#F8FAFC]">
                     <span>Price</span>
                     <ArrowUpDown className="w-3 h-3 text-gray-400" />
                   </span>
@@ -1127,7 +1127,7 @@ export const ProductsManagementModule = () => {
                     {/* Product Name & Subspecs */}
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 p-1 flex items-center justify-center flex-shrink-0">
+                        <div className="w-12 h-12 rounded-xl bg-[#0B1022]/80 border border-white/10 p-1 flex items-center justify-center flex-shrink-0">
                           <img
                             src={p.image}
                             alt={p.name}
@@ -1135,7 +1135,7 @@ export const ProductsManagementModule = () => {
                           />
                         </div>
                         <div className="min-w-0">
-                          <h4 className="text-xs font-bold text-gray-900 leading-snug line-clamp-1">
+                          <h4 className="text-xs font-bold text-[#F8FAFC] leading-snug line-clamp-1">
                             {p.name}
                           </h4>
                           <p className="text-[10px] text-gray-400 mt-0.5 line-clamp-1">
@@ -1146,18 +1146,18 @@ export const ProductsManagementModule = () => {
                     </td>
 
                     {/* SKU */}
-                    <td className="py-3 px-4 font-mono font-bold text-gray-700 text-[11px]">
+                    <td className="py-3 px-4 font-mono font-bold text-[#A6B1C8] text-[11px]">
                       {p.sku}
                     </td>
 
                     {/* Category */}
-                    <td className="py-3 px-4 text-gray-700 font-medium whitespace-nowrap">
+                    <td className="py-3 px-4 text-[#A6B1C8] font-medium whitespace-nowrap">
                       {p.category}
                     </td>
 
                     {/* Brand */}
                     <td className="py-3 px-4">
-                      <div className="flex items-center gap-1.5 font-semibold text-gray-800 whitespace-nowrap">
+                      <div className="flex items-center gap-1.5 font-semibold text-[#F8FAFC] whitespace-nowrap">
                         <span className="text-sm">{BRAND_LOGOS[p.brand] || '⌚'}</span>
                         <span>{p.brand}</span>
                       </div>
@@ -1166,7 +1166,7 @@ export const ProductsManagementModule = () => {
                     {/* Price & Discount */}
                     <td className="py-3 px-4 whitespace-nowrap">
                       <div>
-                        <span className="font-bold text-gray-900 text-xs">
+                        <span className="font-bold text-[#F8FAFC] text-xs">
                           ₹{p.price.toLocaleString('en-IN')}
                         </span>
                         {p.originalPrice && p.originalPrice > p.price && (
@@ -1183,7 +1183,7 @@ export const ProductsManagementModule = () => {
                     </td>
 
                     {/* Stock */}
-                    <td className="py-3 px-4 font-bold text-gray-800">
+                    <td className="py-3 px-4 font-bold text-[#F8FAFC]">
                       {p.stock}
                     </td>
 
@@ -1198,7 +1198,7 @@ export const ProductsManagementModule = () => {
                           Low Stock
                         </span>
                       ) : p.status === 'Draft' ? (
-                        <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-bold bg-gray-100 text-gray-700 border border-gray-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-bold bg-white/5 text-[#A6B1C8] border border-white/10">
                           Draft
                         </span>
                       ) : (
@@ -1210,7 +1210,7 @@ export const ProductsManagementModule = () => {
 
                     {/* Rating */}
                     <td className="py-3 px-4 whitespace-nowrap">
-                      <div className="flex items-center gap-1 text-[11px] font-bold text-gray-800">
+                      <div className="flex items-center gap-1 text-[11px] font-bold text-[#F8FAFC]">
                         <Star className="w-3.5 h-3.5 text-[#D6A63C] fill-[#D6A63C]" />
                         <span>{p.rating}</span>
                         <span className="text-gray-400 font-normal">
@@ -1226,7 +1226,7 @@ export const ProductsManagementModule = () => {
                         <button
                           type="button"
                           onClick={() => setShowDetailsModal(p)}
-                          className="p-1.5 hover:bg-gray-100 text-gray-600 hover:text-black rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 hover:bg-white/5 text-[#A6B1C8] hover:text-black rounded-lg transition-colors cursor-pointer"
                           title="View Details"
                         >
                           <Eye className="w-4 h-4" />
@@ -1236,7 +1236,7 @@ export const ProductsManagementModule = () => {
                         <button
                           type="button"
                           onClick={() => handleOpenEditModal(p)}
-                          className="p-1.5 hover:bg-gray-100 text-gray-600 hover:text-[#D6A63C] rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 hover:bg-white/5 text-[#A6B1C8] hover:text-[#D6A63C] rounded-lg transition-colors cursor-pointer"
                           title="Edit Product"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -1246,7 +1246,7 @@ export const ProductsManagementModule = () => {
                         <button
                           type="button"
                           onClick={() => handleDuplicateProduct(p)}
-                          className="p-1.5 hover:bg-gray-100 text-gray-600 hover:text-blue-600 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 hover:bg-white/5 text-[#A6B1C8] hover:text-blue-600 rounded-lg transition-colors cursor-pointer"
                           title="Duplicate Product"
                         >
                           <Copy className="w-4 h-4" />
@@ -1273,10 +1273,10 @@ export const ProductsManagementModule = () => {
         {/* ════════════════════════════════════════════════════════════════
             7. PAGINATION STRIP
             ════════════════════════════════════════════════════════════════ */}
-        <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+        <div className="p-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#A6B1C8]">
           <div>
-            Showing <span className="font-bold text-gray-800">1–{paginatedProducts.length}</span> of{' '}
-            <span className="font-bold text-gray-800">{stats.total} products</span>
+            Showing <span className="font-bold text-[#F8FAFC]">1–{paginatedProducts.length}</span> of{' '}
+            <span className="font-bold text-[#F8FAFC]">{stats.total} products</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -1288,7 +1288,7 @@ export const ProductsManagementModule = () => {
                   setItemsPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white font-semibold text-gray-700"
+                className="px-2.5 py-1.5 rounded-lg border border-white/10 bg-[#10182D]/90 backdrop-blur-md font-semibold text-[#A6B1C8]"
               >
                 <option value={8}>8 per page</option>
                 <option value={16}>16 per page</option>
@@ -1303,7 +1303,7 @@ export const ProductsManagementModule = () => {
                 type="button"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(1)}
-                className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-40"
+                className="p-1.5 rounded-lg border border-white/10 hover:bg-white/5 disabled:opacity-40"
               >
                 <ChevronsLeft className="w-3.5 h-3.5" />
               </button>
@@ -1311,7 +1311,7 @@ export const ProductsManagementModule = () => {
                 type="button"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
-                className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-40"
+                className="p-1.5 rounded-lg border border-white/10 hover:bg-white/5 disabled:opacity-40"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
@@ -1319,22 +1319,22 @@ export const ProductsManagementModule = () => {
               <button className="px-2.5 py-1 rounded-lg bg-[#D6A63C] text-black font-extrabold text-xs">
                 1
               </button>
-              <button className="px-2.5 py-1 rounded-lg hover:bg-gray-100 text-gray-700">2</button>
-              <button className="px-2.5 py-1 rounded-lg hover:bg-gray-100 text-gray-700">3</button>
+              <button className="px-2.5 py-1 rounded-lg hover:bg-white/5 text-[#A6B1C8]">2</button>
+              <button className="px-2.5 py-1 rounded-lg hover:bg-white/5 text-[#A6B1C8]">3</button>
               <span className="px-1 text-gray-400">...</span>
-              <button className="px-2.5 py-1 rounded-lg hover:bg-gray-100 text-gray-700">40</button>
+              <button className="px-2.5 py-1 rounded-lg hover:bg-white/5 text-[#A6B1C8]">40</button>
 
               <button
                 type="button"
                 onClick={() => setCurrentPage(2)}
-                className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-100"
+                className="p-1.5 rounded-lg border border-white/10 hover:bg-white/5"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
                 onClick={() => setCurrentPage(40)}
-                className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-100"
+                className="p-1.5 rounded-lg border border-white/10 hover:bg-white/5"
               >
                 <ChevronsRight className="w-3.5 h-3.5" />
               </button>
@@ -1348,7 +1348,7 @@ export const ProductsManagementModule = () => {
           ════════════════════════════════════════════════════════════════ */}
       {showAddEditModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-scaleUp">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl max-w-4xl w-full max-h-[90vh] shadow-2xl border border-white/10 flex flex-col overflow-hidden animate-scaleUp">
             {/* Modal Header */}
             <div className="bg-[#0B121C] text-white p-5 flex items-center justify-between">
               <div>
@@ -1370,7 +1370,7 @@ export const ProductsManagementModule = () => {
             </div>
 
             {/* Form Section Navigation Tabs */}
-            <div className="bg-gray-50 border-b border-gray-200 px-5 flex items-center gap-1 overflow-x-auto scrollbar-none py-2 text-xs">
+            <div className="bg-[#0B1022]/80 border-b border-white/10 px-5 flex items-center gap-1 overflow-x-auto scrollbar-none py-2 text-xs">
               {[
                 { id: 'basic', label: '1. Basic Info' },
                 { id: 'specs', label: '2. Watch Specs' },
@@ -1386,7 +1386,7 @@ export const ProductsManagementModule = () => {
                   className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                     formActiveTab === tab.id
                       ? 'bg-[#0B121C] text-[#D6A63C] shadow-xs'
-                      : 'text-gray-600 hover:text-black hover:bg-gray-200/50'
+                      : 'text-[#A6B1C8] hover:text-black hover:bg-gray-200/50'
                   }`}
                 >
                   {tab.label}
@@ -1400,7 +1400,7 @@ export const ProductsManagementModule = () => {
               {formActiveTab === 'basic' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div className="sm:col-span-2">
-                    <label className="block font-bold text-gray-700 mb-1">
+                    <label className="block font-bold text-[#A6B1C8] mb-1">
                       Product Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1409,12 +1409,12 @@ export const ProductsManagementModule = () => {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. Rolex Submariner Date 41mm"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">
+                    <label className="block font-bold text-[#A6B1C8] mb-1">
                       SKU (Stock Keeping Unit) <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1423,16 +1423,16 @@ export const ProductsManagementModule = () => {
                       value={formData.sku}
                       onChange={(e) => setFormData({ ...formData, sku: e.target.value.toUpperCase() })}
                       placeholder="e.g. WH-ROL-001"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 font-mono font-bold focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 font-mono font-bold focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Brand *</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Brand *</label>
                     <select
                       value={formData.brand}
                       onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
                     >
                       {Object.keys(BRAND_LOGOS).map((b) => (
                         <option key={b} value={b}>
@@ -1443,11 +1443,11 @@ export const ProductsManagementModule = () => {
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Category *</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Category *</label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
                     >
                       <option value="Luxury Watches">Luxury Watches</option>
                       <option value="Men's Watches">Men's Watches</option>
@@ -1459,11 +1459,11 @@ export const ProductsManagementModule = () => {
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Gender</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Gender</label>
                     <select
                       value={formData.gender}
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
                     >
                       <option value="Men">Men</option>
                       <option value="Women">Women</option>
@@ -1474,13 +1474,13 @@ export const ProductsManagementModule = () => {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block font-bold text-gray-700 mb-1">Product Description</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Product Description</label>
                     <textarea
                       rows={3}
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       placeholder="Detailed luxury watch description, craftsmanship, movement details..."
-                      className="w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
+                      className="w-full p-3 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
                     />
                   </div>
                 </div>
@@ -1490,7 +1490,7 @@ export const ProductsManagementModule = () => {
               {formActiveTab === 'specs' && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Dial Size</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Dial Size</label>
                     <input
                       type="text"
                       value={formData.specifications.dialSize}
@@ -1501,12 +1501,12 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. 41 mm"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Dial Shape</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Dial Shape</label>
                     <select
                       value={formData.specifications.dialShape}
                       onChange={(e) =>
@@ -1515,7 +1515,7 @@ export const ProductsManagementModule = () => {
                           specifications: { ...formData.specifications, dialShape: e.target.value },
                         })
                       }
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     >
                       <option value="Round">Round</option>
                       <option value="Square">Square</option>
@@ -1526,7 +1526,7 @@ export const ProductsManagementModule = () => {
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Dial Colour</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Dial Colour</label>
                     <input
                       type="text"
                       value={formData.specifications.dialColor}
@@ -1537,12 +1537,12 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. Black / Sunburst Blue"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Case Material</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Case Material</label>
                     <input
                       type="text"
                       value={formData.specifications.caseMaterial}
@@ -1553,12 +1553,12 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. 316L Stainless Steel / Gold"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Strap Material</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Strap Material</label>
                     <input
                       type="text"
                       value={formData.specifications.strapMaterial}
@@ -1569,12 +1569,12 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. Stainless Steel Oyster Bracelet"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Movement Type</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Movement Type</label>
                     <input
                       type="text"
                       value={formData.specifications.movementType}
@@ -1585,12 +1585,12 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. Automatic Self-Winding"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Water Resistance</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Water Resistance</label>
                     <input
                       type="text"
                       value={formData.specifications.waterResistance}
@@ -1601,12 +1601,12 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. 300M Diver / 50M"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Country of Origin</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Country of Origin</label>
                     <input
                       type="text"
                       value={formData.specifications.countryOfOrigin}
@@ -1617,12 +1617,12 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. Switzerland"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Official Warranty</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Official Warranty</label>
                     <input
                       type="text"
                       value={formData.specifications.warranty}
@@ -1633,7 +1633,7 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="e.g. 5 Years International Warranty"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
                 </div>
@@ -1643,7 +1643,7 @@ export const ProductsManagementModule = () => {
               {formActiveTab === 'pricing' && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">
+                    <label className="block font-bold text-[#A6B1C8] mb-1">
                       Selling Price (₹) <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1652,37 +1652,37 @@ export const ProductsManagementModule = () => {
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       placeholder="e.g. 18999"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 font-bold focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 font-bold focus:outline-none focus:ring-2 focus:ring-[#D6A63C]"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Original MRP Price (₹)</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Original MRP Price (₹)</label>
                     <input
                       type="number"
                       value={formData.originalPrice}
                       onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
                       placeholder="e.g. 24999"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Wholesale Cost Price (₹)</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Wholesale Cost Price (₹)</label>
                     <input
                       type="number"
                       value={formData.costPrice}
                       onChange={(e) => setFormData({ ...formData, costPrice: e.target.value })}
                       placeholder="e.g. 12000"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   {/* Profit Margin Preview Card */}
                   <div className="sm:col-span-3 p-4 rounded-xl bg-amber-50/50 border border-amber-200 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-bold text-gray-800">Estimated Profit Margin</p>
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-xs font-bold text-[#F8FAFC]">Estimated Profit Margin</p>
+                      <p className="text-[11px] text-[#A6B1C8]">
                         Selling Price minus Wholesale Cost Price per unit
                       </p>
                     </div>
@@ -1702,44 +1702,44 @@ export const ProductsManagementModule = () => {
               {formActiveTab === 'inventory' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Available Quantity</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Available Quantity</label>
                     <input
                       type="number"
                       value={formData.stock}
                       onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                       placeholder="e.g. 24"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 font-bold"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 font-bold"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Low Stock Warning Threshold</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Low Stock Warning Threshold</label>
                     <input
                       type="number"
                       value={formData.lowStockThreshold}
                       onChange={(e) => setFormData({ ...formData, lowStockThreshold: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Warehouse Location</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Warehouse Location</label>
                     <input
                       type="text"
                       value={formData.warehouseLocation}
                       onChange={(e) => setFormData({ ...formData, warehouseLocation: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Barcode / EAN</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Barcode / EAN</label>
                     <input
                       type="text"
                       value={formData.barcode}
                       onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
                       placeholder="e.g. 8901234567890"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 font-mono"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 font-mono"
                     />
                   </div>
                 </div>
@@ -1749,7 +1749,7 @@ export const ProductsManagementModule = () => {
               {formActiveTab === 'variants' && (
                 <div className="space-y-3 text-xs">
                   <div className="flex items-center justify-between">
-                    <p className="font-bold text-gray-800">Product Variants (Dials, Straps & Sizes)</p>
+                    <p className="font-bold text-[#F8FAFC]">Product Variants (Dials, Straps & Sizes)</p>
                     <button
                       type="button"
                       onClick={() =>
@@ -1767,9 +1767,9 @@ export const ProductsManagementModule = () => {
                     </button>
                   </div>
 
-                  <div className="border border-gray-200 rounded-xl overflow-hidden">
+                  <div className="border border-white/10 rounded-xl overflow-hidden">
                     <table className="w-full text-left">
-                      <thead className="bg-gray-50 text-[10px] text-gray-500 font-bold uppercase">
+                      <thead className="bg-[#0B1022]/80 text-[10px] text-[#A6B1C8] font-bold uppercase">
                         <tr>
                           <th className="p-2">Variant SKU</th>
                           <th className="p-2">Dial</th>
@@ -1867,21 +1867,21 @@ export const ProductsManagementModule = () => {
               {formActiveTab === 'media' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">Main Image URL</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">Main Image URL</label>
                     <input
                       type="text"
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                       placeholder="/images/products/featured_rolex_submariner.jpg"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
-                    <div className="mt-2 w-24 h-24 rounded-xl border border-gray-200 bg-gray-50 p-2 flex items-center justify-center">
+                    <div className="mt-2 w-24 h-24 rounded-xl border border-white/10 bg-[#0B1022]/80 p-2 flex items-center justify-center">
                       <img src={formData.image} alt="Preview" className="w-full h-full object-contain" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block font-bold text-gray-700 mb-1">SEO URL Slug</label>
+                    <label className="block font-bold text-[#A6B1C8] mb-1">SEO URL Slug</label>
                     <input
                       type="text"
                       value={formData.seo?.slug || ''}
@@ -1892,7 +1892,7 @@ export const ProductsManagementModule = () => {
                         })
                       }
                       placeholder="rolex-submariner-date-41mm"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 font-mono text-[11px]"
+                      className="w-full h-10 px-3 rounded-xl border border-white/10 font-mono text-[11px]"
                     />
                     <div className="mt-3">
                       <label className="flex items-center gap-2 font-bold cursor-pointer">
@@ -1910,11 +1910,11 @@ export const ProductsManagementModule = () => {
               )}
 
               {/* Modal Action Buttons */}
-              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => setShowAddEditModal(false)}
-                  className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-100 font-bold text-xs"
+                  className="px-4 py-2 rounded-xl border border-white/10 hover:bg-white/5 font-bold text-xs"
                 >
                   Cancel
                 </button>
@@ -1936,7 +1936,7 @@ export const ProductsManagementModule = () => {
           ════════════════════════════════════════════════════════════════ */}
       {showDetailsModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-scaleUp">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl max-w-3xl w-full max-h-[90vh] shadow-2xl border border-white/10 flex flex-col overflow-hidden animate-scaleUp">
             {/* Modal Header */}
             <div className="bg-[#0B121C] text-white p-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -1959,7 +1959,7 @@ export const ProductsManagementModule = () => {
             <div className="flex-1 overflow-y-auto p-6 space-y-5 text-xs">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                 {/* Image */}
-                <div className="md:col-span-4 bg-gray-50 rounded-2xl border border-gray-100 p-4 flex items-center justify-center">
+                <div className="md:col-span-4 bg-[#0B1022]/80 rounded-2xl border border-white/10 p-4 flex items-center justify-center">
                   <img
                     src={showDetailsModal.image}
                     alt={showDetailsModal.name}
@@ -1979,7 +1979,7 @@ export const ProductsManagementModule = () => {
                   </div>
 
                   <div className="flex items-baseline gap-3">
-                    <span className="text-2xl font-bold font-sans text-gray-900">
+                    <span className="text-2xl font-bold font-sans text-[#F8FAFC]">
                       ₹{showDetailsModal.price.toLocaleString('en-IN')}
                     </span>
                     {showDetailsModal.originalPrice && (
@@ -1994,22 +1994,22 @@ export const ProductsManagementModule = () => {
                     )}
                   </div>
 
-                  <p className="text-gray-600 leading-relaxed">{showDetailsModal.description}</p>
+                  <p className="text-[#A6B1C8] leading-relaxed">{showDetailsModal.description}</p>
 
-                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100 text-[11px]">
-                    <div className="p-2 rounded-xl bg-gray-50">
+                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/10 text-[11px]">
+                    <div className="p-2 rounded-xl bg-[#0B1022]/80">
                       <span className="text-gray-400 block">Available Stock</span>
-                      <span className="font-bold text-gray-900 text-sm">{showDetailsModal.stock} units</span>
+                      <span className="font-bold text-[#F8FAFC] text-sm">{showDetailsModal.stock} units</span>
                     </div>
-                    <div className="p-2 rounded-xl bg-gray-50">
+                    <div className="p-2 rounded-xl bg-[#0B1022]/80">
                       <span className="text-gray-400 block">Wholesale Cost</span>
-                      <span className="font-bold text-gray-900 text-sm">
+                      <span className="font-bold text-[#F8FAFC] text-sm">
                         ₹{showDetailsModal.costPrice?.toLocaleString('en-IN') || '—'}
                       </span>
                     </div>
-                    <div className="p-2 rounded-xl bg-gray-50">
+                    <div className="p-2 rounded-xl bg-[#0B1022]/80">
                       <span className="text-gray-400 block">Customer Rating</span>
-                      <span className="font-bold text-gray-900 text-sm flex items-center gap-1">
+                      <span className="font-bold text-[#F8FAFC] text-sm flex items-center gap-1">
                         ★ {showDetailsModal.rating} ({showDetailsModal.reviewsCount})
                       </span>
                     </div>
@@ -2018,15 +2018,15 @@ export const ProductsManagementModule = () => {
               </div>
 
               {/* Technical Specifications Grid */}
-              <div className="border-t border-gray-100 pt-4">
-                <h4 className="font-bold text-gray-800 text-sm mb-3">Technical Specifications</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
+              <div className="border-t border-white/10 pt-4">
+                <h4 className="font-bold text-[#F8FAFC] text-sm mb-3">Technical Specifications</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#0B1022]/80/50 p-4 rounded-xl border border-white/10">
                   {Object.entries(showDetailsModal.specifications || {}).map(([key, value]) => (
                     <div key={key}>
                       <span className="text-gray-400 text-[10px] uppercase font-bold tracking-wider block">
                         {key.replace(/([A-Z])/g, ' $1')}
                       </span>
-                      <span className="font-semibold text-gray-800">{value}</span>
+                      <span className="font-semibold text-[#F8FAFC]">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -2034,11 +2034,11 @@ export const ProductsManagementModule = () => {
 
               {/* Product Variants List */}
               {showDetailsModal.variants?.length > 0 && (
-                <div className="border-t border-gray-100 pt-4">
-                  <h4 className="font-bold text-gray-800 text-sm mb-2">Available Variants</h4>
-                  <div className="border border-gray-100 rounded-xl overflow-hidden">
+                <div className="border-t border-white/10 pt-4">
+                  <h4 className="font-bold text-[#F8FAFC] text-sm mb-2">Available Variants</h4>
+                  <div className="border border-white/10 rounded-xl overflow-hidden">
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-gray-50 text-[10px] text-gray-500 font-bold uppercase">
+                      <thead className="bg-[#0B1022]/80 text-[10px] text-[#A6B1C8] font-bold uppercase">
                         <tr>
                           <th className="p-2">Variant SKU</th>
                           <th className="p-2">Dial</th>
@@ -2074,9 +2074,9 @@ export const ProductsManagementModule = () => {
           ════════════════════════════════════════════════════════════════ */}
       {showImportModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-gray-100 p-6 animate-scaleUp">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl max-w-lg w-full shadow-2xl border border-white/10 p-6 animate-scaleUp">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-base text-gray-900 flex items-center gap-2">
+              <h3 className="font-bold text-base text-[#F8FAFC] flex items-center gap-2">
                 <Upload className="w-4 h-4 text-[#D6A63C]" />
                 <span>Bulk Import Products</span>
               </h3>
@@ -2089,13 +2089,13 @@ export const ProductsManagementModule = () => {
               </button>
             </div>
 
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-[#A6B1C8] mb-4">
               Upload a standard CSV file with watch listings. Duplicate SKUs will be automatically validated to protect database integrity.
             </p>
 
-            <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center bg-gray-50/50 hover:border-[#D6A63C] transition-colors cursor-pointer">
+            <div className="border-2 border-dashed border-white/15 rounded-2xl p-6 text-center bg-[#0B1022]/80/50 hover:border-[#D6A63C] transition-colors cursor-pointer">
               <FileSpreadsheet className="w-10 h-10 text-[#D6A63C] mx-auto mb-2" />
-              <p className="text-xs font-bold text-gray-800">Drag & Drop product CSV here</p>
+              <p className="text-xs font-bold text-[#F8FAFC]">Drag & Drop product CSV here</p>
               <p className="text-[11px] text-gray-400 mt-1">or click to browse from device</p>
               <input
                 type="file"
@@ -2117,7 +2117,7 @@ export const ProductsManagementModule = () => {
               </label>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
               <button
                 type="button"
                 onClick={handleDownloadTemplate}
@@ -2128,7 +2128,7 @@ export const ProductsManagementModule = () => {
               <button
                 type="button"
                 onClick={() => setShowImportModal(false)}
-                className="px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-100 font-bold"
+                className="px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5 font-bold"
               >
                 Close
               </button>

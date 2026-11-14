@@ -423,17 +423,17 @@ export default function DeliveryManagerDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] text-gray-800 flex flex-col font-poppins antialiased selection:bg-[#D6A63C]/30 selection:text-black">
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex flex-col font-poppins antialiased selection:bg-[#F4B942]/30 selection:text-white">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#071426] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-[#D6A63C]/40 flex items-center gap-3 animate-fade-in text-sm">
-          <CheckCircle className="w-5 h-5 text-[#D6A63C]" />
+        <div className="fixed bottom-6 right-6 z-50 bg-[#10182D]/95 text-white px-5 py-3.5 rounded-2xl shadow-[0_0_25px_rgba(0,240,255,0.3)] border border-[#00F0FF]/40 flex items-center gap-3 animate-fade-in text-sm backdrop-blur-md">
+          <CheckCircle className="w-5 h-5 text-[#00F0FF]" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* TOP HEADER */}
-      <header className="bg-[#071426] text-white sticky top-0 z-40 border-b border-white/10 shadow-md">
+      <header className="bg-[#071426]/90 backdrop-blur-md text-white sticky top-0 z-40 border-b border-white/10 shadow-lg">
         <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           {/* Logo & Toggle with Delivery Truck Icon in gold box */}
           <div className="flex items-center gap-3.5">
@@ -503,19 +503,19 @@ export default function DeliveryManagerDashboardPage() {
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 text-gray-800 z-50 animate-fade-in text-xs">
-                  <div className="flex items-center justify-between pb-3 border-b border-gray-100 font-bold">
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#10182D]/95 backdrop-blur-md rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-white/10 p-4 text-[#F8FAFC] z-50 animate-fade-in text-xs">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10 font-bold">
                     <span>Logistics Real-Time Alerts</span>
-                    <span className="text-[11px] text-[#D6A63C] font-semibold cursor-pointer">Mark all as read</span>
+                    <span className="text-[11px] text-[#00F0FF] font-semibold cursor-pointer">Mark all as read</span>
                   </div>
                   <div className="space-y-3 mt-3 max-h-72 overflow-y-auto">
                     {(deliveryData?.notifications || []).map((notif) => (
-                      <div key={notif.id} className="p-2.5 rounded-xl bg-gray-50 hover:bg-amber-50/50 border border-gray-100 text-xs">
+                      <div key={notif.id} className="p-2.5 rounded-xl bg-[#0B1022] hover:bg-white/5 border border-white/10 text-xs">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-[#071426]">{notif.title}</span>
+                          <span className="font-bold text-[#F8FAFC]">{notif.title}</span>
                           <span className="text-[10px] text-gray-400">{notif.timestamp}</span>
                         </div>
-                        <p className="text-gray-600 leading-relaxed">{notif.message}</p>
+                        <p className="text-gray-300 leading-relaxed">{notif.message}</p>
                       </div>
                     ))}
                   </div>
@@ -541,7 +541,7 @@ export default function DeliveryManagerDashboardPage() {
                 <img
                   src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80"
                   alt="Delivery Manager"
-                  className="w-7 h-7 rounded-lg object-cover border border-[#D6A63C]"
+                  className="w-7 h-7 rounded-lg object-cover border border-[#00F0FF]"
                 />
                 <div className="text-left hidden sm:block">
                   <p className="text-xs font-bold text-white leading-none">Delivery Manager</p>
@@ -550,11 +550,11 @@ export default function DeliveryManagerDashboardPage() {
               </button>
 
               {roleMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 text-gray-800 animate-fade-in text-xs">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <p className="font-bold text-sm text-[#071426]">Amit Sharma</p>
-                    <p className="text-[11px] text-gray-500">delivery@watchhub.in</p>
-                    <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-amber-50 text-[#D6A63C] text-[10px] font-bold border border-[#D6A63C]/30">
+                <div className="absolute right-0 mt-2 w-64 bg-[#10182D]/95 backdrop-blur-md rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-white/10 py-2 z-50 text-[#F8FAFC] animate-fade-in text-xs">
+                  <div className="px-4 py-2 border-b border-white/10">
+                    <p className="font-bold text-sm text-[#F8FAFC]">Amit Sharma</p>
+                    <p className="text-[11px] text-gray-400">delivery@watchhub.in</p>
+                    <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-[#00F0FF]/15 text-[#00F0FF] text-[10px] font-bold border border-[#00F0FF]/30 shadow-[0_0_8px_rgba(0,240,255,0.2)]">
                       Verified Logistics Lead
                     </span>
                   </div>
@@ -577,27 +577,28 @@ export default function DeliveryManagerDashboardPage() {
                             if (r === ROLES.STORE_ADMIN) navigate('/dashboard');
                             if (r === ROLES.INVENTORY_MANAGER) navigate('/inventory-manager/dashboard');
                             if (r === ROLES.CUSTOMER_SUPPORT) navigate('/customer-support/dashboard');
+                            if (r === ROLES.DELIVERY_PARTNER) navigate('/delivery-partner/dashboard');
                           }}
-                          className={`w-full text-left px-4 py-2 flex items-center justify-between hover:bg-amber-50 transition-colors cursor-pointer ${
-                            isActive ? 'bg-amber-50/70 text-[#D6A63C] font-bold' : 'text-gray-700'
+                          className={`w-full text-left px-4 py-2 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer ${
+                            isActive ? 'bg-[#00F0FF]/15 text-[#00F0FF] font-bold' : 'text-gray-300'
                           }`}
                         >
                           <div className="flex items-center gap-2">
                             <span>{staff?.avatar || '👤'}</span>
                             <span>{r}</span>
                           </div>
-                          {isActive && <CheckCircle className="w-3.5 h-3.5 text-[#D6A63C]" />}
+                          {isActive && <CheckCircle className="w-3.5 h-3.5 text-[#00F0FF]" />}
                         </button>
                       );
                     })}
 
-                  <div className="border-t border-gray-100 mt-1 pt-1">
+                  <div className="border-t border-white/10 mt-1 pt-1">
                     <button
                       onClick={() => {
                         logout();
                         navigate('/login');
                       }}
-                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors cursor-pointer"
+                      className="w-full text-left px-4 py-2 text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 transition-colors cursor-pointer"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       <span>Log Out</span>
@@ -737,19 +738,19 @@ export default function DeliveryManagerDashboardPage() {
           {/* 5 KPI CARDS */}
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {/* 1. Total Shipments */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(168,85,247,0.12)] hover:border-[#A855F7]/50 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] transition-all flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-gray-500">Total Shipments</span>
-                <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm">
+                <span className="text-xs font-medium text-[#A6B1C8]">Total Shipments</span>
+                <div className="w-7 h-7 rounded-lg bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(168,85,247,0.3)]">
                   📦
                 </div>
               </div>
               <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
                     {deliveryData?.stats?.totalShipments?.toLocaleString() || '1,248'}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-purple-600 mt-0.5">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#A855F7] mt-0.5">
                     <ArrowUpRight className="w-3.5 h-3.5" />
                     <span>{deliveryData?.stats?.totalShipmentsTrend || '+12%'}</span>
                   </div>
@@ -757,7 +758,7 @@ export default function DeliveryManagerDashboardPage() {
                 <div className="w-16 h-8">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={waveDataTotal}>
-                      <Area type="monotone" dataKey="v" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.15} strokeWidth={2} />
+                      <Area type="monotone" dataKey="v" stroke="#A855F7" fill="#A855F7" fillOpacity={0.25} strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -765,19 +766,19 @@ export default function DeliveryManagerDashboardPage() {
             </div>
 
             {/* 2. Out for Delivery */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(0,240,255,0.12)] hover:border-[#00F0FF]/50 hover:shadow-[0_0_25px_rgba(0,240,255,0.25)] transition-all flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-gray-500">Out for Delivery</span>
-                <div className="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-sm">
+                <span className="text-xs font-medium text-[#A6B1C8]">Out for Delivery</span>
+                <div className="w-7 h-7 rounded-lg bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(0,240,255,0.3)]">
                   🚚
                 </div>
               </div>
               <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
                     {deliveryData?.stats?.outForDelivery?.toLocaleString() || '312'}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-green-600 mt-0.5">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#00F0FF] mt-0.5">
                     <ArrowUpRight className="w-3.5 h-3.5" />
                     <span>{deliveryData?.stats?.outForDeliveryTrend || '+18%'}</span>
                   </div>
@@ -785,7 +786,7 @@ export default function DeliveryManagerDashboardPage() {
                 <div className="w-16 h-8">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={waveDataOut}>
-                      <Area type="monotone" dataKey="v" stroke="#10B981" fill="#10B981" fillOpacity={0.15} strokeWidth={2} />
+                      <Area type="monotone" dataKey="v" stroke="#00F0FF" fill="#00F0FF" fillOpacity={0.25} strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -793,19 +794,19 @@ export default function DeliveryManagerDashboardPage() {
             </div>
 
             {/* 3. Delivered */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(57,245,165,0.12)] hover:border-[#39F5A5]/50 hover:shadow-[0_0_25px_rgba(57,245,165,0.25)] transition-all flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-gray-500">Delivered</span>
-                <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                <span className="text-xs font-medium text-[#A6B1C8]">Delivered</span>
+                <div className="w-7 h-7 rounded-lg bg-[#39F5A5]/15 text-[#39F5A5] border border-[#39F5A5]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(57,245,165,0.3)]">
                   ✓
                 </div>
               </div>
               <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
                     {deliveryData?.stats?.delivered?.toLocaleString() || '892'}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-0.5">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#39F5A5] mt-0.5">
                     <ArrowUpRight className="w-3.5 h-3.5" />
                     <span>{deliveryData?.stats?.deliveredTrend || '+14%'}</span>
                   </div>
@@ -813,7 +814,7 @@ export default function DeliveryManagerDashboardPage() {
                 <div className="w-16 h-8">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={waveDataDelivered}>
-                      <Area type="monotone" dataKey="v" stroke="#059669" fill="#059669" fillOpacity={0.15} strokeWidth={2} />
+                      <Area type="monotone" dataKey="v" stroke="#39F5A5" fill="#39F5A5" fillOpacity={0.25} strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -821,19 +822,19 @@ export default function DeliveryManagerDashboardPage() {
             </div>
 
             {/* 4. Delivery Attempts */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(255,69,103,0.12)] hover:border-[#FF4567]/50 hover:shadow-[0_0_25px_rgba(255,69,103,0.25)] transition-all flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-gray-500">Delivery Attempts</span>
-                <div className="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
+                <span className="text-xs font-medium text-[#A6B1C8]">Delivery Attempts</span>
+                <div className="w-7 h-7 rounded-lg bg-[#FF4567]/15 text-[#FF4567] border border-[#FF4567]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(255,69,103,0.3)]">
                   ⟳
                 </div>
               </div>
               <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
                     {deliveryData?.stats?.deliveryAttempts || '36'}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-rose-500 mt-0.5">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#FF4567] mt-0.5">
                     <ArrowDownRight className="w-3.5 h-3.5" />
                     <span>{deliveryData?.stats?.deliveryAttemptsTrend || '-20%'}</span>
                   </div>
@@ -841,7 +842,7 @@ export default function DeliveryManagerDashboardPage() {
                 <div className="w-16 h-8">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={waveDataAttempts}>
-                      <Area type="monotone" dataKey="v" stroke="#EF4444" fill="#EF4444" fillOpacity={0.15} strokeWidth={2} />
+                      <Area type="monotone" dataKey="v" stroke="#FF4567" fill="#FF4567" fillOpacity={0.25} strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -849,19 +850,19 @@ export default function DeliveryManagerDashboardPage() {
             </div>
 
             {/* 5. Returns / Pickups */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between col-span-2 lg:col-span-1">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(244,185,66,0.12)] hover:border-[#F4B942]/50 hover:shadow-[0_0_25px_rgba(244,185,66,0.25)] transition-all flex flex-col justify-between col-span-2 lg:col-span-1">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-gray-500">Returns / Pickups</span>
-                <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
+                <span className="text-xs font-medium text-[#A6B1C8]">Returns / Pickups</span>
+                <div className="w-7 h-7 rounded-lg bg-[#F4B942]/15 text-[#F4B942] border border-[#F4B942]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(244,185,66,0.3)]">
                   📦
                 </div>
               </div>
               <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
                     {deliveryData?.stats?.returnsPickups || '8'}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600 mt-0.5">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#F4B942] mt-0.5">
                     <ArrowDownRight className="w-3.5 h-3.5" />
                     <span>{deliveryData?.stats?.returnsPickupsTrend || '-11%'}</span>
                   </div>
@@ -869,7 +870,7 @@ export default function DeliveryManagerDashboardPage() {
                 <div className="w-16 h-8">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={waveDataReturns}>
-                      <Area type="monotone" dataKey="v" stroke="#D97706" fill="#D97706" fillOpacity={0.15} strokeWidth={2} />
+                      <Area type="monotone" dataKey="v" stroke="#F4B942" fill="#F4B942" fillOpacity={0.25} strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -880,9 +881,9 @@ export default function DeliveryManagerDashboardPage() {
           {/* MIDDLE ROW: 3 PANELS (Shipment Status Donut + Live Delivery Map + Quick Actions) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
             {/* CARD 1: SHIPMENT STATUS OVERVIEW (lg:col-span-4) */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-4 flex flex-col justify-between">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-4 flex flex-col justify-between">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-gray-900">Shipment Status Overview</h3>
+                <h3 className="text-sm font-bold text-[#F8FAFC]">Shipment Status Overview</h3>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 my-auto">
@@ -899,6 +900,8 @@ export default function DeliveryManagerDashboardPage() {
                         paddingAngle={3}
                         dataKey="count"
                         cursor="pointer"
+                        stroke="#050816"
+                        strokeWidth={2}
                         onClick={(entry) => {
                           setStatusFilter(entry.name);
                           triggerToast(`Filtered table by: ${entry.name}`);
@@ -908,12 +911,19 @@ export default function DeliveryManagerDashboardPage() {
                           <Cell key={`cell-${idx}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: '#10182D',
+                          borderColor: 'rgba(255,255,255,0.15)',
+                          borderRadius: '12px',
+                          color: '#F8FAFC',
+                        }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                    <span className="text-base font-extrabold text-gray-900 leading-none">1,248</span>
-                    <span className="text-[10px] text-gray-500 font-medium mt-0.5">Shipments</span>
+                    <span className="text-base font-extrabold text-[#F8FAFC] leading-none">1,248</span>
+                    <span className="text-[10px] text-[#A6B1C8] font-medium mt-0.5">Shipments</span>
                   </div>
                 </div>
 
@@ -923,13 +933,13 @@ export default function DeliveryManagerDashboardPage() {
                     <div
                       key={item.name}
                       onClick={() => setStatusFilter(item.name)}
-                      className="flex items-center justify-between p-1.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="flex items-center justify-between p-1.5 rounded-lg hover:bg-white/5 cursor-pointer transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                        <span className="text-gray-700 font-medium">{item.name}</span>
+                        <span className="text-[#A6B1C8] font-medium">{item.name}</span>
                       </div>
-                      <span className="font-bold text-gray-900">{item.percentage}%</span>
+                      <span className="font-bold text-[#F8FAFC]">{item.percentage}%</span>
                     </div>
                   ))}
                 </div>
@@ -937,42 +947,43 @@ export default function DeliveryManagerDashboardPage() {
             </div>
 
             {/* CARD 2: LIVE DELIVERY MAP (lg:col-span-5) */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-5 flex flex-col justify-between relative overflow-hidden">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(0,240,255,0.1)] lg:col-span-5 flex flex-col justify-between relative overflow-hidden">
               <div className="flex items-center justify-between mb-3 z-10">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-blue-600" />
-                  <h3 className="text-sm font-bold text-gray-900">Live Delivery Map</h3>
+                  <MapPin className="w-4 h-4 text-[#00F0FF]" />
+                  <h3 className="text-sm font-bold text-[#F8FAFC]">Live Delivery Map</h3>
                 </div>
                 <button
                   onClick={() => setShowFullMapModal(true)}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-bold text-[#00F0FF] hover:text-[#00CFFF] flex items-center gap-1 cursor-pointer"
                 >
                   <span>View Full Map</span>
                   <ExternalLink className="w-3 h-3" />
                 </button>
               </div>
 
-              {/* Realistic Interactive Vector Map Graphics */}
-              <div className="relative w-full h-56 rounded-xl overflow-hidden bg-[#e5ece8] border border-gray-200">
+              {/* Realistic Interactive Vector Map Graphics in Neon Luxury */}
+              <div className="relative w-full h-56 rounded-xl overflow-hidden bg-[#070D1F] border border-white/15">
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 500 240">
-                  <path d="M 0 160 Q 150 140, 260 170 T 500 130 L 500 160 L 0 200 Z" fill="#cbe3f5" opacity="0.8" />
-                  <rect x="30" y="30" width="80" height="60" rx="10" fill="#d2e7d6" opacity="0.8" />
-                  <rect x="320" y="40" width="90" height="70" rx="12" fill="#d2e7d6" opacity="0.8" />
-                  <path d="M 0 60 L 500 80" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
-                  <path d="M 0 120 L 500 110" stroke="#ffffff" strokeWidth="5" />
-                  <path d="M 120 0 L 150 240" stroke="#ffffff" strokeWidth="7" />
-                  <path d="M 300 0 L 280 240" stroke="#ffffff" strokeWidth="6" />
-                  <path d="M 420 0 L 440 240" stroke="#ffffff" strokeWidth="5" />
-                  <path d="M 0 190 Q 250 180, 500 210" stroke="#f1e0c6" strokeWidth="8" />
+                  <path d="M 0 160 Q 150 140, 260 170 T 500 130 L 500 160 L 0 200 Z" fill="#0C1B33" opacity="0.8" />
+                  <rect x="30" y="30" width="80" height="60" rx="10" fill="#0E2342" opacity="0.7" />
+                  <rect x="320" y="40" width="90" height="70" rx="12" fill="#0E2342" opacity="0.7" />
+                  <path d="M 0 60 L 500 80" stroke="rgba(255,255,255,0.08)" strokeWidth="6" strokeLinecap="round" />
+                  <path d="M 0 120 L 500 110" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
+                  <path d="M 120 0 L 150 240" stroke="rgba(255,255,255,0.08)" strokeWidth="7" />
+                  <path d="M 300 0 L 280 240" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
+                  <path d="M 420 0 L 440 240" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
+                  <path d="M 0 190 Q 250 180, 500 210" stroke="#1A2D4E" strokeWidth="8" />
 
-                  {/* Active Blue Delivery Route Line */}
+                  {/* Active Neon Cyan Route Line */}
                   <path
                     d="M 60 190 Q 140 180, 220 140 T 380 95"
                     fill="none"
-                    stroke="#2563EB"
+                    stroke="#00F0FF"
                     strokeWidth="4"
                     strokeLinecap="round"
-                    strokeDasharray="4 2"
+                    strokeDasharray="6 3"
+                    className="animate-pulse"
                   />
                 </svg>
 
@@ -981,7 +992,7 @@ export default function DeliveryManagerDashboardPage() {
                   className="absolute left-[50px] top-[175px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group"
                   title="WatchHub Central Logistics Hub"
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#071426] text-white flex items-center justify-center text-[10px] shadow-lg border-2 border-white">
+                  <div className="w-6 h-6 rounded-full bg-[#10182D] text-[#F4B942] flex items-center justify-center text-[10px] shadow-[0_0_12px_rgba(244,185,66,0.5)] border-2 border-[#F4B942]">
                     🏠
                   </div>
                 </div>
@@ -991,7 +1002,7 @@ export default function DeliveryManagerDashboardPage() {
                   className="absolute left-[260px] top-[140px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer animate-bounce"
                   title="Rider Rohan Singh - Verified GPS"
                 >
-                  <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shadow-xl border-2 border-white ring-4 ring-blue-400/30">
+                  <div className="w-7 h-7 rounded-full bg-[#00F0FF] text-black flex items-center justify-center text-xs shadow-[0_0_15px_rgba(0,240,255,0.8)] border-2 border-white ring-4 ring-[#00F0FF]/30">
                     🚚
                   </div>
                 </div>
@@ -1001,27 +1012,27 @@ export default function DeliveryManagerDashboardPage() {
                   className="absolute left-[380px] top-[95px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer"
                   title="Destination: Gomti Nagar"
                 >
-                  <div className="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-xs shadow-xl border-2 border-white">
+                  <div className="w-7 h-7 rounded-full bg-[#FF4567] text-white flex items-center justify-center text-xs shadow-[0_0_15px_rgba(255,69,103,0.7)] border-2 border-white">
                     📍
                   </div>
                 </div>
 
-                {/* Floating Popup Card matching reference image exactly */}
-                <div className="absolute top-3 left-4 bg-white/95 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg border border-gray-100 z-20 text-xs flex items-center gap-2.5">
+                {/* Floating Popup Card in Dark Glass */}
+                <div className="absolute top-3 left-4 bg-[#10182D]/90 backdrop-blur-md px-3 py-2 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.6)] border border-[#00F0FF]/30 z-20 text-xs flex items-center gap-2.5">
                   <img
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
                     alt="Rohan Singh"
-                    className="w-9 h-9 rounded-full object-cover border border-[#10B981]"
+                    className="w-9 h-9 rounded-full object-cover border border-[#39F5A5]"
                   />
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-gray-900 text-xs">Rohan Singh</span>
-                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-green-100 text-green-700">
+                      <span className="font-bold text-[#F8FAFC] text-xs">Rohan Singh</span>
+                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#39F5A5]/20 text-[#39F5A5] border border-[#39F5A5]/40 shadow-[0_0_8px_rgba(57,245,165,0.3)]">
                         • Out for Delivery
                       </span>
                     </div>
-                    <p className="text-[10px] text-gray-600 font-medium">📍 Order: #WH12548</p>
-                    <p className="text-[10px] text-gray-500 font-medium">ETA: 12:40 PM (6.2 km)</p>
+                    <p className="text-[10px] text-[#A6B1C8] font-medium">📍 Order: #WH12548</p>
+                    <p className="text-[10px] text-gray-400 font-medium">ETA: 12:40 PM (6.2 km)</p>
                   </div>
                 </div>
 
@@ -1029,19 +1040,19 @@ export default function DeliveryManagerDashboardPage() {
                 <div className="absolute right-3 bottom-3 flex flex-col gap-1.5 z-20">
                   <button
                     onClick={() => triggerToast('Zooming map view in')}
-                    className="w-7 h-7 rounded-lg bg-white/90 hover:bg-white text-gray-700 shadow flex items-center justify-center font-bold text-sm cursor-pointer"
+                    className="w-7 h-7 rounded-lg bg-[#10182D]/90 hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 shadow flex items-center justify-center font-bold text-sm cursor-pointer"
                   >
                     +
                   </button>
                   <button
                     onClick={() => triggerToast('Zooming map view out')}
-                    className="w-7 h-7 rounded-lg bg-white/90 hover:bg-white text-gray-700 shadow flex items-center justify-center font-bold text-sm cursor-pointer"
+                    className="w-7 h-7 rounded-lg bg-[#10182D]/90 hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 shadow flex items-center justify-center font-bold text-sm cursor-pointer"
                   >
                     –
                   </button>
                   <button
                     onClick={() => triggerToast('Centered on live rider Rohan Singh')}
-                    className="w-7 h-7 rounded-lg bg-white/90 hover:bg-white text-gray-700 shadow flex items-center justify-center font-bold text-xs cursor-pointer"
+                    className="w-7 h-7 rounded-lg bg-[#10182D]/90 hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 shadow flex items-center justify-center font-bold text-xs cursor-pointer"
                     title="Recenter Map"
                   >
                     <Crosshair className="w-3.5 h-3.5" />
@@ -1051,20 +1062,20 @@ export default function DeliveryManagerDashboardPage() {
             </div>
 
             {/* CARD 3: QUICK ACTIONS (lg:col-span-3) */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-3 flex flex-col justify-between">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-3 flex flex-col justify-between">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-amber-500 font-bold">⚡</span>
-                <h3 className="text-sm font-bold text-gray-900">Quick Actions</h3>
+                <span className="text-[#F4B942] font-bold">⚡</span>
+                <h3 className="text-sm font-bold text-[#F8FAFC]">Quick Actions</h3>
               </div>
 
               <div className="grid grid-cols-2 gap-2.5 my-auto">
                 {/* 1. Assign Orders */}
                 <button
                   onClick={() => setShowAssignModal(true)}
-                  className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
+                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#00F0FF] hover:shadow-[0_0_15px_rgba(0,240,255,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
                 >
-                  <Bike className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
-                  <span className="text-xs font-semibold text-gray-700">Assign Orders</span>
+                  <Bike className="w-5 h-5 text-[#00F0FF] group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-semibold text-[#F8FAFC]">Assign Orders</span>
                 </button>
 
                 {/* 2. Track Shipment */}
@@ -1076,46 +1087,46 @@ export default function DeliveryManagerDashboardPage() {
                       setShowTrackingModal(true);
                     }
                   }}
-                  className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
+                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#00F0FF] hover:shadow-[0_0_15px_rgba(0,240,255,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
                 >
-                  <MapPin className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
-                  <span className="text-xs font-semibold text-gray-700">Track Shipment</span>
+                  <MapPin className="w-5 h-5 text-[#00F0FF] group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-semibold text-[#F8FAFC]">Track Shipment</span>
                 </button>
 
                 {/* 3. Manage Riders */}
                 <button
                   onClick={() => setActiveTab('partners')}
-                  className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
+                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#A855F7] hover:shadow-[0_0_15px_rgba(168,85,247,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
                 >
-                  <Users className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
-                  <span className="text-xs font-semibold text-gray-700">Manage Riders</span>
+                  <Users className="w-5 h-5 text-[#A855F7] group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-semibold text-[#F8FAFC]">Manage Riders</span>
                 </button>
 
                 {/* 4. Plan Routes */}
                 <button
                   onClick={() => setActiveTab('routes')}
-                  className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
+                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#F4B942] hover:shadow-[0_0_15px_rgba(244,185,66,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
                 >
-                  <Compass className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
-                  <span className="text-xs font-semibold text-gray-700">Plan Routes</span>
+                  <Compass className="w-5 h-5 text-[#F4B942] group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-semibold text-[#F8FAFC]">Plan Routes</span>
                 </button>
 
                 {/* 5. Create Shipment */}
                 <button
                   onClick={() => setShowCreateShipmentModal(true)}
-                  className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
+                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#39F5A5] hover:shadow-[0_0_15px_rgba(57,245,165,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
                 >
-                  <Package className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
-                  <span className="text-xs font-semibold text-gray-700">Create Shipment</span>
+                  <Package className="w-5 h-5 text-[#39F5A5] group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-semibold text-[#F8FAFC]">Create Shipment</span>
                 </button>
 
                 {/* 6. Handle Returns */}
                 <button
                   onClick={() => setActiveTab('returns')}
-                  className="p-3 rounded-xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#D6A63C] flex flex-col items-center justify-center gap-1.5 transition-all hover:shadow-xs group cursor-pointer text-center"
+                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#FF4567] hover:shadow-[0_0_15px_rgba(255,69,103,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
                 >
-                  <RotateCcw className="w-5 h-5 text-amber-500 group-hover:text-[#D6A63C]" />
-                  <span className="text-xs font-semibold text-gray-700">Handle Returns</span>
+                  <RotateCcw className="w-5 h-5 text-[#FF4567] group-hover:scale-110 transition-transform" />
+                  <span className="text-xs font-semibold text-[#F8FAFC]">Handle Returns</span>
                 </button>
               </div>
             </div>
@@ -1124,18 +1135,18 @@ export default function DeliveryManagerDashboardPage() {
           {/* BOTTOM ROW: TODAY'S DELIVERY ORDERS + DELIVERY PARTNERS (28) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             {/* LEFT: TODAY'S DELIVERY ORDERS TABLE (lg:col-span-9) */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-9 space-y-4">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-9 space-y-4">
               {/* Header with Title and Tabs */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-amber-500" />
-                  <h3 className="text-sm font-bold text-gray-900">
+                  <Truck className="w-4 h-4 text-[#F4B942]" />
+                  <h3 className="text-sm font-bold text-[#F8FAFC]">
                     Today's Delivery Orders <span className="text-gray-400 font-normal">(312)</span>
                   </h3>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex items-center gap-1 bg-gray-50 p-1 rounded-xl border border-gray-100 text-xs overflow-x-auto">
+                <div className="flex items-center gap-1 bg-[#0B1022] p-1 rounded-xl border border-white/10 text-xs overflow-x-auto">
                   {[
                     { id: 'All', label: 'All (312)' },
                     { id: 'Assigned', label: 'Assigned (286)' },
@@ -1148,8 +1159,8 @@ export default function DeliveryManagerDashboardPage() {
                       onClick={() => setOrderFilterTab(t.id)}
                       className={`px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         orderFilterTab === t.id
-                          ? 'bg-[#071426] text-white shadow-xs'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                          ? 'bg-[#00F0FF] text-black shadow-[0_0_12px_rgba(0,240,255,0.4)]'
+                          : 'text-[#A6B1C8] hover:text-[#F8FAFC] hover:bg-white/5'
                       }`}
                     >
                       {t.label}
@@ -1167,7 +1178,7 @@ export default function DeliveryManagerDashboardPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by Order ID, Customer, Product..."
-                    className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-800 placeholder-gray-400 focus:border-[#D6A63C] outline-none"
+                    className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-white/10 bg-[#0B1022] text-xs text-[#F8FAFC] placeholder-gray-400 focus:border-[#00F0FF] focus:shadow-[0_0_10px_rgba(0,240,255,0.2)] outline-none"
                   />
                 </div>
 
@@ -1175,7 +1186,7 @@ export default function DeliveryManagerDashboardPage() {
                 <select
                   value={areaFilter}
                   onChange={(e) => setAreaFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
+                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
                 >
                   <option value="All">Area / City ▾</option>
                   <option value="Gomti Nagar">Gomti Nagar, Lucknow</option>
@@ -1189,7 +1200,7 @@ export default function DeliveryManagerDashboardPage() {
                 <select
                   value={riderFilter}
                   onChange={(e) => setRiderFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
+                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
                 >
                   <option value="All">Rider ▾</option>
                   {(deliveryData?.partners || []).map((p) => (
@@ -1203,7 +1214,7 @@ export default function DeliveryManagerDashboardPage() {
                 <select
                   value={courierFilter}
                   onChange={(e) => setCourierFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
+                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
                 >
                   <option value="All">Courier Partner ▾</option>
                   <option value="BlueDart">BlueDart Express</option>
@@ -1216,7 +1227,7 @@ export default function DeliveryManagerDashboardPage() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs text-gray-700 bg-white focus:border-[#D6A63C] outline-none"
+                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
                 >
                   <option value="All">Status ▾</option>
                   <option value="Out for Delivery">Out for Delivery</option>
@@ -1228,29 +1239,29 @@ export default function DeliveryManagerDashboardPage() {
               </div>
 
               {/* Table */}
-              <div className="overflow-x-auto rounded-xl border border-gray-100">
+              <div className="overflow-x-auto rounded-xl border border-white/10">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-gray-50/80 text-gray-500 font-semibold border-b border-gray-100">
+                  <thead className="bg-[#0B1022] text-[#A6B1C8] font-semibold border-b border-white/10">
                     <tr>
                       <th className="p-3 w-8">
                         <input
                           type="checkbox"
                           checked={orders.length > 0 && selectedOrderIds.length === orders.length}
                           onChange={handleSelectAllOrders}
-                          className="rounded text-[#D6A63C] focus:ring-[#D6A63C]"
+                          className="rounded text-[#00F0FF] focus:ring-[#00F0FF]"
                         />
                       </th>
-                      <th className="p-3 font-semibold text-gray-700">Order ID</th>
-                      <th className="p-3 font-semibold text-gray-700">Customer</th>
-                      <th className="p-3 font-semibold text-gray-700">Product</th>
-                      <th className="p-3 font-semibold text-gray-700">Address (Area)</th>
-                      <th className="p-3 font-semibold text-gray-700">Rider</th>
-                      <th className="p-3 font-semibold text-gray-700">Status</th>
-                      <th className="p-3 font-semibold text-gray-700">ETA</th>
-                      <th className="p-3 text-right font-semibold text-gray-700">Actions</th>
+                      <th className="p-3 font-semibold text-[#F8FAFC]">Order ID</th>
+                      <th className="p-3 font-semibold text-[#F8FAFC]">Customer</th>
+                      <th className="p-3 font-semibold text-[#F8FAFC]">Product</th>
+                      <th className="p-3 font-semibold text-[#F8FAFC]">Address (Area)</th>
+                      <th className="p-3 font-semibold text-[#F8FAFC]">Rider</th>
+                      <th className="p-3 font-semibold text-[#F8FAFC]">Status</th>
+                      <th className="p-3 font-semibold text-[#F8FAFC]">ETA</th>
+                      <th className="p-3 text-right font-semibold text-[#F8FAFC]">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100 text-gray-700">
+                  <tbody className="divide-y divide-white/5 text-gray-300">
                     {orders.length === 0 ? (
                       <tr>
                         <td colSpan="9" className="p-8 text-center text-gray-400">
@@ -1261,19 +1272,19 @@ export default function DeliveryManagerDashboardPage() {
                       orders.map((order) => {
                         const isChecked = selectedOrderIds.includes(order.orderId);
                         return (
-                          <tr key={order.id} className="hover:bg-amber-50/30 transition-colors">
+                          <tr key={order.id} className="hover:bg-white/5 transition-colors">
                             <td className="p-3">
                               <input
                                 type="checkbox"
                                 checked={isChecked}
                                 onChange={() => handleSelectOrder(order.orderId)}
-                                className="rounded text-[#D6A63C] focus:ring-[#D6A63C]"
+                                className="rounded text-[#00F0FF] focus:ring-[#00F0FF]"
                               />
                             </td>
-                            <td className="p-3 font-bold text-gray-900 whitespace-nowrap">
+                            <td className="p-3 font-bold text-[#F8FAFC] whitespace-nowrap">
                               {order.orderId}
                             </td>
-                            <td className="p-3 font-medium whitespace-nowrap text-gray-900">
+                            <td className="p-3 font-medium whitespace-nowrap text-[#F8FAFC]">
                               {order.customer}
                             </td>
                             <td className="p-3 whitespace-nowrap">
@@ -1281,17 +1292,17 @@ export default function DeliveryManagerDashboardPage() {
                                 <img
                                   src={order.productImage}
                                   alt={order.productShortName}
-                                  className="w-7 h-7 rounded-lg object-contain bg-gray-50 border border-gray-100 p-0.5"
+                                  className="w-7 h-7 rounded-lg object-contain bg-[#0B1022] border border-white/10 p-0.5"
                                   onError={(e) => {
                                     e.target.src = '/images/products/featured_rolex_submariner.jpg';
                                   }}
                                 />
-                                <span className="font-semibold text-gray-800">{order.productShortName}</span>
+                                <span className="font-semibold text-gray-200">{order.productShortName}</span>
                               </div>
                             </td>
-                            <td className="p-3 text-gray-600 whitespace-nowrap">
-                              <div className="flex items-center gap-1 text-gray-600">
-                                <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                            <td className="p-3 text-gray-300 whitespace-nowrap">
+                              <div className="flex items-center gap-1 text-gray-300">
+                                <MapPin className="w-3 h-3 text-[#00F0FF] flex-shrink-0" />
                                 <span>{order.area}</span>
                               </div>
                             </td>
@@ -1300,23 +1311,24 @@ export default function DeliveryManagerDashboardPage() {
                                 <img
                                   src={order.riderAvatar}
                                   alt={order.riderName}
-                                  className="w-6 h-6 rounded-full object-cover border border-gray-200"
+                                  className="w-6 h-6 rounded-full object-cover border border-white/20"
                                 />
-                                <span className="font-medium text-gray-800">{order.riderName}</span>
+                                <span className="font-medium text-gray-200">{order.riderName}</span>
                               </div>
                             </td>
                             <td className="p-3 whitespace-nowrap">
                               <span
                                 className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold"
                                 style={{
-                                  backgroundColor: `${STATUS_COLORS[order.status] || '#6B7280'}15`,
-                                  color: STATUS_COLORS[order.status] || '#374151',
+                                  backgroundColor: `${STATUS_COLORS[order.status] || '#6B7280'}25`,
+                                  color: STATUS_COLORS[order.status] || '#F8FAFC',
+                                  border: `1px solid ${STATUS_COLORS[order.status] || '#6B7280'}50`,
                                 }}
                               >
                                 {order.status}
                               </span>
                             </td>
-                            <td className="p-3 font-semibold text-gray-700 whitespace-nowrap">
+                            <td className="p-3 font-semibold text-gray-300 whitespace-nowrap">
                               {order.eta}
                             </td>
                             <td className="p-3 text-right whitespace-nowrap">
@@ -1327,7 +1339,7 @@ export default function DeliveryManagerDashboardPage() {
                                     setSelectedOrderForTracking(order);
                                     setShowTrackingModal(true);
                                   }}
-                                  className="p-1.5 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
+                                  className="p-1.5 rounded-lg text-gray-400 hover:text-[#00F0FF] hover:bg-white/10 transition-colors cursor-pointer"
                                   title="View Live Shipment Tracking"
                                 >
                                   <Eye className="w-3.5 h-3.5" />
@@ -1346,7 +1358,7 @@ export default function DeliveryManagerDashboardPage() {
                                     });
                                     setShowContactModal(true);
                                   }}
-                                  className="p-1.5 rounded-lg text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors cursor-pointer"
+                                  className="p-1.5 rounded-lg text-gray-400 hover:text-[#39F5A5] hover:bg-white/10 transition-colors cursor-pointer"
                                   title="Contact Rider or Customer"
                                 >
                                   <Phone className="w-3.5 h-3.5" />
@@ -1358,7 +1370,7 @@ export default function DeliveryManagerDashboardPage() {
                                     setSelectedOrderForFailure(order);
                                     setShowFailedAttemptModal(true);
                                   }}
-                                  className="p-1.5 rounded-lg text-gray-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                  className="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-white/10 transition-colors cursor-pointer"
                                   title="Log Delivery Attempt Failure"
                                 >
                                   <MoreVertical className="w-3.5 h-3.5" />
@@ -1374,38 +1386,38 @@ export default function DeliveryManagerDashboardPage() {
               </div>
 
               {/* Table Pagination matching image */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs text-gray-500">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs text-[#A6B1C8]">
                 <span>Showing 1–5 of 312 orders</span>
                 <div className="flex items-center gap-1">
-                  <select className="px-2 py-1 rounded-lg border border-gray-200 text-xs bg-white text-gray-700 outline-none mr-2">
+                  <select className="px-2 py-1 rounded-lg border border-white/10 text-xs bg-[#0B1022] text-[#F8FAFC] outline-none mr-2">
                     <option>5 per page ▾</option>
                     <option>10 per page ▾</option>
                     <option>25 per page ▾</option>
                   </select>
-                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">«</button>
-                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">‹</button>
-                  <button className="px-2.5 py-1 rounded bg-[#D6A63C] text-[#071426] font-bold">1</button>
-                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">2</button>
-                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">3</button>
-                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">4</button>
-                  <span className="px-1">...</span>
-                  <button className="px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50">63</button>
-                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">›</button>
-                  <button className="px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 cursor-pointer">»</button>
+                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">«</button>
+                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">‹</button>
+                  <button className="px-2.5 py-1 rounded bg-[#00F0FF] text-black font-bold shadow-[0_0_10px_rgba(0,240,255,0.4)]">1</button>
+                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">2</button>
+                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">3</button>
+                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">4</button>
+                  <span className="px-1 text-gray-500">...</span>
+                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">63</button>
+                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">›</button>
+                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">»</button>
                 </div>
               </div>
             </div>
 
             {/* RIGHT: DELIVERY PARTNERS (28) WIDGET (lg:col-span-3) */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs lg:col-span-3 space-y-4">
+            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-3 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-amber-500" />
-                  <h3 className="text-sm font-bold text-gray-900">Delivery Partners <span className="text-gray-400 font-normal">(28)</span></h3>
+                  <Users className="w-4 h-4 text-[#F4B942]" />
+                  <h3 className="text-sm font-bold text-[#F8FAFC]">Delivery Partners <span className="text-gray-400 font-normal">(28)</span></h3>
                 </div>
                 <button
                   onClick={() => setActiveTab('partners')}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="text-xs font-bold text-[#00F0FF] hover:text-[#00CFFF] cursor-pointer"
                 >
                   View All →
                 </button>
@@ -1416,7 +1428,7 @@ export default function DeliveryManagerDashboardPage() {
                 {(deliveryData?.partners || []).slice(0, 4).map((rider) => (
                   <div
                     key={rider.id}
-                    className="p-3 rounded-xl border border-gray-100 hover:border-[#D6A63C] bg-gray-50/50 hover:bg-white transition-all flex items-center justify-between cursor-pointer"
+                    className="p-3 rounded-xl border border-white/10 hover:border-[#00F0FF] bg-[#0B1022] hover:bg-white/5 transition-all flex items-center justify-between cursor-pointer group"
                     onClick={() => {
                       setContactTarget({
                         name: rider.name,
@@ -1430,28 +1442,28 @@ export default function DeliveryManagerDashboardPage() {
                       <img
                         src={rider.avatar}
                         alt={rider.name}
-                        className="w-9 h-9 rounded-full object-cover border border-gray-200"
+                        className="w-9 h-9 rounded-full object-cover border border-white/20"
                       />
                       <div>
-                        <p className="font-bold text-xs text-gray-900">{rider.name}</p>
+                        <p className="font-bold text-xs text-[#F8FAFC]">{rider.name}</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <span
                             className={`w-2 h-2 rounded-full ${
                               rider.status === 'On Delivery'
-                                ? 'bg-green-500'
+                                ? 'bg-[#39F5A5] animate-pulse shadow-[0_0_8px_rgba(57,245,165,0.6)]'
                                 : rider.status === 'Available'
-                                ? 'bg-amber-500'
+                                ? 'bg-[#F4B942]'
                                 : 'bg-gray-400'
                             }`}
                           />
-                          <span className="text-[11px] text-gray-500 font-medium">{rider.status}</span>
+                          <span className="text-[11px] text-[#A6B1C8] font-medium">{rider.status}</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <p className="text-xs font-bold text-gray-900">{rider.activeOrders} Orders</p>
-                      <p className="text-[10px] text-green-600 font-bold">{rider.successRate} Success</p>
+                      <p className="text-xs font-bold text-[#F8FAFC]">{rider.activeOrders} Orders</p>
+                      <p className="text-[10px] text-[#39F5A5] font-bold">{rider.successRate} Success</p>
                     </div>
                   </div>
                 ))}
@@ -1460,9 +1472,9 @@ export default function DeliveryManagerDashboardPage() {
               {/* Add Delivery Partner Button */}
               <button
                 onClick={() => setShowAddPartnerModal(true)}
-                className="w-full py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                className="w-full py-2 rounded-xl bg-[#0B1022] hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 hover:border-[#00F0FF] font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.1)]"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3.5 h-3.5 text-[#00F0FF]" />
                 <span>Add Delivery Partner</span>
               </button>
             </div>

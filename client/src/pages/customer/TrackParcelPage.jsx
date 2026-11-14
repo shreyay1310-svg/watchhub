@@ -102,7 +102,7 @@ export default function TrackParcelPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-gray-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] font-sans flex flex-col">
       <CustomerNavbar />
 
       {/* ════════════════════════════════════════════════════════════════
@@ -195,19 +195,19 @@ export default function TrackParcelPage() {
           2. TOP TRACKING OPTIONS BAR (3 Tabs: Order ID, AWB, My Orders)
           ════════════════════════════════════════════════════════════════ */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20 w-full mb-8">
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl border border-white/10 overflow-hidden">
           {/* Top 3 Segmented Tabs */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 border-b border-gray-100">
+          <div className="grid grid-cols-1 sm:grid-cols-3 border-b border-white/10">
             <button
               type="button"
               onClick={() => setActiveTab('orderId')}
               className={`flex items-center justify-center gap-2 py-3.5 px-4 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 activeTab === 'orderId'
                   ? 'bg-[#0B121C] text-white shadow-inner'
-                  : 'bg-gray-50/70 hover:bg-gray-100 text-gray-700'
+                  : 'bg-[#0B1022]/80/70 hover:bg-white/5 text-[#A6B1C8]'
               }`}
             >
-              <Package className={`w-4 h-4 ${activeTab === 'orderId' ? 'text-[#D4A84F]' : 'text-gray-500'}`} />
+              <Package className={`w-4 h-4 ${activeTab === 'orderId' ? 'text-[#D4A84F]' : 'text-[#A6B1C8]'}`} />
               <span>Track by Order ID</span>
             </button>
 
@@ -217,10 +217,10 @@ export default function TrackParcelPage() {
               className={`flex items-center justify-center gap-2 py-3.5 px-4 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 activeTab === 'awb'
                   ? 'bg-[#0B121C] text-white shadow-inner'
-                  : 'bg-gray-50/70 hover:bg-gray-100 text-gray-700'
+                  : 'bg-[#0B1022]/80/70 hover:bg-white/5 text-[#A6B1C8]'
               }`}
             >
-              <Truck className={`w-4 h-4 ${activeTab === 'awb' ? 'text-[#D4A84F]' : 'text-gray-500'}`} />
+              <Truck className={`w-4 h-4 ${activeTab === 'awb' ? 'text-[#D4A84F]' : 'text-[#A6B1C8]'}`} />
               <span>Track by AWB Number</span>
             </button>
 
@@ -230,21 +230,21 @@ export default function TrackParcelPage() {
               className={`flex items-center justify-center gap-2 py-3.5 px-4 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 activeTab === 'myOrders'
                   ? 'bg-[#0B121C] text-white shadow-inner'
-                  : 'bg-gray-50/70 hover:bg-gray-100 text-gray-700'
+                  : 'bg-[#0B1022]/80/70 hover:bg-white/5 text-[#A6B1C8]'
               }`}
             >
-              <Layers className={`w-4 h-4 ${activeTab === 'myOrders' ? 'text-[#D4A84F]' : 'text-gray-500'}`} />
+              <Layers className={`w-4 h-4 ${activeTab === 'myOrders' ? 'text-[#D4A84F]' : 'text-[#A6B1C8]'}`} />
               <span>Track from My Orders</span>
             </button>
           </div>
 
           {/* Tab Content & Search Form */}
-          <div className="p-4 sm:p-6 bg-white">
+          <div className="p-4 sm:p-6 bg-[#10182D]/85">
             {activeTab === 'orderId' && (
               <form onSubmit={handleTrackSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                 {/* Order ID Input */}
                 <div className="md:col-span-5">
-                  <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                  <label className="block text-xs font-bold text-[#A6B1C8] mb-1.5">
                     Order ID <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -255,14 +255,14 @@ export default function TrackParcelPage() {
                       onChange={(e) => setOrderIdInput(e.target.value)}
                       placeholder="Enter your order ID (e.g. WH20261125)"
                       required
-                      className="w-full h-11 pl-10 pr-4 text-xs sm:text-sm rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
+                      className="w-full h-11 pl-10 pr-4 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#0B1022]/80/50 text-[#F8FAFC] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
                     />
                   </div>
                 </div>
 
                 {/* Email / Phone Input */}
                 <div className="md:col-span-5">
-                  <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                  <label className="block text-xs font-bold text-[#A6B1C8] mb-1.5">
                     Registered Email or Mobile Number <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -273,7 +273,7 @@ export default function TrackParcelPage() {
                       onChange={(e) => setContactInput(e.target.value)}
                       placeholder="Enter your email or mobile number"
                       required
-                      className="w-full h-11 pl-10 pr-4 text-xs sm:text-sm rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
+                      className="w-full h-11 pl-10 pr-4 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#0B1022]/80/50 text-[#F8FAFC] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -302,7 +302,7 @@ export default function TrackParcelPage() {
               <form onSubmit={handleTrackSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                 {/* AWB Number Input */}
                 <div className="md:col-span-5">
-                  <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                  <label className="block text-xs font-bold text-[#A6B1C8] mb-1.5">
                     AWB / Consignment Number <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -313,20 +313,20 @@ export default function TrackParcelPage() {
                       onChange={(e) => setAwbInput(e.target.value)}
                       placeholder="Enter 10-14 digit AWB (e.g. DLV7894563210)"
                       required
-                      className="w-full h-11 pl-10 pr-4 text-xs sm:text-sm rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
+                      className="w-full h-11 pl-10 pr-4 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#0B1022]/80/50 text-[#F8FAFC] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
                     />
                   </div>
                 </div>
 
                 {/* Courier Partner Selector */}
                 <div className="md:col-span-5">
-                  <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                  <label className="block text-xs font-bold text-[#A6B1C8] mb-1.5">
                     Courier Partner <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={selectedCourier}
                     onChange={(e) => setSelectedCourier(e.target.value)}
-                    className="w-full h-11 px-3 text-xs sm:text-sm rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
+                    className="w-full h-11 px-3 text-xs sm:text-sm rounded-xl border border-white/10 bg-[#0B1022]/80/50 text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#D4A84F]/50 focus:border-[#D4A84F] transition-all font-medium"
                   >
                     <option value="Delhivery">Delhivery (Official Partner)</option>
                     <option value="BlueDart">BlueDart Express</option>
@@ -358,7 +358,7 @@ export default function TrackParcelPage() {
 
             {activeTab === 'myOrders' && (
               <div>
-                <p className="text-xs text-gray-500 mb-3">
+                <p className="text-xs text-[#A6B1C8] mb-3">
                   Select any recent order from your WatchHub account to view real-time courier tracking:
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -371,17 +371,17 @@ export default function TrackParcelPage() {
                         className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
                           isSelected
                             ? 'border-[#D4A84F] bg-[#FCF9F2] shadow-sm'
-                            : 'border-gray-200 bg-gray-50/50 hover:bg-gray-100 hover:border-gray-300'
+                            : 'border-white/10 bg-[#0B1022]/80/50 hover:bg-white/5 hover:border-gray-300'
                         }`}
                       >
                         <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="font-bold text-gray-900">{order.orderId}</span>
+                          <span className="font-bold text-[#F8FAFC]">{order.orderId}</span>
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
                             {order.timeline.find((t) => t.active)?.title || 'In Transit'}
                           </span>
                         </div>
-                        <p className="text-xs font-medium text-gray-700 truncate">{order.product.name}</p>
-                        <div className="flex items-center justify-between mt-2 text-[11px] text-gray-500">
+                        <p className="text-xs font-medium text-[#A6B1C8] truncate">{order.product.name}</p>
+                        <div className="flex items-center justify-between mt-2 text-[11px] text-[#A6B1C8]">
                           <span>{order.formattedPrice}</span>
                           <span className="font-semibold text-[#D4A84F] flex items-center gap-0.5">
                             Track Now <ChevronRight className="w-3 h-3" />
@@ -423,14 +423,14 @@ export default function TrackParcelPage() {
               LEFT COLUMN: ORDER DETAILS (lg:col-span-3)
               ───────────────────────────────────────────────────────────── */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6 sticky top-24">
-              <h2 className="text-base font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">
+            <div className="bg-white rounded-2xl shadow-sm border border-white/10 p-5 sm:p-6 sticky top-24">
+              <h2 className="text-base font-bold text-[#F8FAFC] mb-4 pb-2 border-b border-white/10">
                 Order Details
               </h2>
 
               {/* Product Thumbnail & Core Info */}
-              <div className="flex items-center gap-3.5 mb-5 pb-4 border-b border-gray-100">
-                <div className="w-20 h-20 rounded-xl bg-gray-50 border border-gray-100 p-1.5 flex items-center justify-center flex-shrink-0">
+              <div className="flex items-center gap-3.5 mb-5 pb-4 border-b border-white/10">
+                <div className="w-20 h-20 rounded-xl bg-[#0B1022]/80 border border-white/10 p-1.5 flex items-center justify-center flex-shrink-0">
                   <img
                     src={currentOrder.product.image}
                     alt={currentOrder.product.name}
@@ -441,13 +441,13 @@ export default function TrackParcelPage() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4A84F] block">
                     {currentOrder.product.category || 'Luxury'}
                   </span>
-                  <h3 className="text-sm font-bold text-gray-900 leading-snug line-clamp-2">
+                  <h3 className="text-sm font-bold text-[#F8FAFC] leading-snug line-clamp-2">
                     {currentOrder.product.name}
                   </h3>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-[#A6B1C8] mt-0.5">
                     Qty: {currentOrder.product.quantity}
                   </p>
-                  <p className="text-sm font-bold text-gray-900 mt-1">
+                  <p className="text-sm font-bold text-[#F8FAFC] mt-1">
                     {currentOrder.product.formattedPrice}
                   </p>
                 </div>
@@ -457,25 +457,25 @@ export default function TrackParcelPage() {
               <div className="space-y-3.5 text-xs">
                 {/* Order ID */}
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-gray-500 flex items-center gap-2">
+                  <span className="text-[#A6B1C8] flex items-center gap-2">
                     <Box className="w-4 h-4 text-gray-400" />
                     <span>Order ID</span>
                   </span>
-                  <span className="font-bold text-gray-900">{currentOrder.orderId}</span>
+                  <span className="font-bold text-[#F8FAFC]">{currentOrder.orderId}</span>
                 </div>
 
                 {/* Order Date */}
                 <div className="flex items-center justify-between py-1 border-t border-gray-50">
-                  <span className="text-gray-500 flex items-center gap-2">
+                  <span className="text-[#A6B1C8] flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-gray-400" />
                     <span>Order Date</span>
                   </span>
-                  <span className="font-semibold text-gray-800 text-right">{currentOrder.orderDate}</span>
+                  <span className="font-semibold text-[#F8FAFC] text-right">{currentOrder.orderDate}</span>
                 </div>
 
                 {/* Payment Status */}
                 <div className="flex items-center justify-between py-1 border-t border-gray-50">
-                  <span className="text-gray-500 flex items-center gap-2">
+                  <span className="text-[#A6B1C8] flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-gray-400" />
                     <span>Payment Status</span>
                   </span>
@@ -486,30 +486,30 @@ export default function TrackParcelPage() {
 
                 {/* Courier Partner */}
                 <div className="flex items-center justify-between py-1 border-t border-gray-50">
-                  <span className="text-gray-500 flex items-center gap-2">
+                  <span className="text-[#A6B1C8] flex items-center gap-2">
                     <Truck className="w-4 h-4 text-gray-400" />
                     <span>Courier Partner</span>
                   </span>
-                  <span className="font-bold text-gray-900">{currentOrder.courierPartner}</span>
+                  <span className="font-bold text-[#F8FAFC]">{currentOrder.courierPartner}</span>
                 </div>
 
                 {/* Tracking / AWB No. with Copy Button */}
                 <div className="py-2 border-t border-gray-50">
-                  <div className="flex items-center justify-between text-gray-500 mb-1">
+                  <div className="flex items-center justify-between text-[#A6B1C8] mb-1">
                     <span className="flex items-center gap-2">
                       <Copy className="w-4 h-4 text-gray-400" />
                       <span>Tracking / AWB No.</span>
                     </span>
                   </div>
-                  <div className="flex items-center justify-between bg-gray-50 rounded-xl p-2.5 border border-gray-100">
-                    <span className="font-mono font-bold text-gray-900 text-xs">
+                  <div className="flex items-center justify-between bg-[#0B1022]/80 rounded-xl p-2.5 border border-white/10">
+                    <span className="font-mono font-bold text-[#F8FAFC] text-xs">
                       {currentOrder.awbNumber}
                     </span>
                     <button
                       type="button"
                       onClick={handleCopyAwb}
                       title="Copy AWB Number"
-                      className="p-1 hover:bg-white rounded text-gray-500 hover:text-[#D4A84F] transition-all cursor-pointer flex items-center gap-1 text-[11px] font-semibold"
+                      className="p-1 hover:bg-white rounded text-[#A6B1C8] hover:text-[#D4A84F] transition-all cursor-pointer flex items-center gap-1 text-[11px] font-semibold"
                     >
                       {isCopied ? (
                         <span className="text-emerald-600 flex items-center gap-1 font-bold">
@@ -529,7 +529,7 @@ export default function TrackParcelPage() {
                       href={currentOrder.courierTrackingUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-2 px-3 rounded-xl border border-gray-200 hover:border-[#D4A84F] bg-white hover:bg-gray-50 text-gray-700 hover:text-black font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
+                      className="w-full py-2 px-3 rounded-xl border border-white/10 hover:border-[#D4A84F] bg-white hover:bg-[#0B1022]/80 text-[#A6B1C8] hover:text-black font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
                     >
                       <span>Carrier Portal Tracking</span>
                       <ExternalLink className="w-3 h-3 text-gray-400" />
@@ -544,10 +544,10 @@ export default function TrackParcelPage() {
               CENTER COLUMN: SHIPMENT PROGRESS (8 Stages) (lg:col-span-5)
               ───────────────────────────────────────────────────────────── */}
           <div className="lg:col-span-5">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-white/10 p-5 sm:p-6">
               {/* Card Header with Status Badge */}
-              <div className="flex items-center justify-between mb-6 pb-3 border-b border-gray-100">
-                <h2 className="text-base font-bold text-gray-900">
+              <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+                <h2 className="text-base font-bold text-[#F8FAFC]">
                   Shipment Progress
                 </h2>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -597,9 +597,9 @@ export default function TrackParcelPage() {
                           <h4
                             className={`text-sm font-bold ${
                               isActive
-                                ? 'text-gray-900'
+                                ? 'text-[#F8FAFC]'
                                 : isCompleted
-                                ? 'text-gray-900'
+                                ? 'text-[#F8FAFC]'
                                 : 'text-gray-400'
                             }`}
                           >
@@ -608,7 +608,7 @@ export default function TrackParcelPage() {
                           {stage.time && (
                             <span
                               className={`text-[11px] ${
-                                isActive ? 'font-semibold text-gray-700' : 'text-gray-500'
+                                isActive ? 'font-semibold text-[#A6B1C8]' : 'text-[#A6B1C8]'
                               }`}
                             >
                               {stage.time}
@@ -624,7 +624,7 @@ export default function TrackParcelPage() {
                         ) : (
                           <p
                             className={`text-xs mt-0.5 leading-relaxed ${
-                              isCompleted ? 'text-gray-600' : 'text-gray-400'
+                              isCompleted ? 'text-[#A6B1C8]' : 'text-gray-400'
                             }`}
                           >
                             {stage.description}
@@ -644,31 +644,31 @@ export default function TrackParcelPage() {
           <div className="lg:col-span-4 space-y-5">
             {/* 1. Delivery Estimate Card (Champagne gold container) */}
             <div className="bg-[#FCF9F2] border border-[#EADBBD] rounded-2xl p-5 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-bold text-gray-600 mb-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#A6B1C8] mb-2">
                 <Calendar className="w-4 h-4 text-[#D4A84F]" />
                 <span className="uppercase tracking-wider">Delivery Estimate</span>
               </div>
-              <p className="text-xs text-gray-500">Expected Delivery</p>
-              <h3 className="text-2xl sm:text-3xl font-bold font-sans text-gray-900 mt-0.5">
+              <p className="text-xs text-[#A6B1C8]">Expected Delivery</p>
+              <h3 className="text-2xl sm:text-3xl font-bold font-sans text-[#F8FAFC] mt-0.5">
                 {currentOrder.expectedDelivery}
               </h3>
-              <p className="text-xs font-medium text-gray-600 mt-1">
+              <p className="text-xs font-medium text-[#A6B1C8] mt-1">
                 {currentOrder.deliveryTimeWindow}
               </p>
             </div>
 
             {/* 2. Current Location & Interactive Map Preview */}
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-white/10 rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-full bg-amber-50 text-[#D4A84F] flex items-center justify-center">
                     <MapPin className="w-4 h-4 fill-[#D4A84F]" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    <h4 className="text-xs font-bold text-[#A6B1C8] uppercase tracking-wider">
                       Current Location
                     </h4>
-                    <p className="text-sm font-bold text-gray-900 leading-tight">
+                    <p className="text-sm font-bold text-[#F8FAFC] leading-tight">
                       {currentOrder.currentLocation}
                     </p>
                   </div>
@@ -680,7 +680,7 @@ export default function TrackParcelPage() {
               </p>
 
               {/* Styled Vector Map Preview */}
-              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-gray-200 bg-[#E8ECEF]">
+              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-[#E8ECEF]">
                 {/* SVG Simulated City Grid & Highways */}
                 <svg className="w-full h-full" viewBox="0 0 300 140" fill="none">
                   {/* Background map land */}
@@ -712,9 +712,9 @@ export default function TrackParcelPage() {
                 </svg>
 
                 {/* Floating Map Status Bubble (Matches reference UI exactly) */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-xs shadow-md border border-gray-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 whitespace-nowrap">
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-xs shadow-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-1.5 whitespace-nowrap">
                   <div className="w-2 h-2 rounded-full bg-[#D4A84F] animate-ping" />
-                  <span className="text-[11px] font-bold text-gray-800">
+                  <span className="text-[11px] font-bold text-[#F8FAFC]">
                     In Transit - Gurugram Hub
                   </span>
                 </div>
@@ -725,13 +725,13 @@ export default function TrackParcelPage() {
             <button
               type="button"
               onClick={() => setShowUpdatesModal(true)}
-              className="w-full py-3.5 px-4 rounded-xl border border-[#EADBBD] bg-white hover:bg-[#FCF9F2] text-gray-900 font-bold text-xs sm:text-sm flex items-center justify-between shadow-xs transition-all cursor-pointer group"
+              className="w-full py-3.5 px-4 rounded-xl border border-[#EADBBD] bg-white hover:bg-[#FCF9F2] text-[#F8FAFC] font-bold text-xs sm:text-sm flex items-center justify-between shadow-xs transition-all cursor-pointer group"
             >
               <div className="flex items-center gap-2">
                 <Bell className="w-4 h-4 text-[#D4A84F] group-hover:scale-110 transition-transform" />
                 <span>Get Delivery Updates</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#F8FAFC] transition-colors" />
             </button>
           </div>
 
@@ -743,7 +743,7 @@ export default function TrackParcelPage() {
           ════════════════════════════════════════════════════════════════ */}
       {showUpdatesModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-gray-100 overflow-hidden animate-scaleUp">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-white/10 overflow-hidden animate-scaleUp">
             {/* Modal Header */}
             <div className="bg-[#0B121C] text-white p-5 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -766,18 +766,18 @@ export default function TrackParcelPage() {
 
             {/* Modal Form */}
             <form onSubmit={handleSubscribeUpdates} className="p-5 space-y-4">
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-[#A6B1C8]">
                 Choose how you would like to receive real-time notifications for milestone updates:
               </p>
 
               {/* Notification Channel Checkboxes */}
               <div className="space-y-2.5">
-                <label className="flex items-center justify-between p-3 rounded-xl border border-gray-200 bg-gray-50/50 cursor-pointer hover:border-[#D4A84F]">
+                <label className="flex items-center justify-between p-3 rounded-xl border border-white/10 bg-[#0B1022]/80/50 cursor-pointer hover:border-[#D4A84F]">
                   <div className="flex items-center gap-2.5">
                     <span className="text-lg">💬</span>
                     <div>
-                      <p className="text-xs font-bold text-gray-900">WhatsApp Instant Alerts</p>
-                      <p className="text-[11px] text-gray-500">Live milestone updates on WhatsApp</p>
+                      <p className="text-xs font-bold text-[#F8FAFC]">WhatsApp Instant Alerts</p>
+                      <p className="text-[11px] text-[#A6B1C8]">Live milestone updates on WhatsApp</p>
                     </div>
                   </div>
                   <input
@@ -790,12 +790,12 @@ export default function TrackParcelPage() {
                   />
                 </label>
 
-                <label className="flex items-center justify-between p-3 rounded-xl border border-gray-200 bg-gray-50/50 cursor-pointer hover:border-[#D4A84F]">
+                <label className="flex items-center justify-between p-3 rounded-xl border border-white/10 bg-[#0B1022]/80/50 cursor-pointer hover:border-[#D4A84F]">
                   <div className="flex items-center gap-2.5">
                     <span className="text-lg">📱</span>
                     <div>
-                      <p className="text-xs font-bold text-gray-900">SMS Out-for-Delivery Alerts</p>
-                      <p className="text-[11px] text-gray-500">OTP & driver contact when dispatched</p>
+                      <p className="text-xs font-bold text-[#F8FAFC]">SMS Out-for-Delivery Alerts</p>
+                      <p className="text-[11px] text-[#A6B1C8]">OTP & driver contact when dispatched</p>
                     </div>
                   </div>
                   <input
@@ -808,12 +808,12 @@ export default function TrackParcelPage() {
                   />
                 </label>
 
-                <label className="flex items-center justify-between p-3 rounded-xl border border-gray-200 bg-gray-50/50 cursor-pointer hover:border-[#D4A84F]">
+                <label className="flex items-center justify-between p-3 rounded-xl border border-white/10 bg-[#0B1022]/80/50 cursor-pointer hover:border-[#D4A84F]">
                   <div className="flex items-center gap-2.5">
                     <span className="text-lg">✉️</span>
                     <div>
-                      <p className="text-xs font-bold text-gray-900">Email Delivery Confirmation</p>
-                      <p className="text-[11px] text-gray-500">Official invoice and warranty certificate</p>
+                      <p className="text-xs font-bold text-[#F8FAFC]">Email Delivery Confirmation</p>
+                      <p className="text-[11px] text-[#A6B1C8]">Official invoice and warranty certificate</p>
                     </div>
                   </div>
                   <input
@@ -829,7 +829,7 @@ export default function TrackParcelPage() {
 
               {/* Phone Input */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">
+                <label className="block text-xs font-bold text-[#A6B1C8] mb-1">
                   Mobile Number
                 </label>
                 <input
@@ -837,7 +837,7 @@ export default function TrackParcelPage() {
                   value={updatePhone}
                   onChange={(e) => setUpdatePhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full h-10 px-3 text-xs rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]"
+                  className="w-full h-10 px-3 text-xs rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]"
                 />
               </div>
 

@@ -48,25 +48,25 @@ export const CartPage = () => {
     return (
       <div className="min-h-screen bg-watch-light flex flex-col font-poppins">
         <CustomerNavbar />
-        <main className="max-w-xl mx-auto my-16 p-8 bg-white rounded-2xl shadow-xl text-center border border-gray-200">
+        <main className="max-w-xl mx-auto my-16 p-8 bg-white rounded-2xl shadow-xl text-center border border-white/10">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-10 h-10" />
           </div>
-          <h2 className="text-2xl font-black text-gray-900 mb-1">Order Placed Successfully! 🎉</h2>
-          <p className="text-xs text-gray-500 mb-6">
-            Thank you for choosing WatchHub. Your luxury order <span className="font-mono font-bold text-gray-800">#WH{Math.floor(10000 + Math.random() * 90000)}</span> has been confirmed.
+          <h2 className="text-2xl font-black text-[#F8FAFC] mb-1">Order Placed Successfully! 🎉</h2>
+          <p className="text-xs text-[#A6B1C8] mb-6">
+            Thank you for choosing WatchHub. Your luxury order <span className="font-mono font-bold text-[#F8FAFC]">#WH{Math.floor(10000 + Math.random() * 90000)}</span> has been confirmed.
           </p>
-          <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-xs text-left mb-6 space-y-1.5">
+          <div className="bg-[#0B1022]/80 p-4 rounded-xl border border-white/10 text-xs text-left mb-6 space-y-1.5">
             <div className="flex justify-between">
-              <span className="text-gray-500">Payment Status:</span>
+              <span className="text-[#A6B1C8]">Payment Status:</span>
               <span className="font-bold text-emerald-600">Verified & Paid (Online)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">Estimated Delivery:</span>
-              <span className="font-bold text-gray-800">Within 3-4 Working Days</span>
+              <span className="text-[#A6B1C8]">Estimated Delivery:</span>
+              <span className="font-bold text-[#F8FAFC]">Within 3-4 Working Days</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">Warehouse Fulfillment:</span>
+              <span className="text-[#A6B1C8]">Warehouse Fulfillment:</span>
               <span className="font-bold text-blue-600">Assigned to Mumbai Central Hub</span>
             </div>
           </div>
@@ -74,7 +74,7 @@ export const CartPage = () => {
             <Link to="/" className="btn-gold text-xs">
               Continue Shopping
             </Link>
-            <Link to="/dashboard" className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50">
+            <Link to="/dashboard" className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-[#A6B1C8] hover:bg-[#0B1022]/80">
               View in Staff Portal
             </Link>
           </div>
@@ -88,13 +88,13 @@ export const CartPage = () => {
       <CustomerNavbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 w-full flex-1">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Shopping Cart ({cart.length} items)</h2>
+        <h2 className="text-2xl font-bold text-[#F8FAFC] mb-6">Shopping Cart ({cart.length} items)</h2>
 
         {cart.length === 0 ? (
-          <div className="bg-white p-12 text-center rounded-2xl border border-gray-200 shadow-sm max-w-lg mx-auto">
+          <div className="bg-white p-12 text-center rounded-2xl border border-white/10 shadow-sm max-w-lg mx-auto">
             <span className="text-6xl block mb-3">🛒</span>
-            <h3 className="text-lg font-bold text-gray-800">Your WatchHub cart is empty</h3>
-            <p className="text-xs text-gray-500 mt-1 mb-5">Explore our heritage collections and find your timepiece.</p>
+            <h3 className="text-lg font-bold text-[#F8FAFC]">Your WatchHub cart is empty</h3>
+            <p className="text-xs text-[#A6B1C8] mt-1 mb-5">Explore our heritage collections and find your timepiece.</p>
             <Link to="/products" className="btn-gold text-xs">
               Start Shopping
             </Link>
@@ -104,8 +104,8 @@ export const CartPage = () => {
             {/* Left Items Column */}
             <div className="lg:col-span-8 space-y-4">
               {cart.map((item) => (
-                <div key={item.id} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between gap-4">
-                  <div className="w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-100 overflow-hidden">
+                <div key={item.id} className="bg-white p-4 rounded-xl border border-white/10 shadow-sm flex items-center justify-between gap-4">
+                  <div className="w-20 h-20 bg-[#0B1022]/80 rounded-lg flex items-center justify-center flex-shrink-0 border border-white/10 overflow-hidden">
                     {item.image ? (
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     ) : (
@@ -115,9 +115,9 @@ export const CartPage = () => {
 
                   <div className="flex-1 min-w-0">
                     <span className="text-[10px] text-gray-400 font-bold uppercase">{item.category}</span>
-                    <h4 className="text-sm font-bold text-gray-900 truncate">{item.name}</h4>
-                    <p className="text-xs text-gray-500">{item.warranty || '2 Years Warranty'}</p>
-                    <div className="mt-2 text-sm font-extrabold text-gray-900">
+                    <h4 className="text-sm font-bold text-[#F8FAFC] truncate">{item.name}</h4>
+                    <p className="text-xs text-[#A6B1C8]">{item.warranty || '2 Years Warranty'}</p>
+                    <div className="mt-2 text-sm font-extrabold text-[#F8FAFC]">
                       ₹{item.price.toLocaleString('en-IN')}{' '}
                       <span className="text-xs text-gray-400 line-through font-normal ml-1">
                         ₹{(item.originalPrice || item.price * 1.4).toLocaleString('en-IN')}
@@ -126,17 +126,17 @@ export const CartPage = () => {
                   </div>
 
                   {/* Quantity Controls */}
-                  <div className="flex items-center gap-2 border border-gray-200 rounded-lg p-1 bg-gray-50">
+                  <div className="flex items-center gap-2 border border-white/10 rounded-lg p-1 bg-[#0B1022]/80">
                     <button
                       onClick={() => updateQuantity(item.id, -1)}
-                      className="w-7 h-7 bg-white rounded flex items-center justify-center text-gray-700 hover:bg-gray-100 shadow-sm"
+                      className="w-7 h-7 bg-white rounded flex items-center justify-center text-[#A6B1C8] hover:bg-gray-100 shadow-sm"
                     >
                       <Minus className="w-3.5 h-3.5" />
                     </button>
                     <span className="w-8 text-center text-xs font-bold">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.id, 1)}
-                      className="w-7 h-7 bg-white rounded flex items-center justify-center text-gray-700 hover:bg-gray-100 shadow-sm"
+                      className="w-7 h-7 bg-white rounded flex items-center justify-center text-[#A6B1C8] hover:bg-gray-100 shadow-sm"
                     >
                       <Plus className="w-3.5 h-3.5" />
                     </button>
@@ -144,7 +144,7 @@ export const CartPage = () => {
 
                   {/* Subtotal & Delete */}
                   <div className="text-right">
-                    <p className="text-sm font-extrabold text-gray-900">
+                    <p className="text-sm font-extrabold text-[#F8FAFC]">
                       ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                     </p>
                     <button
@@ -162,8 +162,8 @@ export const CartPage = () => {
             {/* Right Summary Column */}
             <div className="lg:col-span-4 space-y-4">
               {/* Coupon Card */}
-              <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                <span className="text-xs font-bold text-gray-800 flex items-center gap-1.5 mb-2">
+              <div className="bg-[#10182D]/85 p-4 rounded-xl border border-white/10 shadow-sm text-[#F8FAFC]">
+                <span className="text-xs font-bold text-[#F8FAFC] flex items-center gap-1.5 mb-2">
                   <Tag className="w-3.5 h-3.5 text-watch-gold" /> Apply Promo Code
                 </span>
 
@@ -201,32 +201,32 @@ export const CartPage = () => {
               </div>
 
               {/* Order Summary Card */}
-              <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-3 text-xs">
-                <h3 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2">Order Summary</h3>
+              <div className="bg-[#10182D]/85 p-5 rounded-xl border border-white/10 shadow-sm space-y-3 text-xs text-[#F8FAFC]">
+                <h3 className="text-sm font-bold text-[#F8FAFC] border-b border-white/10 pb-2">Order Summary</h3>
 
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-[#A6B1C8]">
                   <span>Total MRP</span>
                   <span>₹{mrpTotal.toLocaleString('en-IN')}</span>
                 </div>
 
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-[#A6B1C8]">
                   <span>Product Discount</span>
                   <span className="text-emerald-600 font-bold">-₹{(mrpTotal - subtotal).toLocaleString('en-IN')}</span>
                 </div>
 
                 {appliedCoupon && (
-                  <div className="flex justify-between text-gray-600">
+                  <div className="flex justify-between text-[#A6B1C8]">
                     <span>Coupon Savings ({appliedCoupon.percent}%)</span>
                     <span className="text-emerald-600 font-bold">-₹{couponDiscount.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-[#A6B1C8]">
                   <span>Delivery Charges</span>
                   <span>{deliveryCharges === 0 ? <strong className="text-emerald-600">FREE</strong> : `₹${deliveryCharges}`}</span>
                 </div>
 
-                <div className="border-t border-gray-200 pt-3 flex justify-between items-center text-sm font-extrabold text-gray-900">
+                <div className="border-t border-white/10 pt-3 flex justify-between items-center text-sm font-extrabold text-[#F8FAFC]">
                   <span>Grand Total</span>
                   <span className="text-lg text-watch-navy">₹{totalAmount.toLocaleString('en-IN')}</span>
                 </div>

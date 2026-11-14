@@ -58,7 +58,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200/90 shadow-xl p-5 flex flex-col justify-between relative overflow-hidden font-poppins select-none">
+    <div className="bg-[#10182D]/90 backdrop-blur-xl rounded-3xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.6)] p-5 flex flex-col text-[#F8FAFC] justify-between relative overflow-hidden font-poppins select-none">
       {/* Background radial atmosphere */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#F9FAFB] via-white to-[#F3F4F6] pointer-events-none" />
 
@@ -76,14 +76,14 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
         </div>
 
         {/* Floating View Switcher Pills */}
-        <div className="flex items-center gap-1.5 self-start bg-gray-100/90 p-1 rounded-2xl border border-gray-200 shadow-xs">
+        <div className="flex items-center gap-1.5 self-start bg-[#0B1022]/90 border border-white/10 p-1 rounded-2xl border border-gray-200 shadow-xs">
           <button
             type="button"
             onClick={() => setViewMode('360')}
             className={`px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               viewMode === '360'
                 ? 'bg-watch-navy text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-[#A6B1C8] hover:text-[#F8FAFC]'
             }`}
           >
             <RotateCw className="w-3.5 h-3.5 text-watch-gold" />
@@ -96,7 +96,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
             className={`px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               viewMode === 'front'
                 ? 'bg-watch-navy text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-[#A6B1C8] hover:text-[#F8FAFC]'
             }`}
           >
             <Eye className="w-3.5 h-3.5" />
@@ -109,7 +109,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
             className={`px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               viewMode === 'back'
                 ? 'bg-watch-navy text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-[#A6B1C8] hover:text-[#F8FAFC]'
             }`}
           >
             <span>Back Case</span>
@@ -121,7 +121,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
             className={`px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
               viewMode === 'zoom'
                 ? 'bg-watch-navy text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-[#A6B1C8] hover:text-[#F8FAFC]'
             }`}
             title="Zoom In"
           >
@@ -645,7 +645,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
           className={`p-1.5 rounded-xl border flex flex-col items-center gap-1 transition-all cursor-pointer ${
             viewMode === 'front'
               ? 'border-watch-gold bg-amber-50/50 shadow-sm'
-              : 'border-gray-200 hover:border-gray-300 bg-white'
+              : 'border-white/10 hover:border-[#00F0FF]/50 bg-white/5'
           }`}
         >
           <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center" style={{ backgroundColor: dialColorHex }}>
@@ -661,7 +661,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
           className={`p-1.5 rounded-xl border flex flex-col items-center gap-1 transition-all cursor-pointer ${
             viewMode === '360'
               ? 'border-watch-gold bg-amber-50/50 shadow-sm'
-              : 'border-gray-200 hover:border-gray-300 bg-white'
+              : 'border-white/10 hover:border-[#00F0FF]/50 bg-white/5'
           }`}
         >
           <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center bg-gray-100">
@@ -677,7 +677,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
           className={`p-1.5 rounded-xl border flex flex-col items-center gap-1 transition-all cursor-pointer ${
             viewMode === 'back'
               ? 'border-watch-gold bg-amber-50/50 shadow-sm'
-              : 'border-gray-200 hover:border-gray-300 bg-white'
+              : 'border-white/10 hover:border-[#00F0FF]/50 bg-white/5'
           }`}
         >
           <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center bg-slate-800 text-watch-gold">
@@ -693,7 +693,7 @@ export const LiveWatchPreview = ({ customWatch, onSelectAngle }) => {
           className={`p-1.5 rounded-xl border flex flex-col items-center gap-1 transition-all cursor-pointer ${
             viewMode === 'zoom'
               ? 'border-watch-gold bg-amber-50/50 shadow-sm'
-              : 'border-gray-200 hover:border-gray-300 bg-white'
+              : 'border-white/10 hover:border-[#00F0FF]/50 bg-white/5'
           }`}
         >
           <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center bg-amber-100">

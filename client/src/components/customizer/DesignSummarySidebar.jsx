@@ -90,9 +90,9 @@ export const DesignSummarySidebar = ({
   const movement = MOVEMENT_CONFIG.find((m) => m.id === customWatch.movement)?.name || 'Automatic';
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-5 font-poppins flex flex-col justify-between h-full">
+    <div className="bg-[#10182D]/90 backdrop-blur-xl rounded-3xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.6)] p-5 font-poppins text-[#F8FAFC] flex flex-col justify-between h-full">
       <div>
-        <h3 className="text-base font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center justify-between">
+        <h3 className="text-base font-bold text-[#F8FAFC] pb-3 border-b border-white/10 flex items-center justify-between">
           <span>Your Custom Watch</span>
           <span className="text-[10px] font-extrabold bg-amber-50 text-amber-900 border border-watch-gold/40 px-2 py-0.5 rounded-full">
             Bespoke Edition
@@ -103,19 +103,19 @@ export const DesignSummarySidebar = ({
         <div className="mt-3.5 space-y-3 text-xs">
           {/* Watch Type */}
           <div className="flex items-start gap-2.5 pb-2.5 border-b border-gray-50">
-            <span className="p-1.5 rounded-lg bg-gray-50 text-base">⌚</span>
+            <span className="p-1.5 rounded-lg bg-[#0B1022]/80 text-base">⌚</span>
             <div className="flex-1">
               <span className="text-[10.5px] text-gray-400 font-bold block uppercase tracking-wider">Watch Type</span>
-              <span className="font-bold text-gray-900">{watchTypeObj.name}</span>
+              <span className="font-bold text-[#F8FAFC]">{watchTypeObj.name}</span>
             </div>
           </div>
 
           {/* Dial */}
           <div className="flex items-start gap-2.5 pb-2.5 border-b border-gray-50">
-            <span className="p-1.5 rounded-lg bg-gray-50 text-base">⭕</span>
+            <span className="p-1.5 rounded-lg bg-[#0B1022]/80 text-base">⭕</span>
             <div className="flex-1">
               <span className="text-[10.5px] text-gray-400 font-bold block uppercase tracking-wider">Dial</span>
-              <span className="font-bold text-gray-900">
+              <span className="font-bold text-[#F8FAFC]">
                 {dialShape}, {customWatch.dial.size} mm, {dialColor} ({dialFinish})
               </span>
             </div>
@@ -123,10 +123,10 @@ export const DesignSummarySidebar = ({
 
           {/* Case */}
           <div className="flex items-start gap-2.5 pb-2.5 border-b border-gray-50">
-            <span className="p-1.5 rounded-lg bg-gray-50 text-base">🛡️</span>
+            <span className="p-1.5 rounded-lg bg-[#0B1022]/80 text-base">🛡️</span>
             <div className="flex-1">
               <span className="text-[10.5px] text-gray-400 font-bold block uppercase tracking-wider">Case</span>
-              <span className="font-bold text-gray-900">
+              <span className="font-bold text-[#F8FAFC]">
                 {caseMat}, {caseColor}
               </span>
             </div>
@@ -134,10 +134,10 @@ export const DesignSummarySidebar = ({
 
           {/* Strap */}
           <div className="flex items-start gap-2.5 pb-2.5 border-b border-gray-50">
-            <span className="p-1.5 rounded-lg bg-gray-50 text-base">🏷️</span>
+            <span className="p-1.5 rounded-lg bg-[#0B1022]/80 text-base">🏷️</span>
             <div className="flex-1">
               <span className="text-[10.5px] text-gray-400 font-bold block uppercase tracking-wider">Strap</span>
-              <span className="font-bold text-gray-900">
+              <span className="font-bold text-[#F8FAFC]">
                 {strapMat}, {strapColor} ({customWatch.strap.width} mm)
               </span>
             </div>
@@ -145,19 +145,19 @@ export const DesignSummarySidebar = ({
 
           {/* Movement */}
           <div className="flex items-start gap-2.5 pb-2.5 border-b border-gray-50">
-            <span className="p-1.5 rounded-lg bg-gray-50 text-base">⚙️</span>
+            <span className="p-1.5 rounded-lg bg-[#0B1022]/80 text-base">⚙️</span>
             <div className="flex-1">
               <span className="text-[10.5px] text-gray-400 font-bold block uppercase tracking-wider">Movement</span>
-              <span className="font-bold text-gray-900">{movement}</span>
+              <span className="font-bold text-[#F8FAFC]">{movement}</span>
             </div>
           </div>
 
           {/* Features */}
           <div className="flex items-start gap-2.5 pb-2.5 border-b border-gray-50">
-            <span className="p-1.5 rounded-lg bg-gray-50 text-base">✨</span>
+            <span className="p-1.5 rounded-lg bg-[#0B1022]/80 text-base">✨</span>
             <div className="flex-1">
               <span className="text-[10.5px] text-gray-400 font-bold block uppercase tracking-wider">Features</span>
-              <span className="font-bold text-gray-900 line-clamp-1">
+              <span className="font-bold text-[#F8FAFC] line-clamp-1">
                 {customWatch.features && customWatch.features.length > 0
                   ? customWatch.features
                       .map((fId) => FEATURES_CONFIG.find((fc) => fc.id === fId)?.name)
@@ -170,7 +170,7 @@ export const DesignSummarySidebar = ({
 
           {/* Engraving */}
           <div className="flex items-start gap-2.5">
-            <span className="p-1.5 rounded-lg bg-gray-50 text-base">✍️</span>
+            <span className="p-1.5 rounded-lg bg-[#0B1022]/80 text-base">✍️</span>
             <div className="flex-1">
               <span className="text-[10.5px] text-gray-400 font-bold block uppercase tracking-wider">Engraving</span>
               <span className="font-bold text-amber-800">
@@ -187,32 +187,32 @@ export const DesignSummarySidebar = ({
         {/* ══════════════════════════════════════════════════════════════
             ESTIMATED PRICE BREAKDOWN (Exact Match to Reference Mockup)
             ══════════════════════════════════════════════════════════════ */}
-        <div className="mt-5 pt-3.5 border-t border-gray-200">
-          <div className="flex justify-between items-center text-xs text-gray-500 mb-1.5">
+        <div className="mt-5 pt-3.5 border-t border-white/10">
+          <div className="flex justify-between items-center text-xs text-[#A6B1C8] mb-1.5">
             <span>Base Price</span>
             <span className="font-bold text-gray-800">₹{basePrice.toLocaleString('en-IN')}</span>
           </div>
 
-          <div className="flex justify-between items-center text-xs text-gray-500 mb-1.5">
+          <div className="flex justify-between items-center text-xs text-[#A6B1C8] mb-1.5">
             <span>Custom Upgrades</span>
             <span className="font-bold text-gray-800">
               {upgrades > 0 ? `+₹${upgrades.toLocaleString('en-IN')}` : '₹0'}
             </span>
           </div>
 
-          <div className="flex justify-between items-center text-xs text-gray-500 mb-3">
+          <div className="flex justify-between items-center text-xs text-[#A6B1C8] mb-3">
             <span>Engraving</span>
             <span className="font-bold text-gray-800">
               {engravingFee > 0 ? `+₹${engravingFee}` : '₹0'}
             </span>
           </div>
 
-          <div className="pt-2.5 border-t border-gray-200 flex justify-between items-baseline mb-4">
+          <div className="pt-2.5 border-t border-white/10 flex justify-between items-baseline mb-4">
             <div>
-              <span className="text-xs font-bold text-gray-900 block">Total (Estimated)</span>
+              <span className="text-xs font-bold text-[#F8FAFC] block">Total (Estimated)</span>
               <span className="text-[10px] text-emerald-600 font-bold">Includes GST & Free Courier</span>
             </div>
-            <span className="text-xl font-extrabold text-gray-900">
+            <span className="text-xl font-extrabold text-[#F8FAFC]">
               ₹{total.toLocaleString('en-IN')}
             </span>
           </div>
@@ -222,7 +222,7 @@ export const DesignSummarySidebar = ({
       {/* ══════════════════════════════════════════════════════════════
           ACTIONS: ADD TO CART & SAVE DESIGN
           ══════════════════════════════════════════════════════════════ */}
-      <div className="space-y-2 mt-4 pt-3 border-t border-gray-100">
+      <div className="space-y-2 mt-4 pt-3 border-t border-white/10">
         <button
           type="button"
           onClick={() => onAddToCart({ ...customWatch, calculatedPrice: total })}
@@ -243,7 +243,7 @@ export const DesignSummarySidebar = ({
             className={`py-2 px-3 rounded-xl text-xs font-bold border flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               isSaved
                 ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-watch-gold hover:text-watch-gold'
+                : 'bg-white text-[#F8FAFC] border-white/10 hover:border-watch-gold hover:text-watch-gold'
             }`}
           >
             <Bookmark className="w-3.5 h-3.5" />
@@ -253,7 +253,7 @@ export const DesignSummarySidebar = ({
           <button
             type="button"
             onClick={onShare}
-            className="py-2 px-3 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:border-watch-gold hover:text-watch-gold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+            className="py-2 px-3 rounded-xl text-xs font-bold bg-white text-[#F8FAFC] border border-white/10 hover:border-watch-gold hover:text-watch-gold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span>Share</span>

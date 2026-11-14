@@ -302,7 +302,7 @@ export const SignupPage = () => {
           </div>
 
           {/* Right Interactive Signup Panel */}
-          <div className="md:col-span-7 bg-white p-7 sm:p-9 relative">
+          <div className="md:col-span-7 bg-[#10182D]/90 p-7 sm:p-9 relative text-[#F8FAFC]">
             
             {/* ════════════════════════════════════════════════════════════════
                 STEP 1: FILL DETAILS & SELECT USER TYPE
@@ -311,8 +311,8 @@ export const SignupPage = () => {
               <div className="animate-fade-in">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">Create Account</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">Select user type and fill in your details.</p>
+                    <h3 className="text-xl font-bold text-[#F8FAFC]">Create Account</h3>
+                    <p className="text-xs text-[#A6B1C8] mt-0.5">Select user type and fill in your details.</p>
                   </div>
                   <span className="text-[11px] font-bold text-watch-gold bg-watch-gold/10 px-2.5 py-1 rounded-full border border-watch-gold/20">
                     Step 1 of 2
@@ -328,14 +328,14 @@ export const SignupPage = () => {
                 <form onSubmit={handleProceedToOtp} className="space-y-3 text-xs">
                   {/* ── Type of User (Role Selection) ── */}
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">
+                    <label className="block text-[#F8FAFC] font-semibold mb-1">
                       Type of User <span className="text-amber-600 font-normal">(User, Admin, Store Manager, etc.)</span>
                     </label>
                     <div className="relative">
                       <select
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
-                        className="w-full h-11 px-3.5 pr-9 rounded-xl border border-gray-300 font-semibold text-gray-800 text-xs sm:text-sm focus:border-watch-gold outline-none bg-gray-50/70 appearance-none cursor-pointer"
+                        className="w-full h-11 px-3.5 pr-9 rounded-xl border border-white/10 font-semibold text-[#F8FAFC] text-xs sm:text-sm focus:border-watch-gold outline-none bg-[#0B1022]/80 text-[#F8FAFC] appearance-none cursor-pointer"
                       >
                         {ROLE_OPTIONS.map((opt) => (
                           <option key={opt.id} value={opt.id}>
@@ -349,7 +349,7 @@ export const SignupPage = () => {
 
                   {/* Full Name */}
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Full Name</label>
+                    <label className="block text-[#F8FAFC] font-semibold mb-1">Full Name</label>
                     <div className="relative">
                       <User className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
@@ -357,7 +357,7 @@ export const SignupPage = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Ananya Singh"
-                        className="w-full h-10 pl-9 pr-3 rounded-xl border border-gray-300 focus:border-watch-gold outline-none"
+                        className="w-full h-10 pl-9 pr-3 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
                         required
                       />
                     </div>
@@ -366,7 +366,7 @@ export const SignupPage = () => {
                   {/* Email & Mobile Number Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Email Address</label>
+                      <label className="block text-[#F8FAFC] font-semibold mb-1">Email Address</label>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
@@ -374,16 +374,16 @@ export const SignupPage = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="name@example.com"
-                          className="w-full h-10 pl-9 pr-3 rounded-xl border border-gray-300 focus:border-watch-gold outline-none"
+                          className="w-full h-10 pl-9 pr-3 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
                           required
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Mobile Number (For OTP)</label>
-                      <div className="flex rounded-xl border border-gray-300 overflow-hidden focus-within:border-watch-gold">
-                        <div className="bg-gray-50 border-r border-gray-300 px-2.5 flex items-center text-[11px] font-semibold text-gray-600">
+                      <label className="block text-[#F8FAFC] font-semibold mb-1">Mobile Number (For OTP)</label>
+                      <div className="flex rounded-xl border border-white/10 overflow-hidden focus-within:border-watch-gold">
+                        <div className="bg-[#0B1022]/80 border-r border-white/10 px-2.5 flex items-center text-[11px] font-semibold text-[#A6B1C8]">
                           +91
                         </div>
                         <input
@@ -402,7 +402,7 @@ export const SignupPage = () => {
                   {/* Password & Confirm Password Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Password</label>
+                      <label className="block text-[#F8FAFC] font-semibold mb-1">Password</label>
                       <div className="relative">
                         <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
@@ -410,13 +410,13 @@ export const SignupPage = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Min 6 characters"
-                          className="w-full h-10 pl-9 pr-8 rounded-xl border border-gray-300 focus:border-watch-gold outline-none"
+                          className="w-full h-10 pl-9 pr-8 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
                           required
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#A6B1C8]"
                         >
                           {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                         </button>
@@ -424,7 +424,7 @@ export const SignupPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Confirm Password</label>
+                      <label className="block text-[#F8FAFC] font-semibold mb-1">Confirm Password</label>
                       <div className="relative">
                         <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
@@ -432,7 +432,7 @@ export const SignupPage = () => {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="Repeat password"
-                          className="w-full h-10 pl-9 pr-3 rounded-xl border border-gray-300 focus:border-watch-gold outline-none"
+                          className="w-full h-10 pl-9 pr-3 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
                           required
                         />
                       </div>
@@ -447,7 +447,7 @@ export const SignupPage = () => {
                       onChange={(e) => setAgreeTerms(e.target.checked)}
                       className="accent-watch-gold w-4 h-4 rounded cursor-pointer"
                     />
-                    <span className="text-gray-600 text-[11px]">
+                    <span className="text-[#A6B1C8] text-[11px]">
                       I agree to the <span className="text-watch-gold font-bold hover:underline">Terms of Service</span> &{' '}
                       <span className="text-watch-gold font-bold hover:underline">Privacy Policy</span>
                     </span>
@@ -474,12 +474,12 @@ export const SignupPage = () => {
                 </div>
 
                 <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-xl font-bold text-gray-900">Enter Verification OTP</h3>
+                  <h3 className="text-xl font-bold text-[#F8FAFC]">Enter Verification OTP</h3>
                   <span className="text-[11px] font-bold text-watch-gold bg-watch-gold/10 px-2.5 py-1 rounded-full border border-watch-gold/20">
                     Step 2 of 2
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mb-4">
+                <p className="text-xs text-[#A6B1C8] mb-4">
                   Please enter the 6-digit OTP sent to your registered mobile and email.
                 </p>
 
@@ -495,10 +495,10 @@ export const SignupPage = () => {
                     <div>
                       <p className="font-semibold text-xs flex items-center gap-1.5 text-amber-900">
                         <Smartphone className="w-4 h-4 text-[#C4913B]" />
-                        <span>SMS OTP Sent to <strong className="text-gray-900">+91 {phone.slice(-10)}</strong></span>
+                        <span>SMS OTP Sent to <strong className="text-[#F8FAFC]">+91 {phone.slice(-10)}</strong></span>
                       </p>
                       <p className="text-[11px] text-amber-700 mt-0.5">
-                        Registering as: <strong className="font-semibold text-gray-800">{currentRoleObj.label}</strong>
+                        Registering as: <strong className="font-semibold text-[#F8FAFC]">{currentRoleObj.label}</strong>
                       </p>
                     </div>
                     <div className="bg-white border border-amber-200 px-3 py-1 rounded-xl text-center shadow-xs">
@@ -532,24 +532,24 @@ export const SignupPage = () => {
 
                 <form onSubmit={handleVerifyOtpAndCreate} className="space-y-4 text-xs">
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1.5">Enter 6-Digit OTP</label>
+                    <label className="block text-[#F8FAFC] font-semibold mb-1.5">Enter 6-Digit OTP</label>
                     <input
                       type="text"
                       maxLength={6}
                       value={enteredOtp}
                       onChange={(e) => setEnteredOtp(e.target.value)}
                       placeholder="e.g. 482910"
-                      className="w-full h-12 px-3 rounded-xl border border-gray-300 font-mono text-center tracking-widest text-lg font-bold focus:border-watch-gold outline-none bg-gray-50/50"
+                      className="w-full h-12 px-3 rounded-xl border border-white/10 font-mono text-center tracking-widest text-lg font-bold focus:border-watch-gold outline-none bg-[#0B1022]/80/50"
                       required
                       autoFocus
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+                  <div className="flex items-center justify-between text-xs text-[#A6B1C8] pt-1">
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="text-gray-500 hover:text-gray-800 underline cursor-pointer"
+                      className="text-[#A6B1C8] hover:text-[#F8FAFC] underline cursor-pointer"
                     >
                       ← Edit details
                     </button>
@@ -592,10 +592,10 @@ export const SignupPage = () => {
                   </div>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 mb-2">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-[#F8FAFC] mb-2">
                   User account is being created...
                 </h3>
-                <p className="text-xs text-gray-600 mb-6 max-w-xs font-medium">
+                <p className="text-xs text-[#A6B1C8] mb-6 max-w-xs font-medium">
                   {creationStatus}
                 </p>
 
@@ -608,7 +608,7 @@ export const SignupPage = () => {
                 </div>
 
                 {/* Role and security indicator */}
-                <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 px-3.5 py-1.5 rounded-full text-[11px] text-gray-600 font-medium">
+                <div className="inline-flex items-center gap-2 bg-[#0B1022]/80 border border-gray-200 px-3.5 py-1.5 rounded-full text-[11px] text-[#A6B1C8] font-medium">
                   <Sparkles className="w-3.5 h-3.5 text-watch-gold" />
                   <span>Configuring {currentRoleObj.label} access & privileges</span>
                 </div>

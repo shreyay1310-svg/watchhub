@@ -45,14 +45,14 @@ export const ProductCard = ({
 
   return (
     <div
-      className={`bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-watch-gold hover:shadow-xl transition-all duration-300 flex flex-col justify-between group h-full ${className}`}
+      className={`neon-glass-card rounded-2xl overflow-hidden border border-white/10 hover:border-[#00F0FF]/50 hover:shadow-[0_0_25px_rgba(0,240,255,0.2)] transition-all duration-300 flex flex-col justify-between group h-full ${className}`}
     >
       {/* ════════════════════════════════════════════════════════════════
           1. PRODUCT IMAGE CONTAINER (Fixed 240px, object-fit: contain)
           ════════════════════════════════════════════════════════════════ */}
       <div
         onClick={() => onNavigate?.(product)}
-        className="product-image-container w-full h-[230px] sm:h-[240px] bg-[#f8f8f8] flex items-center justify-center relative overflow-hidden p-3 cursor-pointer select-none"
+        className="product-image-container w-full h-[230px] sm:h-[240px] bg-[#0B1022]/80 flex items-center justify-center relative overflow-hidden p-3 cursor-pointer select-none"
       >
         <img
           src={product.image}
@@ -84,7 +84,7 @@ export const ProductCard = ({
             e.stopPropagation();
             onToggleWishlist?.(product);
           }}
-          className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transition-all cursor-pointer z-10 hover:shadow-lg ${
+          className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-[#10182D]/90 border border-white/10 shadow-md flex items-center justify-center transition-all cursor-pointer z-10 hover:border-[#FF35C8]/50 hover:shadow-[0_0_12px_rgba(255,53,200,0.4)] ${
             isInWishlist ? 'text-red-500 fill-red-500' : 'text-gray-400 hover:text-red-500'
           }`}
           title={isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
@@ -96,14 +96,14 @@ export const ProductCard = ({
       {/* ════════════════════════════════════════════════════════════════
           2. PRODUCT INFORMATION & ACTIONS
           ════════════════════════════════════════════════════════════════ */}
-      <div className="p-4 flex-1 flex flex-col justify-between bg-white">
+      <div className="p-4 flex-1 flex flex-col justify-between bg-[#10182D]/85 backdrop-blur-md">
         <div>
-          <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">
+          <span className="text-[10px] text-[#A6B1C8] font-bold uppercase tracking-wider block mb-1">
             {product.category || 'Luxury'}
           </span>
           <h4
             onClick={() => onNavigate?.(product)}
-            className="text-[14px] font-bold text-gray-900 group-hover:text-watch-gold transition-colors line-clamp-1 cursor-pointer"
+            className="text-[14px] font-bold text-[#F8FAFC] group-hover:text-[#00F0FF] transition-colors line-clamp-1 cursor-pointer"
             title={product.name}
           >
             {product.name}
@@ -113,27 +113,27 @@ export const ProductCard = ({
               <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400 mr-0.5" />
               {product.rating || 4.8}
             </span>
-            <span className="text-gray-400 text-[11px]">
+            <span className="text-[#A6B1C8]/80 text-[11px]">
               ({(product.reviewsCount || 1200).toLocaleString('en-IN')} Reviews)
             </span>
           </div>
         </div>
 
-        <div className="mt-3 pt-3 border-t border-gray-100">
+        <div className="mt-3 pt-3 border-t border-white/10">
           {/* Price Row */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-base font-extrabold text-gray-900">
+              <span className="text-base font-extrabold text-[#F8FAFC] tracking-tight">
                 ₹{product.price?.toLocaleString('en-IN')}
               </span>
               {product.originalPrice && (
-                <span className="text-xs text-gray-400 line-through">
+                <span className="text-xs text-[#A6B1C8]/60 line-through">
                   ₹{product.originalPrice.toLocaleString('en-IN')}
                 </span>
               )}
             </div>
             {discountVal > 0 && (
-              <span className="bg-red-50 text-red-600 border border-red-100 text-[10px] font-extrabold px-2 py-0.5 rounded">
+              <span className="bg-[#FF4567]/15 text-[#FF4567] border border-[#FF4567]/30 text-[10px] font-extrabold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(255,69,103,0.2)]">
                 {discountVal}% OFF
               </span>
             )}
@@ -147,7 +147,7 @@ export const ProductCard = ({
               className={`py-2 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer ${
                 isAdded
                   ? 'bg-emerald-600 text-white'
-                  : 'bg-[#0B121C] text-white hover:bg-watch-gold hover:text-black'
+                  : 'bg-gradient-to-r from-[#F4B942] to-[#E5A832] text-[#050816] font-black hover:shadow-[0_0_15px_rgba(244,185,66,0.4)]'
               }`}
             >
               <ShoppingCart className="w-3.5 h-3.5 text-watch-gold" />
@@ -157,7 +157,7 @@ export const ProductCard = ({
             <button
               type="button"
               onClick={() => onQuickView?.(product)}
-              className="py-2 px-2 rounded-lg text-[11px] font-bold text-gray-700 bg-white border border-gray-200 hover:border-watch-gold hover:text-watch-gold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+              className="py-2 px-2 rounded-lg text-[11px] font-bold text-[#A6B1C8] bg-white/5 border border-white/10 hover:border-[#00F0FF]/50 hover:text-[#00F0FF] flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
             >
               <Eye className="w-3.5 h-3.5 text-gray-500" />
               <span>Quick View</span>

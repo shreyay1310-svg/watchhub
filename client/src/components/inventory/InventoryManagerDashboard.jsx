@@ -417,14 +417,14 @@ export default function InventoryManagerDashboard({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
           {/* Yellow/Gold warehouse building icon in rounded container */}
-          <div className="w-11 h-11 rounded-2xl bg-[#D6A63C]/15 border border-[#D6A63C]/30 text-[#D6A63C] flex items-center justify-center shrink-0 shadow-xs">
+          <div className="w-11 h-11 rounded-2xl bg-[#D6A63C]/15 border border-[#D6A63C]/40 text-[#D6A63C] flex items-center justify-center shrink-0 shadow-neon-gold">
             <Building2 className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl md:text-2xl font-black text-[#071426] tracking-tight">
+            <h1 className="text-xl md:text-2xl font-black text-white tracking-tight">
               Inventory Manager Dashboard
             </h1>
-            <p className="text-xs text-gray-500 font-medium mt-0.5">
+            <p className="text-xs text-gray-400 font-medium mt-0.5">
               Monitor stock, manage warehouses, track movements and ensure product availability.
             </p>
           </div>
@@ -437,14 +437,14 @@ export default function InventoryManagerDashboard({
             <button
               type="button"
               onClick={() => setDateRangeOpen(!dateRangeOpen)}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs font-semibold text-gray-700 hover:border-gray-300 shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#10182D] border border-white/10 text-xs font-semibold text-gray-200 hover:border-cyan-500/40 shadow-xs transition-all cursor-pointer"
             >
-              <Calendar className="w-3.5 h-3.5 text-gray-500" />
+              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
               <span>{dateRange}</span>
               <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
             </button>
             {dateRangeOpen && (
-              <div className="absolute right-0 mt-1.5 w-40 bg-white border border-gray-200 rounded-xl shadow-xl py-1 z-20 text-xs">
+              <div className="absolute right-0 mt-1.5 w-40 bg-[#0B1022] border border-white/15 rounded-xl shadow-2xl py-1 z-20 text-xs">
                 {['Today', 'Last 7 Days', 'Last 30 Days', 'This Quarter', 'This Year'].map((range) => (
                   <button
                     key={range}
@@ -454,8 +454,8 @@ export default function InventoryManagerDashboard({
                       setDateRangeOpen(false);
                       showToast(`Filtered for ${range}`);
                     }}
-                    className={`w-full text-left px-3.5 py-2 hover:bg-gray-50 transition-colors ${
-                      dateRange === range ? 'text-[#D6A63C] font-bold bg-amber-50/50' : 'text-gray-700'
+                    className={`w-full text-left px-3.5 py-2 hover:bg-white/10 transition-colors ${
+                      dateRange === range ? 'text-[#D6A63C] font-bold bg-white/5' : 'text-gray-300'
                     }`}
                   >
                     {range}
@@ -469,7 +469,7 @@ export default function InventoryManagerDashboard({
           <button
             type="button"
             onClick={() => setShowAddStockModal(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#D6A63C] hover:bg-[#c49532] text-[#071426] text-xs font-extrabold shadow-sm hover:shadow-md transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#F4B942] to-[#D97706] text-[#050816] text-xs font-black shadow-neon-gold hover:shadow-[0_0_25px_rgba(244,185,66,0.6)] transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Add Stock</span>
@@ -480,22 +480,22 @@ export default function InventoryManagerDashboard({
       {/* 2. FIVE KPI METRIC CARDS */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
         {/* Card 1: Total Stock Units */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl p-4 border border-white/10 shadow-xl hover:border-purple-500/40 transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center">
               <Box className="w-5 h-5" />
             </div>
             <div className="h-6 w-16">
               <svg className="w-full h-full" viewBox="0 0 60 20">
-                <path d="M 0 15 Q 15 18, 30 10 T 60 5" fill="none" stroke="#8B5CF6" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 0 15 Q 15 18, 30 10 T 60 5" fill="none" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 block">Total Stock Units</span>
+            <span className="text-[11px] font-semibold text-gray-400 block">Total Stock Units</span>
             <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-xl font-black text-[#071426]">12,840</span>
-              <span className="text-[11px] font-bold text-emerald-600 flex items-center">
+              <span className="text-xl font-black text-white">12,840</span>
+              <span className="text-[11px] font-bold text-emerald-400 flex items-center">
                 ↑ +12%
               </span>
             </div>
@@ -503,22 +503,22 @@ export default function InventoryManagerDashboard({
         </div>
 
         {/* Card 2: In-Stock Products */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl p-4 border border-white/10 shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
               <Boxes className="w-5 h-5" />
             </div>
             <div className="h-6 w-16">
               <svg className="w-full h-full" viewBox="0 0 60 20">
-                <path d="M 0 16 Q 15 14, 30 8 T 60 4" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 0 16 Q 15 14, 30 8 T 60 4" fill="none" stroke="#39F5A5" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 block">In-Stock Products</span>
+            <span className="text-[11px] font-semibold text-gray-400 block">In-Stock Products</span>
             <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-xl font-black text-[#071426]">298</span>
-              <span className="text-[11px] font-bold text-emerald-600 flex items-center">
+              <span className="text-xl font-black text-white">298</span>
+              <span className="text-[11px] font-bold text-emerald-400 flex items-center">
                 ↑ +10%
               </span>
             </div>
@@ -526,22 +526,22 @@ export default function InventoryManagerDashboard({
         </div>
 
         {/* Card 3: Low Stock Items */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl p-4 border border-white/10 shadow-xl hover:border-amber-500/40 transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div className="h-6 w-16">
               <svg className="w-full h-full" viewBox="0 0 60 20">
-                <path d="M 0 6 Q 15 8, 30 14 T 60 18" fill="none" stroke="#EF4444" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 0 6 Q 15 8, 30 14 T 60 18" fill="none" stroke="#FF4567" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 block">Low Stock Items</span>
+            <span className="text-[11px] font-semibold text-gray-400 block">Low Stock Items</span>
             <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-xl font-black text-[#071426]">18</span>
-              <span className="text-[11px] font-bold text-red-500 flex items-center">
+              <span className="text-xl font-black text-white">18</span>
+              <span className="text-[11px] font-bold text-red-400 flex items-center">
                 ↓ -22%
               </span>
             </div>
@@ -549,24 +549,24 @@ export default function InventoryManagerDashboard({
         </div>
 
         {/* Card 4: Out of Stock */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl p-4 border border-white/10 shadow-xl hover:border-red-500/40 transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
-              <div className="w-5 h-5 rounded-full border-2 border-red-500 flex items-center justify-center text-[10px] font-black">
+            <div className="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-full border-2 border-red-400 flex items-center justify-center text-[10px] font-black">
                 !
               </div>
             </div>
             <div className="h-6 w-16">
               <svg className="w-full h-full" viewBox="0 0 60 20">
-                <path d="M 0 8 Q 15 10, 30 15 T 60 17" fill="none" stroke="#EF4444" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 0 8 Q 15 10, 30 15 T 60 17" fill="none" stroke="#FF4567" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 block">Out of Stock</span>
+            <span className="text-[11px] font-semibold text-gray-400 block">Out of Stock</span>
             <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-xl font-black text-[#071426]">10</span>
-              <span className="text-[11px] font-bold text-red-500 flex items-center">
+              <span className="text-xl font-black text-white">10</span>
+              <span className="text-[11px] font-bold text-red-400 flex items-center">
                 ↓ -9%
               </span>
             </div>
@@ -574,22 +574,22 @@ export default function InventoryManagerDashboard({
         </div>
 
         {/* Card 5: Total Stock Value */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-xs flex flex-col justify-between col-span-2 sm:col-span-1">
+        <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl p-4 border border-white/10 shadow-xl hover:border-cyan-500/40 transition-all flex flex-col justify-between col-span-2 sm:col-span-1">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <span className="text-sm font-black">₹</span>
+            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center font-black">
+              ₹
             </div>
             <div className="h-6 w-16">
               <svg className="w-full h-full" viewBox="0 0 60 20">
-                <path d="M 0 15 Q 15 12, 30 7 T 60 3" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 0 15 Q 15 12, 30 7 T 60 3" fill="none" stroke="#00CFFF" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-gray-500 block">Total Stock Value</span>
+            <span className="text-[11px] font-semibold text-gray-400 block">Total Stock Value</span>
             <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-lg font-black text-[#071426] truncate">₹8,42,90,000</span>
-              <span className="text-[11px] font-bold text-emerald-600 flex items-center shrink-0">
+              <span className="text-lg font-black text-white truncate">₹8,42,90,000</span>
+              <span className="text-[11px] font-bold text-emerald-400 flex items-center shrink-0">
                 ↑ +15%
               </span>
             </div>
@@ -600,10 +600,10 @@ export default function InventoryManagerDashboard({
       {/* 3. MIDDLE ANALYTICS ROW (3 CARDS) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Panel A: Stock Status Overview Donut Chart (4 cols) */}
-        <div className="lg:col-span-4 bg-white rounded-3xl p-5 border border-gray-100 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-[#10182D]/90 backdrop-blur-md rounded-3xl p-5 border border-white/10 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-extrabold text-sm text-[#071426]">Stock Status Overview</h3>
-            <span className="text-[11px] text-gray-400 font-medium">Real-time</span>
+            <h3 className="font-extrabold text-sm text-white">Stock Status Overview</h3>
+            <span className="text-[11px] text-cyan-400 font-mono font-semibold">Real-time</span>
           </div>
 
           <div className="flex items-center justify-between py-2">
@@ -626,7 +626,7 @@ export default function InventoryManagerDashboard({
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-base font-black text-[#071426] leading-none">320</span>
+                <span className="text-base font-black text-white leading-none">320</span>
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mt-0.5">
                   Products
                 </span>
@@ -637,47 +637,46 @@ export default function InventoryManagerDashboard({
             <div className="space-y-2.5 text-xs">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
-                  <span className="text-gray-600 text-[11px] font-medium">In Stock (298)</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#39F5A5] shrink-0" />
+                  <span className="text-gray-300 text-[11px] font-medium">In Stock (298)</span>
                 </div>
-                <span className="font-bold text-[#071426] text-[11px]">93.1%</span>
+                <span className="font-bold text-white text-[11px]">93.1%</span>
               </div>
 
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
-                  <span className="text-gray-600 text-[11px] font-medium">Low Stock (18)</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#F4B942] shrink-0" />
+                  <span className="text-gray-300 text-[11px] font-medium">Low Stock (18)</span>
                 </div>
-                <span className="font-bold text-[#071426] text-[11px]">5.6%</span>
+                <span className="font-bold text-white text-[11px]">5.6%</span>
               </div>
 
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0" />
-                  <span className="text-gray-600 text-[11px] font-medium">Out of Stock (10)</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-400 shadow-[0_0_8px_#FF4567] shrink-0" />
+                  <span className="text-gray-300 text-[11px] font-medium">Out of Stock (10)</span>
                 </div>
-                <span className="font-bold text-[#071426] text-[11px]">3.1%</span>
+                <span className="font-bold text-white text-[11px]">3.1%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Panel B: Stock Movement (Last 30 Days) Area Chart (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl p-5 border border-gray-100 shadow-xs flex flex-col justify-between">
+        {/* Panel B: Stock Movement Area Chart (5 cols) */}
+        <div className="lg:col-span-5 bg-[#10182D]/90 backdrop-blur-md rounded-3xl p-5 border border-white/10 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h3 className="font-extrabold text-sm text-[#071426]">Stock Movement</h3>
+              <h3 className="font-extrabold text-sm text-white">Stock Movement</h3>
               <span className="text-[11px] text-gray-400 font-medium">(Last 30 Days)</span>
             </div>
-            {/* Legend: Stock In / Stock Out */}
             <div className="flex items-center gap-3 text-[11px] font-semibold">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-gray-600">Stock In</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#39F5A5]" />
+                <span className="text-gray-300">Stock In</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-purple-500" />
-                <span className="text-gray-600">Stock Out</span>
+                <span className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_6px_#A855F7]" />
+                <span className="text-gray-300">Stock Out</span>
               </div>
             </div>
           </div>
@@ -687,40 +686,41 @@ export default function InventoryManagerDashboard({
               <AreaChart data={STOCK_MOVEMENT_CHART_DATA} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="invGreen" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#39F5A5" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#39F5A5" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="invPurple" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#A855F7" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#A855F7" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="day" stroke="#9CA3AF" fontSize={10} tickLine={false} axisLine={false} />
-                <YAxis stroke="#9CA3AF" fontSize={10} tickLine={false} axisLine={false} ticks={[0, 250, 500, 750, 1000]} />
+                <XAxis dataKey="day" stroke="#64748B" fontSize={10} tickLine={false} axisLine={false} />
+                <YAxis stroke="#64748B" fontSize={10} tickLine={false} axisLine={false} ticks={[0, 250, 500, 750, 1000]} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#071426',
+                    backgroundColor: '#0B1022',
                     borderRadius: '12px',
-                    border: 'none',
+                    border: '1px solid rgba(255,255,255,0.15)',
                     color: '#fff',
                     fontSize: '11px',
+                    boxShadow: '0 0 15px rgba(0, 207, 255, 0.2)',
                   }}
                 />
-                <Area type="monotone" dataKey="stockIn" stroke="#10B981" strokeWidth={2.5} fillOpacity={1} fill="url(#invGreen)" />
-                <Area type="monotone" dataKey="stockOut" stroke="#8B5CF6" strokeWidth={2.5} fillOpacity={1} fill="url(#invPurple)" />
+                <Area type="monotone" dataKey="stockIn" stroke="#39F5A5" strokeWidth={2.5} fillOpacity={1} fill="url(#invGreen)" />
+                <Area type="monotone" dataKey="stockOut" stroke="#A855F7" strokeWidth={2.5} fillOpacity={1} fill="url(#invPurple)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Panel C: Warehouse Stock Summary (3 cols) */}
-        <div className="lg:col-span-3 bg-white rounded-3xl p-5 border border-gray-100 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-3 bg-[#10182D]/90 backdrop-blur-md rounded-3xl p-5 border border-white/10 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-extrabold text-sm text-[#071426]">Warehouse Stock Summary</h3>
+            <h3 className="font-extrabold text-sm text-white">Warehouse Stock Summary</h3>
             <button
               type="button"
               onClick={() => setShowWarehousesModal(true)}
-              className="text-[11px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 cursor-pointer"
+              className="text-[11px] font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-0.5 cursor-pointer"
             >
               <span>View All</span>
               <span>→</span>
@@ -732,17 +732,17 @@ export default function InventoryManagerDashboard({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                  <Building2 className="w-3.5 h-3.5 text-gray-500" />
-                  <span className="font-bold text-[#071426]">Main Warehouse</span>
+                  <Building2 className="w-3.5 h-3.5 text-cyan-400" />
+                  <span className="font-bold text-white">Main Warehouse</span>
                 </div>
-                <span className="font-black text-gray-700">68%</span>
+                <span className="font-black text-emerald-400">68%</span>
               </div>
-              <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1">
+              <div className="flex items-center justify-between text-[11px] text-gray-400 mb-1">
                 <span>Gurugram Central Vault</span>
-                <span className="font-semibold text-gray-800">8,420 Units</span>
+                <span className="font-semibold text-gray-200">8,420 Units</span>
               </div>
-              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                <div className="bg-emerald-500 h-full rounded-full" style={{ width: '68%' }} />
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div className="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full shadow-[0_0_8px_#39F5A5]" style={{ width: '68%' }} />
               </div>
             </div>
 
@@ -750,17 +750,17 @@ export default function InventoryManagerDashboard({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                  <Building2 className="w-3.5 h-3.5 text-gray-500" />
-                  <span className="font-bold text-[#071426]">Delhi Warehouse</span>
+                  <Building2 className="w-3.5 h-3.5 text-purple-400" />
+                  <span className="font-bold text-white">Delhi Warehouse</span>
                 </div>
-                <span className="font-black text-gray-700">21%</span>
+                <span className="font-black text-purple-400">21%</span>
               </div>
-              <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1">
+              <div className="flex items-center justify-between text-[11px] text-gray-400 mb-1">
                 <span>Okhla Phase III Hub</span>
-                <span className="font-semibold text-gray-800">2,640 Units</span>
+                <span className="font-semibold text-gray-200">2,640 Units</span>
               </div>
-              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-full rounded-full" style={{ width: '21%' }} />
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full shadow-[0_0_8px_#A855F7]" style={{ width: '21%' }} />
               </div>
             </div>
 
@@ -768,17 +768,17 @@ export default function InventoryManagerDashboard({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                  <Building2 className="w-3.5 h-3.5 text-gray-500" />
-                  <span className="font-bold text-[#071426]">Mumbai Warehouse</span>
+                  <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="font-bold text-white">Mumbai Warehouse</span>
                 </div>
-                <span className="font-black text-gray-700">11%</span>
+                <span className="font-black text-amber-400">11%</span>
               </div>
-              <div className="flex items-center justify-between text-[11px] text-gray-500 mb-1">
+              <div className="flex items-center justify-between text-[11px] text-gray-400 mb-1">
                 <span>BKC Logistics Park</span>
-                <span className="font-semibold text-gray-800">1,780 Units</span>
+                <span className="font-semibold text-gray-200">1,780 Units</span>
               </div>
-              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                <div className="bg-amber-500 h-full rounded-full" style={{ width: '11%' }} />
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div className="bg-gradient-to-r from-amber-500 to-orange-500 h-full rounded-full shadow-[0_0_8px_#F4B942]" style={{ width: '11%' }} />
               </div>
             </div>
           </div>
@@ -795,11 +795,11 @@ export default function InventoryManagerDashboard({
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTableTab === 'All'
-              ? 'bg-[#071426] text-white shadow-md'
-              : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-black shadow-neon-cyan'
+              : 'bg-[#10182D] text-gray-300 hover:bg-white/10 border border-white/10'
           }`}
         >
-          <Box className={`w-3.5 h-3.5 ${activeTableTab === 'All' ? 'text-[#D6A63C]' : 'text-gray-400'}`} />
+          <Box className={`w-3.5 h-3.5 ${activeTableTab === 'All' ? 'text-black' : 'text-cyan-400'}`} />
           <span>All Inventory (320)</span>
         </button>
 
@@ -811,11 +811,11 @@ export default function InventoryManagerDashboard({
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
             activeTableTab === 'In Stock'
-              ? 'bg-[#071426] text-white shadow-md'
-              : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+              ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-black shadow-neon-green'
+              : 'bg-[#10182D] text-gray-300 hover:bg-white/10 border border-white/10'
           }`}
         >
-          <Check className="w-3.5 h-3.5 text-emerald-500" />
+          <Check className="w-3.5 h-3.5 text-emerald-400" />
           <span>In Stock (298)</span>
         </button>
 
@@ -827,11 +827,11 @@ export default function InventoryManagerDashboard({
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
             activeTableTab === 'Low Stock'
-              ? 'bg-[#071426] text-white shadow-md'
-              : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+              ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-black font-black shadow-neon-gold'
+              : 'bg-[#10182D] text-gray-300 hover:bg-white/10 border border-white/10'
           }`}
         >
-          <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+          <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
           <span>Low Stock (18)</span>
         </button>
 
@@ -843,26 +843,26 @@ export default function InventoryManagerDashboard({
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
             activeTableTab === 'Out of Stock'
-              ? 'bg-[#071426] text-white shadow-md'
-              : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+              ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white font-black shadow-[0_0_15px_#FF4567]'
+              : 'bg-[#10182D] text-gray-300 hover:bg-white/10 border border-white/10'
           }`}
         >
-          <X className="w-3.5 h-3.5 text-red-500" />
+          <X className="w-3.5 h-3.5 text-red-400" />
           <span>Out of Stock (10)</span>
         </button>
 
         <button
           type="button"
           onClick={() => setShowAdjustStockModal(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 transition-all cursor-pointer ml-auto"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[#10182D] text-gray-300 hover:bg-white/10 border border-white/10 transition-all cursor-pointer ml-auto"
         >
-          <ArrowRightLeft className="w-3.5 h-3.5 text-blue-500" />
+          <ArrowRightLeft className="w-3.5 h-3.5 text-cyan-400" />
           <span>Stock Movements</span>
         </button>
       </div>
 
       {/* 5. SEARCH & MULTI-FILTER BAR */}
-      <div className="bg-white rounded-2xl p-3 border border-gray-200 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl p-3 border border-white/10 shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs">
         {/* Search */}
         <div className="relative flex-1 min-w-[220px]">
           <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -874,7 +874,7 @@ export default function InventoryManagerDashboard({
               setCurrentPage(1);
             }}
             placeholder="Search by Product Name, SKU or Brand..."
-            className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-3 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-hidden focus:bg-white focus:border-[#D6A63C]"
+            className="w-full bg-[#050816] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-hidden focus:border-cyan-400"
           />
         </div>
 
@@ -887,7 +887,7 @@ export default function InventoryManagerDashboard({
               setFilterCategory(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 focus:outline-hidden cursor-pointer"
+            className="px-3 py-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-gray-200 focus:outline-hidden cursor-pointer"
           >
             <option value="All">Category (All)</option>
             <option value="Luxury">Luxury</option>
@@ -904,7 +904,7 @@ export default function InventoryManagerDashboard({
               setFilterBrand(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 focus:outline-hidden cursor-pointer"
+            className="px-3 py-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-gray-200 focus:outline-hidden cursor-pointer"
           >
             <option value="All">Brand (All)</option>
             <option value="Rolex">Rolex</option>
@@ -921,7 +921,7 @@ export default function InventoryManagerDashboard({
               setFilterWarehouse(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 focus:outline-hidden cursor-pointer"
+            className="px-3 py-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-gray-200 focus:outline-hidden cursor-pointer"
           >
             <option value="All">Warehouse (All)</option>
             <option value="Main">Main Warehouse</option>
@@ -936,7 +936,7 @@ export default function InventoryManagerDashboard({
               setFilterStatus(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 focus:outline-hidden cursor-pointer"
+            className="px-3 py-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-gray-200 focus:outline-hidden cursor-pointer"
           >
             <option value="All">Stock Status (All)</option>
             <option value="In Stock">In Stock</option>
@@ -948,7 +948,7 @@ export default function InventoryManagerDashboard({
           <button
             type="button"
             onClick={handleResetFilters}
-            className="px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 font-semibold transition-colors cursor-pointer"
+            className="px-3 py-2 rounded-xl border border-white/10 text-gray-300 hover:bg-white/10 font-semibold transition-colors cursor-pointer"
             title="Reset Filters"
           >
             Reset
@@ -958,26 +958,26 @@ export default function InventoryManagerDashboard({
           <button
             type="button"
             onClick={handleExportCSV}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#071426] text-white hover:bg-[#0c2242] font-bold shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black hover:opacity-95 font-black shadow-neon-cyan transition-colors cursor-pointer"
           >
-            <Download className="w-3.5 h-3.5 text-[#D6A63C]" />
+            <Download className="w-3.5 h-3.5 text-black" />
             <span>Export</span>
           </button>
         </div>
       </div>
 
       {/* 6. MAIN INVENTORY TABLE */}
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-xs overflow-hidden">
+      <div className="bg-[#10182D]/90 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-gray-50/80 border-b border-gray-200 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+              <tr className="bg-[#0B1022] border-b border-white/10 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                 <th className="py-3 px-4 w-10 text-center">
                   <input
                     type="checkbox"
                     checked={selectedItems.length === paginatedItems.length && paginatedItems.length > 0}
                     onChange={toggleSelectAll}
-                    className="rounded border-gray-300 text-[#071426] focus:ring-[#D6A63C]"
+                    className="rounded border-gray-600 bg-[#050816] text-cyan-500 focus:ring-cyan-400"
                   />
                 </th>
                 <th className="py-3 px-4">Product</th>
@@ -993,32 +993,32 @@ export default function InventoryManagerDashboard({
                 <th className="py-3 px-4 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-white/5">
               {paginatedItems.length === 0 ? (
                 <tr>
                   <td colSpan={12} className="py-12 text-center text-gray-500">
-                    <Boxes className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                    <p className="font-semibold text-sm">No inventory items matched your filter.</p>
-                    <p className="text-xs text-gray-400 mt-1">Try resetting filters or changing the search keyword.</p>
+                    <Boxes className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                    <p className="font-semibold text-sm text-gray-400">No inventory items matched your filter.</p>
+                    <p className="text-xs text-gray-500 mt-1">Try resetting filters or changing the search keyword.</p>
                   </td>
                 </tr>
               ) : (
                 paginatedItems.map((item) => (
-                  <tr key={item.id} className="hover:bg-amber-50/20 transition-colors">
+                  <tr key={item.id} className="hover:bg-white/5 transition-colors">
                     {/* Checkbox */}
                     <td className="py-3 px-4 text-center">
                       <input
                         type="checkbox"
                         checked={selectedItems.includes(item.id)}
                         onChange={() => toggleSelectItem(item.id)}
-                        className="rounded border-gray-300 text-[#071426] focus:ring-[#D6A63C]"
+                        className="rounded border-gray-600 bg-[#050816] text-cyan-500 focus:ring-cyan-400"
                       />
                     </td>
 
                     {/* Product */}
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden shrink-0 flex items-center justify-center p-1">
+                        <div className="w-10 h-10 rounded-xl bg-[#0B1022] border border-white/10 overflow-hidden shrink-0 flex items-center justify-center p-1">
                           <img
                             src={item.image}
                             alt={item.productName}
@@ -1029,10 +1029,10 @@ export default function InventoryManagerDashboard({
                           />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-extrabold text-[#071426] text-xs leading-tight truncate">
+                          <p className="font-extrabold text-white text-xs leading-tight truncate">
                             {item.productName}
                           </p>
-                          <p className="text-[10px] text-gray-500 truncate mt-0.5">
+                          <p className="text-[10px] text-gray-400 truncate mt-0.5">
                             {item.subSpecs}
                           </p>
                         </div>
@@ -1040,37 +1040,37 @@ export default function InventoryManagerDashboard({
                     </td>
 
                     {/* SKU */}
-                    <td className="py-3 px-3 font-semibold text-gray-600 font-mono text-[11px]">
+                    <td className="py-3 px-3 font-semibold text-cyan-400 font-mono text-[11px]">
                       {item.sku}
                     </td>
 
                     {/* Category */}
-                    <td className="py-3 px-3 text-gray-600 font-medium">
+                    <td className="py-3 px-3 text-gray-300 font-medium">
                       {item.category}
                     </td>
 
                     {/* Warehouse */}
-                    <td className="py-3 px-3 text-gray-700 font-semibold">
+                    <td className="py-3 px-3 text-gray-200 font-semibold">
                       {item.warehouse}
                     </td>
 
                     {/* Current Stock */}
-                    <td className="py-3 px-3 text-center font-black text-[#071426] text-sm">
+                    <td className="py-3 px-3 text-center font-black text-white text-sm">
                       {item.currentStock}
                     </td>
 
                     {/* Reserved */}
-                    <td className="py-3 px-3 text-center font-semibold text-gray-500">
+                    <td className="py-3 px-3 text-center font-semibold text-gray-400">
                       {item.reservedStock}
                     </td>
 
                     {/* Available */}
-                    <td className="py-3 px-3 text-center font-bold text-emerald-600">
+                    <td className="py-3 px-3 text-center font-bold text-emerald-400">
                       {item.availableStock}
                     </td>
 
                     {/* Min. Level */}
-                    <td className="py-3 px-3 text-center font-semibold text-gray-400">
+                    <td className="py-3 px-3 text-center font-semibold text-gray-500">
                       {item.minLevel}
                     </td>
 
@@ -1079,10 +1079,10 @@ export default function InventoryManagerDashboard({
                       <span
                         className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black ${
                           item.status === 'In Stock'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 shadow-[0_0_8px_rgba(57,245,165,0.2)]'
                             : item.status === 'Low Stock'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : 'bg-red-50 text-red-700 border border-red-200'
+                            ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30 shadow-[0_0_8px_rgba(244,185,66,0.2)]'
+                            : 'bg-red-500/10 text-red-300 border border-red-500/30 shadow-[0_0_8px_rgba(255,69,103,0.2)]'
                         }`}
                       >
                         {item.status}
@@ -1090,7 +1090,7 @@ export default function InventoryManagerDashboard({
                     </td>
 
                     {/* Last Updated */}
-                    <td className="py-3 px-4 text-gray-500 text-[11px] whitespace-nowrap">
+                    <td className="py-3 px-4 text-gray-400 text-[11px] whitespace-nowrap">
                       {item.lastUpdated}
                     </td>
 
@@ -1102,7 +1102,7 @@ export default function InventoryManagerDashboard({
                           onClick={() => {
                             setActiveItemForDetail(item);
                           }}
-                          className="p-1 hover:text-[#071426] hover:bg-gray-100 rounded-lg transition-colors"
+                          className="p-1 hover:text-cyan-400 hover:bg-white/10 rounded-lg transition-colors"
                           title="View Product Stock Details"
                         >
                           <Eye className="w-4 h-4" />
@@ -1117,7 +1117,7 @@ export default function InventoryManagerDashboard({
                             });
                             setShowAdjustStockModal(true);
                           }}
-                          className="p-1 hover:text-[#D6A63C] hover:bg-amber-50 rounded-lg transition-colors"
+                          className="p-1 hover:text-amber-400 hover:bg-white/10 rounded-lg transition-colors"
                           title="Adjust Stock Quantity"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -1132,7 +1132,7 @@ export default function InventoryManagerDashboard({
                             });
                             setShowTransferModal(true);
                           }}
-                          className="p-1 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1 hover:text-cyan-400 hover:bg-white/10 rounded-lg transition-colors"
                           title="Warehouse Stock Transfer"
                         >
                           <ArrowRightLeft className="w-4 h-4" />
@@ -1147,7 +1147,7 @@ export default function InventoryManagerDashboard({
         </div>
 
         {/* 7. TABLE FOOTER & PAGINATION */}
-        <div className="bg-gray-50/80 border-t border-gray-200 px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
+        <div className="bg-[#0B1022] border-t border-white/10 px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
           <div className="flex items-center gap-3">
             <span>Showing 1-5 of 320 products</span>
             <div className="flex items-center gap-1.5 font-semibold">
@@ -1157,7 +1157,7 @@ export default function InventoryManagerDashboard({
                   setItemsPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="bg-white border border-gray-200 rounded-lg px-2 py-1 text-xs focus:outline-hidden"
+                className="bg-[#050816] border border-white/10 rounded-lg px-2 py-1 text-xs text-gray-200 focus:outline-hidden"
               >
                 <option value={5}>5 per page</option>
                 <option value={10}>10 per page</option>
@@ -1172,7 +1172,7 @@ export default function InventoryManagerDashboard({
               type="button"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(1)}
-              className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border border-white/10 bg-[#050816] text-gray-300 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <ChevronsLeft className="w-3.5 h-3.5" />
             </button>
@@ -1180,43 +1180,43 @@ export default function InventoryManagerDashboard({
               type="button"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border border-white/10 bg-[#050816] text-gray-300 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
 
             <button
               type="button"
-              className="w-7 h-7 rounded-lg bg-[#D6A63C] text-[#071426] font-extrabold text-xs flex items-center justify-center shadow-xs"
+              className="w-7 h-7 rounded-lg bg-gradient-to-r from-[#F4B942] to-[#D97706] text-[#050816] font-black text-xs flex items-center justify-center shadow-neon-gold"
             >
               1
             </button>
             <button
               type="button"
               onClick={() => setCurrentPage(2)}
-              className="w-7 h-7 rounded-lg border border-gray-200 bg-white text-gray-700 font-semibold text-xs hover:bg-gray-50"
+              className="w-7 h-7 rounded-lg border border-white/10 bg-[#050816] text-gray-300 font-semibold text-xs hover:bg-white/10"
             >
               2
             </button>
             <button
               type="button"
               onClick={() => setCurrentPage(3)}
-              className="w-7 h-7 rounded-lg border border-gray-200 bg-white text-gray-700 font-semibold text-xs hover:bg-gray-50"
+              className="w-7 h-7 rounded-lg border border-white/10 bg-[#050816] text-gray-300 font-semibold text-xs hover:bg-white/10"
             >
               3
             </button>
             <button
               type="button"
               onClick={() => setCurrentPage(4)}
-              className="w-7 h-7 rounded-lg border border-gray-200 bg-white text-gray-700 font-semibold text-xs hover:bg-gray-50"
+              className="w-7 h-7 rounded-lg border border-white/10 bg-[#050816] text-gray-300 font-semibold text-xs hover:bg-white/10"
             >
               4
             </button>
-            <span className="px-1 text-gray-400">...</span>
+            <span className="px-1 text-gray-600">...</span>
             <button
               type="button"
               onClick={() => setCurrentPage(64)}
-              className="w-7 h-7 rounded-lg border border-gray-200 bg-white text-gray-700 font-semibold text-xs hover:bg-gray-50"
+              className="w-7 h-7 rounded-lg border border-white/10 bg-[#050816] text-gray-300 font-semibold text-xs hover:bg-white/10"
             >
               64
             </button>
@@ -1225,7 +1225,7 @@ export default function InventoryManagerDashboard({
               type="button"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border border-white/10 bg-[#050816] text-gray-300 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -1233,7 +1233,7 @@ export default function InventoryManagerDashboard({
               type="button"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(totalPages)}
-              className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border border-white/10 bg-[#050816] text-gray-300 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <ChevronsRight className="w-3.5 h-3.5" />
             </button>
@@ -1241,26 +1241,27 @@ export default function InventoryManagerDashboard({
         </div>
       </div>
 
-      {/* ──────────────── MODALS ──────────────── */}
+      {/* ──────────────── MODALS (DARK NEON GLASS) ──────────────── */}
 
       {/* MODAL 1: ADD STOCK MODAL */}
       {showAddStockModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#0B1022] rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-white/15 text-xs text-white relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-300" />
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 text-[#D6A63C] flex items-center justify-center font-bold">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold">
                   +📦
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm text-[#071426]">Add Inbound Stock Entry</h3>
+                  <h3 className="font-extrabold text-sm text-white">Add Inbound Stock Entry</h3>
                   <p className="text-[11px] text-gray-400">Log incoming purchase shipment into warehouse</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowAddStockModal(false)}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-gray-400 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1268,11 +1269,11 @@ export default function InventoryManagerDashboard({
 
             <form onSubmit={handleAddStockSubmit} className="space-y-3.5 pt-4">
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 mb-1">Select Timepiece / SKU</label>
+                <label className="block text-[11px] font-bold text-gray-300 mb-1">Select Timepiece / SKU</label>
                 <select
                   value={addForm.sku}
                   onChange={(e) => setAddForm({ ...addForm, sku: e.target.value })}
-                  className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+                  className="w-full p-2.5 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-white focus:border-amber-400"
                 >
                   {items.map((i) => (
                     <option key={i.sku} value={i.sku}>
@@ -1284,11 +1285,11 @@ export default function InventoryManagerDashboard({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Destination Warehouse</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">Destination Warehouse</label>
                   <select
                     value={addForm.warehouse}
                     onChange={(e) => setAddForm({ ...addForm, warehouse: e.target.value })}
-                    className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+                    className="w-full p-2.5 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-white focus:border-amber-400"
                   >
                     <option value="Main Warehouse">Main Warehouse (Gurugram)</option>
                     <option value="Delhi Warehouse">Delhi Warehouse (Okhla)</option>
@@ -1297,49 +1298,49 @@ export default function InventoryManagerDashboard({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Units Quantity</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">Units Quantity</label>
                   <input
                     type="number"
                     min="1"
                     value={addForm.quantity}
                     onChange={(e) => setAddForm({ ...addForm, quantity: e.target.value })}
-                    className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+                    className="w-full p-2.5 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-white focus:border-amber-400"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Supplier / Brand Partner</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">Supplier / Brand Partner</label>
                   <input
                     type="text"
                     value={addForm.supplier}
                     onChange={(e) => setAddForm({ ...addForm, supplier: e.target.value })}
-                    className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs"
+                    className="w-full p-2.5 bg-[#050816] border border-white/10 rounded-xl text-xs text-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">PO Reference Number</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">PO Reference Number</label>
                   <input
                     type="text"
                     value={addForm.reference}
                     onChange={(e) => setAddForm({ ...addForm, reference: e.target.value })}
-                    className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono"
+                    className="w-full p-2.5 bg-[#050816] border border-white/10 rounded-xl text-xs font-mono text-cyan-400"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 flex items-center justify-end gap-2 border-t border-gray-100">
+              <div className="pt-3 flex items-center justify-end gap-2 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setShowAddStockModal(false)}
-                  className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold"
+                  className="px-4 py-2 rounded-xl border border-white/10 text-gray-300 hover:bg-white/10 font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#D6A63C] text-[#071426] font-extrabold shadow-sm hover:bg-[#c49532]"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-black font-black shadow-neon-gold hover:opacity-95"
                 >
                   Confirm Stock Entry
                 </button>
@@ -1351,17 +1352,18 @@ export default function InventoryManagerDashboard({
 
       {/* MODAL 2: STOCK ADJUSTMENT MODAL */}
       {showAdjustStockModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#0B1022] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-white/15 text-xs text-white relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-cyan-400" />
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-5 h-5 text-[#D6A63C]" />
-                <h3 className="font-extrabold text-sm text-[#071426]">Stock Adjustment</h3>
+                <SlidersHorizontal className="w-5 h-5 text-cyan-400" />
+                <h3 className="font-extrabold text-sm text-white">Stock Adjustment</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowAdjustStockModal(false)}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-gray-400 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1369,45 +1371,45 @@ export default function InventoryManagerDashboard({
 
             <form onSubmit={handleAdjustSubmit} className="space-y-3 pt-3">
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 mb-1">SKU</label>
+                <label className="block text-[11px] font-bold text-gray-300 mb-1">SKU</label>
                 <input
                   type="text"
                   value={adjustForm.sku}
                   disabled
-                  className="w-full p-2 bg-gray-100 border border-gray-200 rounded-xl text-xs font-mono font-bold"
+                  className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-mono font-bold text-cyan-400"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Adjustment Type</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">Adjustment Type</label>
                   <select
                     value={adjustForm.adjustType}
                     onChange={(e) => setAdjustForm({ ...adjustForm, adjustType: e.target.value })}
-                    className="w-full p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+                    className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-white"
                   >
                     <option value="add">Increase (+) Stock</option>
                     <option value="reduce">Decrease (-) Stock</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Quantity</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">Quantity</label>
                   <input
                     type="number"
                     min="1"
                     value={adjustForm.quantity}
                     onChange={(e) => setAdjustForm({ ...adjustForm, quantity: e.target.value })}
-                    className="w-full p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+                    className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-white"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 mb-1">Audit Reason</label>
+                <label className="block text-[11px] font-bold text-gray-300 mb-1">Audit Reason</label>
                 <select
                   value={adjustForm.reason}
                   onChange={(e) => setAdjustForm({ ...adjustForm, reason: e.target.value })}
-                  className="w-full p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs"
+                  className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs text-white"
                 >
                   <option value="Audit Inventory Reconciliation">Audit Inventory Reconciliation</option>
                   <option value="Damaged in Transit">Damaged in Transit</option>
@@ -1420,13 +1422,13 @@ export default function InventoryManagerDashboard({
                 <button
                   type="button"
                   onClick={() => setShowAdjustStockModal(false)}
-                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-gray-600"
+                  className="px-3 py-1.5 rounded-xl border border-white/10 text-gray-300 hover:bg-white/10"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-[#071426] text-white font-bold"
+                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-black shadow-neon-cyan"
                 >
                   Apply Adjustment
                 </button>
@@ -1438,17 +1440,18 @@ export default function InventoryManagerDashboard({
 
       {/* MODAL 3: WAREHOUSE TRANSFER */}
       {showTransferModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#0B1022] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-white/15 text-xs text-white relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-400" />
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2">
-                <ArrowRightLeft className="w-5 h-5 text-blue-600" />
-                <h3 className="font-extrabold text-sm text-[#071426]">Warehouse Transfer</h3>
+                <ArrowRightLeft className="w-5 h-5 text-cyan-400" />
+                <h3 className="font-extrabold text-sm text-white">Warehouse Transfer</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowTransferModal(false)}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-gray-400 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1456,31 +1459,31 @@ export default function InventoryManagerDashboard({
 
             <div className="space-y-3 pt-3">
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 mb-1">Product SKU</label>
+                <label className="block text-[11px] font-bold text-gray-300 mb-1">Product SKU</label>
                 <input
                   type="text"
                   value={transferForm.sku}
                   disabled
-                  className="w-full p-2 bg-gray-100 border border-gray-200 rounded-xl text-xs font-mono font-bold"
+                  className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-mono font-bold text-cyan-400"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Source Hub</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">Source Hub</label>
                   <input
                     type="text"
                     value={transferForm.fromWarehouse}
                     disabled
-                    className="w-full p-2 bg-gray-100 border border-gray-200 rounded-xl text-xs font-medium"
+                    className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-medium text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 mb-1">Destination Hub</label>
+                  <label className="block text-[11px] font-bold text-gray-300 mb-1">Destination Hub</label>
                   <select
                     value={transferForm.toWarehouse}
                     onChange={(e) => setTransferForm({ ...transferForm, toWarehouse: e.target.value })}
-                    className="w-full p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold"
+                    className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs font-semibold text-white"
                   >
                     <option value="Main Warehouse">Main Warehouse</option>
                     <option value="Delhi Warehouse">Delhi Warehouse</option>
@@ -1490,13 +1493,13 @@ export default function InventoryManagerDashboard({
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 mb-1">Quantity to Move</label>
+                <label className="block text-[11px] font-bold text-gray-300 mb-1">Quantity to Move</label>
                 <input
                   type="number"
                   min="1"
                   value={transferForm.quantity}
                   onChange={(e) => setTransferForm({ ...transferForm, quantity: e.target.value })}
-                  className="w-full p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs"
+                  className="w-full p-2 bg-[#050816] border border-white/10 rounded-xl text-xs text-white"
                 />
               </div>
 
@@ -1504,7 +1507,7 @@ export default function InventoryManagerDashboard({
                 <button
                   type="button"
                   onClick={() => setShowTransferModal(false)}
-                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-gray-600"
+                  className="px-3 py-1.5 rounded-xl border border-white/10 text-gray-300 hover:bg-white/10"
                 >
                   Cancel
                 </button>
@@ -1514,7 +1517,7 @@ export default function InventoryManagerDashboard({
                     setShowTransferModal(false);
                     showToast(`Dispatched transfer of ${transferForm.quantity} units to ${transferForm.toWarehouse}!`);
                   }}
-                  className="px-4 py-1.5 rounded-xl bg-blue-600 text-white font-bold"
+                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-black font-black shadow-neon-cyan"
                 >
                   Dispatch Transfer
                 </button>
@@ -1526,56 +1529,56 @@ export default function InventoryManagerDashboard({
 
       {/* MODAL 4: PRODUCT DETAIL PREVIEW */}
       {activeItemForDetail && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span className="font-bold text-[#071426]">Stock Details</span>
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#0B1022] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-white/15 text-xs text-white relative overflow-hidden">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <span className="font-bold text-white">Stock Details</span>
               <button
                 type="button"
                 onClick={() => setActiveItemForDetail(null)}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-gray-400 hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="py-4 text-center">
-              <div className="w-24 h-24 mx-auto rounded-2xl bg-gray-50 p-2 border border-gray-100 mb-3">
+              <div className="w-24 h-24 mx-auto rounded-2xl bg-[#050816] p-2 border border-white/10 mb-3 flex items-center justify-center">
                 <img
                   src={activeItemForDetail.image}
                   alt={activeItemForDetail.productName}
                   className="w-full h-full object-contain"
                 />
               </div>
-              <h4 className="font-extrabold text-sm text-[#071426]">{activeItemForDetail.productName}</h4>
-              <p className="text-gray-500 text-[11px] font-mono mt-0.5">{activeItemForDetail.sku}</p>
+              <h4 className="font-extrabold text-sm text-white">{activeItemForDetail.productName}</h4>
+              <p className="text-cyan-400 text-[11px] font-mono mt-0.5">{activeItemForDetail.sku}</p>
             </div>
-            <div className="space-y-2 bg-gray-50 p-3 rounded-2xl border border-gray-100 text-[11px]">
+            <div className="space-y-2 bg-[#050816] p-3 rounded-2xl border border-white/10 text-[11px]">
               <div className="flex justify-between">
-                <span className="text-gray-500">Warehouse:</span>
-                <span className="font-bold text-gray-800">{activeItemForDetail.warehouseFullName}</span>
+                <span className="text-gray-400">Warehouse:</span>
+                <span className="font-bold text-white">{activeItemForDetail.warehouseFullName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Current Stock:</span>
-                <span className="font-bold text-gray-800">{activeItemForDetail.currentStock} Units</span>
+                <span className="text-gray-400">Current Stock:</span>
+                <span className="font-bold text-white">{activeItemForDetail.currentStock} Units</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Reserved for Orders:</span>
-                <span className="font-bold text-amber-600">{activeItemForDetail.reservedStock} Units</span>
+                <span className="text-gray-400">Reserved for Orders:</span>
+                <span className="font-bold text-amber-400">{activeItemForDetail.reservedStock} Units</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Available to Sell:</span>
-                <span className="font-bold text-emerald-600">{activeItemForDetail.availableStock} Units</span>
+                <span className="text-gray-400">Available to Sell:</span>
+                <span className="font-bold text-emerald-400">{activeItemForDetail.availableStock} Units</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Reorder Threshold:</span>
-                <span className="font-bold text-gray-800">{activeItemForDetail.minLevel} Units</span>
+                <span className="text-gray-400">Reorder Threshold:</span>
+                <span className="font-bold text-gray-300">{activeItemForDetail.minLevel} Units</span>
               </div>
             </div>
             <div className="pt-4">
               <button
                 type="button"
                 onClick={() => setActiveItemForDetail(null)}
-                className="w-full py-2 rounded-xl bg-[#071426] text-white font-bold"
+                className="w-full py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-black"
               >
                 Close
               </button>

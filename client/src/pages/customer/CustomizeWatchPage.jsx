@@ -122,7 +122,7 @@ export const CustomizeWatchPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
       {/* 1. Header with Active Customize Your Watch Link */}
       <CustomerNavbar />
 
@@ -246,43 +246,43 @@ export const CustomizeWatchPage = () => {
             4. BOTTOM TRUST & CRAFTSMANSHIP STRIP (Matching Reference UI)
             ════════════════════════════════════════════════════════════════ */}
         <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pt-6 border-t border-gray-200">
-          <div className="p-3.5 rounded-2xl bg-white border border-gray-200 flex items-center gap-3 shadow-xs">
+          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
             <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">⚙️</span>
             <div>
-              <h5 className="text-xs font-bold text-gray-900">Full Customization</h5>
-              <p className="text-[10px] text-gray-500">Dial, Case, Strap & More</p>
+              <h5 className="text-xs font-bold text-[#F8FAFC]">Full Customization</h5>
+              <p className="text-[10px] text-[#A6B1C8]">Dial, Case, Strap & More</p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-white border border-gray-200 flex items-center gap-3 shadow-xs">
+          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
             <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">👁️</span>
             <div>
-              <h5 className="text-xs font-bold text-gray-900">Live 360° Preview</h5>
-              <p className="text-[10px] text-gray-500">See Your Watch in Real Time</p>
+              <h5 className="text-xs font-bold text-[#F8FAFC]">Live 360° Preview</h5>
+              <p className="text-[10px] text-[#A6B1C8]">See Your Watch in Real Time</p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-white border border-gray-200 flex items-center gap-3 shadow-xs">
+          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
             <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">₹</span>
             <div>
-              <h5 className="text-xs font-bold text-gray-900">Transparent Pricing</h5>
-              <p className="text-[10px] text-gray-500">Know the Cost Instantly</p>
+              <h5 className="text-xs font-bold text-[#F8FAFC]">Transparent Pricing</h5>
+              <p className="text-[10px] text-[#A6B1C8]">Know the Cost Instantly</p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-white border border-gray-200 flex items-center gap-3 shadow-xs">
+          <div className="p-3.5 rounded-2xl neon-glass-card border border-white/10 flex items-center gap-3 shadow-xs hover:border-[#00F0FF]/40">
             <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">💾</span>
             <div>
-              <h5 className="text-xs font-bold text-gray-900">Save &amp; Revisit</h5>
-              <p className="text-[10px] text-gray-500">Keep Your Designs Anytime</p>
+              <h5 className="text-xs font-bold text-[#F8FAFC]">Save &amp; Revisit</h5>
+              <p className="text-[10px] text-[#A6B1C8]">Keep Your Designs Anytime</p>
             </div>
           </div>
 
           <div className="p-3.5 rounded-2xl bg-white border border-gray-200 flex items-center gap-3 shadow-xs col-span-2 sm:col-span-1">
             <span className="p-2 rounded-xl bg-amber-50 text-watch-gold text-lg">🚚</span>
             <div>
-              <h5 className="text-xs font-bold text-gray-900">Made for You</h5>
-              <p className="text-[10px] text-gray-500">Custom Built &amp; Delivered</p>
+              <h5 className="text-xs font-bold text-[#F8FAFC]">Made for You</h5>
+              <p className="text-[10px] text-[#A6B1C8]">Custom Built &amp; Delivered</p>
             </div>
           </div>
         </div>

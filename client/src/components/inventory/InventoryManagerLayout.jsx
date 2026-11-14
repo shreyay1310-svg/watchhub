@@ -84,7 +84,7 @@ export default function InventoryManagerLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f6f8] text-[#071426] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex flex-col font-sans relative">
       {/* Dedicated Inventory Sidebar */}
       <InventoryManagerSidebar
         collapsed={sidebarCollapsed}

@@ -376,14 +376,14 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
   return (
     <div className="space-y-6">
       {/* Upper Module Sub-Tab Switcher Bar (Matches User Reference Screenshots) */}
-      <div className="bg-white p-2 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between overflow-x-auto">
+      <div className="bg-[#10182D]/90 backdrop-blur-md p-2 rounded-2xl border border-white/10 shadow-sm flex items-center justify-between overflow-x-auto">
         <div className="flex items-center gap-2 min-w-max">
           <button
             onClick={() => switchTab('assigned_orders')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'assigned_orders'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>📋</span> Assigned Orders
@@ -397,7 +397,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'pick_pack'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>📦</span> Pick & Pack Workstation
@@ -408,7 +408,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'shipments'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>🚚</span> Shipments & Carrier Manifests
@@ -422,7 +422,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'track_orders'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>📍</span> Track Orders (AWB Timeline)
@@ -433,7 +433,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'returns'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>🔄</span> Returns & Cancellations
@@ -443,7 +443,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2 text-xs text-gray-500 font-semibold pr-3">
+        <div className="hidden lg:flex items-center gap-2 text-xs text-[#A6B1C8] font-semibold pr-3">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Fulfillment SLA: 98.6% On-Time</span>
         </div>
@@ -456,32 +456,32 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
         <div className="space-y-5">
           {/* Top KPI Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Pick Queue</span>
-              <p className="text-2xl font-black text-gray-900 mt-1">{assignedOrders.length}</p>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Pick Queue</span>
+              <p className="text-2xl font-black text-[#F8FAFC] mt-1">{assignedOrders.length}</p>
               <span className="text-[10px] text-amber-600 font-bold">● Awaiting physical pick</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Urgent Express SLA</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Urgent Express SLA</span>
               <p className="text-2xl font-black text-rose-600 mt-1">
                 {assignedOrders.filter(o => o.priority.includes('Urgent')).length}
               </p>
               <span className="text-[10px] text-rose-500 font-bold">⚡ Same-day dispatch required</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Active Pickers</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Active Pickers</span>
               <p className="text-2xl font-black text-blue-600 mt-1">4 Staff</p>
               <span className="text-[10px] text-blue-500 font-bold">● Vault & Standard zones</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Avg Pick Duration</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Avg Pick Duration</span>
               <p className="text-2xl font-black text-emerald-600 mt-1">14.2 min</p>
               <span className="text-[10px] text-emerald-500 font-bold">● Below 20m target</span>
             </div>
           </div>
 
           {/* Search, Filter & Bulk Assign Bar */}
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-72">
                 <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -490,13 +490,13 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search order #, customer, watch..."
-                  className="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-300 text-xs outline-none focus:border-watch-gold"
+                  className="w-full h-9 pl-9 pr-3 rounded-lg border border-white/15 text-xs outline-none focus:border-watch-gold"
                 />
               </div>
               <select
                 value={filterPriority}
                 onChange={(e) => setFilterPriority(e.target.value)}
-                className="h-9 px-3 rounded-lg border border-gray-300 text-xs font-semibold text-gray-700 outline-none"
+                className="h-9 px-3 rounded-lg border border-white/15 text-xs font-semibold text-[#A6B1C8] outline-none"
               >
                 <option value="All">All Priorities</option>
                 <option value="Urgent Express">Urgent Express</option>
@@ -508,7 +508,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
             <div className="flex items-center gap-2">
               <button
                 onClick={() => alert('📄 Warehouse Pick List Generated for all 6 orders! Sent to Warehouse Thermal Printers.')}
-                className="h-9 px-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-colors"
+                className="h-9 px-3.5 bg-white/5 hover:bg-gray-200 text-[#F8FAFC] text-xs font-bold rounded-lg flex items-center gap-1.5 transition-colors"
               >
                 <Printer className="w-3.5 h-3.5" /> Print Pick Sheets
               </button>
@@ -524,10 +524,10 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
           </div>
 
           {/* Assigned Orders Table */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-100">
+                <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10px] border-b border-white/10">
                   <tr>
                     <th className="py-3 px-4">Order ID & Destination</th>
                     <th className="py-3 px-4">Watch Item & SKU</th>
@@ -541,15 +541,15 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                   {filteredAssigned.map((order) => (
                     <tr key={order.id} className="hover:bg-amber-50/40 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-mono font-bold text-gray-900 block">{order.id}</span>
-                        <span className="text-[11px] text-gray-500">{order.customer} • {order.city}</span>
+                        <span className="font-mono font-bold text-[#F8FAFC] block">{order.id}</span>
+                        <span className="text-[11px] text-[#A6B1C8]">{order.customer} • {order.city}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{order.watch}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{order.watch}</span>
                         <span className="font-mono text-[10px] text-gray-400">SKU: {order.sku} (Qty: {order.qty})</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-700 border border-gray-200">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/5 text-[#A6B1C8] border border-white/10">
                           {order.zone}
                         </span>
                       </td>
@@ -570,7 +570,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="flex items-center gap-1.5 font-semibold text-gray-800">
+                        <div className="flex items-center gap-1.5 font-semibold text-[#F8FAFC]">
                           <span className="w-6 h-6 rounded-full bg-watch-navy-dark text-watch-gold text-[10px] flex items-center justify-center font-bold">
                             {order.assignedTo.charAt(0)}
                           </span>
@@ -605,13 +605,13 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
           {/* Left Column: Order Selected & Barcode Matcher */}
           <div className="lg:col-span-5 space-y-5">
             {/* Active Order Card */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">
                     Packaging Bench #04
                   </span>
-                  <h4 className="text-base font-black text-gray-900">{packOrder.id}</h4>
+                  <h4 className="text-base font-black text-[#F8FAFC]">{packOrder.id}</h4>
                 </div>
                 <span className="px-2.5 py-1 bg-amber-100 text-amber-900 rounded-lg text-xs font-bold">
                   {packOrder.priority}
@@ -620,30 +620,30 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
 
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Customer:</span>
-                  <span className="font-bold text-gray-900">{packOrder.customer}</span>
+                  <span className="text-[#A6B1C8]">Customer:</span>
+                  <span className="font-bold text-[#F8FAFC]">{packOrder.customer}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Destination:</span>
-                  <span className="font-bold text-gray-900">{packOrder.city}</span>
+                  <span className="text-[#A6B1C8]">Destination:</span>
+                  <span className="font-bold text-[#F8FAFC]">{packOrder.city}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Watch Model:</span>
+                  <span className="text-[#A6B1C8]">Watch Model:</span>
                   <span className="font-bold text-watch-navy-dark">{packOrder.watch}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">SKU Code:</span>
-                  <span className="font-mono font-bold text-gray-800">{packOrder.sku}</span>
+                  <span className="text-[#A6B1C8]">SKU Code:</span>
+                  <span className="font-mono font-bold text-[#F8FAFC]">{packOrder.sku}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Order Value:</span>
+                  <span className="text-[#A6B1C8]">Order Value:</span>
                   <span className="font-extrabold text-emerald-600 text-sm">{packOrder.price}</span>
                 </div>
               </div>
 
               {/* Barcode Scanner Tool */}
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
-                <label className="text-[11px] font-bold text-gray-700 flex items-center gap-1.5">
+              <div className="bg-[#0B1022]/80 p-4 rounded-xl border border-white/10 space-y-2">
+                <label className="text-[11px] font-bold text-[#A6B1C8] flex items-center gap-1.5">
                   <QrCode className="w-3.5 h-3.5 text-watch-gold" /> Scan Serial / SKU Barcode
                 </label>
                 <form onSubmit={handleBarcodeScan} className="flex gap-2">
@@ -652,7 +652,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                     value={barcodeInput}
                     onChange={(e) => setBarcodeInput(e.target.value)}
                     placeholder={`e.g. ${packOrder.sku}`}
-                    className="flex-1 h-9 px-3 rounded-lg border border-gray-300 text-xs font-mono outline-none focus:border-watch-gold"
+                    className="flex-1 h-9 px-3 rounded-lg border border-white/15 text-xs font-mono outline-none focus:border-watch-gold"
                   />
                   <button
                     type="submit"
@@ -674,8 +674,8 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
             </div>
 
             {/* Packaging Box Selection */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
-              <h4 className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-3">
+              <h4 className="text-xs font-bold text-[#F8FAFC] flex items-center gap-1.5">
                 <Box className="w-4 h-4 text-watch-gold" /> Select Packaging Casing
               </h4>
               <div className="grid grid-cols-2 gap-2 text-xs">
@@ -692,10 +692,10 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                     className={`p-3 rounded-xl border text-left transition-all ${
                       selectedBox === box.name
                         ? 'border-watch-gold bg-amber-50/60 shadow-sm ring-1 ring-watch-gold'
-                        : 'border-gray-200 bg-white hover:bg-gray-50'
+                        : 'border-white/10 bg-[#10182D]/90 backdrop-blur-md hover:bg-[#0B1022]/80'
                     }`}
                   >
-                    <span className="font-bold text-gray-900 block text-xs">{box.name}</span>
+                    <span className="font-bold text-[#F8FAFC] block text-xs">{box.name}</span>
                     <span className="text-[10px] text-watch-gold font-bold block">{box.tag}</span>
                     <span className="text-[9.5px] text-gray-400 block mt-0.5">{box.desc}</span>
                   </button>
@@ -707,9 +707,9 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
           {/* Right Column: Pre-Shipment QC Checklist & Thermal Label Generator */}
           <div className="lg:col-span-7 space-y-5">
             {/* Pre-Shipment Quality Control Checklist */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                <h4 className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <h4 className="text-xs font-bold text-[#F8FAFC] flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" /> Mandatory 5-Point Quality & Packaging Inspection
                 </h4>
                 <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -727,7 +727,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                 ].map((chk) => (
                   <label
                     key={chk.key}
-                    className="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100/70 rounded-xl cursor-pointer transition-colors"
+                    className="flex items-start gap-3 p-3 bg-[#0B1022]/80 hover:bg-white/5/70 rounded-xl cursor-pointer transition-colors"
                   >
                     <input
                       type="checkbox"
@@ -736,8 +736,8 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                       className="mt-0.5 w-4 h-4 text-watch-gold rounded focus:ring-watch-gold accent-amber-600"
                     />
                     <div className="text-xs">
-                      <span className="font-bold text-gray-900 block">{chk.label}</span>
-                      <span className="text-gray-500 text-[11px]">{chk.desc}</span>
+                      <span className="font-bold text-[#F8FAFC] block">{chk.label}</span>
+                      <span className="text-[#A6B1C8] text-[11px]">{chk.desc}</span>
                     </div>
                   </label>
                 ))}
@@ -745,20 +745,20 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
             </div>
 
             {/* Thermal Shipping Label Preview & Dispatch */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+                <h4 className="text-xs font-bold text-[#F8FAFC] flex items-center gap-1.5">
                   <Printer className="w-4 h-4 text-watch-navy-dark" /> Thermal Shipping Label & Barcode
                 </h4>
                 <span className="text-[10px] font-mono text-gray-400">Carrier: BlueDart Air Express</span>
               </div>
 
               {/* Mock Shipping Label */}
-              <div className="border-2 border-dashed border-gray-300 p-4 rounded-xl bg-gray-50/50 space-y-3 font-mono text-xs">
-                <div className="flex justify-between items-start border-b border-gray-300 pb-2">
+              <div className="border-2 border-dashed border-white/15 p-4 rounded-xl bg-[#0B1022]/80/50 space-y-3 font-mono text-xs">
+                <div className="flex justify-between items-start border-b border-white/15 pb-2">
                   <div>
-                    <h5 className="font-black text-sm text-gray-900 tracking-wider">WATCHHUB LUXURY DISPATCH</h5>
-                    <p className="text-[10px] text-gray-500">Hub: Mumbai Fulfilment Vault #01 • GST: 27AAAAA0000A1Z5</p>
+                    <h5 className="font-black text-sm text-[#F8FAFC] tracking-wider">WATCHHUB LUXURY DISPATCH</h5>
+                    <p className="text-[10px] text-[#A6B1C8]">Hub: Mumbai Fulfilment Vault #01 • GST: 27AAAAA0000A1Z5</p>
                   </div>
                   <span className="px-2 py-0.5 bg-black text-white text-[10px] font-bold rounded">
                     FRAGILE / HIGH VALUE
@@ -768,24 +768,24 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
                   <div>
                     <span className="text-[10px] text-gray-400 uppercase block">Ship To:</span>
-                    <span className="font-bold text-gray-900 block">{packOrder.customer}</span>
-                    <span className="text-gray-600">{packOrder.city}</span>
-                    <span className="text-gray-500 block">Phone: +91 98765 *****</span>
+                    <span className="font-bold text-[#F8FAFC] block">{packOrder.customer}</span>
+                    <span className="text-[#A6B1C8]">{packOrder.city}</span>
+                    <span className="text-[#A6B1C8] block">Phone: +91 98765 *****</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-gray-400 uppercase block">Order Details:</span>
-                    <span className="font-bold text-gray-900 block">{packOrder.id}</span>
-                    <span className="text-gray-600 block">{packOrder.watch}</span>
-                    <span className="text-gray-500 block">Weight: 0.52 KG • Pkg: {selectedBox}</span>
+                    <span className="font-bold text-[#F8FAFC] block">{packOrder.id}</span>
+                    <span className="text-[#A6B1C8] block">{packOrder.watch}</span>
+                    <span className="text-[#A6B1C8] block">Weight: 0.52 KG • Pkg: {selectedBox}</span>
                   </div>
                 </div>
 
                 {/* Simulated Barcode */}
-                <div className="pt-2 text-center border-t border-gray-200">
-                  <div className="h-10 bg-repeat-x mx-auto max-w-sm rounded flex items-center justify-center tracking-widest text-lg font-black text-gray-800">
+                <div className="pt-2 text-center border-t border-white/10">
+                  <div className="h-10 bg-repeat-x mx-auto max-w-sm rounded flex items-center justify-center tracking-widest text-lg font-black text-[#F8FAFC]">
                     ||| | |||| || | ||||| || ||| |||| | |||||
                   </div>
-                  <span className="text-[10px] text-gray-500 tracking-widest">
+                  <span className="text-[10px] text-[#A6B1C8] tracking-widest">
                     AWB: BLU-88912401-IN • PREPAID
                   </span>
                 </div>
@@ -796,7 +796,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                 <button
                   type="button"
                   onClick={() => alert('🖨️ Thermal Label Sent to Citizen CL-S621 Barcode Printer!')}
-                  className="px-4 py-2 border border-gray-300 hover:bg-gray-100 rounded-xl text-xs font-bold text-gray-700 flex items-center gap-1.5"
+                  className="px-4 py-2 border border-white/15 hover:bg-white/5 rounded-xl text-xs font-bold text-[#A6B1C8] flex items-center gap-1.5"
                 >
                   <Printer className="w-3.5 h-3.5" /> Print Label
                 </button>
@@ -834,24 +834,24 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
               { courier: 'Shadowfax Priority', count: '8 Parcels', eta: 'Hyperlocal 24h', color: 'border-l-4 border-amber-600' },
               { courier: 'DHL Global Express', count: '5 Parcels', eta: 'International / VIP', color: 'border-l-4 border-emerald-600' }
             ].map((c) => (
-              <div key={c.courier} className={`bg-white p-4 rounded-xl border border-gray-200 shadow-sm ${c.color}`}>
-                <span className="text-xs font-bold text-gray-900 block">{c.courier}</span>
-                <p className="text-xl font-extrabold text-gray-900 mt-1">{c.count}</p>
-                <span className="text-[10px] text-gray-500 font-semibold">{c.eta}</span>
+              <div key={c.courier} className={`bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm ${c.color}`}>
+                <span className="text-xs font-bold text-[#F8FAFC] block">{c.courier}</span>
+                <p className="text-xl font-extrabold text-[#F8FAFC] mt-1">{c.count}</p>
+                <span className="text-[10px] text-[#A6B1C8] font-semibold">{c.eta}</span>
               </div>
             ))}
           </div>
 
           {/* Manifest Controls */}
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
             <div>
-              <h4 className="text-xs font-bold text-gray-900">Active Carrier Dispatch Manifests</h4>
-              <p className="text-[11px] text-gray-500">Official handover sheets signed by warehouse security & courier driver.</p>
+              <h4 className="text-xs font-bold text-[#F8FAFC]">Active Carrier Dispatch Manifests</h4>
+              <p className="text-[11px] text-[#A6B1C8]">Official handover sheets signed by warehouse security & courier driver.</p>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => alert('📄 Manifest MNF-BLU-20261104-01 downloaded in PDF format.')}
-                className="h-9 px-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-lg flex items-center gap-1.5"
+                className="h-9 px-3.5 bg-white/5 hover:bg-gray-200 text-[#F8FAFC] text-xs font-bold rounded-lg flex items-center gap-1.5"
               >
                 <FileText className="w-3.5 h-3.5" /> Download Manifest PDF
               </button>
@@ -865,10 +865,10 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
           </div>
 
           {/* Shipments Table */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-100">
+                <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10px] border-b border-white/10">
                   <tr>
                     <th className="py-3 px-4">Shipment & Order</th>
                     <th className="py-3 px-4">Customer & Destination</th>
@@ -880,21 +880,21 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {shipments.map((shp) => (
-                    <tr key={shp.id} className="hover:bg-gray-50/80 transition-colors">
+                    <tr key={shp.id} className="hover:bg-[#0B1022]/80/80 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-mono font-bold text-gray-900 block">{shp.id}</span>
+                        <span className="font-mono font-bold text-[#F8FAFC] block">{shp.id}</span>
                         <span className="text-[10px] font-mono text-gray-400">Order: {shp.orderId}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{shp.customer}</span>
-                        <span className="text-[11px] text-gray-500">{shp.destination}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{shp.customer}</span>
+                        <span className="text-[11px] text-[#A6B1C8]">{shp.destination}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{shp.courier}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{shp.courier}</span>
                         <span className="font-mono text-[11px] text-watch-gold font-bold">{shp.awb}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-mono text-[10.5px] text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
+                        <span className="font-mono text-[10.5px] text-[#A6B1C8] bg-white/5 px-2 py-0.5 rounded">
                           {shp.manifestId}
                         </span>
                       </td>
@@ -919,7 +919,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                               setSelectedTrackingAWB(shp);
                               switchTab('track_orders');
                             }}
-                            className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded font-semibold text-[11px] flex items-center gap-1"
+                            className="px-2.5 py-1 bg-white/5 hover:bg-gray-200 text-[#F8FAFC] rounded font-semibold text-[11px] flex items-center gap-1"
                           >
                             <MapPin className="w-3 h-3 text-rose-500" /> Track
                           </button>
@@ -949,12 +949,12 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
       {currentTab === 'track_orders' && (
         <div className="space-y-5">
           {/* Search AWB Bar */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
             <div>
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
                 <Compass className="w-5 h-5 text-watch-gold" /> Real-Time Courier Transit & Milestone Tracker
               </h4>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
                 Query BlueDart, Delhivery, Shadowfax or DHL live tracking endpoints.
               </p>
             </div>
@@ -964,7 +964,7 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                 value={trackInput}
                 onChange={(e) => setTrackInput(e.target.value)}
                 placeholder="Enter AWB # (e.g. BLU-889124)"
-                className="flex-1 h-9 px-3 rounded-lg border border-gray-300 text-xs font-mono outline-none focus:border-watch-gold"
+                className="flex-1 h-9 px-3 rounded-lg border border-white/15 text-xs font-mono outline-none focus:border-watch-gold"
               />
               <button
                 onClick={() => {
@@ -981,20 +981,20 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
 
           {/* Active Selected Shipment Timeline Card */}
           {selectedTrackingAWB && (
-            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-sm space-y-6">
               {/* Header Info */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-gray-100">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-white/10">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-black text-gray-900 font-mono">
+                    <span className="text-lg font-black text-[#F8FAFC] font-mono">
                       {selectedTrackingAWB.awb}
                     </span>
                     <span className="px-2.5 py-0.5 bg-watch-gold/20 text-watch-navy-dark text-xs font-bold rounded-full">
                       {selectedTrackingAWB.courier}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Order Ref: <span className="font-bold text-gray-800">{selectedTrackingAWB.orderId}</span> • Customer: <span className="font-bold text-gray-800">{selectedTrackingAWB.customer}</span> ({selectedTrackingAWB.destination})
+                  <p className="text-xs text-[#A6B1C8] mt-1">
+                    Order Ref: <span className="font-bold text-[#F8FAFC]">{selectedTrackingAWB.orderId}</span> • Customer: <span className="font-bold text-[#F8FAFC]">{selectedTrackingAWB.customer}</span> ({selectedTrackingAWB.destination})
                   </p>
                 </div>
 
@@ -1035,16 +1035,16 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                               ? 'bg-watch-navy-dark text-watch-gold ring-4 ring-amber-200'
                               : isDone
                               ? 'bg-watch-gold text-watch-navy-dark'
-                              : 'bg-gray-100 text-gray-400 border border-gray-200'
+                              : 'bg-white/5 text-gray-400 border border-white/10'
                           }`}
                         >
                           {isDone ? <Check className="w-5 h-5" /> : milestone.step}
                         </div>
                         <div>
-                          <p className={`text-xs font-bold ${isCurrent ? 'text-watch-navy-dark' : isDone ? 'text-gray-900' : 'text-gray-400'}`}>
+                          <p className={`text-xs font-bold ${isCurrent ? 'text-watch-navy-dark' : isDone ? 'text-[#F8FAFC]' : 'text-gray-400'}`}>
                             {milestone.title}
                           </p>
-                          <p className="text-[10.5px] text-gray-500">{milestone.desc}</p>
+                          <p className="text-[10.5px] text-[#A6B1C8]">{milestone.desc}</p>
                           <p className="text-[9.5px] text-gray-400 font-mono mt-0.5">{milestone.time}</p>
                         </div>
                       </div>
@@ -1054,18 +1054,18 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
               </div>
 
               {/* Courier Milestone Log Table */}
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
-                <h5 className="text-xs font-bold text-gray-800">Carrier Scans & Waypoint History</h5>
+              <div className="bg-[#0B1022]/80 p-4 rounded-xl border border-white/10 space-y-2">
+                <h5 className="text-xs font-bold text-[#F8FAFC]">Carrier Scans & Waypoint History</h5>
                 <div className="space-y-2 text-xs divide-y divide-gray-100">
-                  <div className="pt-1.5 flex justify-between items-center text-gray-700">
+                  <div className="pt-1.5 flex justify-between items-center text-[#A6B1C8]">
                     <span>📍 Package reached delivery facility (Lucknow Hub - Amausi)</span>
                     <span className="font-mono text-[10px] text-gray-400">04 Nov 2026, 07:15 AM</span>
                   </div>
-                  <div className="pt-1.5 flex justify-between items-center text-gray-700">
+                  <div className="pt-1.5 flex justify-between items-center text-[#A6B1C8]">
                     <span>✈️ Inter-facility linehaul departure from Mumbai Central Hub</span>
                     <span className="font-mono text-[10px] text-gray-400">03 Nov 2026, 11:45 PM</span>
                   </div>
-                  <div className="pt-1.5 flex justify-between items-center text-gray-700">
+                  <div className="pt-1.5 flex justify-between items-center text-[#A6B1C8]">
                     <span>📦 Manifest generated and package handed over to carrier</span>
                     <span className="font-mono text-[10px] text-gray-400">02 Nov 2026, 06:30 PM</span>
                   </div>
@@ -1083,42 +1083,42 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
         <div className="space-y-5">
           {/* Reverse Logistics Summary */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Reverse Pickups</span>
-              <p className="text-2xl font-black text-gray-900 mt-1">{returns.length}</p>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Reverse Pickups</span>
+              <p className="text-2xl font-black text-[#F8FAFC] mt-1">{returns.length}</p>
               <span className="text-[10px] text-amber-600 font-bold">● In transit to hub</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Pending Physical QC</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Pending Physical QC</span>
               <p className="text-2xl font-black text-rose-600 mt-1">
                 {returns.filter(r => r.actionStatus.includes('Pending')).length}
               </p>
               <span className="text-[10px] text-rose-500 font-bold">● Requires loupe inspection</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Restocked This Week</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Restocked This Week</span>
               <p className="text-2xl font-black text-emerald-600 mt-1">28 Units</p>
               <span className="text-[10px] text-emerald-500 font-bold">● 100% Mint condition</span>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <span className="text-[11px] font-semibold text-gray-500">Avg Return Turnaround</span>
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
+              <span className="text-[11px] font-semibold text-[#A6B1C8]">Avg Return Turnaround</span>
               <p className="text-2xl font-black text-blue-600 mt-1">36 hrs</p>
               <span className="text-[10px] text-blue-500 font-bold">● From pickup to refund</span>
             </div>
           </div>
 
           {/* Returns Inspection Queue */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-white/10 flex justify-between items-center">
               <div>
-                <h4 className="text-xs font-bold text-gray-900">Return Pickup & Inward Quality Desk</h4>
-                <p className="text-[11px] text-gray-500">Inspect returned watches before authorizing refund or restocking.</p>
+                <h4 className="text-xs font-bold text-[#F8FAFC]">Return Pickup & Inward Quality Desk</h4>
+                <p className="text-[11px] text-[#A6B1C8]">Inspect returned watches before authorizing refund or restocking.</p>
               </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-100">
+                <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10px] border-b border-white/10">
                   <tr>
                     <th className="py-3 px-4">Return ID & Order</th>
                     <th className="py-3 px-4">Customer & City</th>
@@ -1132,20 +1132,20 @@ export const DeliveryModule = ({ activeSubTab = 'assigned_orders', onSubTabChang
                   {returns.map((ret) => (
                     <tr key={ret.id} className="hover:bg-rose-50/20 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-mono font-bold text-gray-900 block">{ret.id}</span>
+                        <span className="font-mono font-bold text-[#F8FAFC] block">{ret.id}</span>
                         <span className="text-[10px] text-gray-400">Order: {ret.orderId}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{ret.customer}</span>
-                        <span className="text-[11px] text-gray-500">{ret.city}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{ret.customer}</span>
+                        <span className="text-[11px] text-[#A6B1C8]">{ret.city}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{ret.watch}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{ret.watch}</span>
                         <span className="text-[10.5px] text-rose-600 font-medium">Reason: {ret.reason}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{ret.courier}</span>
-                        <span className="font-mono text-[10px] text-gray-500">{ret.awb}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{ret.courier}</span>
+                        <span className="font-mono text-[10px] text-[#A6B1C8]">{ret.awb}</span>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex flex-wrap gap-1 text-[10px]">

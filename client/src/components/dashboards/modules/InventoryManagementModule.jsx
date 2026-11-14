@@ -227,14 +227,14 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
   return (
     <div className="space-y-6">
       {/* Upper Module Sub-Tab Switcher Bar (Matches Screenshots 2 & 3) */}
-      <div className="bg-white p-2 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between overflow-x-auto">
+      <div className="bg-[#10182D]/90 backdrop-blur-md p-2 rounded-2xl border border-white/10 shadow-sm flex items-center justify-between overflow-x-auto">
         <div className="flex items-center gap-2 min-w-max">
           <button
             onClick={() => switchTab('inventory')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'inventory'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>📦</span> Inventory Overview
@@ -248,7 +248,7 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'stock_update'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>🔄</span> Stock Update
@@ -259,7 +259,7 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'stock_requests'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>📋</span> Stock Requests
@@ -273,14 +273,14 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               currentTab === 'warehouses'
                 ? 'bg-amber-100 text-amber-900 shadow-sm border border-amber-300'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-[#A6B1C8] hover:bg-white/5'
             }`}
           >
             <span>🏢</span> Warehouses
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2 text-xs text-gray-500 font-semibold pr-3">
+        <div className="hidden lg:flex items-center gap-2 text-xs text-[#A6B1C8] font-semibold pr-3">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Stock Accuracy: 99.8% Barcode Verified</span>
         </div>
@@ -293,39 +293,39 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
         <div className="space-y-5">
           {/* Warehouse Facilities Summary */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
               <div className="flex items-center gap-2 text-watch-navy font-bold text-xs mb-1">
                 <Warehouse className="w-4 h-4 text-watch-gold" /> Mumbai Central Vault (Main)
               </div>
-              <p className="text-xl font-extrabold text-gray-900">4,820 <span className="text-xs font-normal text-gray-400">/ 10,000 units</span></p>
-              <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2 overflow-hidden">
+              <p className="text-xl font-extrabold text-[#F8FAFC]">4,820 <span className="text-xs font-normal text-gray-400">/ 10,000 units</span></p>
+              <div className="w-full bg-white/5 h-1.5 rounded-full mt-2 overflow-hidden">
                 <div className="bg-emerald-500 h-full w-[48%]"></div>
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
               <div className="flex items-center gap-2 text-watch-navy font-bold text-xs mb-1">
                 <Warehouse className="w-4 h-4 text-watch-gold" /> Delhi North Distribution Hub
               </div>
-              <p className="text-xl font-extrabold text-gray-900">2,510 <span className="text-xs font-normal text-gray-400">/ 8,000 units</span></p>
-              <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2 overflow-hidden">
+              <p className="text-xl font-extrabold text-[#F8FAFC]">2,510 <span className="text-xs font-normal text-gray-400">/ 8,000 units</span></p>
+              <div className="w-full bg-white/5 h-1.5 rounded-full mt-2 overflow-hidden">
                 <div className="bg-blue-500 h-full w-[31%]"></div>
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+            <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm">
               <div className="flex items-center gap-2 text-watch-navy font-bold text-xs mb-1">
                 <Warehouse className="w-4 h-4 text-watch-gold" /> Bangalore South Facility
               </div>
-              <p className="text-xl font-extrabold text-gray-900">1,210 <span className="text-xs font-normal text-gray-400">/ 5,000 units</span></p>
-              <div className="w-full bg-gray-100 h-1.5 rounded-full mt-2 overflow-hidden">
+              <p className="text-xl font-extrabold text-[#F8FAFC]">1,210 <span className="text-xs font-normal text-gray-400">/ 5,000 units</span></p>
+              <div className="w-full bg-white/5 h-1.5 rounded-full mt-2 overflow-hidden">
                 <div className="bg-amber-500 h-full w-[24%]"></div>
               </div>
             </div>
           </div>
 
           {/* Search, Filter & Actions Bar */}
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-72">
                 <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -334,13 +334,13 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by SKU or Timepiece..."
-                  className="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-300 text-xs outline-none focus:border-watch-gold"
+                  className="w-full h-9 pl-9 pr-3 rounded-lg border border-white/15 text-xs outline-none focus:border-watch-gold"
                 />
               </div>
               <select
                 value={warehouseFilter}
                 onChange={(e) => setWarehouseFilter(e.target.value)}
-                className="h-9 px-3 rounded-lg border border-gray-300 text-xs font-semibold text-gray-700 outline-none"
+                className="h-9 px-3 rounded-lg border border-white/15 text-xs font-semibold text-[#A6B1C8] outline-none"
               >
                 <option value="All">All Warehouses</option>
                 <option value="Mumbai">Mumbai Central Vault</option>
@@ -366,10 +366,10 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
           </div>
 
           {/* Stock Table */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-100">
+                <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10px] border-b border-white/10">
                   <tr>
                     <th className="py-3 px-4">SKU Code</th>
                     <th className="py-3 px-4">Watch Model & Category</th>
@@ -382,19 +382,19 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filteredInventory.map((item) => (
-                    <tr key={item.sku} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="py-3 px-4 font-mono font-bold text-gray-900">{item.sku}</td>
+                    <tr key={item.sku} className="hover:bg-[#0B1022]/80/80 transition-colors">
+                      <td className="py-3 px-4 font-mono font-bold text-[#F8FAFC]">{item.sku}</td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{item.name}</span>
-                        <span className="text-[10.5px] text-gray-500">{item.category}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{item.name}</span>
+                        <span className="text-[10.5px] text-[#A6B1C8]">{item.category}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-semibold text-gray-800 block">{item.warehouse}</span>
+                        <span className="font-semibold text-[#F8FAFC] block">{item.warehouse}</span>
                         <span className="font-mono text-[10px] text-watch-gold font-bold">{item.bay}</span>
                       </td>
-                      <td className="py-3 px-4 font-extrabold text-gray-900 text-sm">{item.stock} units</td>
-                      <td className="py-3 px-4 text-gray-500 font-mono">{item.reorderLevel} units</td>
-                      <td className="py-3 px-4 font-bold text-gray-800">{item.unitCost}</td>
+                      <td className="py-3 px-4 font-extrabold text-[#F8FAFC] text-sm">{item.stock} units</td>
+                      <td className="py-3 px-4 text-[#A6B1C8] font-mono">{item.reorderLevel} units</td>
+                      <td className="py-3 px-4 font-bold text-[#F8FAFC]">{item.unitCost}</td>
                       <td className="py-3 px-4">
                         <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 w-fit ${
                           item.status === 'Optimal' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
@@ -418,19 +418,19 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
       {currentTab === 'stock_update' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left Column: Stock Adjustment Form */}
-          <div className="lg:col-span-5 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-            <div className="pb-3 border-b border-gray-100 flex justify-between items-center">
+          <div className="lg:col-span-5 bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-4">
+            <div className="pb-3 border-b border-white/10 flex justify-between items-center">
               <div>
-                <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <h4 className="text-sm font-bold text-[#F8FAFC] flex items-center gap-2">
                   <RefreshCw className="w-4 h-4 text-watch-gold" /> Physical Stock Movement Console
                 </h4>
-                <p className="text-xs text-gray-500 mt-0.5">Record factory arrivals, adjustments or damage deductions.</p>
+                <p className="text-xs text-[#A6B1C8] mt-0.5">Record factory arrivals, adjustments or damage deductions.</p>
               </div>
             </div>
 
             {/* Quick Barcode Scanner Simulation */}
-            <div className="bg-gray-50 p-3.5 rounded-xl border border-gray-200 space-y-2">
-              <label className="text-[11px] font-bold text-gray-700 flex items-center gap-1.5">
+            <div className="bg-[#0B1022]/80 p-3.5 rounded-xl border border-white/10 space-y-2">
+              <label className="text-[11px] font-bold text-[#A6B1C8] flex items-center gap-1.5">
                 <QrCode className="w-3.5 h-3.5 text-watch-gold" /> Scan Barcode / SKU
               </label>
               <div className="flex gap-2">
@@ -439,7 +439,7 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                   value={barcodeScanInput}
                   onChange={(e) => setBarcodeScanInput(e.target.value)}
                   placeholder="Scan SKU barcode e.g. WHC-001"
-                  className="flex-1 h-8 px-3 rounded-lg border border-gray-300 text-xs font-mono outline-none focus:border-watch-gold"
+                  className="flex-1 h-8 px-3 rounded-lg border border-white/15 text-xs font-mono outline-none focus:border-watch-gold"
                 />
                 <button
                   type="button"
@@ -462,14 +462,14 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
             {/* Update Form */}
             <form onSubmit={handlePerformStockUpdate} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Target SKU & Timepiece</label>
+                <label className="block text-[#A6B1C8] font-semibold mb-1">Target SKU & Timepiece</label>
                 <select
                   value={stockOp.sku}
                   onChange={(e) => {
                     const selected = inventory.find(i => i.sku === e.target.value);
                     setStockOp({ ...stockOp, sku: e.target.value, warehouse: selected?.warehouse || stockOp.warehouse });
                   }}
-                  className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs font-bold outline-none focus:border-watch-gold"
+                  className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs font-bold outline-none focus:border-watch-gold"
                 >
                   {inventory.map((i) => (
                     <option key={i.sku} value={i.sku}>
@@ -481,11 +481,11 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Movement Type</label>
+                  <label className="block text-[#A6B1C8] font-semibold mb-1">Movement Type</label>
                   <select
                     value={stockOp.type}
                     onChange={(e) => setStockOp({ ...stockOp, type: e.target.value })}
-                    className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs font-bold outline-none"
+                    className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs font-bold outline-none"
                   >
                     <option value="Inward (+)">Inward Supply (+)</option>
                     <option value="Outward (-)">Outward Manual (-)</option>
@@ -495,24 +495,24 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Quantity (Units)</label>
+                  <label className="block text-[#A6B1C8] font-semibold mb-1">Quantity (Units)</label>
                   <input
                     type="number"
                     value={stockOp.qty}
                     onChange={(e) => setStockOp({ ...stockOp, qty: e.target.value })}
                     placeholder="e.g. 25"
-                    className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs font-bold outline-none focus:border-watch-gold"
+                    className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs font-bold outline-none focus:border-watch-gold"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Destination Facility</label>
+                <label className="block text-[#A6B1C8] font-semibold mb-1">Destination Facility</label>
                 <select
                   value={stockOp.warehouse}
                   onChange={(e) => setStockOp({ ...stockOp, warehouse: e.target.value })}
-                  className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs outline-none"
+                  className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs outline-none"
                 >
                   <option value="Mumbai Central Vault">Mumbai Central Vault (Main)</option>
                   <option value="Delhi North Hub">Delhi North Distribution Hub</option>
@@ -521,23 +521,23 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Batch / Inward Lot Ref</label>
+                <label className="block text-[#A6B1C8] font-semibold mb-1">Batch / Inward Lot Ref</label>
                 <input
                   type="text"
                   value={stockOp.batchNo}
                   onChange={(e) => setStockOp({ ...stockOp, batchNo: e.target.value })}
-                  className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs font-mono outline-none"
+                  className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs font-mono outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Movement Reason / PO Number</label>
+                <label className="block text-[#A6B1C8] font-semibold mb-1">Movement Reason / PO Number</label>
                 <input
                   type="text"
                   value={stockOp.reason}
                   onChange={(e) => setStockOp({ ...stockOp, reason: e.target.value })}
                   placeholder="e.g. Supplier Batch #441 Arrival"
-                  className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs outline-none"
+                  className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs outline-none"
                   required
                 />
               </div>
@@ -552,17 +552,17 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
           </div>
 
           {/* Right Column: Live Movement Logs & Audit Trail */}
-          <div className="lg:col-span-7 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
-            <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+          <div className="lg:col-span-7 bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-white/10">
               <div>
-                <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <h4 className="text-sm font-bold text-[#F8FAFC] flex items-center gap-2">
                   <History className="w-4 h-4 text-watch-navy-dark" /> Real-Time Stock Movement Audit Trail
                 </h4>
-                <p className="text-xs text-gray-500">Tamper-evident chronological log of all warehouse movements.</p>
+                <p className="text-xs text-[#A6B1C8]">Tamper-evident chronological log of all warehouse movements.</p>
               </div>
               <button
                 onClick={() => alert('📄 Audit Log exported in CSV / Excel format.')}
-                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg flex items-center gap-1"
+                className="px-3 py-1.5 bg-white/5 hover:bg-gray-200 text-[#A6B1C8] text-xs font-bold rounded-lg flex items-center gap-1"
               >
                 <FileText className="w-3.5 h-3.5" /> Export Logs
               </button>
@@ -572,7 +572,7 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
               {stockLogs.map((log) => {
                 const isInward = log.type.includes('+');
                 return (
-                  <div key={log.id} className="p-3.5 bg-gray-50/70 hover:bg-gray-100/70 rounded-xl border border-gray-200 text-xs flex items-center justify-between gap-3 transition-colors">
+                  <div key={log.id} className="p-3.5 bg-[#0B1022]/80/70 hover:bg-white/5/70 rounded-xl border border-white/10 text-xs flex items-center justify-between gap-3 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black ${
                         isInward ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
@@ -581,11 +581,11 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-gray-900">{log.name}</span>
+                          <span className="font-bold text-[#F8FAFC]">{log.name}</span>
                           <span className="font-mono text-[10px] text-gray-400">({log.sku})</span>
                         </div>
-                        <p className="text-gray-500 text-[11px] mt-0.5">
-                          {log.reason} • Ref: <span className="font-mono font-bold text-gray-700">{log.ref}</span> • {log.warehouse}
+                        <p className="text-[#A6B1C8] text-[11px] mt-0.5">
+                          {log.reason} • Ref: <span className="font-mono font-bold text-[#A6B1C8]">{log.ref}</span> • {log.warehouse}
                         </p>
                       </div>
                     </div>
@@ -610,12 +610,12 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
       {currentTab === 'stock_requests' && (
         <div className="space-y-5">
           {/* Header Controls */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
             <div>
-              <h4 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <h4 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
                 <ClipboardList className="w-5 h-5 text-watch-gold" /> Inter-Warehouse Stock Requisitions & Transfer Desk
               </h4>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-[#A6B1C8] mt-0.5">
                 Manage stock transfer requests between Mumbai Central Vault, Delhi North, and Bangalore South.
               </p>
             </div>
@@ -628,10 +628,10 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
           </div>
 
           {/* Stock Requests Table */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-100">
+                <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10px] border-b border-white/10">
                   <tr>
                     <th className="py-3 px-4">Request ID & Date</th>
                     <th className="py-3 px-4">Requested Watch Item</th>
@@ -644,22 +644,22 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {stockRequests.map((req) => (
-                    <tr key={req.id} className="hover:bg-gray-50/80 transition-colors">
+                    <tr key={req.id} className="hover:bg-[#0B1022]/80/80 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-mono font-bold text-gray-900 block">{req.id}</span>
+                        <span className="font-mono font-bold text-[#F8FAFC] block">{req.id}</span>
                         <span className="text-[10px] text-gray-400">{req.date}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-gray-900 block">{req.item}</span>
+                        <span className="font-bold text-[#F8FAFC] block">{req.item}</span>
                         <span className="font-mono text-[10px] text-gray-400">SKU: {req.sku}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-semibold text-gray-800 block text-[11px]">{req.fromWarehouse}</span>
+                        <span className="font-semibold text-[#F8FAFC] block text-[11px]">{req.fromWarehouse}</span>
                         <span className="text-[10px] text-watch-gold font-bold flex items-center gap-1">
                           → {req.toWarehouse}
                         </span>
                       </td>
-                      <td className="py-3 px-4 font-black text-gray-900 text-sm">{req.qty} units</td>
+                      <td className="py-3 px-4 font-black text-[#F8FAFC] text-sm">{req.qty} units</td>
                       <td className="py-3 px-4">
                         <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
                           req.priority === 'Urgent'
@@ -670,7 +670,7 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                         }`}>
                           {req.priority}
                         </span>
-                        <span className="block text-[10.5px] text-gray-500 mt-0.5">{req.reason}</span>
+                        <span className="block text-[10.5px] text-[#A6B1C8] mt-0.5">{req.reason}</span>
                       </td>
                       <td className="py-3 px-4">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
@@ -705,17 +705,17 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
           {/* Create Request Modal */}
           {requestModalOpen && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
-                <h3 className="text-base font-bold text-gray-900 mb-1">Create Stock Transfer Requisition</h3>
-                <p className="text-xs text-gray-500 mb-4">Request inventory allocation from high-stock facilities.</p>
+              <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl max-w-md w-full p-6 shadow-2xl">
+                <h3 className="text-base font-bold text-[#F8FAFC] mb-1">Create Stock Transfer Requisition</h3>
+                <p className="text-xs text-[#A6B1C8] mb-4">Request inventory allocation from high-stock facilities.</p>
 
                 <form onSubmit={handleCreateRequest} className="space-y-3.5 text-xs">
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Select Timepiece SKU</label>
+                    <label className="block text-[#A6B1C8] font-semibold mb-1">Select Timepiece SKU</label>
                     <select
                       value={newRequest.sku}
                       onChange={(e) => setNewRequest({ ...newRequest, sku: e.target.value })}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs font-bold outline-none"
+                      className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs font-bold outline-none"
                     >
                       {inventory.map((i) => (
                         <option key={i.sku} value={i.sku}>
@@ -727,11 +727,11 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Source (From)</label>
+                      <label className="block text-[#A6B1C8] font-semibold mb-1">Source (From)</label>
                       <select
                         value={newRequest.fromWarehouse}
                         onChange={(e) => setNewRequest({ ...newRequest, fromWarehouse: e.target.value })}
-                        className="w-full h-9 px-2 rounded-lg border border-gray-300 text-xs outline-none"
+                        className="w-full h-9 px-2 rounded-lg border border-white/15 text-xs outline-none"
                       >
                         <option value="Mumbai Central Vault">Mumbai Central Vault</option>
                         <option value="Delhi North Hub">Delhi North Hub</option>
@@ -740,11 +740,11 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Destination (To)</label>
+                      <label className="block text-[#A6B1C8] font-semibold mb-1">Destination (To)</label>
                       <select
                         value={newRequest.toWarehouse}
                         onChange={(e) => setNewRequest({ ...newRequest, toWarehouse: e.target.value })}
-                        className="w-full h-9 px-2 rounded-lg border border-gray-300 text-xs outline-none"
+                        className="w-full h-9 px-2 rounded-lg border border-white/15 text-xs outline-none"
                       >
                         <option value="Delhi North Hub">Delhi North Hub</option>
                         <option value="Bangalore South Hub">Bangalore South Hub</option>
@@ -755,22 +755,22 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Quantity (Units)</label>
+                      <label className="block text-[#A6B1C8] font-semibold mb-1">Quantity (Units)</label>
                       <input
                         type="number"
                         value={newRequest.qty}
                         onChange={(e) => setNewRequest({ ...newRequest, qty: e.target.value })}
-                        className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs font-bold outline-none"
+                        className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs font-bold outline-none"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Requisition Priority</label>
+                      <label className="block text-[#A6B1C8] font-semibold mb-1">Requisition Priority</label>
                       <select
                         value={newRequest.priority}
                         onChange={(e) => setNewRequest({ ...newRequest, priority: e.target.value })}
-                        className="w-full h-9 px-2 rounded-lg border border-gray-300 text-xs outline-none"
+                        className="w-full h-9 px-2 rounded-lg border border-white/15 text-xs outline-none"
                       >
                         <option value="Urgent">Urgent (Stock Out Risk)</option>
                         <option value="High">High</option>
@@ -780,12 +780,12 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Business Reason</label>
+                    <label className="block text-[#A6B1C8] font-semibold mb-1">Business Reason</label>
                     <input
                       type="text"
                       value={newRequest.reason}
                       onChange={(e) => setNewRequest({ ...newRequest, reason: e.target.value })}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-300 text-xs outline-none"
+                      className="w-full h-9 px-3 rounded-lg border border-white/15 text-xs outline-none"
                       required
                     />
                   </div>
@@ -794,7 +794,7 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                     <button
                       type="button"
                       onClick={() => setRequestModalOpen(false)}
-                      className="px-4 py-2 border border-gray-300 rounded-xl text-gray-700 font-bold"
+                      className="px-4 py-2 border border-white/15 rounded-xl text-[#A6B1C8] font-bold"
                     >
                       Cancel
                     </button>
@@ -847,21 +847,21 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                 bays: '6 Standard Bays'
               }
             ].map((wh, idx) => (
-              <div key={idx} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
-                <div className="flex items-center gap-2.5 pb-2 border-b border-gray-100">
+              <div key={idx} className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm space-y-3">
+                <div className="flex items-center gap-2.5 pb-2 border-b border-white/10">
                   <div className="w-10 h-10 rounded-xl bg-watch-navy-dark text-watch-gold flex items-center justify-center font-bold">
                     <Building2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-gray-900 text-xs">{wh.name}</h5>
-                    <span className="text-[10px] text-gray-500">{wh.type}</span>
+                    <h5 className="font-bold text-[#F8FAFC] text-xs">{wh.name}</h5>
+                    <span className="text-[10px] text-[#A6B1C8]">{wh.type}</span>
                   </div>
                 </div>
 
-                <div className="text-xs space-y-1.5 text-gray-600">
+                <div className="text-xs space-y-1.5 text-[#A6B1C8]">
                   <div className="flex justify-between">
                     <span>Capacity:</span>
-                    <span className="font-bold text-gray-900">{wh.capacity}</span>
+                    <span className="font-bold text-[#F8FAFC]">{wh.capacity}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Occupancy:</span>
@@ -869,11 +869,11 @@ export const InventoryManagementModule = ({ activeSubTab = 'inventory', onSubTab
                   </div>
                   <div className="flex justify-between">
                     <span>Facility Lead:</span>
-                    <span className="font-bold text-gray-800">{wh.manager}</span>
+                    <span className="font-bold text-[#F8FAFC]">{wh.manager}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Storage Zones:</span>
-                    <span className="font-semibold text-gray-700">{wh.bays}</span>
+                    <span className="font-semibold text-[#A6B1C8]">{wh.bays}</span>
                   </div>
                 </div>
               </div>

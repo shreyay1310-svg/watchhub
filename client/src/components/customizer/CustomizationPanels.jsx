@@ -40,7 +40,7 @@ export const CustomizationPanels = ({
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-5 sm:p-7 font-poppins flex flex-col justify-between min-h-[500px]">
+    <div className="bg-[#10182D]/90 backdrop-blur-xl rounded-3xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.6)] p-5 sm:p-7 font-poppins text-[#F8FAFC] flex flex-col justify-between min-h-[500px]">
       <div>
         {/* Step Header with Progress */}
         <div className="flex items-center justify-between pb-3 mb-5 border-b border-gray-100">
@@ -48,7 +48,7 @@ export const CustomizationPanels = ({
             <span className="text-[11px] font-bold tracking-wider text-watch-gold uppercase block">
               Step {currentStep} of 8
             </span>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mt-0.5">
+            <h2 className="text-lg sm:text-xl font-bold text-[#F8FAFC] mt-0.5">
               {currentStep === 1 && 'Select Watch Architecture'}
               {currentStep === 2 && 'Customize Dial & Proportions'}
               {currentStep === 3 && 'Choose Case & Bezel Materials'}
@@ -61,8 +61,8 @@ export const CustomizationPanels = ({
           </div>
 
           <div className="text-right">
-            <span className="text-xs font-bold text-gray-700">{percentComplete}% Complete</span>
-            <div className="w-24 h-2 bg-gray-100 rounded-full mt-1 overflow-hidden">
+            <span className="text-xs font-bold text-[#F8FAFC]">{percentComplete}% Complete</span>
+            <div className="w-24 h-2 bg-white/5 border border-white/10 rounded-full mt-1 overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-watch-gold to-amber-500 rounded-full transition-all duration-300"
                 style={{ width: `${percentComplete}%` }}
@@ -76,7 +76,7 @@ export const CustomizationPanels = ({
             ══════════════════════════════════════════════════════════════ */}
         {currentStep === 1 && (
           <div className="space-y-4 animate-fade-in">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-[#A6B1C8]">
               Choose your foundation style. Each type has tailored movement compatibility and case geometry.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1">
@@ -89,16 +89,16 @@ export const CustomizationPanels = ({
                     className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
                       isSelected
                         ? 'border-watch-gold bg-amber-50/60 shadow-sm'
-                        : 'border-gray-200 hover:border-gray-300 bg-white'
+                        : 'border-white/10 hover:border-white/15 bg-white'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl p-2 rounded-xl bg-gray-50 border border-gray-100">
+                      <span className="text-2xl p-2 rounded-xl bg-[#0B1022]/80 border border-white/10 border border-gray-100">
                         {type.icon}
                       </span>
                       <div>
-                        <h4 className="text-xs font-bold text-gray-900">{type.name}</h4>
-                        <p className="text-[11px] text-gray-500">{type.subtitle}</p>
+                        <h4 className="text-xs font-bold text-[#F8FAFC]">{type.name}</h4>
+                        <p className="text-[11px] text-[#A6B1C8]">{type.subtitle}</p>
                         <span className="text-xs font-black text-amber-800 mt-1 block">
                           ₹{type.basePrice.toLocaleString('en-IN')}
                         </span>
@@ -135,7 +135,7 @@ export const CustomizationPanels = ({
                       className={`p-2.5 rounded-2xl border-2 text-center transition-all cursor-pointer flex flex-col items-center gap-1 ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
                       <span className="text-xl">{shape.icon}</span>
@@ -166,7 +166,7 @@ export const CustomizationPanels = ({
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-amber-100 text-amber-950 border border-watch-gold shadow-xs'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          : 'bg-white/5 border border-white/10 text-[#A6B1C8] hover:bg-gray-200'
                       }`}
                     >
                       {s.label}
@@ -191,7 +191,7 @@ export const CustomizationPanels = ({
                         updateNested('dial', 'customHex', color.hex);
                       }}
                       className={`w-8 h-8 rounded-full border-2 transition-transform cursor-pointer flex items-center justify-center ${
-                        isSelected ? 'scale-115 border-watch-gold shadow-md' : 'border-gray-300 hover:scale-105'
+                        isSelected ? 'scale-115 border-watch-gold shadow-md' : 'border-white/15 hover:scale-105'
                       }`}
                       style={{ backgroundColor: color.hex }}
                       title={`${color.name} ${color.price > 0 ? `(+₹${color.price})` : ''}`}
@@ -218,10 +218,10 @@ export const CustomizationPanels = ({
                       updateNested('dial', 'color', 'custom');
                       updateNested('dial', 'customHex', e.target.value);
                     }}
-                    className="w-8 h-8 rounded-full cursor-pointer border border-gray-300"
+                    className="w-8 h-8 rounded-full cursor-pointer border border-white/15"
                     title="Pick Any Custom Color"
                   />
-                  <span className="text-[11px] text-gray-500 font-medium">+ Custom</span>
+                  <span className="text-[11px] text-[#A6B1C8] font-medium">+ Custom</span>
                 </div>
               </div>
             </div>
@@ -240,11 +240,11 @@ export const CustomizationPanels = ({
                       className={`p-2.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
                       <span className="text-xs text-gray-800 block font-bold">{f.name}</span>
-                      <span className="text-[10px] text-gray-500 block truncate">{f.desc}</span>
+                      <span className="text-[10px] text-[#A6B1C8] block truncate">{f.desc}</span>
                       {f.price > 0 && (
                         <span className="text-[10px] text-amber-800 font-bold block mt-1">+₹{f.price}</span>
                       )}
@@ -274,12 +274,12 @@ export const CustomizationPanels = ({
                       className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold shadow-xs'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
                       <div>
-                        <h4 className="text-xs font-bold text-gray-900">{mat.name}</h4>
-                        <p className="text-[10.5px] text-gray-500">{mat.grade}</p>
+                        <h4 className="text-xs font-bold text-[#F8FAFC]">{mat.name}</h4>
+                        <p className="text-[10.5px] text-[#A6B1C8]">{mat.grade}</p>
                       </div>
                       <span className="text-xs font-black text-amber-800">
                         {mat.price > 0 ? `+₹${mat.price.toLocaleString('en-IN')}` : 'Included'}
@@ -304,7 +304,7 @@ export const CustomizationPanels = ({
                       className={`p-2.5 rounded-2xl border-2 flex items-center gap-2.5 transition-all cursor-pointer ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
                       <span
@@ -337,11 +337,11 @@ export const CustomizationPanels = ({
                       className={`p-2.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
-                      <span className="text-xs font-bold text-gray-900 block">{s.name}</span>
-                      <span className="text-[10px] text-gray-500 block">{s.desc}</span>
+                      <span className="text-xs font-bold text-[#F8FAFC] block">{s.name}</span>
+                      <span className="text-[10px] text-[#A6B1C8] block">{s.desc}</span>
                     </button>
                   );
                 })}
@@ -368,11 +368,11 @@ export const CustomizationPanels = ({
                       className={`p-2.5 rounded-2xl border-2 transition-all cursor-pointer ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
-                      <h4 className="text-xs font-bold text-gray-900">{mat.name}</h4>
-                      <p className="text-[10px] text-gray-500 truncate">{mat.desc}</p>
+                      <h4 className="text-xs font-bold text-[#F8FAFC]">{mat.name}</h4>
+                      <p className="text-[10px] text-[#A6B1C8] truncate">{mat.desc}</p>
                       <span className="text-[11px] font-bold text-amber-800 block mt-1">
                         {mat.price > 0 ? `+₹${mat.price.toLocaleString('en-IN')}` : 'Included'}
                       </span>
@@ -394,7 +394,7 @@ export const CustomizationPanels = ({
                       type="button"
                       onClick={() => updateNested('strap', 'color', c.id)}
                       className={`w-8 h-8 rounded-full border-2 transition-transform cursor-pointer flex items-center justify-center ${
-                        isSelected ? 'scale-115 border-watch-gold shadow-md' : 'border-gray-300 hover:scale-105'
+                        isSelected ? 'scale-115 border-watch-gold shadow-md' : 'border-white/15 hover:scale-105'
                       }`}
                       style={{ backgroundColor: c.hex }}
                       title={c.name}
@@ -421,7 +421,7 @@ export const CustomizationPanels = ({
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                         customWatch.strap.width === w
                           ? 'bg-amber-100 text-amber-950 border border-watch-gold'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          : 'bg-white/5 border border-white/10 text-[#A6B1C8] hover:bg-gray-200'
                       }`}
                     >
                       {w} mm
@@ -435,7 +435,7 @@ export const CustomizationPanels = ({
                 <select
                   value={customWatch.strap.style}
                   onChange={(e) => updateNested('strap', 'style', e.target.value)}
-                  className="w-full text-xs font-semibold p-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-watch-gold"
+                  className="w-full text-xs font-semibold p-2.5 rounded-xl border border-white/10 bg-[#0B1022]/80 border border-white/10 focus:outline-none focus:ring-1 focus:ring-watch-gold"
                 >
                   {STRAP_CONFIG.styles.map((s) => (
                     <option key={s.id} value={s.id}>
@@ -466,18 +466,18 @@ export const CustomizationPanels = ({
                       className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3 ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 shadow-xs'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
                       <span className="text-2xl">{m.icon}</span>
                       <div className="flex-1">
                         <div className="flex justify-between items-center">
-                          <h4 className="text-xs font-bold text-gray-900">{m.name}</h4>
+                          <h4 className="text-xs font-bold text-[#F8FAFC]">{m.name}</h4>
                           <span className="text-xs font-black text-amber-800">
                             {m.price > 0 ? `+₹${m.price.toLocaleString('en-IN')}` : 'Included'}
                           </span>
                         </div>
-                        <p className="text-[10px] text-gray-500 mt-0.5">{m.desc}</p>
+                        <p className="text-[10px] text-[#A6B1C8] mt-0.5">{m.desc}</p>
                       </div>
                     </div>
                   );
@@ -497,8 +497,8 @@ export const CustomizationPanels = ({
                       onClick={() => toggleFeature(feat.id)}
                       className={`p-2.5 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${
                         isChecked
-                          ? 'border-watch-gold bg-amber-50/40 text-gray-900 font-bold'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                          ? 'border-watch-gold bg-amber-50/40 text-[#F8FAFC] font-bold'
+                          : 'border-white/10 hover:border-white/15 text-[#A6B1C8]'
                       }`}
                     >
                       <div className="flex items-center gap-2">
@@ -512,7 +512,7 @@ export const CustomizationPanels = ({
                         <span className="text-[11px] font-bold text-amber-800">+₹{feat.price}</span>
                         <div
                           className={`w-4 h-4 rounded-md border flex items-center justify-center ${
-                            isChecked ? 'bg-watch-gold border-watch-gold text-black' : 'border-gray-300'
+                            isChecked ? 'bg-watch-gold border-watch-gold text-black' : 'border-white/15'
                           }`}
                         >
                           {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
@@ -545,7 +545,7 @@ export const CustomizationPanels = ({
                       className={`p-3 rounded-2xl border-2 flex items-center gap-2.5 transition-all cursor-pointer ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
                       <span className="w-5 h-5 rounded-full border border-gray-400" style={{ backgroundColor: h.hex }} />
@@ -569,12 +569,12 @@ export const CustomizationPanels = ({
                       className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
                         isSelected
                           ? 'border-watch-gold bg-amber-50/60 font-bold shadow-xs'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-white/10 hover:border-white/15'
                       }`}
                     >
                       <div>
-                        <h4 className="text-xs font-bold text-gray-900">{m.name}</h4>
-                        <p className="text-[10.5px] text-gray-500">{m.desc}</p>
+                        <h4 className="text-xs font-bold text-[#F8FAFC]">{m.name}</h4>
+                        <p className="text-[10.5px] text-[#A6B1C8]">{m.desc}</p>
                       </div>
                       <span className="text-xs font-black text-amber-800">
                         {m.price > 0 ? `+₹${m.price}` : 'Included'}
@@ -616,7 +616,7 @@ export const CustomizationPanels = ({
                 value={customWatch.personalization.dialText || ''}
                 onChange={(e) => updateNested('personalization', 'dialText', e.target.value.toUpperCase())}
                 placeholder="e.g. CUSTOM, SHREYA, BESPOKE"
-                className="w-full text-xs font-bold p-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-watch-gold uppercase"
+                className="w-full text-xs font-bold p-3 rounded-xl border border-white/15 bg-[#0B1022]/80 text-[#F8FAFC] border-white/15 focus:outline-none focus:border-[#00F0FF]/60 focus:ring-2 focus:ring-watch-gold uppercase"
               />
             </div>
 
@@ -634,7 +634,7 @@ export const CustomizationPanels = ({
                 value={customWatch.personalization.backEngraving || ''}
                 onChange={(e) => updateNested('personalization', 'backEngraving', e.target.value)}
                 placeholder="e.g. S.Y. • 13.11.2026 • Live Every Second"
-                className="w-full text-xs font-bold p-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-watch-gold"
+                className="w-full text-xs font-bold p-3 rounded-xl border border-white/15 bg-[#0B1022]/80 text-[#F8FAFC] border-white/15 focus:outline-none focus:border-[#00F0FF]/60 focus:ring-2 focus:ring-watch-gold"
               />
             </div>
 
@@ -654,11 +654,11 @@ export const CustomizationPanels = ({
                     className={`p-2.5 rounded-xl border-2 text-center transition-all cursor-pointer ${
                       customWatch.personalization.font === f.id
                         ? 'border-watch-gold bg-amber-50/60 font-bold'
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-white/10 hover:border-white/15'
                     }`}
                   >
                     <span className={`text-sm block ${f.font}`}>Abc 123</span>
-                    <span className="text-[10px] text-gray-500">{f.name}</span>
+                    <span className="text-[10px] text-[#A6B1C8]">{f.name}</span>
                   </button>
                 ))}
               </div>
@@ -682,36 +682,36 @@ export const CustomizationPanels = ({
             </div>
 
             {/* Specifications Summary Card */}
-            <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200 space-y-2">
-              <h4 className="font-bold text-gray-900 pb-2 border-b border-gray-200">
+            <div className="bg-[#0B1022]/80 border border-white/10 rounded-2xl p-4 border border-white/10 space-y-2">
+              <h4 className="font-bold text-[#F8FAFC] pb-2 border-b border-white/10">
                 Full Technical Specifications:
               </h4>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px]">
                 <div>
                   <span className="text-gray-400 block">Watch Type</span>
-                  <span className="font-bold text-gray-900 capitalize">{customWatch.watchType} Watch</span>
+                  <span className="font-bold text-[#F8FAFC] capitalize">{customWatch.watchType} Watch</span>
                 </div>
                 <div>
                   <span className="text-gray-400 block">Dial Details</span>
-                  <span className="font-bold text-gray-900 capitalize">
+                  <span className="font-bold text-[#F8FAFC] capitalize">
                     {customWatch.dial.shape}, {customWatch.dial.size}mm, {customWatch.dial.color} ({customWatch.dial.finish})
                   </span>
                 </div>
                 <div>
                   <span className="text-gray-400 block">Case & Bezel</span>
-                  <span className="font-bold text-gray-900 capitalize">
+                  <span className="font-bold text-[#F8FAFC] capitalize">
                     {customWatch.case.material}, {customWatch.case.color}
                   </span>
                 </div>
                 <div>
                   <span className="text-gray-400 block">Strap & Clasp</span>
-                  <span className="font-bold text-gray-900 capitalize">
+                  <span className="font-bold text-[#F8FAFC] capitalize">
                     {customWatch.strap.material}, {customWatch.strap.color} ({customWatch.strap.width}mm)
                   </span>
                 </div>
                 <div>
                   <span className="text-gray-400 block">Movement Caliber</span>
-                  <span className="font-bold text-gray-900 capitalize">{customWatch.movement}</span>
+                  <span className="font-bold text-[#F8FAFC] capitalize">{customWatch.movement}</span>
                 </div>
                 <div>
                   <span className="text-gray-400 block">Back Case Engraving</span>
@@ -724,17 +724,17 @@ export const CustomizationPanels = ({
 
             {/* Trust Badges Strip */}
             <div className="grid grid-cols-3 gap-2 text-center text-[10.5px]">
-              <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+              <div className="p-2.5 rounded-xl bg-[#0B1022]/80 border border-white/10 border border-gray-100">
                 <ShieldCheck className="w-4 h-4 text-watch-gold mx-auto mb-1" />
                 <span className="font-bold text-gray-800 block">5-Year Warranty</span>
                 <span className="text-gray-400 text-[9.5px]">Direct Brand Assurance</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+              <div className="p-2.5 rounded-xl bg-[#0B1022]/80 border border-white/10 border border-gray-100">
                 <Award className="w-4 h-4 text-watch-gold mx-auto mb-1" />
                 <span className="font-bold text-gray-800 block">100% Authentic</span>
                 <span className="text-gray-400 text-[9.5px]">Swiss Movement Grade</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+              <div className="p-2.5 rounded-xl bg-[#0B1022]/80 border border-white/10 border border-gray-100">
                 <Sparkles className="w-4 h-4 text-watch-gold mx-auto mb-1" />
                 <span className="font-bold text-gray-800 block">Custom Built</span>
                 <span className="text-gray-400 text-[9.5px]">Crafted Just for You</span>
@@ -754,8 +754,8 @@ export const CustomizationPanels = ({
           disabled={currentStep === 1}
           className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
             currentStep === 1
-              ? 'opacity-30 cursor-not-allowed text-gray-400 bg-gray-100'
-              : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+              ? 'opacity-30 cursor-not-allowed text-gray-400 bg-white/5 border border-white/10'
+              : 'text-[#F8FAFC] bg-white/5 border border-white/10 hover:bg-gray-200'
           }`}
         >
           <ChevronLeft className="w-4 h-4" />
@@ -768,7 +768,7 @@ export const CustomizationPanels = ({
           disabled={currentStep === 8}
           className={`px-6 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer ${
             currentStep === 8
-              ? 'opacity-40 cursor-not-allowed bg-gray-200 text-gray-500'
+              ? 'opacity-40 cursor-not-allowed bg-gray-200 text-[#A6B1C8]'
               : 'bg-watch-navy text-white hover:bg-watch-gold hover:text-black'
           }`}
         >

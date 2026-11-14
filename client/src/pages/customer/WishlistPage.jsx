@@ -13,12 +13,12 @@ export const WishlistPage = () => {
       <CustomerNavbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 w-full flex-1">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">My Wishlist ({wishlist.length} saved items)</h2>
+        <h2 className="text-2xl font-bold text-[#F8FAFC] mb-6">My Wishlist ({wishlist.length} saved items)</h2>
 
         {wishlist.length === 0 ? (
           <div className="bg-white p-12 text-center rounded-2xl border border-gray-200 shadow-sm max-w-lg mx-auto">
             <span className="text-6xl block mb-3">🤍</span>
-            <h3 className="text-lg font-bold text-gray-800">Your Wishlist is Empty</h3>
+            <h3 className="text-lg font-bold text-[#F8FAFC]">Your Wishlist is Empty</h3>
             <p className="text-xs text-gray-500 mt-1 mb-5">Save your favourite watches here and shop them anytime.</p>
             <Link to="/products" className="btn-gold text-xs">
               Explore Watches
@@ -53,12 +53,12 @@ export const WishlistPage = () => {
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <div>
                     <span className="text-[10px] text-gray-400 font-bold uppercase">{p.category}</span>
-                    <h4 className="text-xs font-bold text-gray-900 line-clamp-1">{p.name}</h4>
+                    <h4 className="text-xs font-bold text-[#F8FAFC] line-clamp-1">{p.name}</h4>
                     <p className="text-xs text-gray-500 mt-1">{p.warranty}</p>
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-sm font-extrabold text-gray-900">
+                    <span className="text-sm font-extrabold text-[#F8FAFC]">
                       ₹{p.price.toLocaleString('en-IN')}
                     </span>
                     <button

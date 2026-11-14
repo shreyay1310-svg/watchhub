@@ -319,7 +319,7 @@ export const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
+    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
       {/* 1. Header (Navbar matching Reference UI) */}
       <CustomerNavbar />
 
@@ -538,7 +538,7 @@ export const HomePage = () => {
         <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-10 pb-6">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-bold text-[#F8FAFC] tracking-tight">
                 Shop by Popular Brands
               </h3>
               <div className="w-12 h-1 bg-[#D9A441] rounded-full mt-1.5" />
@@ -605,7 +605,7 @@ export const HomePage = () => {
             ════════════════════════════════════════════════════════════════ */}
         <section className="max-w-7xl mx-auto px-4 sm:px-8 py-6">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-bold text-[#F8FAFC] tracking-tight">
               Shop by Category
             </h3>
             <Link
@@ -647,7 +647,7 @@ export const HomePage = () => {
                         className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
                       />
                     </div>
-                    <div className="p-2 sm:p-2.5 flex items-center justify-between bg-white text-gray-900 border-t border-gray-100">
+                    <div className="p-2 sm:p-2.5 flex items-center justify-between bg-[#0B1022]/90 text-[#F8FAFC] border-t border-white/10">
                       <span
                         className={`text-[11px] sm:text-xs font-bold leading-tight ${
                           cat.active ? 'text-watch-gold' : ''
@@ -657,7 +657,7 @@ export const HomePage = () => {
                       </span>
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ml-1 ${
-                          cat.active ? 'bg-watch-gold text-black' : 'bg-gray-100 text-gray-700'
+                          cat.active ? 'bg-[#F4B942] text-[#050816] shadow-[0_0_12px_rgba(244,185,66,0.4)]' : 'bg-white/5 text-[#A6B1C8] border border-white/10'
                         }`}
                       >
                         <ArrowRight className="w-3 h-3" />
@@ -694,7 +694,7 @@ export const HomePage = () => {
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-7 bg-watch-gold rounded-full" />
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#F8FAFC] tracking-tight">
                   Featured <span className="text-watch-gold font-serif">Timepieces</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -712,7 +712,7 @@ export const HomePage = () => {
                   className={`px-4 py-1.5 rounded-full font-bold transition-all whitespace-nowrap cursor-pointer ${
                     activeFilterTab === tab
                       ? 'bg-[#0B121C] text-white shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      : 'text-[#A6B1C8] hover:text-[#F8FAFC]'
                   }`}
                 >
                   {tab}
@@ -787,7 +787,7 @@ export const HomePage = () => {
                 <span className="text-[11px] font-extrabold text-watch-gold uppercase tracking-wider block mb-1">
                   {quickViewProduct.category}
                 </span>
-                <h3 className="text-xl font-bold text-gray-900 leading-tight">
+                <h3 className="text-xl font-bold text-[#F8FAFC] leading-tight">
                   {quickViewProduct.name}
                 </h3>
 
@@ -807,7 +807,7 @@ export const HomePage = () => {
 
                 {/* Pricing */}
                 <div className="flex items-baseline gap-2 mt-4 pt-3 border-t border-gray-100">
-                  <span className="text-2xl font-black text-gray-900">
+                  <span className="text-2xl font-black text-[#F8FAFC]">
                     ₹{quickViewProduct.price?.toLocaleString('en-IN')}
                   </span>
                   <span className="text-sm text-gray-400 line-through">
@@ -819,22 +819,22 @@ export const HomePage = () => {
                 </div>
 
                 {/* Specs Highlights */}
-                <div className="grid grid-cols-2 gap-2 mt-4 bg-gray-50 p-3 rounded-xl text-[11px] text-gray-700">
+                <div className="grid grid-cols-2 gap-2 mt-4 bg-[#0B1022]/80 border border-white/10 p-3 rounded-xl text-[11px] text-[#A6B1C8]">
                   <div>
                     <span className="text-gray-400 block text-[10px]">Brand</span>
-                    <strong className="text-gray-900">{quickViewProduct.brand}</strong>
+                    <strong className="text-[#F8FAFC]">{quickViewProduct.brand}</strong>
                   </div>
                   <div>
                     <span className="text-gray-400 block text-[10px]">Water Resistance</span>
-                    <strong className="text-gray-900">{quickViewProduct.waterproof || '100M / 10 ATM'}</strong>
+                    <strong className="text-[#F8FAFC]">{quickViewProduct.waterproof || '100M / 10 ATM'}</strong>
                   </div>
                   <div>
                     <span className="text-gray-400 block text-[10px]">Warranty</span>
-                    <strong className="text-gray-900">2 Years Official</strong>
+                    <strong className="text-[#F8FAFC]">2 Years Official</strong>
                   </div>
                   <div>
                     <span className="text-gray-400 block text-[10px]">Delivery</span>
-                    <strong className="text-gray-900">Free Express (2-3 Days)</strong>
+                    <strong className="text-[#F8FAFC]">Free Express (2-3 Days)</strong>
                   </div>
                 </div>
               </div>
@@ -858,7 +858,7 @@ export const HomePage = () => {
                     className={`py-2.5 px-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                       isInWishlist(quickViewProduct.id)
                         ? 'bg-red-50 border-red-200 text-red-600'
-                        : 'bg-white border-gray-200 text-gray-700 hover:border-watch-gold'
+                        : 'bg-white/5 border-white/10 text-[#F8FAFC] hover:border-[#00F0FF]/50'
                     }`}
                   >
                     <Heart className={`w-4 h-4 ${isInWishlist(quickViewProduct.id) ? 'fill-red-500 text-red-500' : ''}`} />

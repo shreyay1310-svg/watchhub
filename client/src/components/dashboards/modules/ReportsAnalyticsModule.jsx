@@ -20,18 +20,18 @@ export const ReportsAnalyticsModule = () => {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm">
         <div>
-          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-[#F8FAFC] flex items-center gap-2">
             <span>📈</span> Business Intelligence & Financial Reports
           </h3>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-[#A6B1C8] mt-0.5">
             Export audit-grade sales, category performance, tax schedules and courier SLA analytics.
           </p>
         </div>
 
         <div className="flex gap-2">
-          <button onClick={() => handleExport('CSV')} className="px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-1.5">
+          <button onClick={() => handleExport('CSV')} className="px-3 py-1.5 border border-white/15 rounded-lg text-xs font-semibold text-[#A6B1C8] bg-[#10182D]/90 backdrop-blur-md hover:bg-[#0B1022]/80 flex items-center gap-1.5">
             <FileSpreadsheet className="w-4 h-4 text-emerald-600" /> Export CSV
           </button>
           <button onClick={() => handleExport('PDF')} className="btn-gold text-xs py-1.5 px-3 flex items-center gap-1.5">
@@ -41,8 +41,8 @@ export const ReportsAnalyticsModule = () => {
       </div>
 
       {/* Analytics Chart */}
-      <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-        <h4 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-1.5">
+      <div className="bg-[#10182D]/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm">
+        <h4 className="text-xs font-bold text-[#F8FAFC] mb-4 flex items-center gap-1.5">
           <BarChart3 className="w-4 h-4 text-watch-gold" /> Category Revenue Distribution (INR)
         </h4>
         <div className="h-60 w-full">
@@ -59,13 +59,13 @@ export const ReportsAnalyticsModule = () => {
       </div>
 
       {/* Report Table */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-gray-100 flex justify-between items-center text-xs">
-          <span className="font-bold text-gray-800">Quarterly Category Financial Breakdown</span>
+      <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-white/10 flex justify-between items-center text-xs">
+          <span className="font-bold text-[#F8FAFC]">Quarterly Category Financial Breakdown</span>
           <span className="text-gray-400">Total Revenue: ₹12,48,000</span>
         </div>
         <table className="w-full text-left text-xs">
-          <thead className="bg-gray-50 text-gray-500 font-semibold uppercase text-[10.5px]">
+          <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10.5px]">
             <tr>
               <th className="py-3 px-4">Watch Category</th>
               <th className="py-3 px-4">Units Sold</th>
@@ -76,12 +76,12 @@ export const ReportsAnalyticsModule = () => {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {SALES_REPORT.map((row, idx) => (
-              <tr key={idx} className="hover:bg-gray-50">
-                <td className="py-3 px-4 font-bold text-gray-900">{row.category}</td>
+              <tr key={idx} className="hover:bg-[#0B1022]/80">
+                <td className="py-3 px-4 font-bold text-[#F8FAFC]">{row.category}</td>
                 <td className="py-3 px-4">{row.orders} orders</td>
                 <td className="py-3 px-4 font-bold text-emerald-700">₹{row.revenue.toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-gray-600">₹{Math.round(row.revenue / row.orders).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-gray-500">{row.returnRate}</td>
+                <td className="py-3 px-4 text-[#A6B1C8]">₹{Math.round(row.revenue / row.orders).toLocaleString('en-IN')}</td>
+                <td className="py-3 px-4 text-[#A6B1C8]">{row.returnRate}</td>
               </tr>
             ))}
           </tbody>

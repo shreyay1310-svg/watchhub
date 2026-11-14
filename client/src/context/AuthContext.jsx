@@ -10,9 +10,10 @@ export const ROLES = {
   INVENTORY_MANAGER: 'Inventory Manager',
   DELIVERY_MANAGER: 'Delivery Manager',
   CUSTOMER_SUPPORT: 'Customer Support Executive',
+  DELIVERY_PARTNER: 'Delivery Partner',
 };
 
-// Default mock user profiles for development & testing of all 6 roles
+// Default mock user profiles for development & testing of all roles
 export const MOCK_STAFF_ACCOUNTS = {
   [ROLES.SUPER_ADMIN]: {
     id: 'usr_super_admin',
@@ -53,6 +54,14 @@ export const MOCK_STAFF_ACCOUNTS = {
     role: ROLES.CUSTOMER_SUPPORT,
     avatar: '🎧',
     permissions: ['tickets.manage', 'refunds.request', 'orders.lookup'],
+  },
+  [ROLES.DELIVERY_PARTNER]: {
+    id: 'usr_delivery_rider',
+    name: 'Rohan Singh',
+    email: 'rider@watchhub.com',
+    role: ROLES.DELIVERY_PARTNER,
+    avatar: '🛵',
+    permissions: ['delivery.partner', 'order.complete', 'otp.verify'],
   },
   [ROLES.CUSTOMER]: {
     id: 'usr_customer_demo',
@@ -200,6 +209,8 @@ export const AuthProvider = ({ children }) => {
 
       if (cleanEmail.includes('inventory')) {
         matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.INVENTORY_MANAGER] };
+      } else if (cleanEmail.includes('rider') || cleanEmail.includes('partner')) {
+        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.DELIVERY_PARTNER] };
       } else if (cleanEmail.includes('delivery')) {
         matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.DELIVERY_MANAGER] };
       } else if (cleanEmail.includes('support')) {
