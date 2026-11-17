@@ -33,9 +33,9 @@ import {
 export default function InventoryStockModule({
   products = [],
   warehouses = [],
-  onAddProduct = () => {},
-  onUpdateStock = () => {},
-  onTransferStock = () => {},
+  onAddProduct = () => { },
+  onUpdateStock = () => { },
+  onTransferStock = () => { },
 }) {
   const safeProducts = Array.isArray(products) ? products : [];
   const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
@@ -549,89 +549,87 @@ export default function InventoryStockModule({
                         ₹{stockVal.toLocaleString('en-IN')}
                       </td>
 
-                    {/* Status Badge */}
-                    <td className="py-3 px-3">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
-                          p.status === 'In Stock'
+                      {/* Status Badge */}
+                      <td className="py-3 px-3">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${p.status === 'In Stock'
                             ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                             : p.status === 'Low Stock'
-                            ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
-                            : 'bg-rose-500/20 text-rose-400 border border-rose-500/40'
-                        }`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            p.status === 'In Stock' ? 'bg-emerald-400' : p.status === 'Low Stock' ? 'bg-amber-400' : 'bg-rose-400'
-                          }`}
-                        />
-                        {p.status}
-                      </span>
-                    </td>
-
-                    {/* Actions: View Details, Edit Info, Update Stock, Transfer Stock, View History */}
-                    <td className="py-3 px-4">
-                      <div className="flex items-center justify-center gap-1">
-                        {/* View Product Details */}
-                        <button
-                          onClick={() => setDrawerProduct(p)}
-                          className="p-1.5 rounded-lg bg-[#17165A] hover:bg-[#6500FF]/30 text-[#00D5FF] border border-[#29305D] transition-all cursor-pointer"
-                          title="View Details Drawer"
+                              ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                              : 'bg-rose-500/20 text-rose-400 border border-rose-500/40'
+                            }`}
                         >
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${p.status === 'In Stock' ? 'bg-emerald-400' : p.status === 'Low Stock' ? 'bg-amber-400' : 'bg-rose-400'
+                              }`}
+                          />
+                          {p.status}
+                        </span>
+                      </td>
 
-                        {/* Edit Inventory Info */}
-                        <button
-                          onClick={() => setEditProductItem(p)}
-                          className="p-1.5 rounded-lg bg-[#17165A] hover:bg-[#E9B94F]/20 text-[#E9B94F] border border-[#29305D] transition-all cursor-pointer"
-                          title="Edit Inventory Information"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
+                      {/* Actions: View Details, Edit Info, Update Stock, Transfer Stock, View History */}
+                      <td className="py-3 px-4">
+                        <div className="flex items-center justify-center gap-1">
+                          {/* View Product Details */}
+                          <button
+                            onClick={() => setDrawerProduct(p)}
+                            className="p-1.5 rounded-lg bg-[#17165A] hover:bg-[#6500FF]/30 text-[#00D5FF] border border-[#29305D] transition-all cursor-pointer"
+                            title="View Details Drawer"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
 
-                        {/* Update Stock */}
-                        <button
-                          onClick={() => {
-                            setStockUpdateItem(p);
-                            setStockUpdateForm({ qtyDelta: 5, type: 'add', reason: 'Vault replenishment' });
-                          }}
-                          className="p-1.5 rounded-lg bg-[#17165A] hover:bg-emerald-500/20 text-emerald-400 border border-[#29305D] transition-all cursor-pointer"
-                          title="Quick Update Stock"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                        </button>
+                          {/* Edit Inventory Info */}
+                          <button
+                            onClick={() => setEditProductItem(p)}
+                            className="p-1.5 rounded-lg bg-[#17165A] hover:bg-[#E9B94F]/20 text-[#E9B94F] border border-[#29305D] transition-all cursor-pointer"
+                            title="Edit Inventory Information"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </button>
 
-                        {/* Transfer Stock */}
-                        <button
-                          onClick={() => {
-                            setTransferItem(p);
-                            setTransferForm({
-                              fromWarehouse: p.warehouse,
-                              toWarehouse: p.warehouse === 'Delhi Regional Warehouse' ? 'Main Central Vault' : 'Delhi Regional Warehouse',
-                              quantity: 1,
-                              notes: 'Vault rebalance transfer',
-                            });
-                          }}
-                          className="p-1.5 rounded-lg bg-[#17165A] hover:bg-[#6500FF] text-white border border-[#29305D] transition-all cursor-pointer"
-                          title="Inter-Warehouse Transfer"
-                        >
-                          <ArrowRightLeft className="w-3.5 h-3.5" />
-                        </button>
+                          {/* Update Stock */}
+                          <button
+                            onClick={() => {
+                              setStockUpdateItem(p);
+                              setStockUpdateForm({ qtyDelta: 5, type: 'add', reason: 'Vault replenishment' });
+                            }}
+                            className="p-1.5 rounded-lg bg-[#17165A] hover:bg-emerald-500/20 text-emerald-400 border border-[#29305D] transition-all cursor-pointer"
+                            title="Quick Update Stock"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
 
-                        {/* View History */}
-                        <button
-                          onClick={() => setHistoryProductItem(p)}
-                          className="p-1.5 rounded-lg bg-[#17165A] hover:bg-blue-500/20 text-[#00D5FF] border border-[#29305D] transition-all cursor-pointer"
-                          title="View Product History"
-                        >
-                          <History className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              }))}
+                          {/* Transfer Stock */}
+                          <button
+                            onClick={() => {
+                              setTransferItem(p);
+                              setTransferForm({
+                                fromWarehouse: p.warehouse,
+                                toWarehouse: p.warehouse === 'Delhi Regional Warehouse' ? 'Main Central Vault' : 'Delhi Regional Warehouse',
+                                quantity: 1,
+                                notes: 'Vault rebalance transfer',
+                              });
+                            }}
+                            className="p-1.5 rounded-lg bg-[#17165A] hover:bg-[#6500FF] text-white border border-[#29305D] transition-all cursor-pointer"
+                            title="Inter-Warehouse Transfer"
+                          >
+                            <ArrowRightLeft className="w-3.5 h-3.5" />
+                          </button>
+
+                          {/* View History */}
+                          <button
+                            onClick={() => setHistoryProductItem(p)}
+                            className="p-1.5 rounded-lg bg-[#17165A] hover:bg-blue-500/20 text-[#00D5FF] border border-[#29305D] transition-all cursor-pointer"
+                            title="View Product History"
+                          >
+                            <History className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                }))}
             </tbody>
           </table>
         </div>
@@ -1128,22 +1126,20 @@ export default function InventoryStockModule({
                 <button
                   type="button"
                   onClick={() => setStockUpdateForm({ ...stockUpdateForm, type: 'add' })}
-                  className={`py-2 rounded-xl font-bold border transition-all ${
-                    stockUpdateForm.type === 'add'
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-                      : 'bg-[#17165A] text-[#A7B1C2] border-[#29305D]'
-                  }`}
+                  className={`py-2 rounded-xl font-bold border transition-all ${stockUpdateForm.type === 'add'
+                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+                    : 'bg-[#17165A] text-[#A7B1C2] border-[#29305D]'
+                    }`}
                 >
                   + Add Stock
                 </button>
                 <button
                   type="button"
                   onClick={() => setStockUpdateForm({ ...stockUpdateForm, type: 'subtract' })}
-                  className={`py-2 rounded-xl font-bold border transition-all ${
-                    stockUpdateForm.type === 'subtract'
-                      ? 'bg-rose-500/20 text-rose-400 border-rose-500'
-                      : 'bg-[#17165A] text-[#A7B1C2] border-[#29305D]'
-                  }`}
+                  className={`py-2 rounded-xl font-bold border transition-all ${stockUpdateForm.type === 'subtract'
+                    ? 'bg-rose-500/20 text-rose-400 border-rose-500'
+                    : 'bg-[#17165A] text-[#A7B1C2] border-[#29305D]'
+                    }`}
                 >
                   - Deduct Stock
                 </button>

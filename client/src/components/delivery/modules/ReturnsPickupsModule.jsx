@@ -370,7 +370,7 @@ export const ReturnsPickupsModule = ({
                 <div>
                   <span className="font-bold text-white block">{selectedReturnDetail.productName}</span>
                   <span className="text-[11px] text-[#A7B1C2]">Original Order: {selectedReturnDetail.originalOrderId}</span>
-                  <span className="text-[10px] text-[#E9B94F] block mt-0.5">Refund Value: ₹{selectedReturnDetail.refundAmount?.toLocaleString()}</span>
+                  <span className="text-[10px] text-[#E9B94F] block mt-0.5">Refund Value: ₹{Number(selectedReturnDetail?.refundAmount || 0).toLocaleString('en-IN')}</span>
                 </div>
               </div>
 

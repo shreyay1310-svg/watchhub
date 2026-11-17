@@ -205,6 +205,32 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Fetch live synchronized delivery data from backend
+  useEffect(() => {
+    let isMounted = true;
+    fetch('/api/delivery')
+      .then((res) => {
+        if (!res.ok) throw new Error('API offline');
+        return res.json();
+      })
+      .then((data) => {
+        if (!isMounted || !data) return;
+        if (data.stats) setStats((prev) => ({ ...prev, ...data.stats }));
+        if (data.statusBreakdown) setStatusBreakdown(data.statusBreakdown);
+        if (Array.isArray(data.orders) && data.orders.length > 0) setOrders(data.orders);
+        if (Array.isArray(data.riders) && data.riders.length > 0) setRiders(data.riders);
+        if (Array.isArray(data.couriers) && data.couriers.length > 0) setCouriers(data.couriers);
+        if (Array.isArray(data.attempts) && data.attempts.length > 0) setAttempts(data.attempts);
+        if (Array.isArray(data.returns) && data.returns.length > 0) setReturnsList(data.returns);
+      })
+      .catch(() => {
+        // Fallback to local synchronized state buffer
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // 1. Assign Orders Handler
   const handleAssignOrders = (orderIds, riderId, partnerName, priority, timeSlot, instructions) => {
     const rider = riders.find((r) => r.id === riderId);
@@ -249,6 +275,13 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
       outForDelivery: prev.outForDelivery + orderIds.length,
     }));
 
+    // Post to backend API
+    fetch('/api/delivery/assign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderIds, riderId, partnerName, priority, timeSlot, instructions }),
+    }).catch(() => {});
+
     triggerToast(`Assigned ${orderIds.length} order(s) to ${rider?.name}!`);
   };
 
@@ -276,6 +309,13 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
         return order;
       })
     );
+
+    // Post to backend API
+    fetch('/api/delivery/update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, status: newStatus, notes: note }),
+    }).catch(() => {});
 
     triggerToast(`Order #${orderId} status updated to ${newStatus}`);
   };
@@ -355,6 +395,14 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
     setOrders((prev) => [newOrder, ...prev]);
     setStats((prev) => ({ ...prev, totalShipments: prev.totalShipments + 1 }));
     setShowCreateShipmentModal(false);
+
+    // Sync to backend API
+    fetch('/api/delivery/create-shipment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newOrder),
+    }).catch(() => {});
+
     triggerToast(`Shipment created with AWB ${newAwb} for ${newOrder.customerName}`);
   };
 
@@ -400,6 +448,14 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
       deliveryAttempts: prev.deliveryAttempts + 1,
       failedDeliveries: newAttempt.deliveryResult === 'Failed' ? prev.failedDeliveries + 1 : prev.failedDeliveries,
     }));
+
+    // Sync to backend API
+    fetch('/api/delivery/attempt-failure', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newAttempt),
+    }).catch(() => {});
+
     triggerToast(`Recorded doorstep attempt for Order #${newAttempt.orderId}`);
   };
 
@@ -412,6 +468,14 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
           : ret
       )
     );
+
+    // Sync to backend API
+    fetch('/api/delivery/return-pickup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ returnId, riderName, riderId, pickupDate, notes }),
+    }).catch(() => {});
+
     triggerToast(`Pickup assigned to ${riderName}`);
   };
 
