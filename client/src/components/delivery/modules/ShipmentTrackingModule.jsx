@@ -20,8 +20,8 @@ export const ShipmentTrackingModule = ({
   orders = [],
   riders = [],
   selectedOrder = null,
-  onSelectOrder = () => {},
-  onAddTrackingEvent = () => {},
+  onSelectOrder = () => { },
+  onAddTrackingEvent = () => { },
 }) => {
   const safeOrders = Array.isArray(orders) ? orders : [];
   const safeRiders = Array.isArray(riders) ? riders : [];
@@ -123,11 +123,10 @@ export const ShipmentTrackingModule = ({
                 setActiveOrder(o);
                 setSearchInput(o.orderId);
               }}
-              className={`px-2.5 py-1 rounded-lg border transition-colors cursor-pointer ${
-                activeOrder?.orderId === o.orderId
-                  ? 'bg-[#6500FF]/25 border-[#6500FF] text-white font-bold'
-                  : 'bg-[#081529] border-[#28334B] text-[#A7B1C2] hover:text-white'
-              }`}
+              className={`px-2.5 py-1 rounded-lg border transition-colors cursor-pointer ${activeOrder?.orderId === o.orderId
+                ? 'bg-[#6500FF]/25 border-[#6500FF] text-white font-bold'
+                : 'bg-[#081529] border-[#28334B] text-[#A7B1C2] hover:text-white'
+                }`}
             >
               {o.orderId} ({o.customerName})
             </button>
@@ -153,11 +152,10 @@ export const ShipmentTrackingModule = ({
                       AWB: {activeOrder.awbNumber}
                     </span>
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        activeOrder.deliveryStatus === 'Delivered'
-                          ? 'bg-[#00C98B]/20 text-[#00C98B]'
-                          : 'bg-[#00D5FF]/20 text-[#00D5FF]'
-                      }`}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${activeOrder.deliveryStatus === 'Delivered'
+                        ? 'bg-[#00C98B]/20 text-[#00C98B]'
+                        : 'bg-[#00D5FF]/20 text-[#00D5FF]'
+                        }`}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-current" />
                       {activeOrder.deliveryStatus}
@@ -225,15 +223,14 @@ export const ShipmentTrackingModule = ({
                     <div key={idx} className="relative group">
                       {/* Node Bullet */}
                       <div
-                        className={`absolute -left-[30px] top-1 w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all ${
-                          isCompleted
-                            ? 'bg-[#00C98B] border-[#00C98B] text-[#070918]'
-                            : isActive
+                        className={`absolute -left-[30px] top-1 w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all ${isCompleted
+                          ? 'bg-[#00C98B] border-[#00C98B] text-[#070918]'
+                          : isActive
                             ? 'bg-[#00D5FF] border-white text-[#070918] shadow-md shadow-[#00D5FF]/50 animate-pulse'
                             : isFailed
-                            ? 'bg-[#FF4966] border-[#FF4966] text-white'
-                            : 'bg-[#11172C] border-[#28334B] text-[#A7B1C2]'
-                        }`}
+                              ? 'bg-[#FF4966] border-[#FF4966] text-white'
+                              : 'bg-[#11172C] border-[#28334B] text-[#A7B1C2]'
+                          }`}
                       >
                         {isCompleted && <CheckCircle className="w-3 h-3 text-[#070918]" />}
                         {isActive && <Truck className="w-2.5 h-2.5 text-[#070918]" />}
@@ -242,11 +239,10 @@ export const ShipmentTrackingModule = ({
 
                       {/* Event Card */}
                       <div
-                        className={`p-3.5 rounded-xl border text-xs transition-colors ${
-                          isActive
-                            ? 'bg-[#081529] border-[#00D5FF]/50 shadow-md shadow-[#00D5FF]/10'
-                            : 'bg-[#081529]/60 border-[#28334B]'
-                        }`}
+                        className={`p-3.5 rounded-xl border text-xs transition-colors ${isActive
+                          ? 'bg-[#081529] border-[#00D5FF]/50 shadow-md shadow-[#00D5FF]/10'
+                          : 'bg-[#081529]/60 border-[#28334B]'
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-white text-sm">

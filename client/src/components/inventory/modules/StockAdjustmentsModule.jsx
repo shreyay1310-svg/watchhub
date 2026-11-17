@@ -261,8 +261,8 @@ export default function StockAdjustmentsModule({
                     <span className="text-xs text-gray-300 line-clamp-1">{a.reason}</span>
                   </td>
                   <td className="py-3 px-3 text-right font-mono font-semibold">
-                    <span className={a.valueImpact < 0 ? 'text-rose-400' : 'text-emerald-400'}>
-                      {a.valueImpact < 0 ? `-₹${Math.abs(a.valueImpact).toLocaleString('en-IN')}` : `+₹${a.valueImpact.toLocaleString('en-IN')}`}
+                    <span className={Number(a?.valueImpact || 0) < 0 ? 'text-rose-400' : 'text-emerald-400'}>
+                      {Number(a?.valueImpact || 0) < 0 ? `-₹${Math.abs(Number(a?.valueImpact || 0)).toLocaleString('en-IN')}` : `+₹${Number(a?.valueImpact || 0).toLocaleString('en-IN')}`}
                     </span>
                   </td>
                   <td className="py-3 px-3">
@@ -499,7 +499,7 @@ export default function StockAdjustmentsModule({
             <div className="p-3 bg-[#17165A]/50 rounded-xl border border-[#29305D] space-y-1.5">
               <p className="font-bold text-white">{approvalModalItem.productName}</p>
               <p className="text-[11px] text-[#A7B1C2]">
-                Variance: <strong className={approvalModalItem.diff < 0 ? 'text-rose-400' : 'text-emerald-400'}>{approvalModalItem.diff} Units</strong> • Impact: ₹{Math.abs(approvalModalItem.valueImpact).toLocaleString('en-IN')}
+                Variance: <strong className={Number(approvalModalItem?.diff || 0) < 0 ? 'text-rose-400' : 'text-emerald-400'}>{approvalModalItem?.diff || 0} Units</strong> • Impact: ₹{Math.abs(Number(approvalModalItem?.valueImpact || 0)).toLocaleString('en-IN')}
               </p>
               <p className="text-[11px] text-gray-300">Reason: {approvalModalItem.reason}</p>
             </div>

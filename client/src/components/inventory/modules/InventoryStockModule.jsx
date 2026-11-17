@@ -77,6 +77,14 @@ export default function InventoryStockModule({
     image: '/images/products/featured_rolex_submariner.jpg',
   });
 
+  const formatSafeDate = (dateVal) => {
+    if (!dateVal) return 'Not Available';
+    const safeDate = new Date(dateVal);
+    return safeDate && !Number.isNaN(safeDate.getTime())
+      ? safeDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+      : String(dateVal);
+  };
+
   // Required ADD STOCK FORM Fields:
   // Select Product, SKU, Supplier, Warehouse, Quantity Received, Purchase Cost, Batch Number, Received Date, Invoice Number, Notes
   const [addStockForm, setAddStockForm] = useState({
@@ -85,9 +93,9 @@ export default function InventoryStockModule({
     supplier: safeProducts[0]?.supplier || 'Rolex Geneva SA / Swiss Imports Ltd',
     warehouse: safeProducts[0]?.warehouse || 'Main Central Vault',
     quantityReceived: 5,
-    purchaseCost: safeProducts[0]?.unitCost || 500000,
+    purchaseCost: Number(safeProducts[0]?.unitCost ?? safeProducts[0]?.costPrice ?? 500000),
     batchNumber: `BATCH-2026-${Math.floor(100 + Math.random() * 900)}`,
-    receivedDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+    receivedDate: formatSafeDate(new Date()),
     invoiceNumber: `INV-PO-${Math.floor(1000 + Math.random() * 9000)}`,
     notes: 'Verified against chronometer certificate upon delivery.',
   });
@@ -105,39 +113,57 @@ export default function InventoryStockModule({
     notes: 'Urgent boutique fulfillment',
   });
 
-  // Extract unique filters
-  const brands = useMemo(() => ['All', ...new Set(products.map((p) => p.brand))], [products]);
-  const categories = useMemo(() => ['All', ...new Set(products.map((p) => p.category))], [products]);
+  // Extract unique filters safely
+  const brands = useMemo(
+    () => ['All', ...new Set(safeProducts.map((p) => p?.brand).filter(Boolean))],
+    [safeProducts]
+  );
+  const categories = useMemo(
+    () => ['All', ...new Set(safeProducts.map((p) => p?.category).filter(Boolean))],
+    [safeProducts]
+  );
   const statuses = ['All', 'In Stock', 'Low Stock', 'Out of Stock'];
 
   // Filter & Sort
   const filteredProducts = useMemo(() => {
-    return products
+    return safeProducts
       .filter((p) => {
-        const matchWh = selectedWarehouse === 'All' || p.warehouse === selectedWarehouse || p.warehouseId === selectedWarehouse;
+        if (!p) return false;
+        const matchWh =
+          selectedWarehouse === 'All' ||
+          p.warehouse === selectedWarehouse ||
+          p.warehouseId === selectedWarehouse;
         const matchBrand = selectedBrand === 'All' || p.brand === selectedBrand;
         const matchCat = selectedCategory === 'All' || p.category === selectedCategory;
         const matchStat = selectedStatus === 'All' || p.status === selectedStatus;
+        const q = (searchQuery || '').toLowerCase().trim();
         const matchSearch =
-          !searchQuery ||
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (p.barcode && p.barcode.includes(searchQuery)) ||
-          p.brand.toLowerCase().includes(searchQuery.toLowerCase());
+          !q ||
+          (p.name && p.name.toLowerCase().includes(q)) ||
+          (p.sku && p.sku.toLowerCase().includes(q)) ||
+          (p.barcode && String(p.barcode).includes(q)) ||
+          (p.brand && p.brand.toLowerCase().includes(q));
         return matchWh && matchBrand && matchCat && matchStat && matchSearch;
       })
       .sort((a, b) => {
+        if (!a || !b) return 0;
         let valA = a[sortField];
         let valB = b[sortField];
         if (sortField === 'stockValue') {
-          valA = (a.totalQty || 0) * (a.unitCost || 0);
-          valB = (b.totalQty || 0) * (b.unitCost || 0);
+          valA = (Number(a.totalQty ?? a.stock ?? a.quantity ?? 0)) * (Number(a.unitCost ?? a.costPrice ?? a.price ?? 0));
+          valB = (Number(b.totalQty ?? b.stock ?? b.quantity ?? 0)) * (Number(b.unitCost ?? b.costPrice ?? b.price ?? 0));
+        } else if (typeof valA === 'number' || typeof valB === 'number') {
+          valA = Number(valA ?? 0);
+          valB = Number(valB ?? 0);
+        } else {
+          valA = String(valA || '').toLowerCase();
+          valB = String(valB || '').toLowerCase();
         }
         if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
         if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
         return 0;
       });
-  }, [products, selectedWarehouse, selectedBrand, selectedCategory, selectedStatus, searchQuery, sortField, sortDirection]);
+  }, [safeProducts, selectedWarehouse, selectedBrand, selectedCategory, selectedStatus, searchQuery, sortField, sortDirection]);
 
   // Paginated products
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
@@ -423,76 +449,105 @@ export default function InventoryStockModule({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#29305D]/50">
-              {paginatedProducts.map((p) => {
-                const stockVal = (p.totalQty || 0) * (p.unitCost || 0);
-                return (
-                  <tr key={p.id} className="hover:bg-[#17165A]/40 transition-colors group">
-                    {/* Image */}
-                    <td className="py-3 px-3">
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        className="w-10 h-10 rounded-xl object-contain bg-black/40 border border-[#29305D] p-0.5 shrink-0"
-                      />
-                    </td>
-
-                    {/* Product Name & SKU */}
-                    <td className="py-3 px-3">
-                      <p
-                        onClick={() => setDrawerProduct(p)}
-                        className="font-bold text-white text-xs hover:text-[#00D5FF] transition-colors cursor-pointer max-w-[170px] truncate"
-                        title={p.name}
+              {paginatedProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={12} className="py-12 text-center text-[#A7B1C2]">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <Box className="w-10 h-10 text-[#6500FF]/50" />
+                      <p className="font-bold text-white text-sm">No Timepieces Found</p>
+                      <p className="text-xs text-[#A7B1C2]">No inventory products matched the current filter selection.</p>
+                      <button
+                        onClick={() => {
+                          setSearchQuery('');
+                          setSelectedWarehouse('All');
+                          setSelectedBrand('All');
+                          setSelectedCategory('All');
+                          setSelectedStatus('All');
+                        }}
+                        className="mt-2 px-3.5 py-1.5 rounded-xl bg-[#6500FF]/20 text-[#00D5FF] border border-[#6500FF]/40 text-xs font-semibold hover:bg-[#6500FF]/30 cursor-pointer"
                       >
-                        {p.name}
-                      </p>
-                      <p className="font-mono text-[10px] text-[#00D5FF] mt-0.5">{p.sku}</p>
-                    </td>
+                        Reset All Filters
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                paginatedProducts.map((p) => {
+                  const unitCostVal = Number(p?.unitCost ?? p?.costPrice ?? p?.price ?? 0);
+                  const totalUnits = Number(p?.totalQty ?? p?.stock ?? p?.quantity ?? (Number(p?.availableQty ?? 0) + Number(p?.reservedQty ?? 0)));
+                  const stockVal = totalUnits * unitCostVal;
+                  const availableUnits = Number(p?.availableQty ?? p?.availableStock ?? p?.stock ?? 0);
+                  const reservedUnits = Number(p?.reservedQty ?? p?.reservedStock ?? 0);
+                  const minStockUnits = Number(p?.minStock ?? p?.minLevel ?? 5);
 
-                    {/* Brand & Category */}
-                    <td className="py-3 px-3">
-                      <p className="font-semibold text-white">{p.brand}</p>
-                      <p className="text-[10px] text-[#A7B1C2]">{p.category}</p>
-                    </td>
+                  return (
+                    <tr key={p?.id || p?.sku} className="hover:bg-[#17165A]/40 transition-colors group">
+                      {/* Image */}
+                      <td className="py-3 px-3">
+                        <img
+                          src={p?.image || '/images/products/featured_rolex_submariner.jpg'}
+                          alt={p?.name || 'Watch'}
+                          className="w-10 h-10 rounded-xl object-contain bg-black/40 border border-[#29305D] p-0.5 shrink-0"
+                        />
+                      </td>
 
-                    {/* Barcode */}
-                    <td className="py-3 px-3 font-mono text-[10px] text-gray-300">
-                      {p.barcode}
-                    </td>
+                      {/* Product Name & SKU */}
+                      <td className="py-3 px-3">
+                        <p
+                          onClick={() => setDrawerProduct(p)}
+                          className="font-bold text-white text-xs hover:text-[#00D5FF] transition-colors cursor-pointer max-w-[170px] truncate"
+                          title={p?.name}
+                        >
+                          {p?.name || 'Unnamed Timepiece'}
+                        </p>
+                        <p className="font-mono text-[10px] text-[#00D5FF] mt-0.5">{p?.sku || 'N/A'}</p>
+                      </td>
 
-                    {/* Warehouse */}
-                    <td className="py-3 px-3 text-gray-200">
-                      <div className="flex items-center gap-1.5">
-                        <Building2 className="w-3.5 h-3.5 text-[#E9B94F] shrink-0" />
-                        <span className="truncate max-w-[110px]">{p.warehouse}</span>
-                      </div>
-                    </td>
+                      {/* Brand & Category */}
+                      <td className="py-3 px-3">
+                        <p className="font-semibold text-white">{p?.brand || 'Luxury'}</p>
+                        <p className="text-[10px] text-[#A7B1C2]">{p?.category || 'Watches'}</p>
+                      </td>
 
-                    {/* Available Quantity */}
-                    <td className="py-3 px-3 text-center font-bold font-mono text-sm">
-                      <span className={p.availableQty === 0 ? 'text-rose-400' : p.availableQty <= p.minStock ? 'text-amber-400' : 'text-emerald-400'}>
-                        {p.availableQty}
-                      </span>
-                    </td>
+                      {/* Barcode */}
+                      <td className="py-3 px-3 font-mono text-[10px] text-gray-300">
+                        {p?.barcode || '—'}
+                      </td>
 
-                    {/* Reserved Quantity */}
-                    <td className="py-3 px-3 text-center font-mono text-gray-300">
-                      {p.reservedQty}
-                    </td>
+                      {/* Warehouse */}
+                      <td className="py-3 px-3 text-gray-200">
+                        <div className="flex items-center gap-1.5">
+                          <Building2 className="w-3.5 h-3.5 text-[#E9B94F] shrink-0" />
+                          <span className="truncate max-w-[110px]">{p?.warehouse || 'Central Vault'}</span>
+                        </div>
+                      </td>
 
-                    {/* Minimum Stock */}
-                    <td className="py-3 px-3 text-center font-mono text-[#A7B1C2]">
-                      {p.minStock}
-                    </td>
+                      {/* Available Quantity */}
+                      <td className="py-3 px-3 text-center font-bold font-mono text-sm">
+                        <span className={availableUnits === 0 ? 'text-rose-400' : availableUnits <= minStockUnits ? 'text-amber-400' : 'text-emerald-400'}>
+                          {availableUnits.toLocaleString('en-IN')}
+                        </span>
+                      </td>
 
-                    {/* Unit Cost */}
-                    <td className="py-3 px-3 text-right font-mono text-gray-300">
-                      ₹{Number(p.unitCost).toLocaleString('en-IN')}
-                    </td>
+                      {/* Reserved Quantity */}
+                      <td className="py-3 px-3 text-center font-mono text-gray-300">
+                        {reservedUnits.toLocaleString('en-IN')}
+                      </td>
 
-                    {/* Stock Value */}
-                    <td className="py-3 px-3 text-right font-mono font-bold text-[#E9B94F]">
-                      ₹{Number(stockVal).toLocaleString('en-IN')}
-                    </td>
+                      {/* Minimum Stock */}
+                      <td className="py-3 px-3 text-center font-mono text-[#A7B1C2]">
+                        {minStockUnits.toLocaleString('en-IN')}
+                      </td>
+
+                      {/* Unit Cost */}
+                      <td className="py-3 px-3 text-right font-mono text-gray-300">
+                        ₹{unitCostVal.toLocaleString('en-IN')}
+                      </td>
+
+                      {/* Stock Value */}
+                      <td className="py-3 px-3 text-right font-mono font-bold text-[#E9B94F]">
+                        ₹{stockVal.toLocaleString('en-IN')}
+                      </td>
 
                     {/* Status Badge */}
                     <td className="py-3 px-3">
@@ -576,7 +631,7 @@ export default function InventoryStockModule({
                     </td>
                   </tr>
                 );
-              })}
+              }))}
             </tbody>
           </table>
         </div>
@@ -775,7 +830,7 @@ export default function InventoryStockModule({
               <div className="p-3 bg-[#17165A] rounded-xl border border-[#29305D] flex justify-between items-center">
                 <span className="text-[#A7B1C2]">Total Procurement Capital:</span>
                 <span className="font-mono font-black text-sm text-[#E9B94F]">
-                  ₹{(Number(addStockForm.quantityReceived) * Number(addStockForm.purchaseCost)).toLocaleString('en-IN')}
+                  ₹{Number((Number(addStockForm?.quantityReceived || 0) * Number(addStockForm?.purchaseCost || 0)) || 0).toLocaleString('en-IN')}
                 </span>
               </div>
 
@@ -1232,29 +1287,35 @@ export default function InventoryStockModule({
               <div className="space-y-2 p-3.5 rounded-xl bg-[#17165A]/30 border border-[#29305D]">
                 <div className="flex justify-between py-1 border-b border-[#29305D]/40">
                   <span className="text-[#A7B1C2]">Vault Location:</span>
-                  <span className="font-semibold text-white">{drawerProduct.warehouse}</span>
+                  <span className="font-semibold text-white">{drawerProduct?.warehouse || 'Central Vault'}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#29305D]/40">
                   <span className="text-[#A7B1C2]">Available Qty:</span>
-                  <span className="font-bold text-emerald-400">{drawerProduct.availableQty} units</span>
+                  <span className="font-bold text-emerald-400">
+                    {Number(drawerProduct?.availableQty ?? drawerProduct?.availableStock ?? drawerProduct?.stock ?? 0).toLocaleString('en-IN')} units
+                  </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#29305D]/40">
                   <span className="text-[#A7B1C2]">Reserved Qty:</span>
-                  <span className="text-white">{drawerProduct.reservedQty} units</span>
+                  <span className="text-white">
+                    {Number(drawerProduct?.reservedQty ?? drawerProduct?.reservedStock ?? 0).toLocaleString('en-IN')} units
+                  </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#29305D]/40">
                   <span className="text-[#A7B1C2]">Unit Procurement Cost:</span>
-                  <span className="text-white font-mono">₹{Number(drawerProduct.unitCost).toLocaleString('en-IN')}</span>
+                  <span className="text-white font-mono">
+                    ₹{Number(drawerProduct?.unitCost ?? drawerProduct?.costPrice ?? drawerProduct?.price ?? 0).toLocaleString('en-IN')}
+                  </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#29305D]/40">
                   <span className="text-[#A7B1C2]">Total Stock Value:</span>
                   <span className="text-[#E9B94F] font-mono font-bold">
-                    ₹{((drawerProduct.totalQty || 0) * (drawerProduct.unitCost || 0)).toLocaleString('en-IN')}
+                    ₹{Number(((drawerProduct?.totalQty ?? drawerProduct?.stock ?? 0) * (drawerProduct?.unitCost ?? drawerProduct?.costPrice ?? drawerProduct?.price ?? 0)) || 0).toLocaleString('en-IN')}
                   </span>
                 </div>
                 <div className="flex justify-between py-1">
                   <span className="text-[#A7B1C2]">Barcode:</span>
-                  <span className="text-white font-mono">{drawerProduct.barcode}</span>
+                  <span className="text-white font-mono">{drawerProduct?.barcode || '—'}</span>
                 </div>
               </div>
             </div>

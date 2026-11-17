@@ -180,16 +180,14 @@ export const DeliveryReportsModule = ({
                 <button
                   key={cat.id}
                   onClick={() => setSelectedReportId(cat.id)}
-                  className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-2.5 ${
-                    isSelected
-                      ? 'bg-gradient-to-r from-[#6500FF]/30 to-[#8B00FF]/20 border-[#6500FF] shadow-md shadow-[#6500FF]/20 ring-1 ring-[#6500FF]'
-                      : 'bg-[#081529]/60 hover:bg-[#081529] border-[#28334B]'
-                  }`}
+                  className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-2.5 ${isSelected
+                    ? 'bg-gradient-to-r from-[#6500FF]/30 to-[#8B00FF]/20 border-[#6500FF] shadow-md shadow-[#6500FF]/20 ring-1 ring-[#6500FF]'
+                    : 'bg-[#081529]/60 hover:bg-[#081529] border-[#28334B]'
+                    }`}
                 >
                   <div
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                      isSelected ? 'bg-[#6500FF] text-white' : 'bg-white/5 text-[#A7B1C2]'
-                    }`}
+                    className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? 'bg-[#6500FF] text-white' : 'bg-white/5 text-[#A7B1C2]'
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                   </div>

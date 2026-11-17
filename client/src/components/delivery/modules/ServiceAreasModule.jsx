@@ -19,8 +19,8 @@ import {
 
 export const ServiceAreasModule = ({
   serviceAreas = [],
-  onAddArea = () => {},
-  onToggleAreaStatus = () => {},
+  onAddArea = () => { },
+  onToggleAreaStatus = () => { },
 }) => {
   const safeAreas = Array.isArray(serviceAreas) ? serviceAreas : [];
   const [showAddModal, setShowAddModal] = useState(false);
@@ -151,11 +151,10 @@ export const ServiceAreasModule = ({
 
         {serviceCheckResult && (
           <div
-            className={`p-4 rounded-xl border text-xs animate-fade-in ${
-              serviceCheckResult.available
-                ? 'bg-[#00C98B]/10 border-[#00C98B]/40 text-white'
-                : 'bg-[#FF4966]/10 border-[#FF4966]/40 text-white'
-            }`}
+            className={`p-4 rounded-xl border text-xs animate-fade-in ${serviceCheckResult.available
+              ? 'bg-[#00C98B]/10 border-[#00C98B]/40 text-white'
+              : 'bg-[#FF4966]/10 border-[#FF4966]/40 text-white'
+              }`}
           >
             {serviceCheckResult.available ? (
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -221,11 +220,10 @@ export const ServiceAreasModule = ({
                 </div>
 
                 <span
-                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                    area.status === 'Active'
-                      ? 'bg-[#00C98B]/20 text-[#00C98B] border border-[#00C98B]/30'
-                      : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                  }`}
+                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${area.status === 'Active'
+                    ? 'bg-[#00C98B]/20 text-[#00C98B] border border-[#00C98B]/30'
+                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                    }`}
                 >
                   {area.status}
                 </span>

@@ -109,7 +109,7 @@ export default function DashboardModule({
     .slice(0, 6);
 
   const formatCurrency = (amount) => {
-    return '₹' + Number(amount).toLocaleString('en-IN');
+    return '₹' + Number(amount || 0).toLocaleString('en-IN');
   };
 
   return (
@@ -184,7 +184,7 @@ export default function DashboardModule({
               <Boxes className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-xl font-black text-white">{totalStockUnits.toLocaleString()}</p>
+          <p className="text-xl font-black text-white">{Number(totalStockUnits || 0).toLocaleString('en-IN')}</p>
           <div className="flex items-center gap-1 text-[10px] text-[#00D5FF] font-semibold mt-1">
             <span>Across 4 Vaults</span>
           </div>
@@ -471,8 +471,8 @@ export default function DashboardModule({
                     />
                   </div>
                   <div className="flex justify-between text-[10px] text-[#A7B1C2]">
-                    <span>{current.toLocaleString()} units</span>
-                    <span>Cap: {capacity.toLocaleString()}</span>
+                    <span>{Number(current || 0).toLocaleString('en-IN')} units</span>
+                    <span>Cap: {Number(capacity || 0).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
               );

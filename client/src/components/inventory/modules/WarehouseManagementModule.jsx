@@ -20,9 +20,9 @@ import {
 export default function WarehouseManagementModule({
   warehouses = [],
   products = [],
-  onAddWarehouse = () => {},
-  onUpdateWarehouse = () => {},
-  onTransferStock = () => {},
+  onAddWarehouse = () => { },
+  onUpdateWarehouse = () => { },
+  onTransferStock = () => { },
 }) {
   const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
   const safeProducts = Array.isArray(products) ? products : [];
@@ -205,11 +205,11 @@ export default function WarehouseManagementModule({
                   </div>
                   <div>
                     <span className="text-[10px] text-[#A7B1C2] block">Current Stored</span>
-                    <strong className="text-white text-xs">{currentUnits.toLocaleString()} Timepieces</strong>
+                    <strong className="text-white text-xs">{Number(currentUnits || 0).toLocaleString('en-IN')} Timepieces</strong>
                   </div>
                   <div>
                     <span className="text-[10px] text-[#A7B1C2] block">Vault Capacity</span>
-                    <span className="text-gray-300 font-mono">{capacity.toLocaleString()} units</span>
+                    <span className="text-gray-300 font-mono">{Number(capacity || 0).toLocaleString('en-IN')} units</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-[#A7B1C2] block">Low Stock Items</span>
@@ -491,7 +491,7 @@ export default function WarehouseManagementModule({
                       </div>
                       <div className="text-right">
                         <p className="font-bold text-white">{p.availableQty} Units</p>
-                        <p className="text-[10px] text-emerald-400">₹{Number(p.sellingPrice).toLocaleString('en-IN')}</p>
+                        <p className="text-[10px] text-emerald-400">₹{Number(p?.sellingPrice ?? p?.price ?? 0).toLocaleString('en-IN')}</p>
                       </div>
                     </div>
                   ))}

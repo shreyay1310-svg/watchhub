@@ -22,10 +22,10 @@ import {
 export const DeliveryPartnersModule = ({
   couriers = [],
   riders = [],
-  onAddPartner = () => {},
-  onAddRider = () => {},
-  onToggleRiderStatus = () => {},
-  onTogglePartnerStatus = () => {},
+  onAddPartner = () => { },
+  onAddRider = () => { },
+  onToggleRiderStatus = () => { },
+  onTogglePartnerStatus = () => { },
 }) => {
   const safeCouriers = Array.isArray(couriers) ? couriers : [];
   const safeRiders = Array.isArray(riders) ? riders : [];
@@ -176,11 +176,10 @@ export const DeliveryPartnersModule = ({
       <div className="flex items-center gap-2 border-b border-[#28334B] pb-1">
         <button
           onClick={() => setActiveTab('partners')}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-t-xl font-bold text-xs transition-colors cursor-pointer border-b-2 ${
-            activeTab === 'partners'
-              ? 'border-[#00D5FF] text-[#00D5FF] bg-white/5'
-              : 'border-transparent text-[#A7B1C2] hover:text-white'
-          }`}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-t-xl font-bold text-xs transition-colors cursor-pointer border-b-2 ${activeTab === 'partners'
+            ? 'border-[#00D5FF] text-[#00D5FF] bg-white/5'
+            : 'border-transparent text-[#A7B1C2] hover:text-white'
+            }`}
         >
           <Truck className="w-4 h-4" />
           <span>Courier Partners ({couriers.length})</span>
@@ -188,11 +187,10 @@ export const DeliveryPartnersModule = ({
 
         <button
           onClick={() => setActiveTab('riders')}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-t-xl font-bold text-xs transition-colors cursor-pointer border-b-2 ${
-            activeTab === 'riders'
-              ? 'border-[#6500FF] text-[#00D5FF] bg-white/5'
-              : 'border-transparent text-[#A7B1C2] hover:text-white'
-          }`}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-t-xl font-bold text-xs transition-colors cursor-pointer border-b-2 ${activeTab === 'riders'
+            ? 'border-[#6500FF] text-[#00D5FF] bg-white/5'
+            : 'border-transparent text-[#A7B1C2] hover:text-white'
+            }`}
         >
           <Users className="w-4 h-4" />
           <span>City Riders Fleet ({riders.length})</span>
@@ -279,11 +277,10 @@ export const DeliveryPartnersModule = ({
                       {/* Status */}
                       <td className="py-3 px-3 whitespace-nowrap">
                         <span
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                            partner.status === 'Active'
-                              ? 'bg-[#00C98B]/20 text-[#00C98B] border border-[#00C98B]/30'
-                              : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                          }`}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${partner.status === 'Active'
+                            ? 'bg-[#00C98B]/20 text-[#00C98B] border border-[#00C98B]/30'
+                            : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                            }`}
                         >
                           {partner.status}
                         </span>
@@ -293,11 +290,10 @@ export const DeliveryPartnersModule = ({
                       <td className="py-3 pr-4 text-right whitespace-nowrap">
                         <button
                           onClick={() => onTogglePartnerStatus(partner.id)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-colors cursor-pointer ${
-                            partner.status === 'Active'
-                              ? 'bg-red-500/10 text-red-400 border-red-500/30 hover:bg-red-500/20'
-                              : 'bg-[#00C98B]/10 text-[#00C98B] border-[#00C98B]/30 hover:bg-[#00C98B]/20'
-                          }`}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-colors cursor-pointer ${partner.status === 'Active'
+                            ? 'bg-red-500/10 text-red-400 border-red-500/30 hover:bg-red-500/20'
+                            : 'bg-[#00C98B]/10 text-[#00C98B] border-[#00C98B]/30 hover:bg-[#00C98B]/20'
+                            }`}
                         >
                           {partner.status === 'Active' ? 'Deactivate' : 'Activate'}
                         </button>
@@ -375,13 +371,12 @@ export const DeliveryPartnersModule = ({
                     {/* Status */}
                     <td className="py-3 px-3 whitespace-nowrap">
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          rider.status === 'Available'
-                            ? 'bg-[#00C98B]/20 text-[#00C98B] border border-[#00C98B]/30'
-                            : rider.status === 'On Delivery'
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${rider.status === 'Available'
+                          ? 'bg-[#00C98B]/20 text-[#00C98B] border border-[#00C98B]/30'
+                          : rider.status === 'On Delivery'
                             ? 'bg-[#00D5FF]/20 text-[#00D5FF] border border-[#00D5FF]/30'
                             : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                        }`}
+                          }`}
                       >
                         {rider.status}
                       </span>

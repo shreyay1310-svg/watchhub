@@ -21,7 +21,7 @@ export const RoutePlanningModule = ({
   orders = [],
   riders = [],
   couriers = [],
-  onCreateRoute = () => {},
+  onCreateRoute = () => { },
 }) => {
   const safeRoutes = Array.isArray(routes) ? routes : [];
   const safeOrders = Array.isArray(orders) ? orders : [];
@@ -156,11 +156,10 @@ export const RoutePlanningModule = ({
               <button
                 key={r.routeId}
                 onClick={() => setActiveRouteId(r.routeId)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${
-                  activeRouteId === r.routeId
-                    ? 'bg-[#6500FF] border-[#6500FF] text-white shadow-md'
-                    : 'bg-[#11172C] border-[#28334B] text-[#A7B1C2] hover:text-white'
-                }`}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${activeRouteId === r.routeId
+                  ? 'bg-[#6500FF] border-[#6500FF] text-white shadow-md'
+                  : 'bg-[#11172C] border-[#28334B] text-[#A7B1C2] hover:text-white'
+                  }`}
               >
                 {r.routeName} ({r.routeId})
               </button>
@@ -267,11 +266,10 @@ export const RoutePlanningModule = ({
                     <div className="text-right">
                       <span className="text-[11px] font-mono text-[#E9B94F] block">ETA: {stop.eta}</span>
                       <span
-                        className={`text-[10px] font-bold ${
-                          stop.status === 'Delivered' || stop.status === 'Completed'
-                            ? 'text-[#00C98B]'
-                            : 'text-[#00D5FF]'
-                        }`}
+                        className={`text-[10px] font-bold ${stop.status === 'Delivered' || stop.status === 'Completed'
+                          ? 'text-[#00C98B]'
+                          : 'text-[#00D5FF]'
+                          }`}
                       >
                         {stop.status}
                       </span>
@@ -369,17 +367,15 @@ export const RoutePlanningModule = ({
                           prev.includes(o.orderId) ? prev.filter((id) => id !== o.orderId) : [...prev, o.orderId]
                         )
                       }
-                      className={`p-2 rounded-lg border flex items-center justify-between cursor-pointer text-xs ${
-                        isChecked
-                          ? 'bg-[#081529] border-[#6500FF] text-white font-bold'
-                          : 'bg-[#081529]/50 border-[#28334B] text-[#A7B1C2]'
-                      }`}
+                      className={`p-2 rounded-lg border flex items-center justify-between cursor-pointer text-xs ${isChecked
+                        ? 'bg-[#081529] border-[#6500FF] text-white font-bold'
+                        : 'bg-[#081529]/50 border-[#28334B] text-[#A7B1C2]'
+                        }`}
                     >
                       <div className="flex items-center gap-2">
                         <div
-                          className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] ${
-                            isChecked ? 'bg-[#6500FF] border-[#6500FF] text-white' : 'border-[#28334B]'
-                          }`}
+                          className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] ${isChecked ? 'bg-[#6500FF] border-[#6500FF] text-white' : 'border-[#28334B]'
+                            }`}
                         >
                           {isChecked && <Check className="w-3 h-3" />}
                         </div>

@@ -21,8 +21,8 @@ export const ReturnsPickupsModule = ({
   returns = [],
   orders = [],
   riders = [],
-  onUpdateReturnStatus = () => {},
-  onScheduleReturnPickup = () => {},
+  onUpdateReturnStatus = () => { },
+  onScheduleReturnPickup = () => { },
 }) => {
   const safeReturns = Array.isArray(returns) ? returns : [];
   const safeOrders = Array.isArray(orders) ? orders : [];
@@ -213,15 +213,14 @@ export const ReturnsPickupsModule = ({
                   {/* Return Status */}
                   <td className="py-3 px-3 whitespace-nowrap">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        ret.returnStatus === 'Completed'
-                          ? 'bg-[#00C98B]/20 text-[#00C98B]'
-                          : ret.returnStatus === 'Pickup Assigned'
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${ret.returnStatus === 'Completed'
+                        ? 'bg-[#00C98B]/20 text-[#00C98B]'
+                        : ret.returnStatus === 'Pickup Assigned'
                           ? 'bg-[#00D5FF]/20 text-[#00D5FF]'
                           : ret.returnStatus === 'Received at Warehouse'
-                          ? 'bg-[#6500FF]/20 text-[#00D5FF]'
-                          : 'bg-[#FFB020]/20 text-[#FFB020]'
-                      }`}
+                            ? 'bg-[#6500FF]/20 text-[#00D5FF]'
+                            : 'bg-[#FFB020]/20 text-[#FFB020]'
+                        }`}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-current" />
                       {ret.returnStatus}

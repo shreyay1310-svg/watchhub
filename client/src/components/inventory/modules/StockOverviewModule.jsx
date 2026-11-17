@@ -170,7 +170,7 @@ export default function StockOverviewModule({
             <span className="text-[10px] font-semibold">Total Stock</span>
             <Boxes className="w-3.5 h-3.5 text-[#6500FF]" />
           </div>
-          <p className="text-lg font-black text-white">{totalStock.toLocaleString()}</p>
+          <p className="text-lg font-black text-white">{Number(totalStock || 0).toLocaleString('en-IN')}</p>
           <p className="text-[10px] text-[#A7B1C2]">Physical units</p>
         </div>
 
@@ -180,7 +180,7 @@ export default function StockOverviewModule({
             <span className="text-[10px] font-semibold">Available</span>
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
           </div>
-          <p className="text-lg font-black text-emerald-400">{availableStock.toLocaleString()}</p>
+          <p className="text-lg font-black text-emerald-400">{Number(availableStock || 0).toLocaleString('en-IN')}</p>
           <p className="text-[10px] text-emerald-300">Ready to fulfill</p>
         </div>
 
@@ -190,7 +190,7 @@ export default function StockOverviewModule({
             <span className="text-[10px] font-semibold">Reserved</span>
             <ShieldCheck className="w-3.5 h-3.5 text-[#00D5FF]" />
           </div>
-          <p className="text-lg font-black text-[#00D5FF]">{reservedStock.toLocaleString()}</p>
+          <p className="text-lg font-black text-[#00D5FF]">{Number(reservedStock || 0).toLocaleString('en-IN')}</p>
           <p className="text-[10px] text-[#00D5FF]/80">VIP holds</p>
         </div>
 
@@ -200,7 +200,7 @@ export default function StockOverviewModule({
             <span className="text-[10px] font-semibold">Damaged</span>
             <X className="w-3.5 h-3.5 text-rose-400" />
           </div>
-          <p className="text-lg font-black text-rose-400">{damagedStock.toLocaleString()}</p>
+          <p className="text-lg font-black text-rose-400">{Number(damagedStock || 0).toLocaleString('en-IN')}</p>
           <p className="text-[10px] text-rose-300">Quarantine</p>
         </div>
 
@@ -488,10 +488,10 @@ export default function StockOverviewModule({
                     <td className="py-3 px-3 text-center font-mono text-gray-300">{p.reservedQty}</td>
                     <td className="py-3 px-3 text-center font-mono font-bold text-white">{p.totalQty}</td>
                     <td className="py-3 px-3 text-right font-mono text-gray-300">
-                      ₹{Number(p.unitCost).toLocaleString('en-IN')}
+                      ₹{Number(p?.unitCost ?? p?.costPrice ?? p?.price ?? 0).toLocaleString('en-IN')}
                     </td>
                     <td className="py-3 px-3 text-right font-mono font-bold text-[#E9B94F]">
-                      ₹{Number(stockVal).toLocaleString('en-IN')}
+                      ₹{Number(stockVal || 0).toLocaleString('en-IN')}
                     </td>
                     <td className="py-3 px-4 text-center">
                       <span

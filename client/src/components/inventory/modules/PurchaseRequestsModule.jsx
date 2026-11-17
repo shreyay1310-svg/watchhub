@@ -150,12 +150,13 @@ export default function PurchaseRequestsModule({
   };
 
   const downloadPDFSummary = (pr) => {
-    const content = `WATCHHUB LUXURY HOROLOGY - PURCHASE ORDER\nPO Number: ${pr.id}\nDate: ${pr.date}\nSupplier: ${pr.supplier}\nDestination: ${pr.destinationWarehouse}\nStatus: ${pr.status}\n\nITEMS:\n${pr.items.map((i) => `- ${i.name} (${i.sku}) x ${i.quantity} units @ ₹${i.unitCost.toLocaleString('en-IN')}`).join('\n')}\n\nTOTAL ESTIMATED: ₹${pr.totalCost.toLocaleString('en-IN')}\n\nAuthorized by: ${pr.createdBy}`;
+    const itemsText = (pr?.items || []).map((i) => `- ${i?.name || 'Item'} (${i?.sku || 'SKU'}) x ${i?.quantity || 0} units @ ₹${Number(i?.unitCost || 0).toLocaleString('en-IN')}`).join('\n');
+    const content = `WATCHHUB LUXURY HOROLOGY - PURCHASE ORDER\nPO Number: ${pr?.id || 'N/A'}\nDate: ${pr?.date || 'N/A'}\nSupplier: ${pr?.supplier || 'N/A'}\nDestination: ${pr?.destinationWarehouse || 'Central Vault'}\nStatus: ${pr?.status || 'Pending'}\n\nITEMS:\n${itemsText}\n\nTOTAL ESTIMATED: ₹${Number(pr?.totalCost || 0).toLocaleString('en-IN')}\n\nAuthorized by: ${pr?.createdBy || 'Inventory Manager'}`;
     const blob = new Blob([content], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `WatchHub_PO_${pr.id}.txt`;
+    a.download = `WatchHub_PO_${pr?.id || 'PO'}.txt`;
     a.click();
   };
 
@@ -497,7 +498,7 @@ export default function PurchaseRequestsModule({
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-[#A7B1C2]">Total Estimated:</span>
-                <span className="text-[#E9B94F] font-bold font-mono">₹{viewPRItem.totalCost?.toLocaleString('en-IN')}</span>
+                <span className="text-[#E9B94F] font-bold font-mono">₹{Number(viewPRItem?.totalCost || 0).toLocaleString('en-IN')}</span>
               </div>
             </div>
 

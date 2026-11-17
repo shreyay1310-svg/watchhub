@@ -181,9 +181,8 @@ export default function StockReportsModule({
               <div
                 key={rpt.id}
                 onClick={() => setSelectedReportId(rpt.id)}
-                className={`bg-[#11123D] border rounded-2xl p-4 shadow-md transition-all cursor-pointer flex flex-col justify-between group ${
-                  isSelected ? 'border-[#00D5FF] bg-[#17165A]' : 'border-[#29305D] hover:border-[#6500FF]'
-                }`}
+                className={`bg-[#11123D] border rounded-2xl p-4 shadow-md transition-all cursor-pointer flex flex-col justify-between group ${isSelected ? 'border-[#00D5FF] bg-[#17165A]' : 'border-[#29305D] hover:border-[#6500FF]'
+                  }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
