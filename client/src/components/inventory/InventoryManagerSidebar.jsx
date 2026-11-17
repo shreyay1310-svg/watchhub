@@ -12,11 +12,13 @@ import {
   BarChart3,
   History,
   Settings,
-  HelpCircle,
   X,
+  User,
+  LogOut,
   ChevronRight,
   ShieldCheck,
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export default function InventoryManagerSidebar({
   collapsed,
@@ -24,10 +26,9 @@ export default function InventoryManagerSidebar({
   onCloseMobile,
   activeTab,
   onSelectTab,
-  onOpenSupport,
   reorderAlertsCount = 18,
 }) {
-  const location = useLocation();
+  const { user, logout } = useAuth();
 
   // Exactly matching the 11 inventory navigation modules from the specification
   const navItems = [
@@ -61,13 +62,13 @@ export default function InventoryManagerSidebar({
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-[#29305D] bg-[#11123D]/50">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-[#29305D] bg-[#11123D]/50 shrink-0">
           <Link
             to="/inventory-manager/dashboard"
             className="flex items-center gap-3 group focus:outline-hidden"
           >
             {/* Gold watch icon container */}
-            <div className="w-10 h-10 rounded-xl bg-[#E9B94F]/15 border border-[#E9B94F]/40 flex items-center justify-center text-[#E9B94F] shadow-inner group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-[#E9B94F]/15 border border-[#E9B94F]/40 flex items-center justify-center text-[#E9B94F] shadow-inner group-hover:scale-105 transition-transform text-lg">
               ⌚
             </div>
             {!collapsed && (
@@ -75,7 +76,7 @@ export default function InventoryManagerSidebar({
                 <span className="text-base font-extrabold tracking-tight text-white leading-none">
                   WatchHub
                 </span>
-                <span className="text-[11px] font-bold text-[#E9B94F] tracking-wide mt-0.5">
+                <span className="text-[11px] font-bold text-[#E9B94F] tracking-wide mt-1">
                   Inventory Manager
                 </span>
               </div>
@@ -93,7 +94,7 @@ export default function InventoryManagerSidebar({
         </div>
 
         {/* Navigation Items (11 Dedicated Inventory Modules) */}
-        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1 scrollbar-thin scrollbar-thumb-white/10 text-xs">
+        <div className="flex-1 overflow-y-auto py-3 px-3 space-y-1 scrollbar-thin scrollbar-thumb-white/10 text-xs">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isSelected = activeTab === item.id;
@@ -139,30 +140,61 @@ export default function InventoryManagerSidebar({
           })}
         </div>
 
-        {/* Bottom "Need Help?" Card */}
-        {!collapsed && (
-          <div className="p-3.5 m-3 rounded-2xl bg-gradient-to-br from-[#11123D] to-[#080923] border border-[#29305D] text-xs shadow-xl">
-            <div className="flex items-start gap-2.5 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-[#E9B94F]/20 text-[#E9B94F] flex items-center justify-center shrink-0">
-                📦
+        {/* BOTTOM SIDEBAR (Required: Logged-in employee profile, name, designation, profile settings, logout) */}
+        <div className="p-3 border-t border-[#29305D] bg-[#11123D]/60 shrink-0">
+          {!collapsed ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#6500FF] to-[#E9B94F] flex items-center justify-center font-black text-xs text-white shrink-0 border border-white/20">
+                  SP
+                </div>
+                <div className="truncate flex-1">
+                  <h4 className="text-xs font-bold text-white truncate">Suresh Patel</h4>
+                  <p className="text-[10px] text-[#E9B94F] font-semibold truncate">Inventory Manager</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold text-white text-[13px]">Vault Support</h4>
-                <p className="text-[#A7B1C2] text-[11px] leading-tight">
-                  Inventory ops &amp; stock sync helpdesk.
-                </p>
+
+              <div className="grid grid-cols-2 gap-1.5 pt-1 text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => onSelectTab && onSelectTab('settings')}
+                  className="py-1.5 px-2 rounded-lg bg-[#17165A] hover:bg-[#6500FF]/30 text-[#A7B1C2] hover:text-white flex items-center justify-center gap-1 border border-[#29305D] transition-colors cursor-pointer"
+                  title="Profile & Vault Settings"
+                >
+                  <Settings className="w-3.5 h-3.5 text-[#00D5FF]" />
+                  <span>Settings</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => logout && logout()}
+                  className="py-1.5 px-2 rounded-lg bg-[#17165A] hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 flex items-center justify-center gap-1 border border-[#29305D] transition-colors cursor-pointer"
+                  title="Logout"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Logout</span>
+                </button>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={onOpenSupport}
-              className="w-full mt-1 py-1.5 px-3 rounded-xl bg-[#E9B94F] hover:bg-[#d8a83d] text-[#080923] font-bold text-[11px] flex items-center justify-center gap-1 transition-all shadow cursor-pointer"
-            >
-              <span>Contact Support</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        )}
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <div
+                className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#6500FF] to-[#E9B94F] flex items-center justify-center font-bold text-xs text-white"
+                title="Suresh Patel (Inventory Manager)"
+              >
+                SP
+              </div>
+              <button
+                type="button"
+                onClick={() => logout && logout()}
+                className="p-1.5 rounded-lg text-rose-400 hover:bg-rose-500/20"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
       </aside>
     </>
   );

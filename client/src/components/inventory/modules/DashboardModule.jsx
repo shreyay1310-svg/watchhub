@@ -28,6 +28,8 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   RotateCcw,
+  DollarSign,
+  PackagePlus,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -53,8 +55,7 @@ export default function DashboardModule({
   onNavigateTab,
   onQuickStockAction,
 }) {
-  const [movementPeriod, setMovementPeriod] = useState('7d');
-  const [selectedWarehouseFilter, setSelectedWarehouseFilter] = useState('All');
+  const [activityTab, setActivityTab] = useState('movements'); // movements, adjustments, requests, alerts
 
   // Compute live metrics
   const totalProducts = products.length;
@@ -64,21 +65,24 @@ export default function DashboardModule({
   const outOfStockCount = products.filter((p) => p.status === 'Out of Stock' || p.availableQty === 0).length;
   const pendingPRs = purchaseRequests.filter((pr) => pr.status === 'Submitted' || pr.status === 'Under Review').length;
 
-  // Chart data
-  const movementTrendData = [
-    { day: 'Mon', stockIn: 45, stockOut: 28 },
-    { day: 'Tue', stockIn: 62, stockOut: 35 },
-    { day: 'Wed', stockIn: 88, stockOut: 54 },
-    { day: 'Thu', stockIn: 40, stockOut: 62 },
-    { day: 'Fri', stockIn: 110, stockOut: 75 },
-    { day: 'Sat', stockIn: 95, stockOut: 85 },
-    { day: 'Sun', stockIn: 70, stockOut: 40 },
+  // Monthly Stock In vs Stock Out chart data
+  const monthlyInOutData = [
+    { month: 'Jun', stockIn: 420, stockOut: 310 },
+    { month: 'Jul', stockIn: 510, stockOut: 390 },
+    { month: 'Aug', stockIn: 680, stockOut: 450 },
+    { month: 'Sep', stockIn: 590, stockOut: 520 },
+    { month: 'Oct', stockIn: 840, stockOut: 610 },
+    { month: 'Nov', stockIn: 980, stockOut: 720 },
   ];
 
-  const stockOverviewData = [
-    { name: 'In Stock', value: products.filter((p) => p.status === 'In Stock').length, color: '#10B981' },
-    { name: 'Low Stock', value: lowStockCount, color: '#F59E0B' },
-    { name: 'Out of Stock', value: outOfStockCount, color: '#EF4444' },
+  // Inventory Value Trend data (in ₹ Crores)
+  const valuationTrendData = [
+    { month: 'Jun', value: 6.85 },
+    { month: 'Jul', value: 7.15 },
+    { month: 'Aug', value: 7.40 },
+    { month: 'Sep', value: 7.75 },
+    { month: 'Oct', value: 8.10 },
+    { month: 'Nov', value: 8.42 },
   ];
 
   // Category distribution
@@ -91,10 +95,10 @@ export default function DashboardModule({
     units: categoryMap[cat],
   }));
 
-  // Low stock products for alerts card
+  // Low stock products for alerts
   const lowStockProducts = products
     .filter((p) => p.status === 'Low Stock' || p.status === 'Out of Stock' || p.availableQty <= p.reorderLevel)
-    .slice(0, 5);
+    .slice(0, 6);
 
   const formatCurrency = (amount) => {
     return '₹' + Number(amount).toLocaleString('en-IN');
@@ -109,73 +113,82 @@ export default function DashboardModule({
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-[#6500FF]/30 text-[#00D5FF] border border-[#6500FF]/50">
-                Live Horology Operations
+                Horology Operations Center
               </span>
-              <span className="text-[11px] text-[#A7B1C2]">• Central Vault Sync Active</span>
+              <span className="text-[11px] text-[#A7B1C2]">• 4 Secured Swiss Vaults Synced</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white">
-              Welcome, <span className="text-[#E9B94F]">Inventory Manager</span>
+              Welcome Back, <span className="text-[#E9B94F]">Inventory Manager!</span>
             </h1>
             <p className="text-xs md:text-sm text-[#A7B1C2] mt-1 max-w-2xl">
-              Monitor real-time vault allocations, multi-warehouse stock balances, restock thresholds, and automated purchase requests across all luxury boutiques.
+              Monitor multi-warehouse luxury timepiece reserves, real-time stock velocity, safety buffers, and factory purchase requests.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          {/* Quick Actions in Header */}
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <button
-              onClick={() => onNavigateTab('stock', { openAddModal: true })}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#6500FF] to-[#8B00FF] hover:from-[#5700db] hover:to-[#7800db] text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-[#6500FF]/25 border border-white/10 transition-all hover:scale-102 cursor-pointer"
+              onClick={() => onNavigateTab('stock')}
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-[#6500FF] to-[#8B00FF] hover:from-[#5700db] hover:to-[#7800db] text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-[#6500FF]/25 border border-white/10 transition-all cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
-              <span>Add New Product</span>
+              <PackagePlus className="w-4 h-4" />
+              <span>Add New Stock</span>
             </button>
             <button
-              onClick={() => onNavigateTab('movements')}
-              className="px-3.5 py-2.5 rounded-xl bg-[#11123D] hover:bg-[#1b1d54] text-[#E9B94F] font-bold text-xs flex items-center gap-2 border border-[#E9B94F]/40 transition-all cursor-pointer"
+              onClick={() => onNavigateTab('adjustments')}
+              className="px-3.5 py-2.5 rounded-xl bg-[#11123D] hover:bg-[#1b1d54] text-[#E9B94F] font-bold text-xs flex items-center gap-1.5 border border-[#E9B94F]/40 transition-all cursor-pointer"
             >
-              <ArrowRightLeft className="w-4 h-4" />
-              <span>Stock Movements</span>
+              <SlidersHorizontal className="w-4 h-4" />
+              <span>Stock Adjustment</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* 2. Top 6 KPI Cards */}
+      {/* 2. Top 6 Required KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
-        {/* Total Products */}
-        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-[#6500FF] transition-all">
+        {/* 1. Total Products */}
+        <div
+          onClick={() => onNavigateTab('stock')}
+          className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-[#6500FF] transition-all cursor-pointer group"
+        >
           <div className="flex items-center justify-between text-[#A7B1C2] mb-2">
-            <span className="text-[11px] font-semibold">Total Products</span>
+            <span className="text-[11px] font-semibold group-hover:text-white">Total Products</span>
             <div className="w-7 h-7 rounded-lg bg-[#6500FF]/20 text-[#00D5FF] flex items-center justify-center">
               <Box className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-xl font-black text-white">{totalProducts}</p>
+          <p className="text-xl font-black text-white">{totalProducts} SKUs</p>
           <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-semibold mt-1">
             <ArrowUpRight className="w-3 h-3" />
-            <span>+3 new SKUs this month</span>
+            <span>Active Master Catalog</span>
           </div>
         </div>
 
-        {/* Total Stock Units */}
-        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-[#6500FF] transition-all">
+        {/* 2. Total Stock Units */}
+        <div
+          onClick={() => onNavigateTab('overview')}
+          className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-[#6500FF] transition-all cursor-pointer group"
+        >
           <div className="flex items-center justify-between text-[#A7B1C2] mb-2">
-            <span className="text-[11px] font-semibold">Total Stock Units</span>
+            <span className="text-[11px] font-semibold group-hover:text-white">Total Stock Units</span>
             <div className="w-7 h-7 rounded-lg bg-[#E9B94F]/20 text-[#E9B94F] flex items-center justify-center">
               <Boxes className="w-3.5 h-3.5" />
             </div>
           </div>
           <p className="text-xl font-black text-white">{totalStockUnits.toLocaleString()}</p>
-          <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-semibold mt-1">
-            <ArrowUpRight className="w-3 h-3" />
+          <div className="flex items-center gap-1 text-[10px] text-[#00D5FF] font-semibold mt-1">
             <span>Across 4 Vaults</span>
           </div>
         </div>
 
-        {/* Inventory Valuation */}
-        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-[#6500FF] transition-all">
+        {/* 3. Total Inventory Value */}
+        <div
+          onClick={() => onNavigateTab('reports')}
+          className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-emerald-500 transition-all cursor-pointer group"
+        >
           <div className="flex items-center justify-between text-[#A7B1C2] mb-2">
-            <span className="text-[11px] font-semibold">Inventory Value</span>
+            <span className="text-[11px] font-semibold group-hover:text-white">Total Inventory Value</span>
             <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
               ₹
             </div>
@@ -185,29 +198,29 @@ export default function DashboardModule({
           </p>
           <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-semibold mt-1">
             <TrendingUp className="w-3 h-3" />
-            <span>Audited asset value</span>
+            <span>Certified Valuation</span>
           </div>
         </div>
 
-        {/* Low Stock Items */}
+        {/* 4. Low Stock Items */}
         <div
           onClick={() => onNavigateTab('reorder')}
           className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-amber-500 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between text-[#A7B1C2] mb-2">
-            <span className="text-[11px] font-semibold group-hover:text-amber-300">Low Stock</span>
+            <span className="text-[11px] font-semibold group-hover:text-amber-300">Low Stock Items</span>
             <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
               <AlertTriangle className="w-3.5 h-3.5" />
             </div>
           </div>
           <p className="text-xl font-black text-amber-400">{lowStockCount}</p>
           <div className="flex items-center gap-1 text-[10px] text-amber-300 font-semibold mt-1">
-            <span>Needs attention</span>
+            <span>Needs Reorder</span>
             <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
 
-        {/* Out of Stock Items */}
+        {/* 5. Out of Stock Items */}
         <div
           onClick={() => onNavigateTab('reorder')}
           className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-rose-500 transition-all cursor-pointer group"
@@ -220,12 +233,12 @@ export default function DashboardModule({
           </div>
           <p className="text-xl font-black text-rose-400">{outOfStockCount}</p>
           <div className="flex items-center gap-1 text-[10px] text-rose-300 font-semibold mt-1">
-            <span>Critical reorders</span>
+            <span>0 Available</span>
             <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
 
-        {/* Pending Purchase Requests */}
+        {/* 6. Pending Purchase Requests */}
         <div
           onClick={() => onNavigateTab('requests')}
           className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md hover:border-[#00D5FF] transition-all cursor-pointer group"
@@ -238,48 +251,95 @@ export default function DashboardModule({
           </div>
           <p className="text-xl font-black text-[#00D5FF]">{pendingPRs}</p>
           <div className="flex items-center gap-1 text-[10px] text-[#00D5FF] font-semibold mt-1">
-            <span>Awaiting dispatch</span>
+            <span>Factory Requisitions</span>
             <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
       </div>
 
-      {/* 3. Interactive Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart 1: Stock Movement Trends */}
-        <div className="lg:col-span-2 bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
+      {/* QUICK ACTIONS STRIP */}
+      <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-4 shadow-md">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-xs font-bold text-[#E9B94F] uppercase tracking-wider flex items-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            <span>Vault Quick Actions</span>
+          </h3>
+          <span className="text-[11px] text-[#A7B1C2]">Direct Operations Shortcuts</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+          <button
+            onClick={() => onNavigateTab('stock')}
+            className="p-3 rounded-xl bg-[#17165A] hover:bg-[#6500FF]/30 border border-[#29305D] text-left transition-all hover:border-[#6500FF] cursor-pointer"
+          >
+            <Plus className="w-4 h-4 text-[#00D5FF] mb-1" />
+            <p className="font-bold text-white text-xs">Add New Stock</p>
+            <p className="text-[10px] text-[#A7B1C2]">Inbound PO entry</p>
+          </button>
+
+          <button
+            onClick={() => onNavigateTab('adjustments')}
+            className="p-3 rounded-xl bg-[#17165A] hover:bg-[#E9B94F]/20 border border-[#29305D] text-left transition-all hover:border-[#E9B94F] cursor-pointer"
+          >
+            <SlidersHorizontal className="w-4 h-4 text-[#E9B94F] mb-1" />
+            <p className="font-bold text-white text-xs">Stock Adjustment</p>
+            <p className="text-[10px] text-[#A7B1C2]">Cycle counts &amp; audit</p>
+          </button>
+
+          <button
+            onClick={() => onNavigateTab('warehouses')}
+            className="p-3 rounded-xl bg-[#17165A] hover:bg-[#00D5FF]/20 border border-[#29305D] text-left transition-all hover:border-[#00D5FF] cursor-pointer"
+          >
+            <ArrowRightLeft className="w-4 h-4 text-[#00D5FF] mb-1" />
+            <p className="font-bold text-white text-xs">Transfer Stock</p>
+            <p className="text-[10px] text-[#A7B1C2]">Inter-vault dispatch</p>
+          </button>
+
+          <button
+            onClick={() => onNavigateTab('requests')}
+            className="p-3 rounded-xl bg-[#17165A] hover:bg-[#8B00FF]/30 border border-[#29305D] text-left transition-all hover:border-[#8B00FF] cursor-pointer"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-[#8B00FF] mb-1" />
+            <p className="font-bold text-white text-xs">Purchase Request</p>
+            <p className="text-[10px] text-[#A7B1C2]">Factory replenishment</p>
+          </button>
+
+          <button
+            onClick={() => onNavigateTab('reports')}
+            className="p-3 rounded-xl bg-[#17165A] hover:bg-emerald-500/20 border border-[#29305D] text-left transition-all hover:border-emerald-500 cursor-pointer"
+          >
+            <BarChart3 className="w-4 h-4 text-emerald-400 mb-1" />
+            <p className="font-bold text-white text-xs">Stock Reports</p>
+            <p className="text-[10px] text-[#A7B1C2]">12 standard reports</p>
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Analytics Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Chart 1: Monthly Stock In vs Stock Out */}
+        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <ArrowRightLeft className="w-4 h-4 text-[#6500FF]" />
-                <span>Stock Movement Trends</span>
+                <span>Monthly Stock In vs Stock Out</span>
               </h3>
-              <p className="text-[11px] text-[#A7B1C2]">Daily Stock In vs Stock Out velocity</p>
+              <p className="text-[11px] text-[#A7B1C2]">Volume flow velocity comparison (6 months)</p>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1 text-[11px] text-[#A7B1C2]">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" /> Inbound
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 text-[11px] text-[#A7B1C2]">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" /> Stock In
               </span>
-              <span className="flex items-center gap-1 text-[11px] text-[#A7B1C2]">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#6500FF]" /> Outbound
+              <span className="flex items-center gap-1.5 text-[11px] text-[#A7B1C2]">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#6500FF]" /> Stock Out
               </span>
             </div>
           </div>
 
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={movementTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorIn" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
-                  </linearGradient>
-                  <linearGradient id="colorOut" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6500FF" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#6500FF" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="day" stroke="#A7B1C2" fontSize={11} tickLine={false} />
+              <BarChart data={monthlyInOutData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <XAxis dataKey="month" stroke="#A7B1C2" fontSize={11} tickLine={false} />
                 <YAxis stroke="#A7B1C2" fontSize={11} tickLine={false} />
                 <Tooltip
                   contentStyle={{
@@ -290,82 +350,64 @@ export default function DashboardModule({
                     fontSize: '11px',
                   }}
                 />
-                <Area type="monotone" dataKey="stockIn" name="Stock In" stroke="#10B981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorIn)" />
-                <Area type="monotone" dataKey="stockOut" name="Stock Out" stroke="#6500FF" strokeWidth={2.5} fillOpacity={1} fill="url(#colorOut)" />
-              </AreaChart>
+                <Bar dataKey="stockIn" name="Stock In" fill="#10B981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="stockOut" name="Stock Out" fill="#6500FF" radius={[4, 4, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Chart 2: Stock Health Overview (Pie Chart) */}
-        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-2">
+        {/* Chart 2: Inventory Value Trend */}
+        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
+          <div className="flex items-center justify-between mb-4">
+            <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#E9B94F]" />
-                <span>Stock Health Overview</span>
+                <TrendingUp className="w-4 h-4 text-[#00D5FF]" />
+                <span>Inventory Value Trend</span>
               </h3>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#17165A] text-[#00D5FF] border border-[#29305D]">
-                Audit Compliant
-              </span>
+              <p className="text-[11px] text-[#A7B1C2]">Appraised horological capital in vault (₹ Crores)</p>
             </div>
-            <p className="text-[11px] text-[#A7B1C2] mb-3">Breakdown of inventory catalog readiness</p>
-
-            <div className="h-44 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={stockOverviewData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={70}
-                    paddingAngle={4}
-                    dataKey="value"
-                  >
-                    {stockOverviewData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#17165A',
-                      borderColor: '#29305D',
-                      borderRadius: '12px',
-                      color: '#fff',
-                      fontSize: '11px',
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+            <span className="text-xs font-bold text-[#E9B94F] bg-[#17165A] px-2.5 py-1 rounded-xl border border-[#29305D]">
+              ₹8.42 Cr Current
+            </span>
           </div>
 
-          <div className="space-y-2 pt-2 border-t border-[#29305D]/60 text-xs">
-            {stockOverviewData.map((item) => (
-              <div key={item.name} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-[#A7B1C2]">{item.name}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-white">{item.value} SKUs</span>
-                  <span className="text-[10px] text-[#A7B1C2]">
-                    ({((item.value / totalProducts) * 100).toFixed(0)}%)
-                  </span>
-                </div>
-              </div>
-            ))}
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={valuationTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="dashValTrend" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00D5FF" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#00D5FF" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="month" stroke="#A7B1C2" fontSize={11} tickLine={false} />
+                <YAxis stroke="#A7B1C2" fontSize={11} tickLine={false} domain={['dataMin - 0.5', 'dataMax + 0.5']} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#17165A',
+                    borderColor: '#29305D',
+                    borderRadius: '12px',
+                    color: '#fff',
+                    fontSize: '11px',
+                  }}
+                />
+                <Area type="monotone" dataKey="value" name="Value (₹ Cr)" stroke="#00D5FF" strokeWidth={2.5} fillOpacity={1} fill="url(#dashValTrend)" />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
       {/* 4. Category & Warehouse Distribution + Velocity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Category Breakdown Bar Chart */}
+        {/* Category-wise Stock Distribution */}
         <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-white">Stock by Category</h3>
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <Box className="w-4 h-4 text-[#6500FF]" />
+              <span>Category Stock Distribution</span>
+            </h3>
             <span className="text-[10px] text-[#A7B1C2]">Units</span>
           </div>
           <div className="h-52 w-full">
@@ -388,7 +430,7 @@ export default function DashboardModule({
           </div>
         </div>
 
-        {/* Warehouse Network Distribution */}
+        {/* Warehouse-wise Stock Distribution */}
         <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -399,7 +441,7 @@ export default function DashboardModule({
               onClick={() => onNavigateTab('warehouses')}
               className="text-[11px] text-[#E9B94F] hover:underline flex items-center gap-0.5"
             >
-              <span>View All</span>
+              <span>Manage</span>
               <ChevronRight className="w-3 h-3" />
             </button>
           </div>
@@ -428,20 +470,20 @@ export default function DashboardModule({
           </div>
         </div>
 
-        {/* Velocity: Fast vs Slow Movers */}
+        {/* Fast Moving & Slow Moving Products */}
         <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#E9B94F]" />
-              <span>Stock Velocity</span>
+              <span>Velocity Analysis</span>
             </h3>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#17165A] text-[#E9B94F] border border-[#29305D]">
-              30-Day Index
+              Fast vs Slow
             </span>
           </div>
           <div className="space-y-2 text-xs">
             <div className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5 pt-1">
-              <TrendingUp className="w-3.5 h-3.5" /> Fast Moving Timepieces
+              <TrendingUp className="w-3.5 h-3.5" /> Fast Moving Products
             </div>
             {products
               .filter((p) => p.velocity === 'Fast Moving')
@@ -462,7 +504,7 @@ export default function DashboardModule({
               ))}
 
             <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5 pt-2">
-              <Clock className="w-3.5 h-3.5" /> Slow Moving Timepieces
+              <Clock className="w-3.5 h-3.5" /> Slow Moving Products
             </div>
             {products
               .filter((p) => p.velocity === 'Slow Moving')
@@ -473,7 +515,7 @@ export default function DashboardModule({
                     <img src={p.image} alt={p.name} className="w-7 h-7 rounded-lg object-contain bg-black/40 border border-white/10" />
                     <div className="truncate">
                       <p className="font-semibold text-white truncate text-[11px]">{p.name}</p>
-                      <p className="text-[10px] text-[#A7B1C2]">{p.brand} • {p.availableQty} units in vault</p>
+                      <p className="text-[10px] text-[#A7B1C2]">{p.brand} • {p.availableQty} in vault</p>
                     </div>
                   </div>
                   <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px] font-bold shrink-0">
@@ -485,134 +527,195 @@ export default function DashboardModule({
         </div>
       </div>
 
-      {/* 5. Bottom Two Tables: Recent Movements + Low Stock Action Center */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Stock Movements */}
-        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <ArrowRightLeft className="w-4 h-4 text-[#6500FF]" />
-                <span>Recent Stock Movements</span>
-              </h3>
-              <p className="text-[11px] text-[#A7B1C2]">Real-time ledger updates</p>
-            </div>
-            <button
-              onClick={() => onNavigateTab('movements')}
-              className="text-xs text-[#E9B94F] hover:underline font-semibold flex items-center gap-1"
-            >
-              <span>View Full Ledger</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+      {/* 5. Recent Activities Section (Recent Movements, Adjustments, Pending PRs, Low Stock Alerts) */}
+      <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#29305D]">
+          <div>
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <History className="w-4 h-4 text-[#00D5FF]" />
+              <span>Recent Operations &amp; Activities</span>
+            </h3>
+            <p className="text-[11px] text-[#A7B1C2]">Real-time operational stream across all luxury boutiques</p>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          {/* Switcher */}
+          <div className="bg-[#17165A] p-1 rounded-xl border border-[#29305D] flex items-center text-xs">
+            <button
+              onClick={() => setActivityTab('movements')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                activityTab === 'movements' ? 'bg-[#6500FF] text-white shadow-xs' : 'text-[#A7B1C2] hover:text-white'
+              }`}
+            >
+              Stock Movements ({movements.length})
+            </button>
+            <button
+              onClick={() => setActivityTab('adjustments')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                activityTab === 'adjustments' ? 'bg-[#6500FF] text-white shadow-xs' : 'text-[#A7B1C2] hover:text-white'
+              }`}
+            >
+              Adjustments ({adjustments.length})
+            </button>
+            <button
+              onClick={() => setActivityTab('requests')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                activityTab === 'requests' ? 'bg-[#6500FF] text-white shadow-xs' : 'text-[#A7B1C2] hover:text-white'
+              }`}
+            >
+              Purchase Requests ({purchaseRequests.length})
+            </button>
+            <button
+              onClick={() => setActivityTab('alerts')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                activityTab === 'alerts' ? 'bg-[#6500FF] text-white shadow-xs' : 'text-[#A7B1C2] hover:text-white'
+              }`}
+            >
+              Low Stock Alerts ({lowStockCount + outOfStockCount})
+            </button>
+          </div>
+        </div>
+
+        {/* Tab 1: Movements */}
+        {activityTab === 'movements' && (
+          <div className="overflow-x-auto text-xs">
+            <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-[#29305D] text-[#A7B1C2] text-[10px] font-bold uppercase tracking-wider">
                   <th className="py-2.5">ID</th>
+                  <th className="py-2.5">Time</th>
                   <th className="py-2.5">Product</th>
                   <th className="py-2.5">Type</th>
-                  <th className="py-2.5 text-right">Qty</th>
+                  <th className="py-2.5 text-right">Quantity</th>
+                  <th className="py-2.5">Locations</th>
+                  <th className="py-2.5">Operator</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#29305D]/50">
                 {movements.slice(0, 5).map((m) => (
                   <tr key={m.id} className="hover:bg-[#17165A]/40 transition-colors">
                     <td className="py-2.5 font-mono text-[11px] text-[#00D5FF]">{m.id}</td>
+                    <td className="py-2.5 text-gray-300">{m.date} • {m.time}</td>
                     <td className="py-2.5">
-                      <p className="font-semibold text-white truncate max-w-[160px]">{m.productName}</p>
-                      <p className="text-[10px] text-[#A7B1C2]">{m.date} • {m.time}</p>
+                      <p className="font-semibold text-white">{m.productName}</p>
+                      <p className="text-[10px] text-[#A7B1C2] font-mono">{m.sku}</p>
                     </td>
                     <td className="py-2.5">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          m.type === 'Stock In'
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                            : m.type === 'Stock Out' || m.type === 'Customer Sale'
-                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40'
-                            : 'bg-blue-500/20 text-blue-400 border border-blue-500/40'
-                        }`}
-                      >
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#17165A] text-white border border-[#29305D]">
                         {m.type}
                       </span>
                     </td>
-                    <td className="py-2.5 text-right font-bold text-white font-mono">
-                      {m.quantity > 0 ? `+${m.quantity}` : m.quantity}
+                    <td className="py-2.5 text-right font-mono font-bold">
+                      <span className={m.quantity > 0 ? 'text-emerald-400' : 'text-rose-400'}>
+                        {m.quantity > 0 ? `+${m.quantity}` : m.quantity}
+                      </span>
+                    </td>
+                    <td className="py-2.5 text-[#A7B1C2]">
+                      {m.fromLocation} → {m.toLocation}
+                    </td>
+                    <td className="py-2.5 text-gray-300 font-medium">{m.performedBy}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Tab 2: Adjustments */}
+        {activityTab === 'adjustments' && (
+          <div className="overflow-x-auto text-xs">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-[#29305D] text-[#A7B1C2] text-[10px] font-bold uppercase tracking-wider">
+                  <th className="py-2.5">ID</th>
+                  <th className="py-2.5">Date</th>
+                  <th className="py-2.5">Product</th>
+                  <th className="py-2.5 text-center">Variance</th>
+                  <th className="py-2.5">Reason</th>
+                  <th className="py-2.5">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#29305D]/50">
+                {adjustments.slice(0, 5).map((a) => (
+                  <tr key={a.id} className="hover:bg-[#17165A]/40 transition-colors">
+                    <td className="py-2.5 font-mono text-[11px] text-[#00D5FF]">{a.id}</td>
+                    <td className="py-2.5 text-gray-300">{a.date}</td>
+                    <td className="py-2.5 font-bold text-white">{a.productName}</td>
+                    <td className="py-2.5 text-center font-mono font-bold">
+                      <span className={a.diff < 0 ? 'text-rose-400' : 'text-emerald-400'}>
+                        {a.diff > 0 ? `+${a.diff}` : a.diff}
+                      </span>
+                    </td>
+                    <td className="py-2.5 text-gray-300">{a.reason}</td>
+                    <td className="py-2.5">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#17165A] text-white">
+                        {a.status}
+                      </span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
+        )}
 
-        {/* Low Stock Action Center */}
-        <div className="bg-[#11123D] border border-[#29305D] rounded-2xl p-5 shadow-xl">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
-                <span>Low Stock Critical Alerts</span>
-              </h3>
-              <p className="text-[11px] text-[#A7B1C2]">Threshold breached — immediate reorder recommended</p>
-            </div>
-            <button
-              onClick={() => onNavigateTab('reorder')}
-              className="text-xs text-[#E9B94F] hover:underline font-semibold flex items-center gap-1"
-            >
-              <span>All Alerts ({lowStockCount + outOfStockCount})</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+        {/* Tab 3: Purchase Requests */}
+        {activityTab === 'requests' && (
+          <div className="overflow-x-auto text-xs">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-[#29305D] text-[#A7B1C2] text-[10px] font-bold uppercase tracking-wider">
+                  <th className="py-2.5">PR #</th>
+                  <th className="py-2.5">Supplier</th>
+                  <th className="py-2.5">Destination</th>
+                  <th className="py-2.5 text-right">Total Cost</th>
+                  <th className="py-2.5">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#29305D]/50">
+                {purchaseRequests.slice(0, 5).map((pr) => (
+                  <tr key={pr.id} className="hover:bg-[#17165A]/40 transition-colors">
+                    <td className="py-2.5 font-mono text-[11px] text-[#00D5FF]">{pr.id}</td>
+                    <td className="py-2.5 font-semibold text-white">{pr.supplier}</td>
+                    <td className="py-2.5 text-gray-300">{pr.destinationWarehouse}</td>
+                    <td className="py-2.5 text-right font-mono font-bold text-[#E9B94F]">
+                      ₹{(pr.totalCost / 100000).toFixed(1)} Lakhs
+                    </td>
+                    <td className="py-2.5">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#17165A] text-emerald-400">
+                        {pr.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+        )}
 
-          <div className="space-y-2.5">
+        {/* Tab 4: Low Stock Alerts */}
+        {activityTab === 'alerts' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {lowStockProducts.map((p) => (
-              <div
-                key={p.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-[#17165A]/40 border border-[#29305D] hover:border-[#6500FF] transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="w-10 h-10 rounded-xl object-contain bg-black/40 border border-white/10 shrink-0"
-                  />
+              <div key={p.id} className="p-3 bg-[#17165A]/40 border border-[#29305D] rounded-xl flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2.5">
+                  <img src={p.image} alt={p.name} className="w-9 h-9 rounded-lg object-contain bg-black/40 border border-[#29305D]" />
                   <div>
-                    <h4 className="font-bold text-white text-xs truncate max-w-[180px]">{p.name}</h4>
-                    <p className="text-[11px] text-[#A7B1C2]">
-                      Available: <strong className="text-amber-400">{p.availableQty} units</strong> (Min: {p.minStock})
+                    <h5 className="font-bold text-white text-xs">{p.name}</h5>
+                    <p className="text-[10px] text-amber-400">
+                      Available: <strong>{p.availableQty} units</strong> (Min: {p.minStock})
                     </p>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
-                      p.status === 'Out of Stock'
-                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40'
-                        : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
-                    }`}
-                  >
-                    {p.status}
-                  </span>
-                  <button
-                    onClick={() =>
-                      onNavigateTab('requests', {
-                        openNewModal: true,
-                        prefillProduct: p,
-                      })
-                    }
-                    className="px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-[#6500FF] to-[#8B00FF] hover:from-[#5700db] hover:to-[#7800db] text-white font-bold text-[11px] flex items-center gap-1 shadow-xs transition-all cursor-pointer"
-                  >
-                    <span>Reorder</span>
-                    <ArrowUpRight className="w-3 h-3" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => onNavigateTab('reorder')}
+                  className="px-2.5 py-1 rounded-lg bg-[#6500FF] hover:bg-[#5700db] text-white font-bold text-[10px]"
+                >
+                  Reorder
+                </button>
               </div>
             ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

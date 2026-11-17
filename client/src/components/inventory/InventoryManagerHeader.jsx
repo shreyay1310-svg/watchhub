@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Menu,
@@ -10,7 +10,9 @@ import {
   User,
   ShieldCheck,
   Check,
-  ExternalLink,
+  Calendar,
+  Clock,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth, ROLES, MOCK_STAFF_ACCOUNTS } from '../../context/AuthContext';
 
@@ -20,7 +22,6 @@ export default function InventoryManagerHeader({
   onSelectWarehouse,
   onSearch,
   onOpenNotifications,
-  onOpenSupport,
   warehouses = [],
   reorderAlertsCount = 18,
 }) {
@@ -30,6 +31,28 @@ export default function InventoryManagerHeader({
   const [warehouseDropdownOpen, setWarehouseDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+
+  // Live Current Date and Time
+  const [currentDateTime, setCurrentDateTime] = useState('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const formatted = now.toLocaleDateString('en-GB', {
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }) + ' • ' + now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      setCurrentDateTime(formatted);
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const warehouseOptions = ['All Warehouses', ...warehouses.map((w) => w.name || w)];
 
@@ -62,13 +85,13 @@ export default function InventoryManagerHeader({
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#11123D] border-b border-[#29305D] px-4 md:px-6 flex items-center justify-between text-white select-none shadow-md">
+    <header className="sticky top-0 z-30 h-16 bg-[#11123D] border-b border-[#29305D] px-4 md:px-6 flex items-center justify-between text-white select-none shadow-lg">
       {/* Left: Mobile Toggle & Global Search */}
-      <div className="flex items-center gap-3 md:gap-4 flex-1 max-w-2xl">
+      <div className="flex items-center gap-3 md:gap-4 flex-1 max-w-xl">
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-2 rounded-xl text-[#A7B1C2] hover:text-white hover:bg-[#17165A] transition-colors focus:outline-hidden"
+          className="p-2 rounded-xl text-[#A7B1C2] hover:text-white hover:bg-[#17165A] transition-colors focus:outline-hidden cursor-pointer"
           title="Toggle Navigation Menu"
         >
           <Menu className="w-5 h-5" />
@@ -82,25 +105,28 @@ export default function InventoryManagerHeader({
             value={searchValue}
             onChange={handleSearchChange}
             placeholder="Search by Product, SKU, Barcode, or PO..."
-            className="w-full bg-[#17165A] border border-[#29305D] rounded-xl pl-10 pr-16 py-2 text-xs md:text-sm text-white placeholder-[#A7B1C2] focus:outline-hidden focus:border-[#6500FF] focus:ring-1 focus:ring-[#6500FF] transition-all"
+            className="w-full bg-[#17165A] border border-[#29305D] rounded-xl pl-10 pr-4 py-2 text-xs md:text-sm text-white placeholder-[#A7B1C2] focus:outline-hidden focus:border-[#6500FF] focus:ring-1 focus:ring-[#6500FF] transition-all"
           />
-          <span className="hidden sm:inline-flex items-center absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold tracking-wider text-[#A7B1C2] bg-[#11123D] px-1.5 py-0.5 rounded border border-[#29305D]">
-            Ctrl + K
-          </span>
         </div>
       </div>
 
-      {/* Right: Warehouse Filter, Notifications, Profile Dropdown */}
-      <div className="flex items-center gap-2 md:gap-4">
+      {/* Right: Date & Time, Warehouse Filter, Notifications, Profile Dropdown */}
+      <div className="flex items-center gap-2 md:gap-3.5">
+        {/* Current Date and Time */}
+        <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#17165A]/60 border border-[#29305D] text-xs text-[#A7B1C2]">
+          <Clock className="w-3.5 h-3.5 text-[#00D5FF]" />
+          <span className="font-mono font-medium text-white">{currentDateTime}</span>
+        </div>
+
         {/* Warehouse Selector Dropdown */}
-        <div className="relative hidden md:block">
+        <div className="relative hidden sm:block">
           <button
             type="button"
             onClick={() => setWarehouseDropdownOpen(!warehouseDropdownOpen)}
             className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#17165A] border border-[#29305D] text-xs font-semibold text-gray-200 hover:text-white hover:border-[#6500FF] transition-all cursor-pointer"
           >
             <Building2 className="w-4 h-4 text-[#E9B94F]" />
-            <span>{selectedWarehouse || 'All Warehouses'}</span>
+            <span className="max-w-[130px] truncate">{selectedWarehouse || 'All Warehouses'}</span>
             <ChevronDown className="w-3.5 h-3.5 text-[#A7B1C2]" />
           </button>
 
@@ -131,12 +157,14 @@ export default function InventoryManagerHeader({
         <button
           type="button"
           onClick={onOpenNotifications}
-          className="relative p-2 rounded-xl text-[#A7B1C2] hover:text-white hover:bg-[#17165A] transition-colors focus:outline-hidden cursor-pointer"
+          className="relative p-2.5 rounded-xl bg-[#17165A] border border-[#29305D] text-[#A7B1C2] hover:text-white hover:border-[#6500FF] transition-all focus:outline-hidden cursor-pointer"
           title="Reorder Notifications"
         >
-          <Bell className="w-5 h-5" />
+          <Bell className="w-4 h-4" />
           {reorderAlertsCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <span className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-red-500 text-white animate-pulse">
+              {reorderAlertsCount}
+            </span>
           )}
         </button>
 
@@ -147,12 +175,12 @@ export default function InventoryManagerHeader({
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
             className="flex items-center gap-2.5 p-1.5 pr-3 rounded-2xl bg-[#17165A] border border-[#29305D] hover:border-[#6500FF] transition-all cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6500FF] to-[#E9B94F] flex items-center justify-center font-black text-xs text-white">
-              {user?.name ? user.name.slice(0, 2).toUpperCase() : 'IM'}
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6500FF] to-[#E9B94F] flex items-center justify-center font-black text-xs text-white border border-white/20">
+              SP
             </div>
-            <div className="hidden sm:flex flex-col text-left">
+            <div className="hidden md:flex flex-col text-left">
               <span className="text-xs font-bold text-white leading-tight">
-                {user?.name || 'Suresh Patel'}
+                Suresh Patel
               </span>
               <span className="text-[10px] font-semibold text-[#E9B94F] leading-tight">
                 Inventory Manager
@@ -164,12 +192,12 @@ export default function InventoryManagerHeader({
           {profileDropdownOpen && (
             <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#11123D] border border-[#29305D] shadow-2xl p-2 z-50 text-xs animate-fade-in">
               <div className="px-3 py-2 border-b border-[#29305D]/80">
-                <p className="font-bold text-white text-xs">{user?.name || 'Suresh Patel'}</p>
-                <p className="text-[11px] text-[#A7B1C2]">{user?.email || 'inventory@watchhub.luxury'}</p>
+                <p className="font-bold text-white text-xs">Suresh Patel</p>
+                <p className="text-[11px] text-[#A7B1C2]">inventory@watchhub.luxury</p>
                 <div className="mt-1 flex items-center gap-1.5">
                   <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
                   <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">
-                    Authorized Manager
+                    Chief Inventory Officer
                   </span>
                 </div>
               </div>
@@ -182,7 +210,7 @@ export default function InventoryManagerHeader({
                 {MOCK_STAFF_ACCOUNTS &&
                   Object.keys(MOCK_STAFF_ACCOUNTS).map((accKey) => {
                     const acc = MOCK_STAFF_ACCOUNTS[accKey];
-                    const isCurrent = user?.role === acc.role;
+                    const isCurrent = (user?.role || ROLES.INVENTORY_MANAGER) === acc.role;
                     return (
                       <button
                         key={accKey}
