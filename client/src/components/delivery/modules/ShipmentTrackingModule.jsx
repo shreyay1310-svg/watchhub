@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import GoogleMapLiveTracking from '../../common/GoogleMapLiveTracking';
 import {
   Search,
   MapPin,
@@ -271,62 +272,14 @@ export const ShipmentTrackingModule = ({
 
             {/* RIGHT: LIVE INTERACTIVE MAP & RECIPIENT INFORMATION (6 Cols) */}
             <div className="lg:col-span-6 space-y-6">
-              {/* Map Canvas */}
-              <div className="p-5 rounded-2xl bg-[#11172C] border border-[#28334B] shadow-xl">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#00C98B] animate-ping" />
-                    <h3 className="font-serif font-bold text-base text-white">
-                      Live Delivery Route & GPS Waypoint
-                    </h3>
-                  </div>
-                  <span className="text-[11px] text-[#00D5FF] font-semibold">
-                    Live GPS Telemetry
-                  </span>
-                </div>
-
-                {/* Map Display */}
-                <div className="relative h-60 rounded-xl bg-[#081529] border border-[#28334B] overflow-hidden p-4 flex flex-col justify-between">
-                  <div className="absolute inset-0 bg-[radial-gradient(#28334B_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
-
-                  {/* Destination Marker */}
-                  <div className="absolute right-[22%] top-[25%] z-10 flex flex-col items-center group">
-                    <div className="w-8 h-8 rounded-full bg-[#00C98B] border-2 border-white flex items-center justify-center text-xs font-bold text-[#070918] shadow-lg shadow-[#00C98B]/50 animate-bounce">
-                      📍
-                    </div>
-                    <div className="bg-[#081529] border border-[#00C98B] px-2 py-0.5 rounded text-[9.5px] text-white shadow-md whitespace-nowrap mt-1">
-                      {activeOrder.deliveryAddress}
-                    </div>
-                  </div>
-
-                  {/* Rider In-Transit Marker */}
-                  <div className="absolute left-[30%] bottom-[30%] z-10 flex flex-col items-center group">
-                    <div className="w-8 h-8 rounded-full bg-[#00D5FF] border-2 border-white flex items-center justify-center text-xs font-bold text-[#070918] shadow-lg shadow-[#00D5FF]/50">
-                      🛵
-                    </div>
-                    <div className="bg-[#081529] border border-[#00D5FF] px-2 py-0.5 rounded text-[9.5px] text-white shadow-md whitespace-nowrap mt-1">
-                      {activeOrder.rider} ({activeOrder.eta})
-                    </div>
-                  </div>
-
-                  {/* Route Line SVG */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none stroke-[#00D5FF] stroke-2 [stroke-dasharray:6_4]">
-                    <path d="M 120 180 Q 220 120 380 90" fill="none" />
-                  </svg>
-
-                  {/* Bottom Map Info */}
-                  <div className="relative z-10 mt-auto bg-[#11172C]/90 backdrop-blur-md p-2.5 rounded-lg border border-[#28334B] flex items-center justify-between text-[11px]">
-                    <div>
-                      <span className="text-[#A7B1C2] block">Current Location:</span>
-                      <span className="font-bold text-white">{activeOrder.city} • Sector Distribution Point</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[#A7B1C2] block">Live ETA:</span>
-                      <span className="font-bold text-[#00C98B]">{activeOrder.eta}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Google Maps Live GPS Telemetry */}
+              <GoogleMapLiveTracking
+                orderId={activeOrder.orderId}
+                customerAddress={activeOrder.deliveryAddress}
+                customerCoords={{ lat: 28.4595, lng: 77.0850 }}
+                riderName={activeOrder.rider || 'Vikram Singh (Armoured Escort)'}
+                riderPhone={activeOrder.riderPhone || '+91 98765 00921'}
+              />
 
               {/* Recipient & Security Card */}
               <div className="p-5 rounded-2xl bg-[#11172C] border border-[#28334B] shadow-xl space-y-4">

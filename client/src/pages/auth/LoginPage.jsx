@@ -251,55 +251,59 @@ export const LoginPage = () => {
     handleGoogleSelect(newAcc.name, newAcc.email);
   };
 
-  // Forgot password flow (supports Customer Mobile SMS & Email)
-  const handleSendOtp = (e) => {
+  // Forgot password flow (supports Customer Mobile SMS via MSG91 & Email via Resend)
+  const handleSendOtp = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setForgotError('');
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedOtp(otp);
-    setEnteredOtp(otp); // prefill for instant convenience
-
-    if (forgotChannel === 'phone') {
-      const cleanDigits = forgotPhone.replace(/[^0-9]/g, '');
-      if (cleanDigits.length < 10) {
-        setForgotError('Please enter a valid 10-digit mobile number.');
-        return;
-      }
-      const tenDigit = cleanDigits.slice(-10);
-      setForgotPhone(tenDigit);
-
-      // Trigger Fast2SMS server dispatch
-      try {
-        fetch('/api/auth/send-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: tenDigit, otp: otp }),
-        }).catch((err) => console.log('[Fast2SMS]', err));
-      } catch (err) { }
-
-      // Trigger Realistic Simulated Mobile SMS Toast
-      setSmsToast({
-        phone: `+91 ${tenDigit.slice(0, 5)} ${tenDigit.slice(5)}`,
-        otp: otp,
-        time: 'Just now',
-      });
-      setTimeout(() => setSmsToast(null), 12000);
-    } else {
-      if (!forgotEmail.trim() || !forgotEmail.includes('@')) {
-        setForgotError('Please enter a valid email address.');
-        return;
-      }
+    const targetIdentifier = forgotChannel === 'phone' ? forgotPhone.replace(/[^0-9]/g, '').slice(-10) : forgotEmail.trim();
+    if (forgotChannel === 'phone' && targetIdentifier.length < 10) {
+      setForgotError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    if (forgotChannel === 'email' && (!targetIdentifier || !targetIdentifier.includes('@'))) {
+      setForgotError('Please enter a valid email address.');
+      return;
     }
 
-    setForgotStep(2);
-    setResendCooldown(30);
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          identifier: targetIdentifier,
+          channel: forgotChannel === 'phone' ? 'sms' : 'email',
+          purpose: 'password_reset',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to dispatch verification code.');
+      }
+
+      const activeOtp = data.devOtp || Math.floor(100000 + Math.random() * 900000).toString();
+      setGeneratedOtp(activeOtp);
+      setEnteredOtp(activeOtp);
+
+      if (forgotChannel === 'phone') {
+        setSmsToast({
+          phone: `+91 ${targetIdentifier.slice(0, 5)} ${targetIdentifier.slice(5)}`,
+          otp: activeOtp,
+          time: 'Just now',
+        });
+        setTimeout(() => setSmsToast(null), 12000);
+      }
+      setForgotStep(2);
+      setResendCooldown(60);
+    } catch (err) {
+      setForgotError(err.message || 'Could not send verification code.');
+    }
   };
 
   const handleResetSubmit = async (e) => {
     e.preventDefault();
-    if (enteredOtp !== generatedOtp) {
-      setForgotError('Invalid verification code.');
+    if (!enteredOtp || enteredOtp.length !== 6) {
+      setForgotError('Please enter the 6-digit verification code.');
       return;
     }
     if (newPassword.length < 6) {
@@ -312,27 +316,39 @@ export const LoginPage = () => {
     }
 
     setForgotError('');
-    const targetIdentifier = forgotChannel === 'phone' ? forgotPhone : forgotEmail;
-    await resetPassword(targetIdentifier, newPassword);
-    setPassword(newPassword);
+    const targetIdentifier = forgotChannel === 'phone' ? forgotPhone.replace(/[^0-9]/g, '').slice(-10) : forgotEmail.trim();
 
-    const loginId = forgotChannel === 'phone' ? 'customer@watchhub.com' : forgotEmail;
-    setAccount(loginId);
+    try {
+      const res = await fetch('/api/auth/forgot-password-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          identifier: targetIdentifier,
+          code: enteredOtp,
+          newPassword,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to reset password.');
+      }
 
-    setForgotSuccess(
-      forgotChannel === 'phone'
-        ? 'Mobile OTP verified! Password updated successfully. Signing you in...'
-        : 'Password updated successfully! Signing you in...'
-    );
+      await resetPassword(targetIdentifier, newPassword);
+      setPassword(newPassword);
 
-    setTimeout(async () => {
-      await login(loginId, newPassword);
-      setShowForgotModal(false);
-      setForgotSuccess('');
-      setForgotStep(1);
-      setSmsToast(null);
-      navigate('/');
-    }, 900);
+      const loginId = forgotChannel === 'phone' ? 'customer@watchhub.com' : forgotEmail;
+      setAccount(loginId);
+      setForgotStep(3);
+      setForgotSuccess(data.message || 'Password updated! Redirecting to secure sign-in...');
+
+      setTimeout(() => {
+        setShowForgotModal(false);
+        setForgotStep(1);
+        setSuccessMessage('Password reset successfully! Please sign in with your new password.');
+      }, 2000);
+    } catch (err) {
+      setForgotError(err.message || 'Verification failed.');
+    }
   };
 
   return (

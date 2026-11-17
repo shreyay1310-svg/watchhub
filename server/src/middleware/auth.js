@@ -35,6 +35,9 @@ export const authenticate = async (req, res, next) => {
       }
       return res.status(401).json({ status: 'fail', message: 'Invalid or expired authentication token.' });
     }
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
 };
 
 // Role-Based Access Control (RBAC) middleware

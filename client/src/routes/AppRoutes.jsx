@@ -142,6 +142,10 @@ export const AppRoutes = () => {
       <Route path="/orders" element={<CustomerOrdersTrackingPage />} />
       <Route path="/my-orders" element={<CustomerOrdersTrackingPage />} />
       <Route path="/order-tracking" element={<CustomerOrdersTrackingPage />} />
+      <Route path="/account/orders/:orderId/track" element={<CustomerOrdersTrackingPage />} />
+      <Route path="/orders/:orderId/track" element={<CustomerOrdersTrackingPage />} />
+      <Route path="/track-order/:orderId" element={<CustomerOrdersTrackingPage />} />
+      <Route path="/track-parcel/:orderId" element={<CustomerOrdersTrackingPage />} />
       <Route path="/warranty-service" element={<WarrantyServicePage />} />
       <Route path="/returns-refunds" element={<ReturnsRefundsPage />} />
       <Route path="/store-locator" element={<StoreLocatorPage />} />

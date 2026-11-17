@@ -69,6 +69,8 @@ import trackingRoutes from './routes/trackingRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
 import deliveryRoutes from './routes/deliveryRoutes.js';
 import supportRoutes from './routes/supportRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -79,6 +81,8 @@ app.use('/api/tracking', trackingRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/delivery', deliveryRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/users', userRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {

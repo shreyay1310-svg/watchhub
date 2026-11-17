@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link, useParams } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
+import GoogleMapLiveTracking from '../../components/common/GoogleMapLiveTracking';
 import { CUSTOMER_ORDERS_DATA, findCustomerOrder } from '../../data/customerOrdersData';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import {
@@ -49,15 +50,24 @@ export default function CustomerOrdersTrackingPage() {
   const navigate = useNavigate();
   const { formatPrice } = useCurrencyLanguage();
 
+  // Read route parameter if accessed via /account/orders/:orderId/track or /orders/:orderId/track
+  const { orderId: paramOrderId } = useParams();
+
   // Active View Tab: 'orders' | 'detail' | 'tracking'
-  const initialView = searchParams.get('tab') || 'orders';
-  const initialOrderId = searchParams.get('id') || searchParams.get('order') || 'WH2026001';
+  const initialView = paramOrderId ? 'tracking' : (searchParams.get('tab') || 'orders');
+  const initialOrderId = paramOrderId || searchParams.get('id') || searchParams.get('order') || 'WH20261125';
 
   const [activeView, setActiveView] = useState(initialView);
   const [selectedOrderId, setSelectedOrderId] = useState(initialOrderId);
 
-  // Synchronize with URL search params
+  // Synchronize with URL search params or route params
   useEffect(() => {
+    if (paramOrderId) {
+      setActiveView('tracking');
+      setSelectedOrderId(paramOrderId);
+      return;
+    }
+
     const tabParam = searchParams.get('tab');
     const idParam = searchParams.get('id') || searchParams.get('order');
     if (tabParam && ['orders', 'detail', 'tracking'].includes(tabParam)) {
@@ -66,7 +76,7 @@ export default function CustomerOrdersTrackingPage() {
     if (idParam) {
       setSelectedOrderId(idParam);
     }
-  }, [searchParams]);
+  }, [searchParams, paramOrderId]);
 
   // Master Orders List in local state so customer can perform cancellations / updates
   const [ordersList, setOrdersList] = useState(CUSTOMER_ORDERS_DATA);
@@ -88,9 +98,10 @@ export default function CustomerOrdersTrackingPage() {
   // Copy AWB feedback
   const [isCopied, setIsCopied] = useState(false);
 
-  // Map Zoom & Fullscreen
+  // Map Zoom & Fullscreen & Engine Mode
   const [mapZoom, setMapZoom] = useState(1);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  const [mapMode, setMapMode] = useState('google'); // 'google' | 'vector'
 
   // Modals
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
@@ -1203,22 +1214,51 @@ WatchHub guarantees 100% authenticity, verified escapement rate, and official fa
                   </p>
                 </div>
 
-                {/* Map Controls */}
+                {/* Map Engine Toggle & Controls */}
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setMapZoom((prev) => Math.min(prev + 0.2, 1.8))}
-                    className="p-2 rounded-xl bg-[#081529] hover:bg-[#6500FF]/30 text-[#A7B1C2] hover:text-white border border-[#28334B] transition-colors cursor-pointer"
-                    title="Zoom In"
-                  >
-                    <ZoomIn className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setMapZoom((prev) => Math.max(prev - 0.2, 0.8))}
-                    className="p-2 rounded-xl bg-[#081529] hover:bg-[#6500FF]/30 text-[#A7B1C2] hover:text-white border border-[#28334B] transition-colors cursor-pointer"
-                    title="Zoom Out"
-                  >
-                    <ZoomOut className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center p-1 bg-[#081529] border border-[#28334B] rounded-xl text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setMapMode('google')}
+                      className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                        mapMode === 'google'
+                          ? 'bg-gradient-to-r from-[#6500FF] to-[#00D5FF] text-white shadow-md'
+                          : 'text-[#A7B1C2] hover:text-white'
+                      }`}
+                    >
+                      🛰️ Google Maps Live
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMapMode('vector')}
+                      className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                        mapMode === 'vector'
+                          ? 'bg-gradient-to-r from-[#6500FF] to-[#00D5FF] text-white shadow-md'
+                          : 'text-[#A7B1C2] hover:text-white'
+                      }`}
+                    >
+                      🗺️ Atelier Radar
+                    </button>
+                  </div>
+
+                  {mapMode === 'vector' && (
+                    <>
+                      <button
+                        onClick={() => setMapZoom((prev) => Math.min(prev + 0.2, 1.8))}
+                        className="p-2 rounded-xl bg-[#081529] hover:bg-[#6500FF]/30 text-[#A7B1C2] hover:text-white border border-[#28334B] transition-colors cursor-pointer"
+                        title="Zoom In"
+                      >
+                        <ZoomIn className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setMapZoom((prev) => Math.max(prev - 0.2, 0.8))}
+                        className="p-2 rounded-xl bg-[#081529] hover:bg-[#6500FF]/30 text-[#A7B1C2] hover:text-white border border-[#28334B] transition-colors cursor-pointer"
+                        title="Zoom Out"
+                      >
+                        <ZoomOut className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
                   <button
                     onClick={() => setIsMapFullscreen(!isMapFullscreen)}
                     className="p-2 rounded-xl bg-[#081529] hover:bg-[#6500FF]/30 text-[#A7B1C2] hover:text-white border border-[#28334B] transition-colors cursor-pointer"
@@ -1229,88 +1269,99 @@ WatchHub guarantees 100% authenticity, verified escapement rate, and official fa
                 </div>
               </div>
 
-              {/* Interactive Vector Route Map Canvas */}
-              <div
-                className={`w-full rounded-2xl bg-[#081529] border border-[#28334B] overflow-hidden relative transition-all duration-300 flex items-center justify-center ${
-                  isMapFullscreen ? 'h-[500px]' : 'h-72 sm:h-80'
-                }`}
-                style={{ transform: `scale(${mapZoom})`, transformOrigin: 'center center' }}
-              >
-                {/* SVG Visual Roadway & Geofence Matrix */}
-                <svg className="w-full h-full absolute inset-0" viewBox="0 0 800 400" preserveAspectRatio="none">
-                  {/* Grid lines */}
-                  <defs>
-                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(40, 51, 75, 0.4)" strokeWidth="0.5" />
-                    </pattern>
-                    <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#6500FF" />
-                      <stop offset="50%" stopColor="#00D5FF" />
-                      <stop offset="100%" stopColor="#00C98B" />
-                    </linearGradient>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#grid)" />
+              {/* Render either Google Maps Live Tracking or Vector Canvas */}
+              {mapMode === 'google' ? (
+                <GoogleMapLiveTracking
+                  orderId={currentOrder.orderId}
+                  customerAddress={currentOrder.deliveryAddress.street}
+                  customerCoords={{ lat: 28.4595, lng: 77.0850 }}
+                  riderName={currentOrder.shipment.riderName}
+                  riderPhone={currentOrder.shipment.riderPhone}
+                />
+              ) : (
+                /* Interactive Vector Route Map Canvas */
+                <div
+                  className={`w-full rounded-2xl bg-[#081529] border border-[#28334B] overflow-hidden relative transition-all duration-300 flex items-center justify-center ${
+                    isMapFullscreen ? 'h-[500px]' : 'h-72 sm:h-80'
+                  }`}
+                  style={{ transform: `scale(${mapZoom})`, transformOrigin: 'center center' }}
+                >
+                  {/* SVG Visual Roadway & Geofence Matrix */}
+                  <svg className="w-full h-full absolute inset-0" viewBox="0 0 800 400" preserveAspectRatio="none">
+                    {/* Grid lines */}
+                    <defs>
+                      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(40, 51, 75, 0.4)" strokeWidth="0.5" />
+                      </pattern>
+                      <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#6500FF" />
+                        <stop offset="50%" stopColor="#00D5FF" />
+                        <stop offset="100%" stopColor="#00C98B" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)" />
 
-                  {/* Highway Polylines */}
-                  <path
-                    d="M 120 280 C 240 180, 360 320, 500 210 S 680 140, 720 120"
-                    fill="none"
-                    stroke="#28334B"
-                    strokeWidth="8"
-                    strokeLinecap="round"
-                  />
-                  {/* Active Animated Polyline */}
-                  <path
-                    d="M 120 280 C 240 180, 360 320, 500 210 S 680 140, 720 120"
-                    fill="none"
-                    stroke="url(#routeGradient)"
-                    strokeWidth="4"
-                    strokeDasharray="8 6"
-                    strokeLinecap="round"
-                    className="animate-pulse"
-                  />
-                </svg>
+                    {/* Highway Polylines */}
+                    <path
+                      d="M 120 280 C 240 180, 360 320, 500 210 S 680 140, 720 120"
+                      fill="none"
+                      stroke="#28334B"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                    />
+                    {/* Active Animated Polyline */}
+                    <path
+                      d="M 120 280 C 240 180, 360 320, 500 210 S 680 140, 720 120"
+                      fill="none"
+                      stroke="url(#routeGradient)"
+                      strokeWidth="4"
+                      strokeDasharray="8 6"
+                      strokeLinecap="round"
+                      className="animate-pulse"
+                    />
+                  </svg>
 
-                {/* Point 1: Origin (Central Vault, New Delhi) */}
-                <div className="absolute left-[15%] top-[70%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer">
-                  <div className="w-9 h-9 rounded-full bg-[#6500FF] text-white flex items-center justify-center shadow-lg shadow-[#6500FF]/50 border-2 border-white">
-                    <Box className="w-4 h-4" />
+                  {/* Point 1: Origin (Central Vault, New Delhi) */}
+                  <div className="absolute left-[15%] top-[70%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer">
+                    <div className="w-9 h-9 rounded-full bg-[#6500FF] text-white flex items-center justify-center shadow-lg shadow-[#6500FF]/50 border-2 border-white">
+                      <Box className="w-4 h-4" />
+                    </div>
+                    <span className="mt-1 px-2 py-0.5 rounded-md bg-black/80 text-[10px] font-bold text-white whitespace-nowrap border border-white/10">
+                      Central Vault WH-01
+                    </span>
                   </div>
-                  <span className="mt-1 px-2 py-0.5 rounded-md bg-black/80 text-[10px] font-bold text-white whitespace-nowrap border border-white/10">
-                    Central Vault WH-01
-                  </span>
-                </div>
 
-                {/* Point 2: Active Transit / Rider Location */}
-                <div className="absolute left-[62%] top-[52%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer z-20">
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-full bg-[#00D5FF]/30 animate-ping absolute inset-0" />
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#6500FF] to-[#00D5FF] text-white flex items-center justify-center shadow-xl shadow-[#00D5FF]/50 border-2 border-white relative z-10">
-                      <Truck className="w-5 h-5 text-white" />
+                  {/* Point 2: Active Transit / Rider Location */}
+                  <div className="absolute left-[62%] top-[52%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer z-20">
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-full bg-[#00D5FF]/30 animate-ping absolute inset-0" />
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#6500FF] to-[#00D5FF] text-white flex items-center justify-center shadow-xl shadow-[#00D5FF]/50 border-2 border-white relative z-10">
+                        <Truck className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                    <div className="mt-1 px-2.5 py-1 rounded-lg bg-black/90 text-[10px] font-bold text-[#00D5FF] whitespace-nowrap border border-[#00D5FF]/40 shadow-lg flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>{currentOrder.shipment.riderName} (On Route)</span>
                     </div>
                   </div>
-                  <div className="mt-1 px-2.5 py-1 rounded-lg bg-black/90 text-[10px] font-bold text-[#00D5FF] whitespace-nowrap border border-[#00D5FF]/40 shadow-lg flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>{currentOrder.shipment.riderName} (On Route)</span>
+
+                  {/* Point 3: Destination Address */}
+                  <div className="absolute left-[90%] top-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer">
+                    <div className="w-9 h-9 rounded-full bg-[#E9B94F] text-black font-black flex items-center justify-center shadow-lg shadow-[#E9B94F]/50 border-2 border-white">
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    <span className="mt-1 px-2 py-0.5 rounded-md bg-black/80 text-[10px] font-bold text-[#E9B94F] whitespace-nowrap border border-white/10">
+                      Destination: {currentOrder.deliveryAddress.city}
+                    </span>
+                  </div>
+
+                  {/* Map Overlay Badge */}
+                  <div className="absolute bottom-3 left-3 bg-[#081529]/90 backdrop-blur-md border border-[#28334B] rounded-xl px-3 py-1.5 text-[11px] text-[#A7B1C2] flex items-center gap-2">
+                    <Navigation className="w-3.5 h-3.5 text-[#00D5FF]" />
+                    <span>Geofenced Route • ETA: {currentOrder.shipment.eta || 'Scheduled Handover'}</span>
                   </div>
                 </div>
-
-                {/* Point 3: Destination Address */}
-                <div className="absolute left-[90%] top-[30%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer">
-                  <div className="w-9 h-9 rounded-full bg-[#E9B94F] text-black font-black flex items-center justify-center shadow-lg shadow-[#E9B94F]/50 border-2 border-white">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <span className="mt-1 px-2 py-0.5 rounded-md bg-black/80 text-[10px] font-bold text-[#E9B94F] whitespace-nowrap border border-white/10">
-                    Destination: {currentOrder.deliveryAddress.city}
-                  </span>
-                </div>
-
-                {/* Map Overlay Badge */}
-                <div className="absolute bottom-3 left-3 bg-[#081529]/90 backdrop-blur-md border border-[#28334B] rounded-xl px-3 py-1.5 text-[11px] text-[#A7B1C2] flex items-center gap-2">
-                  <Navigation className="w-3.5 h-3.5 text-[#00D5FF]" />
-                  <span>Geofenced Route • ETA: {currentOrder.shipment.eta || 'Scheduled Handover'}</span>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* 6. DELIVERY INFORMATION CARD & 4. 10-MILESTONE TIMELINE */}

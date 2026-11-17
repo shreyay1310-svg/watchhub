@@ -1,6 +1,151 @@
 import express from 'express';
+import { LocationHistory } from '../models/LocationHistory.js';
+import { Order } from '../models/Order.js';
 
 const router = express.Router();
+
+// 1. Ingest Rider GPS Location & Broadcast via Socket.IO
+// POST /api/tracking/rider-location
+router.post('/rider-location', async (req, res) => {
+  try {
+    const {
+      orderId,
+      shipmentId,
+      riderId = 'RIDER_001',
+      riderName = 'Vikram Singh (Armoured Escort)',
+      lat,
+      lng,
+      speed = 34.5,
+      heading = 90,
+      accuracy = 5,
+    } = req.body;
+
+    if (!orderId || lat === undefined || lng === undefined) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'orderId, lat, and lng are required for rider GPS tracking.',
+      });
+    }
+
+    const payload = {
+      orderId,
+      shipmentId,
+      riderId,
+      riderName,
+      lat: Number(lat),
+      lng: Number(lng),
+      speed: Number(speed),
+      heading: Number(heading),
+      accuracy: Number(accuracy),
+      timestamp: new Date(),
+    };
+
+    // Save location to MongoDB
+    try {
+      await LocationHistory.create(payload);
+    } catch (dbErr) {
+      // Don't fail if DB is offline in dev
+      console.warn('[Tracking] DB write warning:', dbErr.message);
+    }
+
+    // Broadcast in real-time to room track_<orderId> via Socket.IO
+    const io = req.app.get('io');
+    if (io) {
+      io.to(`track_${orderId}`).emit('rider_location_update', payload);
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Rider GPS location recorded and broadcasted successfully.',
+      data: payload,
+    });
+  } catch (err) {
+    console.error('[Tracking Error - Rider Location]', err);
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+});
+
+// 2. Get Live GPS Tracking for Customer / Delivery Manager Map
+// GET /api/tracking/:orderId/live-gps
+router.get('/:orderId/live-gps', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    // Fetch latest rider GPS update from DB
+    let latestLocation = null;
+    try {
+      latestLocation = await LocationHistory.findOne({ orderId }).sort({ timestamp: -1 });
+    } catch {}
+
+    // Fetch order to get delivery destination coordinates
+    let order = null;
+    try {
+      order = await Order.findOne({ orderId });
+    } catch {}
+
+    // Default luxury store / vault origin (Oberoi Gurgaon Hub)
+    const storeOrigin = {
+      name: 'WatchHub Armoured Vault',
+      lat: 28.5020,
+      lng: 77.0878,
+      address: 'WatchHub Vault, Phase 2, Udyog Vihar, Gurugram, HR',
+    };
+
+    // Customer destination address coordinates
+    const destination = {
+      lat: order?.shippingAddress?.lat || 28.4595,
+      lng: order?.shippingAddress?.lng || 77.0850,
+      address: order?.shippingAddress?.street || 'Penthouse 14B, The Oberoi Sky Heights, Gurugram',
+      customerName: order?.customer?.name || 'Alexander Sterling',
+    };
+
+    // Current rider coordinates
+    const rider = {
+      riderId: latestLocation?.riderId || 'RIDER_001',
+      riderName: latestLocation?.riderName || 'Vikram Singh (Armoured Escort)',
+      lat: latestLocation?.lat || 28.4815,
+      lng: latestLocation?.lng || 77.0862,
+      speed: latestLocation?.speed || 38.2,
+      heading: latestLocation?.heading || 180,
+      accuracy: latestLocation?.accuracy || 4,
+      lastUpdated: latestLocation?.timestamp || new Date().toISOString(),
+      isLive: Boolean(latestLocation),
+    };
+
+    // Calculate approx distance & ETA
+    // Haversine formula
+    const toRad = (v) => (v * Math.PI) / 180;
+    const R = 6371; // km
+    const dLat = toRad(destination.lat - rider.lat);
+    const dLon = toRad(destination.lng - rider.lng);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(rider.lat)) * Math.cos(toRad(destination.lat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distanceKm = Math.max(Number((R * c).toFixed(2)), 0.4);
+    const etaMinutes = Math.max(Math.round((distanceKm / 30) * 60), 4); // Avg city speed 30km/h
+
+    return res.status(200).json({
+      status: 'success',
+      data: {
+        orderId,
+        origin: storeOrigin,
+        destination,
+        rider,
+        metrics: {
+          distanceKm,
+          distanceFormatted: `${distanceKm} km`,
+          etaMinutes,
+          etaFormatted: `${etaMinutes} mins`,
+          status: 'Out for Armoured Delivery',
+          securityCode: 'SEC-8924',
+        },
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+});
 
 const MOCK_TRACKING_ORDERS = [
   {
