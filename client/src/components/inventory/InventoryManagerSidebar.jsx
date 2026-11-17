@@ -15,6 +15,7 @@ import {
   HelpCircle,
   X,
   ChevronRight,
+  ShieldCheck,
 } from 'lucide-react';
 
 export default function InventoryManagerSidebar({
@@ -24,10 +25,11 @@ export default function InventoryManagerSidebar({
   activeTab,
   onSelectTab,
   onOpenSupport,
+  reorderAlertsCount = 18,
 }) {
   const location = useLocation();
 
-  // Exactly matching the 11 inventory navigation items from reference UI
+  // Exactly matching the 11 inventory navigation modules from the specification
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Boxes },
     { id: 'overview', label: 'Stock Overview', icon: PieChart },
@@ -35,7 +37,7 @@ export default function InventoryManagerSidebar({
     { id: 'movements', label: 'Stock Movements', icon: ArrowRightLeft },
     { id: 'adjustments', label: 'Stock Adjustments', icon: SlidersHorizontal },
     { id: 'warehouses', label: 'Warehouse Management', icon: Building2 },
-    { id: 'reorder', label: 'Reorder Alerts', icon: Bell, badge: '18' },
+    { id: 'reorder', label: 'Reorder Alerts', icon: Bell, badge: reorderAlertsCount ? `${reorderAlertsCount}` : null },
     { id: 'requests', label: 'Purchase Requests', icon: FileSpreadsheet },
     { id: 'reports', label: 'Stock Reports', icon: BarChart3 },
     { id: 'history', label: 'Inventory History', icon: History },
@@ -48,24 +50,24 @@ export default function InventoryManagerSidebar({
       {mobileOpen && (
         <div
           onClick={onCloseMobile}
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 lg:hidden transition-opacity"
         />
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 bg-[#071426] text-white border-r border-white/10 flex flex-col transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 bottom-0 left-0 z-50 bg-[#17165A] text-white border-r border-[#29305D] flex flex-col transition-all duration-300 ease-in-out shadow-2xl ${
           collapsed ? 'w-20' : 'w-64'
         } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Brand Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-[#29305D] bg-[#11123D]/50">
           <Link
             to="/inventory-manager/dashboard"
             className="flex items-center gap-3 group focus:outline-hidden"
           >
-            {/* Gold watch icon outline container */}
-            <div className="w-10 h-10 rounded-xl bg-[#D6A63C]/15 border border-[#D6A63C]/40 flex items-center justify-center text-[#D6A63C] shadow-inner group-hover:scale-105 transition-transform">
+            {/* Gold watch icon container */}
+            <div className="w-10 h-10 rounded-xl bg-[#E9B94F]/15 border border-[#E9B94F]/40 flex items-center justify-center text-[#E9B94F] shadow-inner group-hover:scale-105 transition-transform">
               ⌚
             </div>
             {!collapsed && (
@@ -73,7 +75,7 @@ export default function InventoryManagerSidebar({
                 <span className="text-base font-extrabold tracking-tight text-white leading-none">
                   WatchHub
                 </span>
-                <span className="text-[11px] font-semibold text-[#D6A63C] tracking-wide mt-0.5">
+                <span className="text-[11px] font-bold text-[#E9B94F] tracking-wide mt-0.5">
                   Inventory Manager
                 </span>
               </div>
@@ -90,7 +92,7 @@ export default function InventoryManagerSidebar({
           </button>
         </div>
 
-        {/* Navigation Items (11 Inventory-Only Modules) */}
+        {/* Navigation Items (11 Dedicated Inventory Modules) */}
         <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1 scrollbar-thin scrollbar-thumb-white/10 text-xs">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -106,27 +108,27 @@ export default function InventoryManagerSidebar({
                 }}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition-all group cursor-pointer ${
                   isSelected
-                    ? 'bg-[#D6A63C] text-[#071426] font-bold shadow-md shadow-[#D6A63C]/20'
-                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-[#6500FF] to-[#8B00FF] text-white font-bold shadow-lg shadow-[#6500FF]/30 border border-white/15'
+                    : 'text-[#A7B1C2] hover:text-white hover:bg-[#11123D]'
                 }`}
                 title={item.label}
               >
                 <div className="flex items-center gap-3 truncate">
                   <Icon
                     className={`w-4 h-4 transition-transform group-hover:scale-110 ${
-                      isSelected ? 'text-[#071426]' : 'text-gray-400 group-hover:text-white'
+                      isSelected ? 'text-[#00D5FF]' : 'text-[#A7B1C2] group-hover:text-white'
                     }`}
                   />
                   {!collapsed && <span className="truncate">{item.label}</span>}
                 </div>
 
-                {/* Optional Right Badge (e.g. Reorder Alerts '18') */}
+                {/* Optional Right Badge (e.g. Reorder Alerts) */}
                 {!collapsed && item.badge && (
                   <span
                     className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full ${
                       isSelected
-                        ? 'bg-red-600 text-white'
-                        : 'bg-red-500 text-white shadow-xs'
+                        ? 'bg-red-500 text-white'
+                        : 'bg-red-500/90 text-white shadow-xs'
                     }`}
                   >
                     {item.badge}
@@ -137,24 +139,24 @@ export default function InventoryManagerSidebar({
           })}
         </div>
 
-        {/* Bottom "Need Help?" Card matching reference UI */}
+        {/* Bottom "Need Help?" Card */}
         {!collapsed && (
-          <div className="p-3 m-3 rounded-2xl bg-gradient-to-br from-[#0c2242] to-[#071426] border border-white/10 text-xs shadow-lg">
+          <div className="p-3.5 m-3 rounded-2xl bg-gradient-to-br from-[#11123D] to-[#080923] border border-[#29305D] text-xs shadow-xl">
             <div className="flex items-start gap-2.5 mb-2">
-              <div className="w-8 h-8 rounded-xl bg-[#D6A63C]/20 text-[#D6A63C] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[#E9B94F]/20 text-[#E9B94F] flex items-center justify-center shrink-0">
                 📦
               </div>
               <div>
-                <h4 className="font-bold text-white text-[13px]">Need Help?</h4>
-                <p className="text-gray-400 text-[11px] leading-tight">
-                  Inventory operations &amp; stock support.
+                <h4 className="font-bold text-white text-[13px]">Vault Support</h4>
+                <p className="text-[#A7B1C2] text-[11px] leading-tight">
+                  Inventory ops &amp; stock sync helpdesk.
                 </p>
               </div>
             </div>
             <button
               type="button"
               onClick={onOpenSupport}
-              className="w-full mt-1 py-1.5 px-3 rounded-xl bg-[#D6A63C] hover:bg-[#c49532] text-[#071426] font-bold text-[11px] flex items-center justify-center gap-1 transition-all shadow cursor-pointer"
+              className="w-full mt-1 py-1.5 px-3 rounded-xl bg-[#E9B94F] hover:bg-[#d8a83d] text-[#080923] font-bold text-[11px] flex items-center justify-center gap-1 transition-all shadow cursor-pointer"
             >
               <span>Contact Support</span>
               <ChevronRight className="w-3.5 h-3.5" />

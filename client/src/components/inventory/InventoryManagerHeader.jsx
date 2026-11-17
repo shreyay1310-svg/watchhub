@@ -21,6 +21,8 @@ export default function InventoryManagerHeader({
   onSearch,
   onOpenNotifications,
   onOpenSupport,
+  warehouses = [],
+  reorderAlertsCount = 18,
 }) {
   const { user, switchRole, logout } = useAuth();
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ export default function InventoryManagerHeader({
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
-  const warehouses = ['All Warehouses', 'Main Warehouse', 'Delhi Warehouse', 'Mumbai Warehouse'];
+  const warehouseOptions = ['All Warehouses', ...warehouses.map((w) => w.name || w)];
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -60,13 +62,13 @@ export default function InventoryManagerHeader({
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#071426] border-b border-white/10 px-4 md:px-6 flex items-center justify-between text-white select-none">
+    <header className="sticky top-0 z-30 h-16 bg-[#11123D] border-b border-[#29305D] px-4 md:px-6 flex items-center justify-between text-white select-none shadow-md">
       {/* Left: Mobile Toggle & Global Search */}
       <div className="flex items-center gap-3 md:gap-4 flex-1 max-w-2xl">
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-hidden"
+          className="p-2 rounded-xl text-[#A7B1C2] hover:text-white hover:bg-[#17165A] transition-colors focus:outline-hidden"
           title="Toggle Navigation Menu"
         >
           <Menu className="w-5 h-5" />
@@ -74,15 +76,15 @@ export default function InventoryManagerHeader({
 
         {/* Global Search Bar */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#A7B1C2] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchValue}
             onChange={handleSearchChange}
             placeholder="Search by Product, SKU, Barcode, or PO..."
-            className="w-full bg-[#0d1e38] border border-white/10 rounded-xl pl-10 pr-16 py-2 text-xs md:text-sm text-white placeholder-gray-400 focus:outline-hidden focus:border-[#D6A63C] focus:ring-1 focus:ring-[#D6A63C] transition-all"
+            className="w-full bg-[#17165A] border border-[#29305D] rounded-xl pl-10 pr-16 py-2 text-xs md:text-sm text-white placeholder-[#A7B1C2] focus:outline-hidden focus:border-[#6500FF] focus:ring-1 focus:ring-[#6500FF] transition-all"
           />
-          <span className="hidden sm:inline-flex items-center absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold tracking-wider text-gray-400 bg-white/10 px-1.5 py-0.5 rounded border border-white/10">
+          <span className="hidden sm:inline-flex items-center absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold tracking-wider text-[#A7B1C2] bg-[#11123D] px-1.5 py-0.5 rounded border border-[#29305D]">
             Ctrl + K
           </span>
         </div>
@@ -95,19 +97,19 @@ export default function InventoryManagerHeader({
           <button
             type="button"
             onClick={() => setWarehouseDropdownOpen(!warehouseDropdownOpen)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0d1e38] border border-white/10 text-xs font-semibold text-gray-200 hover:text-white hover:border-[#D6A63C]/50 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#17165A] border border-[#29305D] text-xs font-semibold text-gray-200 hover:text-white hover:border-[#6500FF] transition-all cursor-pointer"
           >
-            <Building2 className="w-4 h-4 text-[#D6A63C]" />
+            <Building2 className="w-4 h-4 text-[#E9B94F]" />
             <span>{selectedWarehouse || 'All Warehouses'}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#A7B1C2]" />
           </button>
 
           {warehouseDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-[#0a192f] border border-white/15 rounded-xl shadow-2xl py-1.5 z-50 animate-fade-in text-xs">
-              <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-gray-400 tracking-wider border-b border-white/10">
-                Filter by Warehouse
+            <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#11123D] border border-[#29305D] shadow-2xl py-2 z-50 text-xs animate-fade-in">
+              <div className="px-3 py-1 text-[10px] font-bold text-[#A7B1C2] uppercase tracking-wider">
+                Filter by Vault Location
               </div>
-              {warehouses.map((wh) => (
+              {warehouseOptions.map((wh) => (
                 <button
                   key={wh}
                   type="button"
@@ -115,110 +117,99 @@ export default function InventoryManagerHeader({
                     if (onSelectWarehouse) onSelectWarehouse(wh);
                     setWarehouseDropdownOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-left hover:bg-white/10 transition-colors ${
-                    (selectedWarehouse || 'All Warehouses') === wh
-                      ? 'text-[#D6A63C] font-bold bg-white/5'
-                      : 'text-gray-300'
-                  }`}
+                  className="w-full flex items-center justify-between px-3.5 py-2 hover:bg-[#17165A] text-left text-gray-200 hover:text-white transition-colors cursor-pointer"
                 >
                   <span>{wh}</span>
-                  {(selectedWarehouse || 'All Warehouses') === wh && (
-                    <Check className="w-3.5 h-3.5 text-[#D6A63C]" />
-                  )}
+                  {selectedWarehouse === wh && <Check className="w-3.5 h-3.5 text-[#00D5FF]" />}
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* Notifications with Red Badge '3' */}
+        {/* Notifications Icon with Badge */}
         <button
           type="button"
           onClick={onOpenNotifications}
-          className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-hidden cursor-pointer"
-          title="Stock Alerts & Notifications"
+          className="relative p-2 rounded-xl text-[#A7B1C2] hover:text-white hover:bg-[#17165A] transition-colors focus:outline-hidden cursor-pointer"
+          title="Reorder Notifications"
         >
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-extrabold rounded-full flex items-center justify-center ring-2 ring-[#071426]">
-            3
-          </span>
+          {reorderAlertsCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+          )}
         </button>
 
-        {/* View Customer Store Link */}
-        <a
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-[#D6A63C] hover:bg-white/5 border border-white/10 transition-all"
-          title="Preview Customer Storefront"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-          <span>View Store</span>
-        </a>
-
-        {/* User Profile Avatar 'SY' + Dropdown */}
+        {/* User Profile Pill */}
         <div className="relative">
           <button
             type="button"
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-            className="flex items-center gap-2.5 p-1 md:pl-2 md:pr-3 rounded-xl hover:bg-white/10 transition-all cursor-pointer focus:outline-hidden"
+            className="flex items-center gap-2.5 p-1.5 pr-3 rounded-2xl bg-[#17165A] border border-[#29305D] hover:border-[#6500FF] transition-all cursor-pointer"
           >
-            {/* Avatar Pill 'SY' */}
-            <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center ring-2 ring-[#D6A63C]/60 shadow-md">
-              SY
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6500FF] to-[#E9B94F] flex items-center justify-center font-black text-xs text-white">
+              {user?.name ? user.name.slice(0, 2).toUpperCase() : 'IM'}
             </div>
             <div className="hidden sm:flex flex-col text-left">
               <span className="text-xs font-bold text-white leading-tight">
-                {user?.name || 'Inventory Manager'}
+                {user?.name || 'Suresh Patel'}
               </span>
-              <span className="text-[10px] text-[#D6A63C] font-semibold leading-none">
+              <span className="text-[10px] font-semibold text-[#E9B94F] leading-tight">
                 Inventory Manager
               </span>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400 hidden sm:block" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#A7B1C2]" />
           </button>
 
           {profileDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-[#0a192f] border border-white/15 rounded-2xl shadow-2xl py-2 z-50 animate-fade-in text-xs">
-              <div className="px-4 py-2 border-b border-white/10">
-                <p className="font-bold text-white text-sm">{user?.name || 'Rajesh Mehta'}</p>
-                <p className="text-gray-400 text-[11px] truncate">{user?.email || 'inventory@watchhub.com'}</p>
-                <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#D6A63C]/15 text-[#D6A63C] text-[10px] font-bold">
-                  <ShieldCheck className="w-3 h-3" />
-                  <span>Role: Inventory Manager</span>
+            <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#11123D] border border-[#29305D] shadow-2xl p-2 z-50 text-xs animate-fade-in">
+              <div className="px-3 py-2 border-b border-[#29305D]/80">
+                <p className="font-bold text-white text-xs">{user?.name || 'Suresh Patel'}</p>
+                <p className="text-[11px] text-[#A7B1C2]">{user?.email || 'inventory@watchhub.luxury'}</p>
+                <div className="mt-1 flex items-center gap-1.5">
+                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">
+                    Authorized Manager
+                  </span>
                 </div>
               </div>
 
-              {/* Role Switcher Menu (Seamless Testing) */}
-              <div className="py-1 border-b border-white/10">
-                <div className="px-4 py-1 text-[10px] uppercase font-bold text-gray-400 tracking-wider">
-                  Switch Role Portal
-                </div>
-                {Object.values(ROLES).map((roleName) => (
-                  <button
-                    key={roleName}
-                    type="button"
-                    onClick={() => handleRoleChange(roleName)}
-                    className={`w-full flex items-center justify-between px-4 py-1.5 text-left transition-colors ${
-                      user?.role === roleName
-                        ? 'text-[#D6A63C] font-bold bg-white/5'
-                        : 'text-gray-300 hover:bg-white/10'
-                    }`}
-                  >
-                    <span>{roleName}</span>
-                    {user?.role === roleName && <Check className="w-3.5 h-3.5 text-[#D6A63C]" />}
-                  </button>
-                ))}
+              {/* Role Switcher Demo */}
+              <div className="py-2 border-b border-[#29305D]/80">
+                <span className="px-3 text-[10px] font-bold text-[#A7B1C2] uppercase tracking-wider block mb-1">
+                  Switch Staff Workspace
+                </span>
+                {MOCK_STAFF_ACCOUNTS &&
+                  Object.keys(MOCK_STAFF_ACCOUNTS).map((accKey) => {
+                    const acc = MOCK_STAFF_ACCOUNTS[accKey];
+                    const isCurrent = user?.role === acc.role;
+                    return (
+                      <button
+                        key={accKey}
+                        type="button"
+                        onClick={() => handleRoleChange(acc.role)}
+                        className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
+                          isCurrent
+                            ? 'bg-[#17165A] text-[#00D5FF] font-bold'
+                            : 'text-[#A7B1C2] hover:bg-[#17165A]/50 hover:text-white'
+                        }`}
+                      >
+                        <span className="text-[11px]">{acc.role}</span>
+                        {isCurrent && <Check className="w-3 h-3 text-[#00D5FF]" />}
+                      </button>
+                    );
+                  })}
               </div>
 
+              {/* Logout */}
               <div className="pt-1">
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-2 px-4 py-2 text-left text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors font-semibold"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
-                  <span>Sign Out</span>
+                  <span className="font-semibold">Log Out</span>
                 </button>
               </div>
             </div>
