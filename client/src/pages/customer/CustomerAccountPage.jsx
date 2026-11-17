@@ -177,14 +177,23 @@ export const CustomerAccountPage = () => {
             {/* 1. MY ORDERS TAB (Exact match to Section 12) */}
             {activeTab === 'orders' && (
               <div className="space-y-6 animate-fade-in text-xs">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-4 gap-3">
                   <div>
-                    <h2 className="text-lg font-serif font-bold text-white">Acquisition History & Orders</h2>
+                    <h2 className="text-lg font-serif font-bold text-white">Acquisition History &amp; Orders</h2>
                     <p className="text-[11px] text-[#A6B1C8]">Review all certified watch purchases and delivery statuses.</p>
                   </div>
-                  <span className="text-xs font-bold text-[#F4B942] bg-[#F4B942]/10 px-3 py-1 rounded-full border border-[#F4B942]/20">
-                    {ordersList.length} Timepieces Acquired
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      to="/orders"
+                      className="py-1.5 px-3 rounded-xl bg-[#6500FF]/20 text-[#00CFFF] border border-[#6500FF]/40 font-bold text-xs flex items-center gap-1.5 hover:bg-[#6500FF]/30 transition-all"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>Full Orders &amp; Tracking Portal</span>
+                    </Link>
+                    <span className="text-xs font-bold text-[#F4B942] bg-[#F4B942]/10 px-3 py-1 rounded-full border border-[#F4B942]/20">
+                      {ordersList.length} Acquired
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
@@ -217,11 +226,18 @@ export const CustomerAccountPage = () => {
                       {/* Actions */}
                       <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
                         <Link
-                          to={`/track-parcel?orderId=${order.id}`}
+                          to={`/orders?tab=tracking&id=${order.id}`}
                           className="py-2 px-3.5 rounded-xl bg-gradient-to-r from-[#00CFFF] to-[#00A3FF] text-[#020813] font-bold text-[11px] flex items-center gap-1.5 shadow-sm"
                         >
                           <Truck className="w-3.5 h-3.5" />
                           <span>Track Order</span>
+                        </Link>
+                        <Link
+                          to={`/orders?tab=detail&id=${order.id}`}
+                          className="py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-[11px] font-semibold flex items-center gap-1.5"
+                        >
+                          <Package className="w-3.5 h-3.5 text-[#00CFFF]" />
+                          <span>Details</span>
                         </Link>
                         <button
                           type="button"
@@ -236,7 +252,7 @@ export const CustomerAccountPage = () => {
                           className="py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-[11px] font-semibold flex items-center gap-1.5"
                         >
                           <RotateCcw className="w-3.5 h-3.5 text-[#F4B942]" />
-                          <span>Return / Service</span>
+                          <span>Return</span>
                         </Link>
                       </div>
                     </div>

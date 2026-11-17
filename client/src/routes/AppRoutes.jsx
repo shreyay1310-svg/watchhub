@@ -28,6 +28,7 @@ import ManufacturingHubPage from '../pages/customer/ManufacturingHubPage';
 import MobileAppHubPage from '../pages/mobile/MobileAppHubPage';
 import CustomizeWatchPage from '../pages/customer/CustomizeWatchPage';
 import TrackParcelPage from '../pages/customer/TrackParcelPage';
+import CustomerOrdersTrackingPage from '../pages/customer/CustomerOrdersTrackingPage';
 import WatchesPage from '../pages/customer/WatchesPage';
 import MenPage from '../pages/customer/MenPage';
 import WomenPage from '../pages/customer/WomenPage';
@@ -138,7 +139,9 @@ export const AppRoutes = () => {
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
       <Route path="/account" element={<CustomerAccountPage />} />
-      <Route path="/orders" element={<CustomerAccountPage />} />
+      <Route path="/orders" element={<CustomerOrdersTrackingPage />} />
+      <Route path="/my-orders" element={<CustomerOrdersTrackingPage />} />
+      <Route path="/order-tracking" element={<CustomerOrdersTrackingPage />} />
       <Route path="/warranty-service" element={<WarrantyServicePage />} />
       <Route path="/returns-refunds" element={<ReturnsRefundsPage />} />
       <Route path="/store-locator" element={<StoreLocatorPage />} />
@@ -148,9 +151,8 @@ export const AppRoutes = () => {
       <Route path="/stories/heritage" element={<StoryDetailPage initialSlug="heritage" />} />
       <Route path="/stories/collectors-journal" element={<StoryDetailPage initialSlug="collectors-journal" />} />
       <Route path="/stories/:slug" element={<StoryDetailPage />} />
-      <Route path="/track-parcel" element={<TrackParcelPage />} />
-      <Route path="/track-order" element={<TrackParcelPage />} />
-      <Route path="/my-orders" element={<TrackParcelPage />} />
+      <Route path="/track-parcel" element={<CustomerOrdersTrackingPage />} />
+      <Route path="/track-order" element={<CustomerOrdersTrackingPage />} />
       <Route path="/manufacturing-hub" element={<ManufacturingHubPage />} />
       <Route path="/mobile-app" element={<MobileAppHubPage />} />
       <Route path="/download-app" element={<MobileAppHubPage />} />
