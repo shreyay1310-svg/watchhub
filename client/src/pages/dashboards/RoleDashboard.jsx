@@ -36,6 +36,7 @@ import POSTerminalModule from '../../components/dashboards/modules/POSTerminalMo
 import ProductsManagementModule from '../../components/dashboards/modules/ProductsManagementModule';
 import OrdersManagementModule from '../../components/dashboards/modules/OrdersManagementModule';
 import InventoryManagementModule from '../../components/dashboards/modules/InventoryManagementModule';
+import InventoryManagerDashboardPage from './InventoryManagerDashboardPage';
 import CustomerSupportModule from '../../components/dashboards/modules/CustomerSupportModule';
 import OffersCouponsModule from '../../components/dashboards/modules/OffersCouponsModule';
 import SettingsAuditModule from '../../components/dashboards/modules/SettingsAuditModule';
@@ -118,12 +119,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
       case 'stock_update':
       case 'stock_requests':
       case 'warehouses':
-        return (
-          <InventoryManagementModule
-            activeSubTab={activeTab}
-            onSubTabChange={setActiveTab}
-          />
-        );
+        return <InventoryManagerDashboardPage />;
       case 'orders':
       case 'payments':
         return <OrdersManagementModule />;

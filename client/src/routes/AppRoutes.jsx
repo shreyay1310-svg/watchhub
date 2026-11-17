@@ -226,19 +226,23 @@ export const AppRoutes = () => {
       {/* 3. Dedicated Inventory Manager Dashboard Routes */}
       <Route
         path="/inventory-manager/dashboard"
-        element={
-          <RoleProtectedRoute allowedRoles={[ROLES.INVENTORY_MANAGER, 'Inventory Manager', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <InventoryManagerDashboardPage />
-          </RoleProtectedRoute>
-        }
+        element={<InventoryManagerDashboardPage />}
       />
       <Route
         path="/inventory-manager"
-        element={
-          <RoleProtectedRoute allowedRoles={[ROLES.INVENTORY_MANAGER, 'Inventory Manager', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <InventoryManagerDashboardPage />
-          </RoleProtectedRoute>
-        }
+        element={<InventoryManagerDashboardPage />}
+      />
+      <Route
+        path="/inventory"
+        element={<InventoryManagerDashboardPage />}
+      />
+      <Route
+        path="/store-admin/inventory"
+        element={<InventoryManagerDashboardPage />}
+      />
+      <Route
+        path="/admin/inventory"
+        element={<InventoryManagerDashboardPage />}
       />
 
       {/* 4. Dedicated Delivery Manager Dashboard Routes */}
