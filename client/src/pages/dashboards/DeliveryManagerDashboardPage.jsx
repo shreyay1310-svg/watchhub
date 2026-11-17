@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth, ROLES, MOCK_STAFF_ACCOUNTS } from '../../context/AuthContext';
 import DeliveryManagerLayout from '../../components/delivery/DeliveryManagerLayout';
 
@@ -46,14 +47,109 @@ import {
   MessageSquare,
 } from 'lucide-react';
 
-export default function DeliveryManagerDashboardPage() {
+// Error Boundary for resilient delivery module rendering
+class DeliveryErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('[Delivery Manager Render Error]', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="bg-[#11172C] border border-rose-500/50 rounded-2xl p-6 text-white text-center space-y-4 my-8 max-w-xl mx-auto shadow-2xl">
+          <div className="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center text-xl font-bold">
+            ⚠️
+          </div>
+          <h2 className="text-xl font-bold">Delivery Module Initializing</h2>
+          <p className="text-xs text-[#A7B1C2]">
+            {this.state.error?.message || 'Recovering delivery state buffer...'}
+          </p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              window.location.reload();
+            }}
+            className="px-4 py-2 bg-[#6500FF] hover:bg-[#5700db] text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
+          >
+            Reload Module
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+const DELIVERY_PATH_TO_TAB = {
+  '/delivery-manager/dashboard': 'dashboard',
+  '/delivery-manager': 'dashboard',
+  '/delivery': 'dashboard',
+  '/store-admin/delivery': 'dashboard',
+  '/admin/delivery': 'dashboard',
+  '/delivery-manager/orders': 'orders',
+  '/delivery-manager/assign': 'assign',
+  '/delivery-manager/tracking': 'tracking',
+  '/delivery-manager/partners': 'partners',
+  '/delivery-manager/routes': 'routes',
+  '/delivery-manager/attempts': 'attempts',
+  '/delivery-manager/returns': 'returns',
+  '/delivery-manager/reports': 'reports',
+  '/delivery-manager/areas': 'areas',
+  '/delivery-manager/settings': 'settings',
+};
+
+const DELIVERY_TAB_TO_PATH = {
+  dashboard: '/delivery-manager/dashboard',
+  orders: '/delivery-manager/orders',
+  assign: '/delivery-manager/assign',
+  tracking: '/delivery-manager/tracking',
+  partners: '/delivery-manager/partners',
+  routes: '/delivery-manager/routes',
+  attempts: '/delivery-manager/attempts',
+  returns: '/delivery-manager/returns',
+  reports: '/delivery-manager/reports',
+  areas: '/delivery-manager/areas',
+  settings: '/delivery-manager/settings',
+};
+
+export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' }) {
   const { user, setUser } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getTabFromPath = () => {
+    if (initialTab && initialTab !== 'dashboard') return initialTab;
+    const path = (location.pathname || '').toLowerCase().replace(/\/$/, '');
+    return DELIVERY_PATH_TO_TAB[path] || initialTab || 'dashboard';
+  };
 
   // Navigation tab state
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(getTabFromPath);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState('');
+
+  // Keep activeTab in sync with browser URL changes
+  useEffect(() => {
+    const tab = getTabFromPath();
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [location.pathname, initialTab]);
+
+  const handleSelectTab = (tabId) => {
+    setActiveTab(tabId);
+    const targetPath = DELIVERY_TAB_TO_PATH[tabId];
+    if (targetPath && location.pathname !== targetPath) {
+      navigate(targetPath);
+    }
+  };
 
   // Live Application State
   const [stats, setStats] = useState(INITIAL_DELIVERY_STATS);
@@ -356,7 +452,7 @@ export default function DeliveryManagerDashboardPage() {
   return (
     <DeliveryManagerLayout
       activeTab={activeTab}
-      setActiveTab={setActiveTab}
+      setActiveTab={handleSelectTab}
       sidebarCollapsed={sidebarCollapsed}
       setSidebarCollapsed={setSidebarCollapsed}
       searchQuery={searchQuery}
@@ -372,128 +468,130 @@ export default function DeliveryManagerDashboardPage() {
         </div>
       )}
 
-      {/* RENDER THE ACTIVE DEDICATED MODULE */}
-      {activeTab === 'dashboard' && (
-        <DashboardModule
-          stats={stats}
-          statusBreakdown={statusBreakdown}
-          orders={orders}
-          riders={riders}
-          couriers={couriers}
-          setActiveTab={setActiveTab}
-          onOpenCreateShipment={() => setShowCreateShipmentModal(true)}
-          onSelectOrderForTracking={(order) => {
-            setSelectedOrderForTracking(order);
-            setActiveTab('tracking');
-          }}
-          onSelectOrderForDetail={(order) => setSelectedOrderForDetail(order)}
-        />
-      )}
+      {/* RENDER THE ACTIVE DEDICATED MODULE (Protected by DeliveryErrorBoundary) */}
+      <DeliveryErrorBoundary>
+        {activeTab === 'dashboard' && (
+          <DashboardModule
+            stats={stats}
+            statusBreakdown={statusBreakdown}
+            orders={orders}
+            riders={riders}
+            couriers={couriers}
+            setActiveTab={handleSelectTab}
+            onOpenCreateShipment={() => setShowCreateShipmentModal(true)}
+            onSelectOrderForTracking={(order) => {
+              setSelectedOrderForTracking(order);
+              handleSelectTab('tracking');
+            }}
+            onSelectOrderForDetail={(order) => setSelectedOrderForDetail(order)}
+          />
+        )}
 
-      {activeTab === 'orders' && (
-        <DeliveryOrdersModule
-          orders={orders}
-          riders={riders}
-          couriers={couriers}
-          onOpenCreateShipment={() => setShowCreateShipmentModal(true)}
-          onSelectOrderForTracking={(order) => {
-            setSelectedOrderForTracking(order);
-            setActiveTab('tracking');
-          }}
-          onSelectOrderForDetail={(order) => setSelectedOrderForDetail(order)}
-          onUpdateOrderStatus={handleUpdateOrderStatus}
-          onAssignOrder={(order) => {
-            setActiveTab('assign');
-          }}
-        />
-      )}
+        {activeTab === 'orders' && (
+          <DeliveryOrdersModule
+            orders={orders}
+            riders={riders}
+            couriers={couriers}
+            onOpenCreateShipment={() => setShowCreateShipmentModal(true)}
+            onSelectOrderForTracking={(order) => {
+              setSelectedOrderForTracking(order);
+              handleSelectTab('tracking');
+            }}
+            onSelectOrderForDetail={(order) => setSelectedOrderForDetail(order)}
+            onUpdateOrderStatus={handleUpdateOrderStatus}
+            onAssignOrder={(order) => {
+              handleSelectTab('assign');
+            }}
+          />
+        )}
 
-      {activeTab === 'assign' && (
-        <AssignDeliveriesModule
-          orders={orders}
-          riders={riders}
-          couriers={couriers}
-          onAssignOrders={handleAssignOrders}
-        />
-      )}
+        {activeTab === 'assign' && (
+          <AssignDeliveriesModule
+            orders={orders}
+            riders={riders}
+            couriers={couriers}
+            onAssignOrders={handleAssignOrders}
+          />
+        )}
 
-      {activeTab === 'tracking' && (
-        <ShipmentTrackingModule
-          orders={orders}
-          riders={riders}
-          selectedOrder={selectedOrderForTracking}
-          onSelectOrder={(o) => setSelectedOrderForTracking(o)}
-          onAddTrackingEvent={handleAddTrackingEvent}
-        />
-      )}
+        {activeTab === 'tracking' && (
+          <ShipmentTrackingModule
+            orders={orders}
+            riders={riders}
+            selectedOrder={selectedOrderForTracking}
+            onSelectOrder={(o) => setSelectedOrderForTracking(o)}
+            onAddTrackingEvent={handleAddTrackingEvent}
+          />
+        )}
 
-      {activeTab === 'partners' && (
-        <DeliveryPartnersModule
-          couriers={couriers}
-          riders={riders}
-          onAddPartner={handleAddPartner}
-          onAddRider={handleAddRider}
-          onToggleRiderStatus={handleToggleRiderStatus}
-          onTogglePartnerStatus={handleTogglePartnerStatus}
-        />
-      )}
+        {activeTab === 'partners' && (
+          <DeliveryPartnersModule
+            couriers={couriers}
+            riders={riders}
+            onAddPartner={handleAddPartner}
+            onAddRider={handleAddRider}
+            onToggleRiderStatus={handleToggleRiderStatus}
+            onTogglePartnerStatus={handleTogglePartnerStatus}
+          />
+        )}
 
-      {activeTab === 'routes' && (
-        <RoutePlanningModule
-          routes={routesList}
-          orders={orders}
-          riders={riders}
-          couriers={couriers}
-          onCreateRoute={handleCreateRoute}
-        />
-      )}
+        {activeTab === 'routes' && (
+          <RoutePlanningModule
+            routes={routesList}
+            orders={orders}
+            riders={riders}
+            couriers={couriers}
+            onCreateRoute={handleCreateRoute}
+          />
+        )}
 
-      {activeTab === 'attempts' && (
-        <DeliveryAttemptsModule
-          attempts={attempts}
-          orders={orders}
-          riders={riders}
-          onRecordAttempt={handleRecordAttempt}
-          onScheduleReattempt={(attemptId) => {
-            triggerToast('Reattempt scheduled for next delivery morning slot');
-          }}
-        />
-      )}
+        {activeTab === 'attempts' && (
+          <DeliveryAttemptsModule
+            attempts={attempts}
+            orders={orders}
+            riders={riders}
+            onRecordAttempt={handleRecordAttempt}
+            onScheduleReattempt={(attemptId) => {
+              triggerToast('Reattempt scheduled for next delivery morning slot');
+            }}
+          />
+        )}
 
-      {activeTab === 'returns' && (
-        <ReturnsPickupsModule
-          returns={returnsList}
-          orders={orders}
-          riders={riders}
-          onUpdateReturnStatus={handleUpdateReturnStatus}
-          onScheduleReturnPickup={handleScheduleReturnPickup}
-        />
-      )}
+        {activeTab === 'returns' && (
+          <ReturnsPickupsModule
+            returns={returnsList}
+            orders={orders}
+            riders={riders}
+            onUpdateReturnStatus={handleUpdateReturnStatus}
+            onScheduleReturnPickup={handleScheduleReturnPickup}
+          />
+        )}
 
-      {activeTab === 'reports' && (
-        <DeliveryReportsModule
-          orders={orders}
-          riders={riders}
-          couriers={couriers}
-          attempts={attempts}
-          returns={returnsList}
-        />
-      )}
+        {activeTab === 'reports' && (
+          <DeliveryReportsModule
+            orders={orders}
+            riders={riders}
+            couriers={couriers}
+            attempts={attempts}
+            returns={returnsList}
+          />
+        )}
 
-      {activeTab === 'areas' && (
-        <ServiceAreasModule
-          serviceAreas={serviceAreas}
-          onAddArea={handleAddServiceArea}
-          onToggleAreaStatus={handleToggleAreaStatus}
-        />
-      )}
+        {activeTab === 'areas' && (
+          <ServiceAreasModule
+            serviceAreas={serviceAreas}
+            onAddArea={handleAddServiceArea}
+            onToggleAreaStatus={handleToggleAreaStatus}
+          />
+        )}
 
-      {activeTab === 'settings' && (
-        <DeliverySettingsModule
-          settings={settings}
-          onSaveSettings={handleSaveSettings}
-        />
-      )}
+        {activeTab === 'settings' && (
+          <DeliverySettingsModule
+            settings={settings}
+            onSaveSettings={handleSaveSettings}
+          />
+        )}
+      </DeliveryErrorBoundary>
 
       {/* MODAL: ORDER DETAILS DRAWER / MODAL */}
       {selectedOrderForDetail && (

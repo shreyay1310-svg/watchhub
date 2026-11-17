@@ -17,20 +17,25 @@ import {
 } from 'lucide-react';
 
 export const RoutePlanningModule = ({
-  routes,
-  orders,
-  riders,
-  couriers,
-  onCreateRoute,
+  routes = [],
+  orders = [],
+  riders = [],
+  couriers = [],
+  onCreateRoute = () => {},
 }) => {
-  const [activeRouteId, setActiveRouteId] = useState(routes[0]?.routeId || '');
+  const safeRoutes = Array.isArray(routes) ? routes : [];
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
+  const safeCouriers = Array.isArray(couriers) ? couriers : [];
+
+  const [activeRouteId, setActiveRouteId] = useState(safeRoutes[0]?.routeId || '');
   const [selectedRiderId, setSelectedRiderId] = useState('rd_001');
   const [startingWarehouse, setStartingWarehouse] = useState('Central Vault WH-01, New Delhi');
   const [selectedPartner, setSelectedPartner] = useState('Blue Dart Express');
   const [priority, setPriority] = useState('Urgent Express');
   const [selectedOrderIds, setSelectedOrderIds] = useState(['WH-ORD-9021', 'WH-ORD-9027']);
 
-  const currentRoute = routes.find((r) => r.routeId === activeRouteId) || routes[0];
+  const currentRoute = safeRoutes.find((r) => r.routeId === activeRouteId) || safeRoutes[0] || null;
 
   // Route sequence optimization algorithm simulation
   const [isOptimizing, setIsOptimizing] = useState(false);
@@ -47,7 +52,7 @@ export const RoutePlanningModule = ({
 
   const handleCreateNewRoute = (e) => {
     e.preventDefault();
-    const rider = riders.find((r) => r.id === selectedRiderId) || riders[0];
+    const rider = safeRiders.find((r) => r.id === selectedRiderId) || safeRiders[0] || { city: 'New Delhi', id: 'rd_001', name: 'Rohan Singh' };
     const newRoute = {
       routeId: `RT-${Math.floor(100 + Math.random() * 900)}`,
       routeName: `${rider.city} Priority Express Loop`,

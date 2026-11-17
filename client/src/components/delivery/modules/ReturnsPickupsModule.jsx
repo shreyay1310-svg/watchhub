@@ -18,29 +18,33 @@ import {
 } from 'lucide-react';
 
 export const ReturnsPickupsModule = ({
-  returns,
-  orders,
-  riders,
-  onUpdateReturnStatus,
-  onScheduleReturnPickup,
+  returns = [],
+  orders = [],
+  riders = [],
+  onUpdateReturnStatus = () => {},
+  onScheduleReturnPickup = () => {},
 }) => {
+  const safeReturns = Array.isArray(returns) ? returns : [];
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
+
   const [selectedReturnDetail, setSelectedReturnDetail] = useState(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [scheduleReturnTarget, setScheduleReturnTarget] = useState(null);
 
   const [scheduleForm, setScheduleForm] = useState({
-    riderId: riders[0]?.id || '',
+    riderId: safeRiders[0]?.id || '',
     pickupDate: '18 Nov 2026, 02:00 PM',
     notes: 'Verify tamper seal before picking up from customer.',
   });
 
   // KPI Calculations
-  const totalReturns = returns.length;
-  const pendingPickup = returns.filter((r) => r.returnStatus === 'Return Requested' || r.returnStatus === 'Approved').length;
-  const pickupAssigned = returns.filter((r) => r.returnStatus === 'Pickup Assigned').length;
-  const pickedUp = returns.filter((r) => r.returnStatus === 'Picked Up' || r.returnStatus === 'In Transit').length;
-  const receivedAtWarehouse = returns.filter((r) => r.returnStatus === 'Received at Warehouse' || r.returnStatus === 'Inspection').length;
-  const completed = returns.filter((r) => r.returnStatus === 'Completed').length;
+  const totalReturns = safeReturns.length;
+  const pendingPickup = safeReturns.filter((r) => r?.returnStatus === 'Return Requested' || r?.returnStatus === 'Approved').length;
+  const pickupAssigned = safeReturns.filter((r) => r?.returnStatus === 'Pickup Assigned').length;
+  const pickedUp = safeReturns.filter((r) => r?.returnStatus === 'Picked Up' || r?.returnStatus === 'In Transit').length;
+  const receivedAtWarehouse = safeReturns.filter((r) => r?.returnStatus === 'Received at Warehouse' || r?.returnStatus === 'Inspection').length;
+  const completed = safeReturns.filter((r) => r?.returnStatus === 'Completed').length;
 
   const handleScheduleSubmit = (e) => {
     e.preventDefault();
@@ -152,7 +156,7 @@ export const ReturnsPickupsModule = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#28334B] text-white">
-              {returns.map((ret) => (
+              {safeReturns.map((ret) => (
                 <tr key={ret.returnId} className="hover:bg-white/5 transition-colors">
                   {/* Return ID */}
                   <td className="py-3 pl-4 font-mono font-bold text-[#00D5FF] whitespace-nowrap">

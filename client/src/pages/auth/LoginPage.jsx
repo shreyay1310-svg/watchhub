@@ -50,7 +50,7 @@ export const LoginPage = () => {
     try {
       const saved = localStorage.getItem('watchhub_google_accounts');
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { }
     return [
       {
         id: 'acc_shreyas',
@@ -245,7 +245,7 @@ export const LoginPage = () => {
     setGoogleAccounts(updated);
     try {
       localStorage.setItem('watchhub_google_accounts', JSON.stringify(updated));
-    } catch {}
+    } catch { }
 
     // Instantly authenticate with this new Google account
     handleGoogleSelect(newAcc.name, newAcc.email);
@@ -276,7 +276,7 @@ export const LoginPage = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: tenDigit, otp: otp }),
         }).catch((err) => console.log('[Fast2SMS]', err));
-      } catch (err) {}
+      } catch (err) { }
 
       // Trigger Realistic Simulated Mobile SMS Toast
       setSmsToast({
@@ -342,7 +342,7 @@ export const LoginPage = () => {
 
       {/* 2-Column Luxury Split Card matching Reference Design */}
       <div className="w-full max-w-5xl rounded-[28px] overflow-hidden shadow-2xl border border-white/10 bg-[#0A101A] grid grid-cols-1 lg:grid-cols-12 relative z-10">
-        
+
         {/* ════════════════════════════════════════════════════════════════
             LEFT EDITORIAL PANEL: Pure, Uncompromised Luxury Watch Visual
             ════════════════════════════════════════════════════════════════ */}
@@ -366,7 +366,7 @@ export const LoginPage = () => {
             RIGHT LOGIN CARD: Warm Ivory, Seamless 5-Tab Bar & Form
             ════════════════════════════════════════════════════════════════ */}
         <div className="lg:col-span-5 bg-[#FAF7F2] lg:rounded-l-[28px] p-6 sm:p-10 flex flex-col justify-between shadow-[-15px_0_35px_rgba(0,0,0,0.25)] relative z-20">
-          
+
           <div>
             {/* 1. Horizontal Segmented Role Tabs (5 Clean Segments, No Text Cut-Off) */}
             <div className="grid grid-cols-5 gap-1.5 p-1 bg-[#F2EDE4] rounded-xl border border-[#E8E2D5] mb-6">
@@ -378,11 +378,10 @@ export const LoginPage = () => {
                     key={tab.id}
                     type="button"
                     onClick={() => handleRoleSelect(tab)}
-                    className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-lg text-center transition-all ${
-                      isActive
-                        ? 'bg-gradient-to-b from-[#C4913B] to-[#AD7929] text-white shadow-sm font-semibold'
-                        : 'text-[#4A5568] hover:text-[#1A202C] hover:bg-white/60'
-                    }`}
+                    className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-lg text-center transition-all ${isActive
+                      ? 'bg-gradient-to-b from-[#C4913B] to-[#AD7929] text-white shadow-sm font-semibold'
+                      : 'text-[#4A5568] hover:text-[#1A202C] hover:bg-white/60'
+                      }`}
                     title={`${tab.line1} ${tab.line2}`.trim()}
                   >
                     <Icon className={`w-4 h-4 mb-1 ${isActive ? 'text-white' : 'text-[#4A5568]'}`} strokeWidth={1.8} />
@@ -756,8 +755,8 @@ export const LoginPage = () => {
             <p className="text-xs text-gray-500 mt-0.5 mb-4">
               {forgotStep === 1
                 ? (forgotChannel === 'phone'
-                    ? 'Enter customer mobile number to receive an instant verification OTP via SMS.'
-                    : 'Enter your registered email address to receive an instant verification OTP.')
+                  ? 'Enter customer mobile number to receive an instant verification OTP via SMS.'
+                  : 'Enter your registered email address to receive an instant verification OTP.')
                 : `Enter the 6-digit OTP sent to your ${forgotChannel === 'phone' ? 'mobile number' : 'email'} and choose your new password.`}
             </p>
 
@@ -770,11 +769,10 @@ export const LoginPage = () => {
                     setForgotChannel('phone');
                     setForgotError('');
                   }}
-                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-                    forgotChannel === 'phone'
-                      ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
-                      : 'text-gray-500 hover:text-gray-800'
-                  }`}
+                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${forgotChannel === 'phone'
+                    ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
+                    : 'text-gray-500 hover:text-gray-800'
+                    }`}
                 >
                   <Smartphone className="w-4 h-4" />
                   <span>Mobile SMS OTP</span>
@@ -785,11 +783,10 @@ export const LoginPage = () => {
                     setForgotChannel('email');
                     setForgotError('');
                   }}
-                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-                    forgotChannel === 'email'
-                      ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
-                      : 'text-gray-500 hover:text-gray-800'
-                  }`}
+                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${forgotChannel === 'email'
+                    ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
+                    : 'text-gray-500 hover:text-gray-800'
+                    }`}
                 >
                   <Mail className="w-4 h-4" />
                   <span>Email Address</span>

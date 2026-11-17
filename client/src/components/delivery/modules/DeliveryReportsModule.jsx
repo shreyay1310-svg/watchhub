@@ -33,12 +33,18 @@ import {
 } from 'recharts';
 
 export const DeliveryReportsModule = ({
-  orders,
-  riders,
-  couriers,
-  attempts,
-  returns,
+  orders = [],
+  riders = [],
+  couriers = [],
+  attempts = [],
+  returns = [],
 }) => {
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
+  const safeCouriers = Array.isArray(couriers) ? couriers : [];
+  const safeAttempts = Array.isArray(attempts) ? attempts : [];
+  const safeReturns = Array.isArray(returns) ? returns : [];
+
   const [selectedReportId, setSelectedReportId] = useState('daily');
   const [dateFilter, setDateFilter] = useState('This Month (Nov 2026)');
   const [cityFilter, setCityFilter] = useState('All');
@@ -83,7 +89,7 @@ export const DeliveryReportsModule = ({
     const reportTitle = REPORT_CATEGORIES.find((r) => r.id === selectedReportId)?.name || 'Delivery Report';
     let content = `WatchHub Enterprise Logistics - ${reportTitle}\nDate Generated: ${new Date().toLocaleString()}\nFilter: ${dateFilter}\n\n`;
     content += 'Order ID,Customer,City,Courier,Rider,Status,Amount\n';
-    orders.forEach((o) => {
+    safeOrders.forEach((o) => {
       content += `${o.orderId},"${o.customerName}",${o.city},"${o.deliveryPartner}","${o.rider}",${o.deliveryStatus},${o.orderAmount}\n`;
     });
 

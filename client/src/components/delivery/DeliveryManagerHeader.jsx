@@ -101,7 +101,7 @@ export const DeliveryManagerHeader = ({
             <span className="font-semibold text-white">Logistics Hub</span>
             <span>/</span>
             <span className="text-[#E9B94F] font-bold capitalize">
-              {activeTab.replace('-', ' ')}
+              {(activeTab || 'dashboard').replace(/-/g, ' ')}
             </span>
           </div>
         </div>

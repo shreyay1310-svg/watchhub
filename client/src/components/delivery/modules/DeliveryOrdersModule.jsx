@@ -25,15 +25,19 @@ import {
 } from 'lucide-react';
 
 export const DeliveryOrdersModule = ({
-  orders,
-  riders,
-  couriers,
-  onOpenCreateShipment,
-  onSelectOrderForTracking,
-  onSelectOrderForDetail,
-  onUpdateOrderStatus,
-  onAssignOrder,
+  orders = [],
+  riders = [],
+  couriers = [],
+  onOpenCreateShipment = () => {},
+  onSelectOrderForTracking = () => {},
+  onSelectOrderForDetail = () => {},
+  onUpdateOrderStatus = () => {},
+  onAssignOrder = () => {},
 }) => {
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
+  const safeCouriers = Array.isArray(couriers) ? couriers : [];
+
   // Filter states
   const [selectedStatusTab, setSelectedStatusTab] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,20 +57,20 @@ export const DeliveryOrdersModule = ({
   // Status Counts for KPI cards
   const counts = useMemo(() => {
     return {
-      all: orders.length,
-      pending: orders.filter((o) => o.deliveryStatus === 'Pending').length,
-      processing: orders.filter((o) => o.deliveryStatus === 'Processing').length,
-      dispatched: orders.filter((o) => o.deliveryStatus === 'Dispatched').length,
-      inTransit: orders.filter((o) => o.deliveryStatus === 'In Transit').length,
-      delivered: orders.filter((o) => o.deliveryStatus === 'Delivered').length,
-      failed: orders.filter((o) => o.deliveryStatus === 'Failed').length,
-      cancelled: orders.filter((o) => o.deliveryStatus === 'Cancelled').length,
+      all: safeOrders.length,
+      pending: safeOrders.filter((o) => o?.deliveryStatus === 'Pending').length,
+      processing: safeOrders.filter((o) => o?.deliveryStatus === 'Processing').length,
+      dispatched: safeOrders.filter((o) => o?.deliveryStatus === 'Dispatched').length,
+      inTransit: safeOrders.filter((o) => o?.deliveryStatus === 'In Transit').length,
+      delivered: safeOrders.filter((o) => o?.deliveryStatus === 'Delivered').length,
+      failed: safeOrders.filter((o) => o?.deliveryStatus === 'Failed').length,
+      cancelled: safeOrders.filter((o) => o?.deliveryStatus === 'Cancelled').length,
     };
-  }, [orders]);
+  }, [safeOrders]);
 
   // Filtered Orders
   const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
+    return safeOrders.filter((order) => {
       // Tab filter
       if (selectedStatusTab !== 'All') {
         if (selectedStatusTab === 'Out for Delivery') {

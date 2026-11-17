@@ -16,19 +16,23 @@ import {
 } from 'lucide-react';
 
 export const DeliveryAttemptsModule = ({
-  attempts,
-  orders,
-  riders,
-  onRecordAttempt,
-  onScheduleReattempt,
+  attempts = [],
+  orders = [],
+  riders = [],
+  onRecordAttempt = () => {},
+  onScheduleReattempt = () => {},
 }) => {
+  const safeAttempts = Array.isArray(attempts) ? attempts : [];
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
+
   const [showRecordModal, setShowRecordModal] = useState(false);
   const [selectedAttemptDetail, setSelectedAttemptDetail] = useState(null);
 
   // New Attempt Form
   const [attemptForm, setAttemptForm] = useState({
-    orderId: orders[0]?.orderId || '',
-    riderId: riders[0]?.id || '',
+    orderId: safeOrders[0]?.orderId || '',
+    riderId: safeRiders[0]?.id || '',
     attemptDate: '17 Nov 2026',
     attemptTime: '01:30 PM',
     attemptNumber: 1,
@@ -40,10 +44,10 @@ export const DeliveryAttemptsModule = ({
   });
 
   // KPI Calculations
-  const totalAttempts = attempts.length;
-  const successfulAttempts = attempts.filter((a) => a.deliveryResult === 'Successful').length;
-  const failedAttempts = attempts.filter((a) => a.deliveryResult === 'Failed').length;
-  const pendingReattempts = attempts.filter((a) => a.status === 'Pending Reattempt').length;
+  const totalAttempts = safeAttempts.length;
+  const successfulAttempts = safeAttempts.filter((a) => a?.deliveryResult === 'Successful').length;
+  const failedAttempts = safeAttempts.filter((a) => a?.deliveryResult === 'Failed').length;
+  const pendingReattempts = safeAttempts.filter((a) => a?.status === 'Pending Reattempt').length;
 
   const handleSubmitAttempt = (e) => {
     e.preventDefault();
@@ -157,7 +161,7 @@ export const DeliveryAttemptsModule = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#28334B] text-white">
-              {attempts.map((att) => (
+              {safeAttempts.map((att) => (
                 <tr key={att.attemptId} className="hover:bg-white/5 transition-colors">
                   {/* Attempt ID */}
                   <td className="py-3 pl-4 font-mono text-[11px] font-bold text-[#00D5FF] whitespace-nowrap">

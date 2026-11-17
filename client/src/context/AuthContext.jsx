@@ -76,8 +76,13 @@ export const MOCK_STAFF_ACCOUNTS = {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('watchhub_auth_user');
-    return saved ? JSON.parse(saved) : MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER];
+    try {
+      const saved = localStorage.getItem('watchhub_auth_user');
+      return saved ? JSON.parse(saved) : MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER];
+    } catch (e) {
+      console.warn('Failed to parse saved user from localStorage', e);
+      return MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER];
+    }
   });
   const [token, setToken] = useState(() => localStorage.getItem('watchhub_token') || 'mock_jwt_token_2026');
   const [loading, setLoading] = useState(false);
@@ -340,6 +345,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         token,
         loading,
         login,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Truck,
@@ -21,17 +21,17 @@ import {
 import { useAuth } from '../../context/AuthContext';
 
 export const DELIVERY_NAV_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'orders', label: 'Delivery Orders', icon: Truck, badge: '28' },
-  { id: 'assign', label: 'Assign Deliveries', icon: UserCheck, badge: '2' },
-  { id: 'tracking', label: 'Shipment Tracking', icon: MapPin },
-  { id: 'partners', label: 'Delivery Partners', icon: Users, badge: '6' },
-  { id: 'routes', label: 'Route Planning', icon: Compass },
-  { id: 'attempts', label: 'Delivery Attempts', icon: AlertTriangle, badge: '3', badgeColor: '#FF4966' },
-  { id: 'returns', label: 'Returns & Pickups', icon: RotateCcw, badge: '3', badgeColor: '#FFB020' },
-  { id: 'reports', label: 'Delivery Reports', icon: FileBarChart2 },
-  { id: 'areas', label: 'Service Areas', icon: Layers, badge: '5' },
-  { id: 'settings', label: 'Settings', icon: Settings },
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/delivery-manager/dashboard' },
+  { id: 'orders', label: 'Delivery Orders', icon: Truck, badge: '28', path: '/delivery-manager/orders' },
+  { id: 'assign', label: 'Assign Deliveries', icon: UserCheck, badge: '2', path: '/delivery-manager/assign' },
+  { id: 'tracking', label: 'Shipment Tracking', icon: MapPin, path: '/delivery-manager/tracking' },
+  { id: 'partners', label: 'Delivery Partners', icon: Users, badge: '6', path: '/delivery-manager/partners' },
+  { id: 'routes', label: 'Route Planning', icon: Compass, path: '/delivery-manager/routes' },
+  { id: 'attempts', label: 'Delivery Attempts', icon: AlertTriangle, badge: '3', badgeColor: '#FF4966', path: '/delivery-manager/attempts' },
+  { id: 'returns', label: 'Returns & Pickups', icon: RotateCcw, badge: '3', badgeColor: '#FFB020', path: '/delivery-manager/returns' },
+  { id: 'reports', label: 'Delivery Reports', icon: FileBarChart2, path: '/delivery-manager/reports' },
+  { id: 'areas', label: 'Service Areas', icon: Layers, badge: '5', path: '/delivery-manager/areas' },
+  { id: 'settings', label: 'Settings', icon: Settings, path: '/delivery-manager/settings' },
 ];
 
 export const DeliveryManagerSidebar = ({
@@ -42,6 +42,7 @@ export const DeliveryManagerSidebar = ({
 }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -83,12 +84,18 @@ export const DeliveryManagerSidebar = ({
         <div className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-185px)] custom-scrollbar">
           {DELIVERY_NAV_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
+            const currentPath = (location.pathname || '').replace(/\/$/, '');
+            const isActive = activeTab === item.id || currentPath === item.path;
 
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  if (setActiveTab) setActiveTab(item.id);
+                  if (item.path && location.pathname !== item.path) {
+                    navigate(item.path);
+                  }
+                }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer group relative ${
                   isActive
                     ? 'bg-gradient-to-r from-[#6500FF] to-[#8B00FF] text-white font-bold shadow-md shadow-[#6500FF]/40 border border-[#8B00FF]/50'

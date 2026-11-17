@@ -20,13 +20,16 @@ import {
 } from 'lucide-react';
 
 export const DeliveryPartnersModule = ({
-  couriers,
-  riders,
-  onAddPartner,
-  onAddRider,
-  onToggleRiderStatus,
-  onTogglePartnerStatus,
+  couriers = [],
+  riders = [],
+  onAddPartner = () => {},
+  onAddRider = () => {},
+  onToggleRiderStatus = () => {},
+  onTogglePartnerStatus = () => {},
 }) => {
+  const safeCouriers = Array.isArray(couriers) ? couriers : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
+
   const [activeTab, setActiveTab] = useState('partners'); // 'partners' | 'riders'
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -58,11 +61,11 @@ export const DeliveryPartnersModule = ({
   });
 
   // KPI Calculations
-  const totalPartners = couriers.length;
-  const activePartners = couriers.filter((c) => c.status === 'Active').length;
-  const availableRiders = riders.filter((r) => r.status === 'Available').length;
-  const busyRiders = riders.filter((r) => r.status === 'On Delivery' || r.status === 'Busy').length;
-  const offlineRiders = riders.filter((r) => r.status === 'Offline').length;
+  const totalPartners = safeCouriers.length;
+  const activePartners = safeCouriers.filter((c) => c?.status === 'Active').length;
+  const availableRiders = safeRiders.filter((r) => r?.status === 'Available').length;
+  const busyRiders = safeRiders.filter((r) => r?.status === 'On Delivery' || r?.status === 'Busy').length;
+  const offlineRiders = safeRiders.filter((r) => r?.status === 'Offline').length;
 
   const handlePartnerSubmit = (e) => {
     e.preventDefault();
@@ -216,7 +219,7 @@ export const DeliveryPartnersModule = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#28334B] text-white">
-                {couriers.map((partner) => {
+                {safeCouriers.map((partner) => {
                   const successRate = partner.totalShipments > 0
                     ? Math.round((partner.successfulDeliveries / partner.totalShipments) * 100)
                     : 100;
@@ -328,7 +331,7 @@ export const DeliveryPartnersModule = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#28334B] text-white">
-                {riders.map((rider) => (
+                {safeRiders.map((rider) => (
                   <tr key={rider.id} className="hover:bg-white/5 transition-colors">
                     {/* Rider Photo & Name */}
                     <td className="py-3 pl-4 whitespace-nowrap">

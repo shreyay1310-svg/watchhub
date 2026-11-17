@@ -28,6 +28,7 @@ import {
   Bike,
   Navigation,
   Sparkles,
+  UserCheck,
 } from 'lucide-react';
 
 const waveDataTotal = [{ v: 30 }, { v: 45 }, { v: 35 }, { v: 60 }, { v: 55 }, { v: 80 }, { v: 72 }];
@@ -38,19 +39,25 @@ const waveDataReturns = [{ v: 10 }, { v: 8 }, { v: 12 }, { v: 7 }, { v: 9 }, { v
 const waveDataFailed = [{ v: 6 }, { v: 4 }, { v: 5 }, { v: 3 }, { v: 4 }, { v: 2 }, { v: 1 }];
 
 export const DashboardModule = ({
-  stats,
-  statusBreakdown,
-  orders,
-  riders,
-  couriers,
-  setActiveTab,
-  onOpenCreateShipment,
-  onSelectOrderForTracking,
-  onSelectOrderForDetail,
+  stats = {},
+  statusBreakdown = [],
+  orders = [],
+  riders = [],
+  couriers = [],
+  setActiveTab = () => {},
+  onOpenCreateShipment = () => {},
+  onSelectOrderForTracking = () => {},
+  onSelectOrderForDetail = () => {},
 }) => {
-  const availableRiders = riders.filter((r) => r.status === 'Available').length;
-  const busyRiders = riders.filter((r) => r.status === 'On Delivery' || r.status === 'Busy').length;
-  const offlineRiders = riders.filter((r) => r.status === 'Offline').length;
+  const safeStats = stats || {};
+  const safeRiders = Array.isArray(riders) ? riders : [];
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeCouriers = Array.isArray(couriers) ? couriers : [];
+  const safeBreakdown = Array.isArray(statusBreakdown) ? statusBreakdown : [];
+
+  const availableRiders = safeRiders.filter((r) => r?.status === 'Available').length;
+  const busyRiders = safeRiders.filter((r) => r?.status === 'On Delivery' || r?.status === 'Busy').length;
+  const offlineRiders = safeRiders.filter((r) => r?.status === 'Offline').length;
 
   return (
     <div className="space-y-6">

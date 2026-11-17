@@ -18,10 +18,11 @@ import {
 } from 'lucide-react';
 
 export const ServiceAreasModule = ({
-  serviceAreas,
-  onAddArea,
-  onToggleAreaStatus,
+  serviceAreas = [],
+  onAddArea = () => {},
+  onToggleAreaStatus = () => {},
 }) => {
+  const safeAreas = Array.isArray(serviceAreas) ? serviceAreas : [];
   const [showAddModal, setShowAddModal] = useState(false);
   const [pinSearchQuery, setPinSearchQuery] = useState('');
   const [serviceCheckResult, setServiceCheckResult] = useState(null);
@@ -47,11 +48,11 @@ export const ServiceAreasModule = ({
     const q = pinSearchQuery.trim().toLowerCase();
 
     // Look for matching area by city name or pincode substring
-    const matched = serviceAreas.find(
+    const matched = safeAreas.find(
       (a) =>
-        a.city.toLowerCase().includes(q) ||
-        a.pincodes.toLowerCase().includes(q) ||
-        a.areaName.toLowerCase().includes(q)
+        a?.city?.toLowerCase().includes(q) ||
+        a?.pincodes?.toLowerCase().includes(q) ||
+        a?.areaName?.toLowerCase().includes(q)
     );
 
     if (matched && matched.status === 'Active') {
@@ -202,7 +203,7 @@ export const ServiceAreasModule = ({
 
       {/* 3. SERVICE AREA CARDS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {serviceAreas.map((area) => (
+        {safeAreas.map((area) => (
           <div
             key={area.areaId}
             className="p-5 rounded-2xl bg-[#11172C] border border-[#28334B] hover:border-[#6500FF]/50 transition-all shadow-xl flex flex-col justify-between"

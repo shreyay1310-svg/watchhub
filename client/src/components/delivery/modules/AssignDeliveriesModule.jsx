@@ -18,11 +18,15 @@ import {
 } from 'lucide-react';
 
 export const AssignDeliveriesModule = ({
-  orders,
-  riders,
-  couriers,
-  onAssignOrders,
+  orders = [],
+  riders = [],
+  couriers = [],
+  onAssignOrders = () => {},
 }) => {
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
+  const safeCouriers = Array.isArray(couriers) ? couriers : [];
+
   // Selected orders (array of Order IDs)
   const [selectedOrderIds, setSelectedOrderIds] = useState([]);
 
@@ -38,13 +42,13 @@ export const AssignDeliveriesModule = ({
   const [confirmationNotice, setConfirmationNotice] = useState('');
 
   // Unassigned orders
-  const unassignedOrders = orders.filter((o) => o.rider === 'Unassigned' || o.deliveryStatus === 'Pending');
-  const assignedOrders = orders.filter((o) => o.rider !== 'Unassigned' && o.deliveryStatus !== 'Pending');
-  const availableRiders = riders.filter((r) => r.status === 'Available');
+  const unassignedOrders = safeOrders.filter((o) => o?.rider === 'Unassigned' || o?.deliveryStatus === 'Pending');
+  const assignedOrders = safeOrders.filter((o) => o?.rider !== 'Unassigned' && o?.deliveryStatus !== 'Pending');
+  const availableRiders = safeRiders.filter((r) => r?.status === 'Available');
 
   // Selected Rider details
-  const currentRider = riders.find((r) => r.id === selectedRiderId) || riders[0];
-  const currentPartner = couriers.find((c) => c.id === selectedPartnerId) || couriers[0];
+  const currentRider = safeRiders.find((r) => r.id === selectedRiderId) || safeRiders[0] || { name: 'Karan Verma', vehicle: 'DL 01 EV 1000' };
+  const currentPartner = safeCouriers.find((c) => c.id === selectedPartnerId) || safeCouriers[0] || { name: 'Blue Dart Express', badge: 'Tier 1' };
 
   // Toggle order selection
   const handleToggleOrder = (orderId) => {

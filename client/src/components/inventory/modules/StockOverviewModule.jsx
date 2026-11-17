@@ -35,7 +35,7 @@ import {
 export default function StockOverviewModule({
   products = [],
   warehouses = [],
-  onNavigateTab = () => {},
+  onNavigateTab = () => { },
 }) {
   const safeProducts = Array.isArray(products) ? products : [];
   const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
@@ -495,13 +495,12 @@ export default function StockOverviewModule({
                     </td>
                     <td className="py-3 px-4 text-center">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          p.status === 'In Stock'
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                            : p.status === 'Low Stock'
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${p.status === 'In Stock'
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                          : p.status === 'Low Stock'
                             ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
                             : 'bg-rose-500/20 text-rose-400 border border-rose-500/40'
-                        }`}
+                          }`}
                       >
                         {p.status}
                       </span>

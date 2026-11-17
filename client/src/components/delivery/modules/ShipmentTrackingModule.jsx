@@ -17,14 +17,16 @@ import {
 } from 'lucide-react';
 
 export const ShipmentTrackingModule = ({
-  orders,
-  riders,
-  selectedOrder,
-  onSelectOrder,
-  onAddTrackingEvent,
+  orders = [],
+  riders = [],
+  selectedOrder = null,
+  onSelectOrder = () => {},
+  onAddTrackingEvent = () => {},
 }) => {
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeRiders = Array.isArray(riders) ? riders : [];
   const [searchInput, setSearchInput] = useState(selectedOrder?.orderId || '');
-  const [activeOrder, setActiveOrder] = useState(selectedOrder || orders[0]);
+  const [activeOrder, setActiveOrder] = useState(selectedOrder || safeOrders[0] || null);
 
   // Modal to append new checkpoint
   const [showAddEventModal, setShowAddEventModal] = useState(false);
@@ -41,12 +43,12 @@ export const ShipmentTrackingModule = ({
     e.preventDefault();
     if (!searchInput.trim()) return;
     const q = searchInput.toLowerCase().trim();
-    const found = orders.find(
+    const found = safeOrders.find(
       (o) =>
-        o.orderId.toLowerCase().includes(q) ||
-        o.awbNumber.toLowerCase().includes(q) ||
-        o.customerName.toLowerCase().includes(q) ||
-        o.mobileNumber.toLowerCase().includes(q)
+        o?.orderId?.toLowerCase().includes(q) ||
+        o?.awbNumber?.toLowerCase().includes(q) ||
+        o?.customerName?.toLowerCase().includes(q) ||
+        o?.mobileNumber?.toLowerCase().includes(q)
     );
     if (found) {
       setActiveOrder(found);
@@ -113,7 +115,7 @@ export const ShipmentTrackingModule = ({
         {/* Quick Shipment Chips */}
         <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-[#28334B] text-[11px]">
           <span className="text-[#A7B1C2] font-semibold">Quick Track:</span>
-          {orders.slice(0, 4).map((o) => (
+          {safeOrders.slice(0, 4).map((o) => (
             <button
               key={o.orderId}
               type="button"

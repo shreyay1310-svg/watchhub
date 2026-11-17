@@ -24,7 +24,8 @@ import {
   ChevronRight,
   ExternalLink,
   Award,
-  Smartphone
+  Smartphone,
+  Crown
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';

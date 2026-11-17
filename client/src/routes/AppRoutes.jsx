@@ -285,26 +285,66 @@ export const AppRoutes = () => {
         element={<InventoryManagerDashboardPage initialTab="dashboard" />}
       />
 
-      {/* 4. Dedicated Delivery Manager Dashboard Routes */}
+      {/* 4. Dedicated Delivery Manager Dashboard Routes (All 11 Modules) */}
       <Route
         path="/delivery-manager/dashboard"
-        element={<DeliveryManagerDashboardPage />}
+        element={<DeliveryManagerDashboardPage initialTab="dashboard" />}
       />
       <Route
         path="/delivery-manager"
-        element={<DeliveryManagerDashboardPage />}
+        element={<DeliveryManagerDashboardPage initialTab="dashboard" />}
       />
       <Route
         path="/delivery"
-        element={<DeliveryManagerDashboardPage />}
+        element={<DeliveryManagerDashboardPage initialTab="dashboard" />}
+      />
+      <Route
+        path="/delivery-manager/orders"
+        element={<DeliveryManagerDashboardPage initialTab="orders" />}
+      />
+      <Route
+        path="/delivery-manager/assign"
+        element={<DeliveryManagerDashboardPage initialTab="assign" />}
+      />
+      <Route
+        path="/delivery-manager/tracking"
+        element={<DeliveryManagerDashboardPage initialTab="tracking" />}
+      />
+      <Route
+        path="/delivery-manager/partners"
+        element={<DeliveryManagerDashboardPage initialTab="partners" />}
+      />
+      <Route
+        path="/delivery-manager/routes"
+        element={<DeliveryManagerDashboardPage initialTab="routes" />}
+      />
+      <Route
+        path="/delivery-manager/attempts"
+        element={<DeliveryManagerDashboardPage initialTab="attempts" />}
+      />
+      <Route
+        path="/delivery-manager/returns"
+        element={<DeliveryManagerDashboardPage initialTab="returns" />}
+      />
+      <Route
+        path="/delivery-manager/reports"
+        element={<DeliveryManagerDashboardPage initialTab="reports" />}
+      />
+      <Route
+        path="/delivery-manager/areas"
+        element={<DeliveryManagerDashboardPage initialTab="areas" />}
+      />
+      <Route
+        path="/delivery-manager/settings"
+        element={<DeliveryManagerDashboardPage initialTab="settings" />}
       />
       <Route
         path="/store-admin/delivery"
-        element={<DeliveryManagerDashboardPage />}
+        element={<DeliveryManagerDashboardPage initialTab="dashboard" />}
       />
       <Route
         path="/admin/delivery"
-        element={<DeliveryManagerDashboardPage />}
+        element={<DeliveryManagerDashboardPage initialTab="dashboard" />}
       />
 
       {/* 5. Dedicated Delivery Partner App Routes */}

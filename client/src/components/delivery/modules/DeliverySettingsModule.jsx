@@ -16,11 +16,11 @@ import {
 } from 'lucide-react';
 
 export const DeliverySettingsModule = ({
-  settings,
-  onSaveSettings,
+  settings = {},
+  onSaveSettings = () => {},
 }) => {
   const [activeSubTab, setActiveSubTab] = useState('config'); // 'config' | 'notifications' | 'riders' | 'tracking' | 'profile' | 'permissions'
-  const [formState, setFormState] = useState(settings);
+  const [formState, setFormState] = useState(settings || {});
   const [saveSuccessNotice, setSaveSuccessNotice] = useState(false);
 
   const handleSave = (e) => {
