@@ -248,19 +248,23 @@ export const AppRoutes = () => {
       {/* 4. Dedicated Delivery Manager Dashboard Routes */}
       <Route
         path="/delivery-manager/dashboard"
-        element={
-          <RoleProtectedRoute allowedRoles={[ROLES.DELIVERY_MANAGER, 'Delivery Manager', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <DeliveryManagerDashboardPage />
-          </RoleProtectedRoute>
-        }
+        element={<DeliveryManagerDashboardPage />}
       />
       <Route
         path="/delivery-manager"
-        element={
-          <RoleProtectedRoute allowedRoles={[ROLES.DELIVERY_MANAGER, 'Delivery Manager', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <DeliveryManagerDashboardPage />
-          </RoleProtectedRoute>
-        }
+        element={<DeliveryManagerDashboardPage />}
+      />
+      <Route
+        path="/delivery"
+        element={<DeliveryManagerDashboardPage />}
+      />
+      <Route
+        path="/store-admin/delivery"
+        element={<DeliveryManagerDashboardPage />}
+      />
+      <Route
+        path="/admin/delivery"
+        element={<DeliveryManagerDashboardPage />}
       />
 
       {/* 5. Dedicated Delivery Partner App Routes */}

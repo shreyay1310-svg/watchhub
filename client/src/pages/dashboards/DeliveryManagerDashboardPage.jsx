@@ -1,178 +1,100 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useAuth, ROLES, MOCK_STAFF_ACCOUNTS } from '../../context/AuthContext';
+import DeliveryManagerLayout from '../../components/delivery/DeliveryManagerLayout';
+
+// 11 Dedicated Modules
+import DashboardModule from '../../components/delivery/modules/DashboardModule';
+import DeliveryOrdersModule from '../../components/delivery/modules/DeliveryOrdersModule';
+import AssignDeliveriesModule from '../../components/delivery/modules/AssignDeliveriesModule';
+import ShipmentTrackingModule from '../../components/delivery/modules/ShipmentTrackingModule';
+import DeliveryPartnersModule from '../../components/delivery/modules/DeliveryPartnersModule';
+import RoutePlanningModule from '../../components/delivery/modules/RoutePlanningModule';
+import DeliveryAttemptsModule from '../../components/delivery/modules/DeliveryAttemptsModule';
+import ReturnsPickupsModule from '../../components/delivery/modules/ReturnsPickupsModule';
+import DeliveryReportsModule from '../../components/delivery/modules/DeliveryReportsModule';
+import ServiceAreasModule from '../../components/delivery/modules/ServiceAreasModule';
+import DeliverySettingsModule from '../../components/delivery/modules/DeliverySettingsModule';
+
+// Central Data Store
 import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-} from 'recharts';
+  INITIAL_DELIVERY_STATS,
+  SHIPMENT_STATUS_BREAKDOWN,
+  COURIER_PARTNERS,
+  RIDERS_FLEET,
+  INITIAL_DELIVERY_ORDERS,
+  INITIAL_DELIVERY_ATTEMPTS,
+  INITIAL_RETURNS_PICKUPS,
+  INITIAL_SERVICE_AREAS,
+  INITIAL_ROUTES,
+  INITIAL_DELIVERY_SETTINGS,
+} from '../../data/deliveryData';
+
 import {
-  Truck,
-  Package,
   CheckCircle,
-  RotateCcw,
-  AlertTriangle,
-  Search,
-  Bell,
-  Settings,
-  ChevronDown,
-  ChevronRight,
-  ExternalLink,
-  Plus,
-  Compass,
-  MapPin,
-  Phone,
-  Eye,
-  MoreVertical,
   X,
-  Users,
-  Calendar,
-  Layers,
-  ArrowUpRight,
-  ArrowDownRight,
-  Check,
+  Printer,
+  Eye,
+  MapPin,
   Clock,
+  Truck,
+  Phone,
+  Mail,
   ShieldCheck,
-  FileText,
-  Download,
-  Upload,
-  RefreshCw,
-  Navigation,
-  Send,
+  Package,
+  Plus,
   HelpCircle,
-  Crosshair,
-  SlidersHorizontal,
-  Bike,
-  Route,
-  Map,
-  Lock,
+  MessageSquare,
 } from 'lucide-react';
 
-// Status colors matching reference UI
-const STATUS_COLORS = {
-  'Delivered': '#10B981',
-  'Out for Delivery': '#10B981', // green pill in table
-  'In Transit': '#3B82F6',       // blue pill
-  'Assigned': '#D97706',         // amber pill
-  'Picked Up': '#8B5CF6',
-  'Failed': '#EF4444',
-  'Returned': '#6B7280',
-};
-
 export default function DeliveryManagerDashboardPage() {
-  const { user, switchRole, logout } = useAuth();
-  const navigate = useNavigate();
-
-  // Role Verification Check
-  const currentRole = user?.role || ROLES.DELIVERY_MANAGER;
-  const isAuthorizedRole = currentRole === ROLES.DELIVERY_MANAGER || currentRole === ROLES.SUPER_ADMIN;
+  const { user, setUser } = useAuth();
 
   // Navigation tab state
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [roleMenuOpen, setRoleMenuOpen] = useState(false);
-  const [dateRangeOpen, setDateRangeOpen] = useState(false);
-  const [selectedDateRange, setSelectedDateRange] = useState('Last 7 Days');
-
-  // Filter state for orders table
-  const [orderFilterTab, setOrderFilterTab] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [areaFilter, setAreaFilter] = useState('All');
-  const [riderFilter, setRiderFilter] = useState('All');
-  const [courierFilter, setCourierFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
-
-  // Selected orders for batch action
-  const [selectedOrderIds, setSelectedOrderIds] = useState([]);
-
-  // Data states from backend
-  const [loading, setLoading] = useState(true);
-  const [deliveryData, setDeliveryData] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Modals state
-  const [showCreateShipmentModal, setShowCreateShipmentModal] = useState(false);
-  const [showAssignModal, setShowAssignModal] = useState(false);
-  const [showTrackingModal, setShowTrackingModal] = useState(false);
+  // Live Application State
+  const [stats, setStats] = useState(INITIAL_DELIVERY_STATS);
+  const [statusBreakdown, setStatusBreakdown] = useState(SHIPMENT_STATUS_BREAKDOWN);
+  const [orders, setOrders] = useState(INITIAL_DELIVERY_ORDERS);
+  const [riders, setRiders] = useState(RIDERS_FLEET);
+  const [couriers, setCouriers] = useState(COURIER_PARTNERS);
+  const [attempts, setAttempts] = useState(INITIAL_DELIVERY_ATTEMPTS);
+  const [returnsList, setReturnsList] = useState(INITIAL_RETURNS_PICKUPS);
+  const [routesList, setRoutesList] = useState(INITIAL_ROUTES);
+  const [serviceAreas, setServiceAreas] = useState(INITIAL_SERVICE_AREAS);
+  const [settings, setSettings] = useState(INITIAL_DELIVERY_SETTINGS);
+
+  // Modals
+  const [selectedOrderForDetail, setSelectedOrderForDetail] = useState(null);
   const [selectedOrderForTracking, setSelectedOrderForTracking] = useState(null);
-  const [showContactModal, setShowContactModal] = useState(false);
-  const [contactTarget, setContactTarget] = useState(null);
-  const [showAddPartnerModal, setShowAddPartnerModal] = useState(false);
-  const [showFailedAttemptModal, setShowFailedAttemptModal] = useState(false);
-  const [selectedOrderForFailure, setSelectedOrderForFailure] = useState(null);
-  const [showFullMapModal, setShowFullMapModal] = useState(false);
+  const [showCreateShipmentModal, setShowCreateShipmentModal] = useState(false);
   const [showSupportModal, setShowSupportModal] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [showServiceAreasModal, setShowServiceAreasModal] = useState(false);
 
-  // Forms state
-  const [shipmentForm, setShipmentForm] = useState({
-    customer: '',
-    customerPhone: '',
-    customerEmail: '',
+  // Form state for creating shipment
+  const [createShipmentForm, setCreateShipmentForm] = useState({
+    customerName: '',
+    mobileNumber: '',
+    email: '',
     productName: 'Rolex Submariner Date 41mm',
-    address: '',
-    area: 'Gomti Nagar, Lucknow',
-    city: 'Lucknow',
-    pincode: '226010',
-    courierPartner: 'BlueDart Express',
-    paymentType: 'Prepaid',
+    deliveryAddress: '',
+    city: 'New Delhi',
+    state: 'Delhi',
+    pincode: '110001',
+    deliveryPartner: 'Blue Dart Express',
+    partnerId: 'cp_bluedart',
     orderAmount: 18999,
+    paymentType: 'Prepaid (Razorpay UPI)',
     priority: 'Urgent Express',
-    timeSlot: '11:00 AM – 02:00 PM',
-    assignedRiderId: 'rd_001',
+    expectedDeliveryDate: '18 Nov 2026, 04:00 PM',
   });
 
-  const [assignForm, setAssignForm] = useState({
-    riderId: 'rd_001',
-    priority: 'Urgent Express',
-    timeSlot: '11:00 AM – 02:00 PM',
-  });
-
-  const [partnerForm, setPartnerForm] = useState({
-    name: '',
-    phone: '',
-    area: 'Gomti Nagar, Lucknow',
-    vehicle: 'Honda Activa',
-    status: 'Available',
-  });
-
-  const [failureForm, setFailureForm] = useState({
-    reason: 'Customer Unavailable',
-    remarks: 'Customer requested evening re-attempt after 6:00 PM.',
-    nextAttemptDate: 'Today, 06:00 PM',
-  });
-
-  // Show Toast
   const triggerToast = (msg) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(''), 4000);
+    setTimeout(() => setToastMessage(''), 4500);
   };
-
-  // Fetch Delivery Data from API
-  const fetchDeliveryData = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/delivery');
-      if (!res.ok) throw new Error('Failed to load delivery data.');
-      const json = await res.json();
-      if (json.status === 'success') {
-        setDeliveryData(json.data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDeliveryData();
-  }, []);
 
   // Keyboard shortcut Ctrl+K
   useEffect(() => {
@@ -187,1829 +109,694 @@ export default function DeliveryManagerDashboardPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Filtered Delivery Orders
-  const orders = useMemo(() => {
-    if (!deliveryData?.orders) return [];
-    return deliveryData.orders.filter((order) => {
-      // Tab filter
-      if (orderFilterTab === 'Assigned' && order.status !== 'Assigned') return false;
-      if (orderFilterTab === 'In Transit' && order.status !== 'In Transit' && order.status !== 'Picked Up') return false;
-      if (orderFilterTab === 'Delivered' && order.status !== 'Delivered') return false;
-      if (orderFilterTab === 'Failed' && order.status !== 'Failed') return false;
-
-      // Status dropdown
-      if (statusFilter !== 'All' && order.status.toLowerCase() !== statusFilter.toLowerCase()) return false;
-
-      // Area dropdown
-      if (areaFilter !== 'All' && !order.area.toLowerCase().includes(areaFilter.toLowerCase())) return false;
-
-      // Rider dropdown
-      if (riderFilter !== 'All' && order.riderId !== riderFilter) return false;
-
-      // Courier partner dropdown
-      if (courierFilter !== 'All' && !order.courierPartner.toLowerCase().includes(courierFilter.toLowerCase())) return false;
-
-      // Search Query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const matches =
-          order.orderId.toLowerCase().includes(q) ||
-          order.customer.toLowerCase().includes(q) ||
-          order.awbNumber.toLowerCase().includes(q) ||
-          order.productName.toLowerCase().includes(q) ||
-          order.productShortName.toLowerCase().includes(q) ||
-          order.riderName.toLowerCase().includes(q) ||
-          order.area.toLowerCase().includes(q);
-        if (!matches) return false;
-      }
-
-      return true;
-    });
-  }, [deliveryData, orderFilterTab, statusFilter, areaFilter, riderFilter, courierFilter, searchQuery]);
-
-  // Handle Order Selection
-  const handleSelectOrder = (orderId) => {
-    setSelectedOrderIds((prev) =>
-      prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]
+  // 1. Assign Orders Handler
+  const handleAssignOrders = (orderIds, riderId, partnerName, priority, timeSlot, instructions) => {
+    const rider = riders.find((r) => r.id === riderId);
+    setOrders((prev) =>
+      prev.map((order) => {
+        if (orderIds.includes(order.orderId)) {
+          return {
+            ...order,
+            rider: rider ? rider.name : 'Assigned Rider',
+            riderId,
+            riderPhone: rider ? rider.phone : order.riderPhone,
+            deliveryPartner: partnerName || order.deliveryPartner,
+            priority: priority || order.priority,
+            deliveryStatus: 'Out for Delivery',
+            eta: `Assigned to ${rider ? rider.name : 'rider'} (${timeSlot})`,
+            notes: instructions || order.notes,
+            trackingTimeline: [
+              ...order.trackingTimeline,
+              {
+                stage: 'Rider Assigned',
+                date: '17 Nov 2026',
+                time: '01:00 PM',
+                location: `${order.city} Hub`,
+                status: 'Completed',
+                desc: `Assigned to ${rider?.name} for doorstep dispatch (${timeSlot}).`,
+              },
+            ],
+          };
+        }
+        return order;
+      })
     );
-  };
 
-  const handleSelectAllOrders = () => {
-    if (selectedOrderIds.length === orders.length) {
-      setSelectedOrderIds([]);
-    } else {
-      setSelectedOrderIds(orders.map((o) => o.orderId));
-    }
-  };
-
-  // Handle Create Shipment
-  const handleCreateShipment = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/delivery/create-shipment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(shipmentForm),
-      });
-      const data = await res.json();
-      if (data.status === 'success') {
-        triggerToast(`Shipment created for ${shipmentForm.customer} with AWB ${data.data.awbNumber}`);
-        setShowCreateShipmentModal(false);
-        fetchDeliveryData();
-      } else {
-        alert(data.message || 'Error creating shipment.');
-      }
-    } catch (err) {
-      alert('Network error creating shipment.');
-    }
-  };
-
-  // Handle Assign Orders
-  const handleAssignOrders = async (e) => {
-    e.preventDefault();
-    if (selectedOrderIds.length === 0) {
-      alert('Please select at least one order.');
-      return;
-    }
-    try {
-      const res = await fetch('/api/delivery/assign', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderIds: selectedOrderIds,
-          riderId: assignForm.riderId,
-          priority: assignForm.priority,
-          timeSlot: assignForm.timeSlot,
-        }),
-      });
-      const data = await res.json();
-      if (data.status === 'success') {
-        triggerToast(data.message);
-        setShowAssignModal(false);
-        setSelectedOrderIds([]);
-        fetchDeliveryData();
-      } else {
-        alert(data.message || 'Error assigning orders.');
-      }
-    } catch (err) {
-      alert('Failed to assign orders.');
-    }
-  };
-
-  // Handle Add Delivery Partner
-  const handleAddPartner = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/delivery/partner', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(partnerForm),
-      });
-      const data = await res.json();
-      if (data.status === 'success') {
-        triggerToast(`Rider ${partnerForm.name} registered.`);
-        setShowAddPartnerModal(false);
-        fetchDeliveryData();
-      }
-    } catch (err) {
-      alert('Error registering partner.');
-    }
-  };
-
-  // Handle Log Failure
-  const handleLogFailure = async (e) => {
-    e.preventDefault();
-    if (!selectedOrderForFailure) return;
-    try {
-      const res = await fetch('/api/delivery/attempt-failure', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderId: selectedOrderForFailure.orderId,
-          reason: failureForm.reason,
-          remarks: failureForm.remarks,
-          nextAttemptDate: failureForm.nextAttemptDate,
-        }),
-      });
-      const data = await res.json();
-      if (data.status === 'success') {
-        triggerToast(`Failure recorded for ${selectedOrderForFailure.orderId}. Re-attempt scheduled.`);
-        setShowFailedAttemptModal(false);
-        fetchDeliveryData();
-      }
-    } catch (err) {
-      alert('Error logging failure.');
-    }
-  };
-
-  // Export Delivery CSV
-  const handleExportCSV = () => {
-    if (!orders || orders.length === 0) return;
-    const headers = ['Order ID', 'Customer', 'Product', 'Address', 'Rider', 'Courier', 'AWB', 'Status', 'ETA', 'Amount'];
-    const rows = orders.map((o) => [
-      o.orderId,
-      `"${o.customer}"`,
-      `"${o.productName}"`,
-      `"${o.address}, ${o.area}"`,
-      `"${o.riderName}"`,
-      o.courierPartner,
-      o.awbNumber,
-      o.status,
-      o.eta,
-      o.formattedAmount,
-    ]);
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `WatchHub_Deliveries_${Date.now()}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    triggerToast('Delivery records exported to CSV successfully.');
-  };
-
-  // KPI Mini Wave Chart Data
-  const waveDataTotal = [{ v: 20 }, { v: 25 }, { v: 22 }, { v: 30 }, { v: 28 }, { v: 35 }, { v: 40 }];
-  const waveDataOut = [{ v: 12 }, { v: 18 }, { v: 15 }, { v: 22 }, { v: 24 }, { v: 28 }, { v: 32 }];
-  const waveDataDelivered = [{ v: 35 }, { v: 38 }, { v: 42 }, { v: 48 }, { v: 52 }, { v: 55 }, { v: 62 }];
-  const waveDataAttempts = [{ v: 18 }, { v: 15 }, { v: 16 }, { v: 12 }, { v: 10 }, { v: 9 }, { v: 8 }];
-  const waveDataReturns = [{ v: 10 }, { v: 8 }, { v: 9 }, { v: 7 }, { v: 6 }, { v: 5 }, { v: 4 }];
-
-  // Dedicated Logistics Sidebar Navigation Menu (Matching image media_1794640028779_2daa6b18.jpg exactly)
-  const SIDEBAR_ITEMS = [
-    { id: 'dashboard', label: 'Dashboard', icon: Package },
-    { id: 'orders', label: 'Delivery Orders', icon: Truck, badge: '28' },
-    { id: 'assign', label: 'Assign Deliveries', icon: Bike },
-    { id: 'tracking', label: 'Shipment Tracking', icon: MapPin },
-    { id: 'partners', label: 'Delivery Partners', icon: Users },
-    { id: 'routes', label: 'Route Planning', icon: Compass },
-    { id: 'attempts', label: 'Delivery Attempts', icon: AlertTriangle },
-    { id: 'returns', label: 'Returns & Pickups', icon: RotateCcw },
-    { id: 'reports', label: 'Delivery Reports', icon: FileText },
-    { id: 'areas', label: 'Service Areas', icon: Layers },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
-
-  // RBAC Permission Gate check: If user role is NOT Delivery Manager and NOT Super Admin, prompt role verification
-  if (!isAuthorizedRole) {
-    return (
-      <div className="min-h-screen bg-[#071426] flex items-center justify-center p-4 text-white font-poppins">
-        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 max-w-md w-full text-center backdrop-blur-md shadow-2xl">
-          <div className="w-16 h-16 rounded-2xl bg-[#D6A63C]/10 border border-[#D6A63C]/30 text-[#D6A63C] text-3xl flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-[#D6A63C]" />
-          </div>
-          <h2 className="text-xl font-bold text-white mb-2">Delivery Operations Portal</h2>
-          <p className="text-xs text-gray-300 mb-6 leading-relaxed">
-            This dashboard is restricted to the <span className="text-[#D6A63C] font-bold">Delivery Manager</span> role for shipment dispatch, live GPS tracking and rider fleet allocation.
-          </p>
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-left mb-6 space-y-1.5">
-            <p className="text-gray-400">Current Logged-in Role: <span className="text-white font-bold">{currentRole}</span></p>
-            <p className="text-gray-400">Required Role: <span className="text-[#D6A63C] font-bold">Delivery Manager</span></p>
-          </div>
-          <button
-            onClick={() => {
-              switchRole(ROLES.DELIVERY_MANAGER);
-              triggerToast('Role verified: Switched to Delivery Manager (Amit Sharma)');
-            }}
-            className="w-full py-3 rounded-xl bg-[#D6A63C] hover:bg-[#c49533] text-[#071426] font-bold text-xs shadow-lg shadow-[#D6A63C]/20 transition-all cursor-pointer flex items-center justify-center gap-2"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>Verify & Enter Delivery Manager Portal</span>
-          </button>
-        </div>
-      </div>
+    // Update rider active orders count
+    setRiders((prev) =>
+      prev.map((r) => (r.id === riderId ? { ...r, activeOrders: r.activeOrders + orderIds.length, status: 'On Delivery' } : r))
     );
-  }
+
+    // Update stats
+    setStats((prev) => ({
+      ...prev,
+      outForDelivery: prev.outForDelivery + orderIds.length,
+    }));
+
+    triggerToast(`Assigned ${orderIds.length} order(s) to ${rider?.name}!`);
+  };
+
+  // 2. Update Order Status Handler
+  const handleUpdateOrderStatus = (orderId, newStatus, note) => {
+    setOrders((prev) =>
+      prev.map((order) => {
+        if (order.orderId === orderId) {
+          return {
+            ...order,
+            deliveryStatus: newStatus,
+            trackingTimeline: [
+              ...order.trackingTimeline,
+              {
+                stage: newStatus,
+                date: '17 Nov 2026',
+                time: '01:15 PM',
+                location: `${order.city} Logistics Point`,
+                status: newStatus === 'Delivered' ? 'Completed' : 'Active',
+                desc: note || `Milestone updated to ${newStatus} by Delivery Manager.`,
+              },
+            ],
+          };
+        }
+        return order;
+      })
+    );
+
+    triggerToast(`Order #${orderId} status updated to ${newStatus}`);
+  };
+
+  // 3. Add Tracking Checkpoint Event
+  const handleAddTrackingEvent = (orderId, newEvent) => {
+    setOrders((prev) =>
+      prev.map((order) => {
+        if (order.orderId === orderId) {
+          return {
+            ...order,
+            deliveryStatus: newEvent.stage === 'Delivered' ? 'Delivered' : order.deliveryStatus,
+            trackingTimeline: [...order.trackingTimeline, newEvent],
+          };
+        }
+        return order;
+      })
+    );
+    triggerToast(`Checkpoint added to Order #${orderId}`);
+  };
+
+  // 4. Create Shipment
+  const handleCreateShipmentSubmit = (e) => {
+    e.preventDefault();
+    const newOrderId = `WH-ORD-${Math.floor(9100 + Math.random() * 900)}`;
+    const newAwb = `BLU${Math.floor(100000000 + Math.random() * 900000000)}`;
+
+    const newOrder = {
+      orderId: newOrderId,
+      awbNumber: newAwb,
+      orderDate: 'Today, 17 Nov 2026',
+      customerName: createShipmentForm.customerName,
+      mobileNumber: createShipmentForm.mobileNumber,
+      email: createShipmentForm.email,
+      productImage: '/images/products/featured_rolex_submariner.jpg',
+      productName: createShipmentForm.productName,
+      productCategory: 'Luxury Automatic',
+      deliveryAddress: createShipmentForm.deliveryAddress,
+      city: createShipmentForm.city,
+      state: createShipmentForm.state,
+      pincode: createShipmentForm.pincode,
+      deliveryPartner: createShipmentForm.deliveryPartner,
+      partnerId: createShipmentForm.partnerId,
+      rider: 'Unassigned',
+      riderId: null,
+      riderPhone: null,
+      paymentType: createShipmentForm.paymentType,
+      orderAmount: createShipmentForm.orderAmount,
+      formattedAmount: `₹${Number(createShipmentForm.orderAmount).toLocaleString()}`,
+      deliveryStatus: 'Processing',
+      priority: createShipmentForm.priority,
+      expectedDeliveryDate: createShipmentForm.expectedDeliveryDate,
+      eta: 'Processing at Vault',
+      coords: { lat: 28.6139, lng: 77.2090 },
+      securityOtp: `${Math.floor(1000 + Math.random() * 9000)}`,
+      notes: 'New shipment generated via Delivery Manager Portal.',
+      trackingTimeline: [
+        {
+          stage: 'Order Confirmed',
+          date: '17 Nov 2026',
+          time: '01:00 PM',
+          location: 'WatchHub Online Store',
+          status: 'Completed',
+          desc: 'Shipment created and registered in central logistics engine.',
+        },
+        {
+          stage: 'Processing',
+          date: '17 Nov 2026',
+          time: '01:15 PM',
+          location: 'Central Vault WH-01, New Delhi',
+          status: 'Active',
+          desc: 'Watch undergoing multi-point chronometric inspection.',
+        },
+      ],
+    };
+
+    setOrders((prev) => [newOrder, ...prev]);
+    setStats((prev) => ({ ...prev, totalShipments: prev.totalShipments + 1 }));
+    setShowCreateShipmentModal(false);
+    triggerToast(`Shipment created with AWB ${newAwb} for ${newOrder.customerName}`);
+  };
+
+  // 5. Toggle Rider Status
+  const handleToggleRiderStatus = (riderId) => {
+    setRiders((prev) =>
+      prev.map((r) => {
+        if (r.id === riderId) {
+          const next = r.status === 'Available' ? 'Offline' : r.status === 'Offline' ? 'Available' : 'Available';
+          return { ...r, status: next };
+        }
+        return r;
+      })
+    );
+    triggerToast('Rider status updated');
+  };
+
+  // 6. Toggle Partner Status
+  const handleTogglePartnerStatus = (partnerId) => {
+    setCouriers((prev) =>
+      prev.map((cp) => (cp.id === partnerId ? { ...cp, status: cp.status === 'Active' ? 'Inactive' : 'Active' } : cp))
+    );
+    triggerToast('Courier partner status toggled');
+  };
+
+  // 7. Add Partner
+  const handleAddPartner = (newPartner) => {
+    setCouriers((prev) => [...prev, newPartner]);
+    triggerToast(`Added ${newPartner.name} to courier network`);
+  };
+
+  // 8. Add Rider
+  const handleAddRider = (newRider) => {
+    setRiders((prev) => [...prev, newRider]);
+    triggerToast(`Onboarded rider ${newRider.name}`);
+  };
+
+  // 9. Record Delivery Attempt
+  const handleRecordAttempt = (newAttempt) => {
+    setAttempts((prev) => [newAttempt, ...prev]);
+    setStats((prev) => ({
+      ...prev,
+      deliveryAttempts: prev.deliveryAttempts + 1,
+      failedDeliveries: newAttempt.deliveryResult === 'Failed' ? prev.failedDeliveries + 1 : prev.failedDeliveries,
+    }));
+    triggerToast(`Recorded doorstep attempt for Order #${newAttempt.orderId}`);
+  };
+
+  // 10. Schedule Return Pickup
+  const handleScheduleReturnPickup = (returnId, riderName, riderId, pickupDate, notes) => {
+    setReturnsList((prev) =>
+      prev.map((ret) =>
+        ret.returnId === returnId
+          ? { ...ret, returnStatus: 'Pickup Assigned', assignedRider: riderName, riderId, pickupDate, inspectionNotes: notes }
+          : ret
+      )
+    );
+    triggerToast(`Pickup assigned to ${riderName}`);
+  };
+
+  // 11. Update Return Status
+  const handleUpdateReturnStatus = (returnId, newStatus) => {
+    setReturnsList((prev) =>
+      prev.map((ret) => (ret.returnId === returnId ? { ...ret, returnStatus: newStatus } : ret))
+    );
+    triggerToast(`Return #${returnId} marked as ${newStatus}`);
+  };
+
+  // 12. Create Route
+  const handleCreateRoute = (newRoute) => {
+    setRoutesList((prev) => [newRoute, ...prev]);
+    triggerToast(`Route ${newRoute.routeName} generated & assigned to ${newRoute.riderName}`);
+  };
+
+  // 13. Add Service Area
+  const handleAddServiceArea = (newArea) => {
+    setServiceAreas((prev) => [...prev, newArea]);
+    triggerToast(`Service corridor ${newArea.areaName} activated`);
+  };
+
+  // 14. Toggle Service Area Status
+  const handleToggleAreaStatus = (areaId) => {
+    setServiceAreas((prev) =>
+      prev.map((a) => (a.areaId === areaId ? { ...a, status: a.status === 'Active' ? 'Inactive' : 'Active' } : a))
+    );
+    triggerToast('Service area coverage updated');
+  };
+
+  // 15. Save Settings
+  const handleSaveSettings = (newSettings) => {
+    setSettings(newSettings);
+    triggerToast('Logistics SLA and dispatch settings updated');
+  };
 
   return (
-    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] flex flex-col font-poppins antialiased selection:bg-[#F4B942]/30 selection:text-white">
+    <DeliveryManagerLayout
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      sidebarCollapsed={sidebarCollapsed}
+      setSidebarCollapsed={setSidebarCollapsed}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      onOpenCreateShipment={() => setShowCreateShipmentModal(true)}
+      onOpenSupportModal={() => setShowSupportModal(true)}
+    >
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#10182D]/95 text-white px-5 py-3.5 rounded-2xl shadow-[0_0_25px_rgba(0,240,255,0.3)] border border-[#00F0FF]/40 flex items-center gap-3 animate-fade-in text-sm backdrop-blur-md">
-          <CheckCircle className="w-5 h-5 text-[#00F0FF]" />
+        <div className="fixed bottom-6 right-6 z-50 bg-[#11172C] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-[#00D5FF]/40 flex items-center gap-3 animate-fade-in text-xs font-semibold backdrop-blur-md">
+          <CheckCircle className="w-4 h-4 text-[#00C98B]" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* TOP HEADER */}
-      <header className="bg-[#071426]/90 backdrop-blur-md text-white sticky top-0 z-40 border-b border-white/10 shadow-lg">
-        <div className="px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          {/* Logo & Toggle with Delivery Truck Icon in gold box */}
-          <div className="flex items-center gap-3.5">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-              title="Toggle Sidebar"
-            >
-              <SlidersHorizontal className="w-5 h-5" />
-            </button>
+      {/* RENDER THE ACTIVE DEDICATED MODULE */}
+      {activeTab === 'dashboard' && (
+        <DashboardModule
+          stats={stats}
+          statusBreakdown={statusBreakdown}
+          orders={orders}
+          riders={riders}
+          couriers={couriers}
+          setActiveTab={setActiveTab}
+          onOpenCreateShipment={() => setShowCreateShipmentModal(true)}
+          onSelectOrderForTracking={(order) => {
+            setSelectedOrderForTracking(order);
+            setActiveTab('tracking');
+          }}
+          onSelectOrderForDetail={(order) => setSelectedOrderForDetail(order)}
+        />
+      )}
 
-            <Link to="/delivery-manager/dashboard" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#D6A63C] to-[#F3D78E] flex items-center justify-center text-[#071426] font-bold shadow-md">
-                🚚
-              </div>
-              <div className="flex flex-col">
-                <span className="font-cinzel text-lg font-bold tracking-wider text-white leading-tight">
-                  WatchHub
-                </span>
-                <span className="text-[10px] text-gray-400 font-medium tracking-widest uppercase">
-                  Delivery Manager
-                </span>
-              </div>
-            </Link>
-          </div>
+      {activeTab === 'orders' && (
+        <DeliveryOrdersModule
+          orders={orders}
+          riders={riders}
+          couriers={couriers}
+          onOpenCreateShipment={() => setShowCreateShipmentModal(true)}
+          onSelectOrderForTracking={(order) => {
+            setSelectedOrderForTracking(order);
+            setActiveTab('tracking');
+          }}
+          onSelectOrderForDetail={(order) => setSelectedOrderForDetail(order)}
+          onUpdateOrderStatus={handleUpdateOrderStatus}
+          onAssignOrder={(order) => {
+            setActiveTab('assign');
+          }}
+        />
+      )}
 
-          {/* Global Search with Ctrl+K */}
-          <div className="hidden md:flex flex-1 max-w-xl mx-4">
-            <div className="relative w-full">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                id="global-delivery-search"
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by Order ID, AWB, Customer, Rider..."
-                className="w-full pl-10 pr-16 py-2 rounded-xl bg-white/10 hover:bg-white/15 focus:bg-white/20 text-white placeholder-gray-400 text-xs sm:text-sm border border-white/15 focus:border-[#D6A63C] outline-none transition-all"
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold bg-white/15 text-gray-300 px-1.5 py-0.5 rounded border border-white/20">
-                Ctrl + K
-              </span>
-            </div>
-          </div>
+      {activeTab === 'assign' && (
+        <AssignDeliveriesModule
+          orders={orders}
+          riders={riders}
+          couriers={couriers}
+          onAssignOrders={handleAssignOrders}
+        />
+      )}
 
-          {/* Top Actions: View Store, Alerts, Question (Help), Profile */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            <Link
-              to="/"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-semibold text-white transition-all hover:border-[#D6A63C]"
-            >
-              <Eye className="w-3.5 h-3.5 text-[#D6A63C]" />
-              <span>View Store ↗</span>
-            </Link>
+      {activeTab === 'tracking' && (
+        <ShipmentTrackingModule
+          orders={orders}
+          riders={riders}
+          selectedOrder={selectedOrderForTracking}
+          onSelectOrder={(o) => setSelectedOrderForTracking(o)}
+          onAddTrackingEvent={handleAddTrackingEvent}
+        />
+      )}
 
-            {/* Notification Bell */}
-            <div className="relative">
-              <button
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="relative p-2 rounded-xl bg-white/10 hover:bg-white/15 text-gray-300 hover:text-white transition-colors cursor-pointer"
-              >
-                <Bell className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-[9px] font-bold flex items-center justify-center">
-                  5
-                </span>
-              </button>
+      {activeTab === 'partners' && (
+        <DeliveryPartnersModule
+          couriers={couriers}
+          riders={riders}
+          onAddPartner={handleAddPartner}
+          onAddRider={handleAddRider}
+          onToggleRiderStatus={handleToggleRiderStatus}
+          onTogglePartnerStatus={handleTogglePartnerStatus}
+        />
+      )}
 
-              {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#10182D]/95 backdrop-blur-md rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-white/10 p-4 text-[#F8FAFC] z-50 animate-fade-in text-xs">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 font-bold">
-                    <span>Logistics Real-Time Alerts</span>
-                    <span className="text-[11px] text-[#00F0FF] font-semibold cursor-pointer">Mark all as read</span>
-                  </div>
-                  <div className="space-y-3 mt-3 max-h-72 overflow-y-auto">
-                    {(deliveryData?.notifications || []).map((notif) => (
-                      <div key={notif.id} className="p-2.5 rounded-xl bg-[#0B1022] hover:bg-white/5 border border-white/10 text-xs">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-[#F8FAFC]">{notif.title}</span>
-                          <span className="text-[10px] text-gray-400">{notif.timestamp}</span>
-                        </div>
-                        <p className="text-gray-300 leading-relaxed">{notif.message}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+      {activeTab === 'routes' && (
+        <RoutePlanningModule
+          routes={routesList}
+          orders={orders}
+          riders={riders}
+          couriers={couriers}
+          onCreateRoute={handleCreateRoute}
+        />
+      )}
 
-            {/* Help Question Circle (?) */}
-            <button
-              onClick={() => setShowSupportModal(true)}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/15 text-gray-300 hover:text-white transition-colors cursor-pointer"
-              title="Help & Support Desk"
-            >
-              <HelpCircle className="w-4 h-4" />
-            </button>
+      {activeTab === 'attempts' && (
+        <DeliveryAttemptsModule
+          attempts={attempts}
+          orders={orders}
+          riders={riders}
+          onRecordAttempt={handleRecordAttempt}
+          onScheduleReattempt={(attemptId) => {
+            triggerToast('Reattempt scheduled for next delivery morning slot');
+          }}
+        />
+      )}
 
-            {/* Role Profile Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setRoleMenuOpen(!roleMenuOpen)}
-                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 transition-all cursor-pointer"
-              >
+      {activeTab === 'returns' && (
+        <ReturnsPickupsModule
+          returns={returnsList}
+          orders={orders}
+          riders={riders}
+          onUpdateReturnStatus={handleUpdateReturnStatus}
+          onScheduleReturnPickup={handleScheduleReturnPickup}
+        />
+      )}
+
+      {activeTab === 'reports' && (
+        <DeliveryReportsModule
+          orders={orders}
+          riders={riders}
+          couriers={couriers}
+          attempts={attempts}
+          returns={returnsList}
+        />
+      )}
+
+      {activeTab === 'areas' && (
+        <ServiceAreasModule
+          serviceAreas={serviceAreas}
+          onAddArea={handleAddServiceArea}
+          onToggleAreaStatus={handleToggleAreaStatus}
+        />
+      )}
+
+      {activeTab === 'settings' && (
+        <DeliverySettingsModule
+          settings={settings}
+          onSaveSettings={handleSaveSettings}
+        />
+      )}
+
+      {/* MODAL: ORDER DETAILS DRAWER / MODAL */}
+      {selectedOrderForDetail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#11172C] border border-[#28334B] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl text-white space-y-5 custom-scrollbar">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-[#28334B]">
+              <div className="flex items-center gap-3">
                 <img
-                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80"
-                  alt="Delivery Manager"
-                  className="w-7 h-7 rounded-lg object-cover border border-[#00F0FF]"
+                  src={selectedOrderForDetail.productImage}
+                  alt={selectedOrderForDetail.productName}
+                  className="w-14 h-14 rounded-xl object-contain bg-[#081529] border border-[#28334B] p-1 flex-shrink-0"
                 />
-                <div className="text-left hidden sm:block">
-                  <p className="text-xs font-bold text-white leading-none">Delivery Manager</p>
-                </div>
-                <ChevronDown className="w-3.5 h-3.5 text-gray-300" />
-              </button>
-
-              {roleMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-[#10182D]/95 backdrop-blur-md rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-white/10 py-2 z-50 text-[#F8FAFC] animate-fade-in text-xs">
-                  <div className="px-4 py-2 border-b border-white/10">
-                    <p className="font-bold text-sm text-[#F8FAFC]">Amit Sharma</p>
-                    <p className="text-[11px] text-gray-400">delivery@watchhub.in</p>
-                    <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-[#00F0FF]/15 text-[#00F0FF] text-[10px] font-bold border border-[#00F0FF]/30 shadow-[0_0_8px_rgba(0,240,255,0.2)]">
-                      Verified Logistics Lead
-                    </span>
-                  </div>
-
-                  <div className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                    Switch Role Dashboard
-                  </div>
-
-                  {Object.values(ROLES)
-                    .filter((r) => r !== ROLES.CUSTOMER)
-                    .map((r) => {
-                      const staff = MOCK_STAFF_ACCOUNTS[r];
-                      const isActive = currentRole === r;
-                      return (
-                        <button
-                          key={r}
-                          onClick={() => {
-                            switchRole(r);
-                            setRoleMenuOpen(false);
-                            if (r === ROLES.STORE_ADMIN) navigate('/dashboard');
-                            if (r === ROLES.INVENTORY_MANAGER) navigate('/inventory-manager/dashboard');
-                            if (r === ROLES.CUSTOMER_SUPPORT) navigate('/customer-support/dashboard');
-                            if (r === ROLES.DELIVERY_PARTNER) navigate('/delivery-partner/dashboard');
-                          }}
-                          className={`w-full text-left px-4 py-2 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer ${
-                            isActive ? 'bg-[#00F0FF]/15 text-[#00F0FF] font-bold' : 'text-gray-300'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span>{staff?.avatar || '👤'}</span>
-                            <span>{r}</span>
-                          </div>
-                          {isActive && <CheckCircle className="w-3.5 h-3.5 text-[#00F0FF]" />}
-                        </button>
-                      );
-                    })}
-
-                  <div className="border-t border-white/10 mt-1 pt-1">
-                    <button
-                      onClick={() => {
-                        logout();
-                        navigate('/login');
-                      }}
-                      className="w-full text-left px-4 py-2 text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 transition-colors cursor-pointer"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                      <span>Log Out</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* BODY WITH FIXED SIDEBAR & MAIN WORKSPACE */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* LEFT NAVY SIDEBAR */}
-        <aside
-          className={`${
-            sidebarCollapsed ? 'w-20' : 'w-64'
-          } bg-[#071426] text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 border-r border-white/10 hidden md:flex`}
-        >
-          {/* Main Navigation Items */}
-          <div className="p-4 space-y-1.5 overflow-y-auto">
-            {SIDEBAR_ITEMS.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    if (item.id === 'areas') setShowServiceAreasModal(true);
-                  }}
-                  className={`w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-[#D6A63C] text-[#071426] shadow-lg font-bold shadow-[#D6A63C]/20'
-                      : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#071426]' : 'text-gray-400'}`} />
-                  {!sidebarCollapsed && <span className="flex-1 text-left">{item.label}</span>}
-                  {!sidebarCollapsed && item.badge && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EF4444] text-white">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Need Help Card */}
-          {!sidebarCollapsed && (
-            <div className="p-4 border-t border-white/10">
-              <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs">
-                <div className="flex items-center gap-2 font-bold text-white mb-1">
-                  <div className="w-5 h-5 rounded-full bg-[#D6A63C]/20 text-[#D6A63C] flex items-center justify-center text-xs">
-                    🎧
-                  </div>
-                  <span>Need Help?</span>
-                </div>
-                <p className="text-[11px] text-gray-400 mb-3 leading-relaxed">
-                  Delivery operations, rider support & route planning.
-                </p>
-                <button
-                  onClick={() => setShowSupportModal(true)}
-                  className="w-full py-1.5 rounded-xl bg-[#D6A63C] hover:bg-[#c49533] text-[#071426] font-bold text-[11px] transition-colors cursor-pointer"
-                >
-                  Contact Support →
-                </button>
-              </div>
-            </div>
-          )}
-        </aside>
-
-        {/* MAIN WORKSPACE CONTENT */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
-          {/* TOP BANNER / TITLE ROW */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-xl shadow-xs">
-                🚚
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
-                  Delivery Manager Dashboard
-                </h1>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Control shipments, assign riders, track deliveries and ensure on-time delivery for WatchHub.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* Date Filter Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setDateRangeOpen(!dateRangeOpen)}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs font-semibold text-gray-700 hover:border-gray-300 transition-all shadow-xs cursor-pointer"
-                >
-                  <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                  <span>{selectedDateRange}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
-                </button>
-
-                {dateRangeOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 text-xs text-gray-700 animate-fade-in">
-                    {['Today', 'Last 7 Days', 'Last 30 Days', 'This Month'].map((r) => (
-                      <button
-                        key={r}
-                        onClick={() => {
-                          setSelectedDateRange(r);
-                          setDateRangeOpen(false);
-                          triggerToast(`Date filter updated to ${r}`);
-                        }}
-                        className={`w-full text-left px-4 py-2 hover:bg-amber-50 hover:text-[#D6A63C] transition-colors ${
-                          selectedDateRange === r ? 'font-bold text-[#D6A63C] bg-amber-50/50' : ''
-                        }`}
-                      >
-                        {r}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Create Shipment Primary Button */}
-              <button
-                onClick={() => setShowCreateShipmentModal(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#D6A63C] hover:bg-[#c49533] text-[#071426] font-bold text-xs sm:text-sm shadow-md shadow-[#D6A63C]/20 transition-all cursor-pointer"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Create Shipment</span>
-              </button>
-            </div>
-          </div>
-
-          {/* 5 KPI CARDS */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            {/* 1. Total Shipments */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(168,85,247,0.12)] hover:border-[#A855F7]/50 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] transition-all flex flex-col justify-between">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-[#A6B1C8]">Total Shipments</span>
-                <div className="w-7 h-7 rounded-lg bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                  📦
-                </div>
-              </div>
-              <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
-                    {deliveryData?.stats?.totalShipments?.toLocaleString() || '1,248'}
-                  </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#A855F7] mt-0.5">
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                    <span>{deliveryData?.stats?.totalShipmentsTrend || '+12%'}</span>
-                  </div>
-                </div>
-                <div className="w-16 h-8">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={waveDataTotal}>
-                      <Area type="monotone" dataKey="v" stroke="#A855F7" fill="#A855F7" fillOpacity={0.25} strokeWidth={2} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-
-            {/* 2. Out for Delivery */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(0,240,255,0.12)] hover:border-[#00F0FF]/50 hover:shadow-[0_0_25px_rgba(0,240,255,0.25)] transition-all flex flex-col justify-between">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-[#A6B1C8]">Out for Delivery</span>
-                <div className="w-7 h-7 rounded-lg bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(0,240,255,0.3)]">
-                  🚚
-                </div>
-              </div>
-              <div className="flex items-baseline justify-between">
-                <div>
-                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
-                    {deliveryData?.stats?.outForDelivery?.toLocaleString() || '312'}
-                  </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#00F0FF] mt-0.5">
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                    <span>{deliveryData?.stats?.outForDeliveryTrend || '+18%'}</span>
-                  </div>
-                </div>
-                <div className="w-16 h-8">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={waveDataOut}>
-                      <Area type="monotone" dataKey="v" stroke="#00F0FF" fill="#00F0FF" fillOpacity={0.25} strokeWidth={2} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Delivered */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(57,245,165,0.12)] hover:border-[#39F5A5]/50 hover:shadow-[0_0_25px_rgba(57,245,165,0.25)] transition-all flex flex-col justify-between">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-[#A6B1C8]">Delivered</span>
-                <div className="w-7 h-7 rounded-lg bg-[#39F5A5]/15 text-[#39F5A5] border border-[#39F5A5]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(57,245,165,0.3)]">
-                  ✓
-                </div>
-              </div>
-              <div className="flex items-baseline justify-between">
-                <div>
-                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
-                    {deliveryData?.stats?.delivered?.toLocaleString() || '892'}
-                  </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#39F5A5] mt-0.5">
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                    <span>{deliveryData?.stats?.deliveredTrend || '+14%'}</span>
-                  </div>
-                </div>
-                <div className="w-16 h-8">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={waveDataDelivered}>
-                      <Area type="monotone" dataKey="v" stroke="#39F5A5" fill="#39F5A5" fillOpacity={0.25} strokeWidth={2} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. Delivery Attempts */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(255,69,103,0.12)] hover:border-[#FF4567]/50 hover:shadow-[0_0_25px_rgba(255,69,103,0.25)] transition-all flex flex-col justify-between">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-[#A6B1C8]">Delivery Attempts</span>
-                <div className="w-7 h-7 rounded-lg bg-[#FF4567]/15 text-[#FF4567] border border-[#FF4567]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(255,69,103,0.3)]">
-                  ⟳
-                </div>
-              </div>
-              <div className="flex items-baseline justify-between">
-                <div>
-                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
-                    {deliveryData?.stats?.deliveryAttempts || '36'}
-                  </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#FF4567] mt-0.5">
-                    <ArrowDownRight className="w-3.5 h-3.5" />
-                    <span>{deliveryData?.stats?.deliveryAttemptsTrend || '-20%'}</span>
-                  </div>
-                </div>
-                <div className="w-16 h-8">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={waveDataAttempts}>
-                      <Area type="monotone" dataKey="v" stroke="#FF4567" fill="#FF4567" fillOpacity={0.25} strokeWidth={2} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Returns / Pickups */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(244,185,66,0.12)] hover:border-[#F4B942]/50 hover:shadow-[0_0_25px_rgba(244,185,66,0.25)] transition-all flex flex-col justify-between col-span-2 lg:col-span-1">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-[#A6B1C8]">Returns / Pickups</span>
-                <div className="w-7 h-7 rounded-lg bg-[#F4B942]/15 text-[#F4B942] border border-[#F4B942]/30 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(244,185,66,0.3)]">
-                  📦
-                </div>
-              </div>
-              <div className="flex items-baseline justify-between">
-                <div>
-                  <span className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">
-                    {deliveryData?.stats?.returnsPickups || '8'}
-                  </span>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#F4B942] mt-0.5">
-                    <ArrowDownRight className="w-3.5 h-3.5" />
-                    <span>{deliveryData?.stats?.returnsPickupsTrend || '-11%'}</span>
-                  </div>
-                </div>
-                <div className="w-16 h-8">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={waveDataReturns}>
-                      <Area type="monotone" dataKey="v" stroke="#F4B942" fill="#F4B942" fillOpacity={0.25} strokeWidth={2} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* MIDDLE ROW: 3 PANELS (Shipment Status Donut + Live Delivery Map + Quick Actions) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-            {/* CARD 1: SHIPMENT STATUS OVERVIEW (lg:col-span-4) */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-4 flex flex-col justify-between">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-[#F8FAFC]">Shipment Status Overview</h3>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 my-auto">
-                {/* Donut Chart with Center Text */}
-                <div className="relative w-44 h-44 flex-shrink-0">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={deliveryData?.statusBreakdown || []}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={50}
-                        outerRadius={70}
-                        paddingAngle={3}
-                        dataKey="count"
-                        cursor="pointer"
-                        stroke="#050816"
-                        strokeWidth={2}
-                        onClick={(entry) => {
-                          setStatusFilter(entry.name);
-                          triggerToast(`Filtered table by: ${entry.name}`);
-                        }}
-                      >
-                        {(deliveryData?.statusBreakdown || []).map((entry, idx) => (
-                          <Cell key={`cell-${idx}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#10182D',
-                          borderColor: 'rgba(255,255,255,0.15)',
-                          borderRadius: '12px',
-                          color: '#F8FAFC',
-                        }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                    <span className="text-base font-extrabold text-[#F8FAFC] leading-none">1,248</span>
-                    <span className="text-[10px] text-[#A6B1C8] font-medium mt-0.5">Shipments</span>
-                  </div>
-                </div>
-
-                {/* Slices Legend */}
-                <div className="space-y-2 text-xs flex-1">
-                  {(deliveryData?.statusBreakdown || []).map((item) => (
-                    <div
-                      key={item.name}
-                      onClick={() => setStatusFilter(item.name)}
-                      className="flex items-center justify-between p-1.5 rounded-lg hover:bg-white/5 cursor-pointer transition-colors"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                        <span className="text-[#A6B1C8] font-medium">{item.name}</span>
-                      </div>
-                      <span className="font-bold text-[#F8FAFC]">{item.percentage}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* CARD 2: LIVE DELIVERY MAP (lg:col-span-5) */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(0,240,255,0.1)] lg:col-span-5 flex flex-col justify-between relative overflow-hidden">
-              <div className="flex items-center justify-between mb-3 z-10">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-[#00F0FF]" />
-                  <h3 className="text-sm font-bold text-[#F8FAFC]">Live Delivery Map</h3>
-                </div>
-                <button
-                  onClick={() => setShowFullMapModal(true)}
-                  className="text-xs font-bold text-[#00F0FF] hover:text-[#00CFFF] flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View Full Map</span>
-                  <ExternalLink className="w-3 h-3" />
-                </button>
-              </div>
-
-              {/* Realistic Interactive Vector Map Graphics in Neon Luxury */}
-              <div className="relative w-full h-56 rounded-xl overflow-hidden bg-[#070D1F] border border-white/15">
-                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 500 240">
-                  <path d="M 0 160 Q 150 140, 260 170 T 500 130 L 500 160 L 0 200 Z" fill="#0C1B33" opacity="0.8" />
-                  <rect x="30" y="30" width="80" height="60" rx="10" fill="#0E2342" opacity="0.7" />
-                  <rect x="320" y="40" width="90" height="70" rx="12" fill="#0E2342" opacity="0.7" />
-                  <path d="M 0 60 L 500 80" stroke="rgba(255,255,255,0.08)" strokeWidth="6" strokeLinecap="round" />
-                  <path d="M 0 120 L 500 110" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
-                  <path d="M 120 0 L 150 240" stroke="rgba(255,255,255,0.08)" strokeWidth="7" />
-                  <path d="M 300 0 L 280 240" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
-                  <path d="M 420 0 L 440 240" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
-                  <path d="M 0 190 Q 250 180, 500 210" stroke="#1A2D4E" strokeWidth="8" />
-
-                  {/* Active Neon Cyan Route Line */}
-                  <path
-                    d="M 60 190 Q 140 180, 220 140 T 380 95"
-                    fill="none"
-                    stroke="#00F0FF"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeDasharray="6 3"
-                    className="animate-pulse"
-                  />
-                </svg>
-
-                {/* Hub Origin Marker */}
-                <div
-                  className="absolute left-[50px] top-[175px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group"
-                  title="WatchHub Central Logistics Hub"
-                >
-                  <div className="w-6 h-6 rounded-full bg-[#10182D] text-[#F4B942] flex items-center justify-center text-[10px] shadow-[0_0_12px_rgba(244,185,66,0.5)] border-2 border-[#F4B942]">
-                    🏠
-                  </div>
-                </div>
-
-                {/* Rider Live Position Marker */}
-                <div
-                  className="absolute left-[260px] top-[140px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer animate-bounce"
-                  title="Rider Rohan Singh - Verified GPS"
-                >
-                  <div className="w-7 h-7 rounded-full bg-[#00F0FF] text-black flex items-center justify-center text-xs shadow-[0_0_15px_rgba(0,240,255,0.8)] border-2 border-white ring-4 ring-[#00F0FF]/30">
-                    🚚
-                  </div>
-                </div>
-
-                {/* Destination Red Pin */}
-                <div
-                  className="absolute left-[380px] top-[95px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer"
-                  title="Destination: Gomti Nagar"
-                >
-                  <div className="w-7 h-7 rounded-full bg-[#FF4567] text-white flex items-center justify-center text-xs shadow-[0_0_15px_rgba(255,69,103,0.7)] border-2 border-white">
-                    📍
-                  </div>
-                </div>
-
-                {/* Floating Popup Card in Dark Glass */}
-                <div className="absolute top-3 left-4 bg-[#10182D]/90 backdrop-blur-md px-3 py-2 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.6)] border border-[#00F0FF]/30 z-20 text-xs flex items-center gap-2.5">
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                    alt="Rohan Singh"
-                    className="w-9 h-9 rounded-full object-cover border border-[#39F5A5]"
-                  />
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-[#F8FAFC] text-xs">Rohan Singh</span>
-                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#39F5A5]/20 text-[#39F5A5] border border-[#39F5A5]/40 shadow-[0_0_8px_rgba(57,245,165,0.3)]">
-                        • Out for Delivery
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-[#A6B1C8] font-medium">📍 Order: #WH12548</p>
-                    <p className="text-[10px] text-gray-400 font-medium">ETA: 12:40 PM (6.2 km)</p>
-                  </div>
-                </div>
-
-                {/* Map Controls */}
-                <div className="absolute right-3 bottom-3 flex flex-col gap-1.5 z-20">
-                  <button
-                    onClick={() => triggerToast('Zooming map view in')}
-                    className="w-7 h-7 rounded-lg bg-[#10182D]/90 hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 shadow flex items-center justify-center font-bold text-sm cursor-pointer"
-                  >
-                    +
-                  </button>
-                  <button
-                    onClick={() => triggerToast('Zooming map view out')}
-                    className="w-7 h-7 rounded-lg bg-[#10182D]/90 hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 shadow flex items-center justify-center font-bold text-sm cursor-pointer"
-                  >
-                    –
-                  </button>
-                  <button
-                    onClick={() => triggerToast('Centered on live rider Rohan Singh')}
-                    className="w-7 h-7 rounded-lg bg-[#10182D]/90 hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 shadow flex items-center justify-center font-bold text-xs cursor-pointer"
-                    title="Recenter Map"
-                  >
-                    <Crosshair className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* CARD 3: QUICK ACTIONS (lg:col-span-3) */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-3 flex flex-col justify-between">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-[#F4B942] font-bold">⚡</span>
-                <h3 className="text-sm font-bold text-[#F8FAFC]">Quick Actions</h3>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5 my-auto">
-                {/* 1. Assign Orders */}
-                <button
-                  onClick={() => setShowAssignModal(true)}
-                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#00F0FF] hover:shadow-[0_0_15px_rgba(0,240,255,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
-                >
-                  <Bike className="w-5 h-5 text-[#00F0FF] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-semibold text-[#F8FAFC]">Assign Orders</span>
-                </button>
-
-                {/* 2. Track Shipment */}
-                <button
-                  onClick={() => {
-                    const firstOrder = deliveryData?.orders?.[0];
-                    if (firstOrder) {
-                      setSelectedOrderForTracking(firstOrder);
-                      setShowTrackingModal(true);
-                    }
-                  }}
-                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#00F0FF] hover:shadow-[0_0_15px_rgba(0,240,255,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
-                >
-                  <MapPin className="w-5 h-5 text-[#00F0FF] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-semibold text-[#F8FAFC]">Track Shipment</span>
-                </button>
-
-                {/* 3. Manage Riders */}
-                <button
-                  onClick={() => setActiveTab('partners')}
-                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#A855F7] hover:shadow-[0_0_15px_rgba(168,85,247,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
-                >
-                  <Users className="w-5 h-5 text-[#A855F7] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-semibold text-[#F8FAFC]">Manage Riders</span>
-                </button>
-
-                {/* 4. Plan Routes */}
-                <button
-                  onClick={() => setActiveTab('routes')}
-                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#F4B942] hover:shadow-[0_0_15px_rgba(244,185,66,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
-                >
-                  <Compass className="w-5 h-5 text-[#F4B942] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-semibold text-[#F8FAFC]">Plan Routes</span>
-                </button>
-
-                {/* 5. Create Shipment */}
-                <button
-                  onClick={() => setShowCreateShipmentModal(true)}
-                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#39F5A5] hover:shadow-[0_0_15px_rgba(57,245,165,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
-                >
-                  <Package className="w-5 h-5 text-[#39F5A5] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-semibold text-[#F8FAFC]">Create Shipment</span>
-                </button>
-
-                {/* 6. Handle Returns */}
-                <button
-                  onClick={() => setActiveTab('returns')}
-                  className="p-3 rounded-xl border border-white/10 bg-[#0B1022] hover:border-[#FF4567] hover:shadow-[0_0_15px_rgba(255,69,103,0.25)] flex flex-col items-center justify-center gap-1.5 transition-all group cursor-pointer text-center"
-                >
-                  <RotateCcw className="w-5 h-5 text-[#FF4567] group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-semibold text-[#F8FAFC]">Handle Returns</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* BOTTOM ROW: TODAY'S DELIVERY ORDERS + DELIVERY PARTNERS (28) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-            {/* LEFT: TODAY'S DELIVERY ORDERS TABLE (lg:col-span-9) */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-9 space-y-4">
-              {/* Header with Title and Tabs */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-[#F4B942]" />
-                  <h3 className="text-sm font-bold text-[#F8FAFC]">
-                    Today's Delivery Orders <span className="text-gray-400 font-normal">(312)</span>
-                  </h3>
-                </div>
-
-                {/* Tabs */}
-                <div className="flex items-center gap-1 bg-[#0B1022] p-1 rounded-xl border border-white/10 text-xs overflow-x-auto">
-                  {[
-                    { id: 'All', label: 'All (312)' },
-                    { id: 'Assigned', label: 'Assigned (286)' },
-                    { id: 'In Transit', label: 'In Transit (18)' },
-                    { id: 'Delivered', label: 'Delivered (0)' },
-                    { id: 'Failed', label: 'Failed (8)' },
-                  ].map((t) => (
-                    <button
-                      key={t.id}
-                      onClick={() => setOrderFilterTab(t.id)}
-                      className={`px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer whitespace-nowrap ${
-                        orderFilterTab === t.id
-                          ? 'bg-[#00F0FF] text-black shadow-[0_0_12px_rgba(0,240,255,0.4)]'
-                          : 'text-[#A6B1C8] hover:text-[#F8FAFC] hover:bg-white/5'
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-serif font-bold text-lg text-white">
+                      Order #{selectedOrderForDetail.orderId}
+                    </h3>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        selectedOrderForDetail.deliveryStatus === 'Delivered'
+                          ? 'bg-[#00C98B]/20 text-[#00C98B]'
+                          : 'bg-[#00D5FF]/20 text-[#00D5FF]'
                       }`}
                     >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Filters Bar matching reference UI */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
-                <div className="relative">
-                  <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by Order ID, Customer, Product..."
-                    className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-white/10 bg-[#0B1022] text-xs text-[#F8FAFC] placeholder-gray-400 focus:border-[#00F0FF] focus:shadow-[0_0_10px_rgba(0,240,255,0.2)] outline-none"
-                  />
-                </div>
-
-                {/* Area / City */}
-                <select
-                  value={areaFilter}
-                  onChange={(e) => setAreaFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
-                >
-                  <option value="All">Area / City ▾</option>
-                  <option value="Gomti Nagar">Gomti Nagar, Lucknow</option>
-                  <option value="Indira Nagar">Indira Nagar, Lucknow</option>
-                  <option value="Aliganj">Aliganj, Lucknow</option>
-                  <option value="Hazratganj">Hazratganj, Lucknow</option>
-                  <option value="Jankipuram">Jankipuram, Lucknow</option>
-                </select>
-
-                {/* Rider */}
-                <select
-                  value={riderFilter}
-                  onChange={(e) => setRiderFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
-                >
-                  <option value="All">Rider ▾</option>
-                  {(deliveryData?.partners || []).map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name} ({p.status})
-                    </option>
-                  ))}
-                </select>
-
-                {/* Courier Partner */}
-                <select
-                  value={courierFilter}
-                  onChange={(e) => setCourierFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
-                >
-                  <option value="All">Courier Partner ▾</option>
-                  <option value="BlueDart">BlueDart Express</option>
-                  <option value="Delhivery">Delhivery</option>
-                  <option value="DTDC">DTDC Express</option>
-                  <option value="Shadowfax">Shadowfax</option>
-                </select>
-
-                {/* Status */}
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#F8FAFC] bg-[#0B1022] focus:border-[#00F0FF] outline-none"
-                >
-                  <option value="All">Status ▾</option>
-                  <option value="Out for Delivery">Out for Delivery</option>
-                  <option value="In Transit">In Transit</option>
-                  <option value="Assigned">Assigned</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Failed">Failed</option>
-                </select>
-              </div>
-
-              {/* Table */}
-              <div className="overflow-x-auto rounded-xl border border-white/10">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-[#0B1022] text-[#A6B1C8] font-semibold border-b border-white/10">
-                    <tr>
-                      <th className="p-3 w-8">
-                        <input
-                          type="checkbox"
-                          checked={orders.length > 0 && selectedOrderIds.length === orders.length}
-                          onChange={handleSelectAllOrders}
-                          className="rounded text-[#00F0FF] focus:ring-[#00F0FF]"
-                        />
-                      </th>
-                      <th className="p-3 font-semibold text-[#F8FAFC]">Order ID</th>
-                      <th className="p-3 font-semibold text-[#F8FAFC]">Customer</th>
-                      <th className="p-3 font-semibold text-[#F8FAFC]">Product</th>
-                      <th className="p-3 font-semibold text-[#F8FAFC]">Address (Area)</th>
-                      <th className="p-3 font-semibold text-[#F8FAFC]">Rider</th>
-                      <th className="p-3 font-semibold text-[#F8FAFC]">Status</th>
-                      <th className="p-3 font-semibold text-[#F8FAFC]">ETA</th>
-                      <th className="p-3 text-right font-semibold text-[#F8FAFC]">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5 text-gray-300">
-                    {orders.length === 0 ? (
-                      <tr>
-                        <td colSpan="9" className="p-8 text-center text-gray-400">
-                          No delivery orders found matching the filter criteria.
-                        </td>
-                      </tr>
-                    ) : (
-                      orders.map((order) => {
-                        const isChecked = selectedOrderIds.includes(order.orderId);
-                        return (
-                          <tr key={order.id} className="hover:bg-white/5 transition-colors">
-                            <td className="p-3">
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => handleSelectOrder(order.orderId)}
-                                className="rounded text-[#00F0FF] focus:ring-[#00F0FF]"
-                              />
-                            </td>
-                            <td className="p-3 font-bold text-[#F8FAFC] whitespace-nowrap">
-                              {order.orderId}
-                            </td>
-                            <td className="p-3 font-medium whitespace-nowrap text-[#F8FAFC]">
-                              {order.customer}
-                            </td>
-                            <td className="p-3 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                <img
-                                  src={order.productImage}
-                                  alt={order.productShortName}
-                                  className="w-7 h-7 rounded-lg object-contain bg-[#0B1022] border border-white/10 p-0.5"
-                                  onError={(e) => {
-                                    e.target.src = '/images/products/featured_rolex_submariner.jpg';
-                                  }}
-                                />
-                                <span className="font-semibold text-gray-200">{order.productShortName}</span>
-                              </div>
-                            </td>
-                            <td className="p-3 text-gray-300 whitespace-nowrap">
-                              <div className="flex items-center gap-1 text-gray-300">
-                                <MapPin className="w-3 h-3 text-[#00F0FF] flex-shrink-0" />
-                                <span>{order.area}</span>
-                              </div>
-                            </td>
-                            <td className="p-3 whitespace-nowrap">
-                              <div className="flex items-center gap-2">
-                                <img
-                                  src={order.riderAvatar}
-                                  alt={order.riderName}
-                                  className="w-6 h-6 rounded-full object-cover border border-white/20"
-                                />
-                                <span className="font-medium text-gray-200">{order.riderName}</span>
-                              </div>
-                            </td>
-                            <td className="p-3 whitespace-nowrap">
-                              <span
-                                className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold"
-                                style={{
-                                  backgroundColor: `${STATUS_COLORS[order.status] || '#6B7280'}25`,
-                                  color: STATUS_COLORS[order.status] || '#F8FAFC',
-                                  border: `1px solid ${STATUS_COLORS[order.status] || '#6B7280'}50`,
-                                }}
-                              >
-                                {order.status}
-                              </span>
-                            </td>
-                            <td className="p-3 font-semibold text-gray-300 whitespace-nowrap">
-                              {order.eta}
-                            </td>
-                            <td className="p-3 text-right whitespace-nowrap">
-                              <div className="flex items-center justify-end gap-1.5">
-                                {/* Eye View Timeline */}
-                                <button
-                                  onClick={() => {
-                                    setSelectedOrderForTracking(order);
-                                    setShowTrackingModal(true);
-                                  }}
-                                  className="p-1.5 rounded-lg text-gray-400 hover:text-[#00F0FF] hover:bg-white/10 transition-colors cursor-pointer"
-                                  title="View Live Shipment Tracking"
-                                >
-                                  <Eye className="w-3.5 h-3.5" />
-                                </button>
-
-                                {/* Phone Call */}
-                                <button
-                                  onClick={() => {
-                                    setContactTarget({
-                                      name: order.riderName,
-                                      phone: order.riderPhone,
-                                      role: 'Rider',
-                                      orderId: order.orderId,
-                                      customer: order.customer,
-                                      customerPhone: order.customerPhone,
-                                    });
-                                    setShowContactModal(true);
-                                  }}
-                                  className="p-1.5 rounded-lg text-gray-400 hover:text-[#39F5A5] hover:bg-white/10 transition-colors cursor-pointer"
-                                  title="Contact Rider or Customer"
-                                >
-                                  <Phone className="w-3.5 h-3.5" />
-                                </button>
-
-                                {/* More actions */}
-                                <button
-                                  onClick={() => {
-                                    setSelectedOrderForFailure(order);
-                                    setShowFailedAttemptModal(true);
-                                  }}
-                                  className="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-white/10 transition-colors cursor-pointer"
-                                  title="Log Delivery Attempt Failure"
-                                >
-                                  <MoreVertical className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Table Pagination matching image */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs text-[#A6B1C8]">
-                <span>Showing 1–5 of 312 orders</span>
-                <div className="flex items-center gap-1">
-                  <select className="px-2 py-1 rounded-lg border border-white/10 text-xs bg-[#0B1022] text-[#F8FAFC] outline-none mr-2">
-                    <option>5 per page ▾</option>
-                    <option>10 per page ▾</option>
-                    <option>25 per page ▾</option>
-                  </select>
-                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">«</button>
-                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">‹</button>
-                  <button className="px-2.5 py-1 rounded bg-[#00F0FF] text-black font-bold shadow-[0_0_10px_rgba(0,240,255,0.4)]">1</button>
-                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">2</button>
-                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">3</button>
-                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">4</button>
-                  <span className="px-1 text-gray-500">...</span>
-                  <button className="px-2.5 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5">63</button>
-                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">›</button>
-                  <button className="px-2 py-1 rounded border border-white/10 bg-[#0B1022] hover:bg-white/5 cursor-pointer">»</button>
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT: DELIVERY PARTNERS (28) WIDGET (lg:col-span-3) */}
-            <div className="bg-[#10182D]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-lg lg:col-span-3 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#F4B942]" />
-                  <h3 className="text-sm font-bold text-[#F8FAFC]">Delivery Partners <span className="text-gray-400 font-normal">(28)</span></h3>
-                </div>
-                <button
-                  onClick={() => setActiveTab('partners')}
-                  className="text-xs font-bold text-[#00F0FF] hover:text-[#00CFFF] cursor-pointer"
-                >
-                  View All →
-                </button>
-              </div>
-
-              {/* Partners List Matching UI */}
-              <div className="space-y-3">
-                {(deliveryData?.partners || []).slice(0, 4).map((rider) => (
-                  <div
-                    key={rider.id}
-                    className="p-3 rounded-xl border border-white/10 hover:border-[#00F0FF] bg-[#0B1022] hover:bg-white/5 transition-all flex items-center justify-between cursor-pointer group"
-                    onClick={() => {
-                      setContactTarget({
-                        name: rider.name,
-                        phone: rider.phone,
-                        role: 'Rider',
-                      });
-                      setShowContactModal(true);
-                    }}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src={rider.avatar}
-                        alt={rider.name}
-                        className="w-9 h-9 rounded-full object-cover border border-white/20"
-                      />
-                      <div>
-                        <p className="font-bold text-xs text-[#F8FAFC]">{rider.name}</p>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span
-                            className={`w-2 h-2 rounded-full ${
-                              rider.status === 'On Delivery'
-                                ? 'bg-[#39F5A5] animate-pulse shadow-[0_0_8px_rgba(57,245,165,0.6)]'
-                                : rider.status === 'Available'
-                                ? 'bg-[#F4B942]'
-                                : 'bg-gray-400'
-                            }`}
-                          />
-                          <span className="text-[11px] text-[#A6B1C8] font-medium">{rider.status}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-xs font-bold text-[#F8FAFC]">{rider.activeOrders} Orders</p>
-                      <p className="text-[10px] text-[#39F5A5] font-bold">{rider.successRate} Success</p>
-                    </div>
+                      {selectedOrderForDetail.deliveryStatus}
+                    </span>
                   </div>
-                ))}
-              </div>
-
-              {/* Add Delivery Partner Button */}
-              <button
-                onClick={() => setShowAddPartnerModal(true)}
-                className="w-full py-2 rounded-xl bg-[#0B1022] hover:bg-[#10182D] text-[#F8FAFC] border border-white/10 hover:border-[#00F0FF] font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.1)]"
-              >
-                <Plus className="w-3.5 h-3.5 text-[#00F0FF]" />
-                <span>Add Delivery Partner</span>
-              </button>
-            </div>
-          </div>
-        </main>
-      </div>
-
-      {/* =========================================================================
-          MODALS & OVERLAYS
-      ========================================================================== */}
-
-      {/* 1. CREATE SHIPMENT MODAL */}
-      {showCreateShipmentModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-[#D6A63C]" />
-                <h3 className="font-bold text-base text-[#071426]">Create New Delivery Shipment</h3>
-              </div>
-              <button
-                onClick={() => setShowCreateShipmentModal(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateShipment} className="space-y-4 mt-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Customer Full Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={shipmentForm.customer}
-                    onChange={(e) => setShipmentForm({ ...shipmentForm, customer: e.target.value })}
-                    placeholder="e.g. Shreya Verma"
-                    className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Customer Phone *</label>
-                  <input
-                    type="tel"
-                    required
-                    value={shipmentForm.customerPhone}
-                    onChange={(e) => setShipmentForm({ ...shipmentForm, customerPhone: e.target.value })}
-                    placeholder="+91 98765 43210"
-                    className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Watch Product Selection *</label>
-                <select
-                  value={shipmentForm.productName}
-                  onChange={(e) => setShipmentForm({ ...shipmentForm, productName: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                >
-                  <option value="Rolex Submariner Date 41mm">Rolex Submariner Date 41mm (₹18,999)</option>
-                  <option value="Rolex Cosmograph Daytona Gold">Rolex Cosmograph Daytona Gold (₹21,999)</option>
-                  <option value="Omega Speedmaster Professional">Omega Speedmaster Professional (₹16,499)</option>
-                  <option value="Omega Seamaster Diver 300M">Omega Seamaster Diver 300M (₹14,999)</option>
-                  <option value="Patek Philippe Nautilus 5711">Patek Philippe Nautilus 5711 (₹54,99,000)</option>
-                  <option value="Cartier Tank Must">Cartier Tank Must (₹3,49,000)</option>
-                  <option value="Apple Watch Series 10">Apple Watch Series 10 (₹46,900)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Doorstep Delivery Address *</label>
-                <textarea
-                  rows="2"
-                  required
-                  value={shipmentForm.address}
-                  onChange={(e) => setShipmentForm({ ...shipmentForm, address: e.target.value })}
-                  placeholder="Flat / House No, Street, Landmark"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs focus:border-[#D6A63C] outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Delivery Area *</label>
-                  <select
-                    value={shipmentForm.area}
-                    onChange={(e) => setShipmentForm({ ...shipmentForm, area: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                  >
-                    <option value="Gomti Nagar, Lucknow">Gomti Nagar</option>
-                    <option value="Indira Nagar, Lucknow">Indira Nagar</option>
-                    <option value="Aliganj, Lucknow">Aliganj</option>
-                    <option value="Hazratganj, Lucknow">Hazratganj</option>
-                    <option value="Jankipuram, Lucknow">Jankipuram</option>
-                    <option value="Mahanagar, Lucknow">Mahanagar</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Courier Partner</label>
-                  <select
-                    value={shipmentForm.courierPartner}
-                    onChange={(e) => setShipmentForm({ ...shipmentForm, courierPartner: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                  >
-                    <option value="BlueDart Express">BlueDart Express</option>
-                    <option value="Delhivery">Delhivery</option>
-                    <option value="DTDC Express">DTDC Express</option>
-                    <option value="Shadowfax">Shadowfax</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Priority</label>
-                  <select
-                    value={shipmentForm.priority}
-                    onChange={(e) => setShipmentForm({ ...shipmentForm, priority: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                  >
-                    <option value="Urgent Express">Urgent Express</option>
-                    <option value="High">High</option>
-                    <option value="Standard">Standard</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Assign Delivery Partner (Rider)</label>
-                <select
-                  value={shipmentForm.assignedRiderId}
-                  onChange={(e) => setShipmentForm({ ...shipmentForm, assignedRiderId: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                >
-                  {(deliveryData?.partners || []).map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name} — {p.area} ({p.status})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateShipmentModal(false)}
-                  className="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#D6A63C] hover:bg-[#c49533] text-[#071426] font-bold shadow-md cursor-pointer"
-                >
-                  Generate AWB & Dispatch
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* 2. ASSIGN DELIVERIES MODAL */}
-      {showAssignModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <Bike className="w-5 h-5 text-[#D6A63C]" />
-                <h3 className="font-bold text-base text-[#071426]">Assign Orders to Delivery Partner</h3>
-              </div>
-              <button
-                onClick={() => setShowAssignModal(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleAssignOrders} className="space-y-4 mt-4">
-              <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-100 text-blue-900">
-                <p className="font-bold">
-                  Selected Orders: {selectedOrderIds.length > 0 ? selectedOrderIds.join(', ') : 'Assigning pending batch queue'}
-                </p>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">Select Delivery Partner *</label>
-                <select
-                  value={assignForm.riderId}
-                  onChange={(e) => setAssignForm({ ...assignForm, riderId: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                >
-                  {(deliveryData?.partners || []).map((p) => (
-                    <option key={p.id} value={p.id} disabled={p.status === 'Off Duty'}>
-                      {p.name} — {p.status} ({p.activeOrders} active orders) {p.status === 'Off Duty' ? '— [OFF DUTY]' : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Delivery Priority</label>
-                  <select
-                    value={assignForm.priority}
-                    onChange={(e) => setAssignForm({ ...assignForm, priority: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                  >
-                    <option value="Urgent Express">Urgent Express (Within 2 Hours)</option>
-                    <option value="High">High (Same Day)</option>
-                    <option value="Standard">Standard Slot</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Delivery Time Slot</label>
-                  <select
-                    value={assignForm.timeSlot}
-                    onChange={(e) => setAssignForm({ ...assignForm, timeSlot: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:border-[#D6A63C] outline-none"
-                  >
-                    <option value="10:00 AM – 01:00 PM">Morning (10 AM – 1 PM)</option>
-                    <option value="01:00 PM – 04:00 PM">Afternoon (1 PM – 4 PM)</option>
-                    <option value="04:00 PM – 08:00 PM">Evening (4 PM – 8 PM)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowAssignModal(false)}
-                  className="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#D6A63C] hover:bg-[#c49533] text-[#071426] font-bold shadow-md cursor-pointer"
-                >
-                  Confirm Assignment
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* 3. SHIPMENT TRACKING MODAL */}
-      {showTrackingModal && selectedOrderForTracking && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-gray-100 text-xs max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-blue-600" />
-                <div>
-                  <h3 className="font-bold text-base text-[#071426]">
-                    Shipment Tracking: {selectedOrderForTracking.orderId}
-                  </h3>
-                  <p className="text-[11px] text-gray-500">
-                    AWB: <span className="font-mono font-bold text-gray-800">{selectedOrderForTracking.awbNumber}</span> ({selectedOrderForTracking.courierPartner})
+                  <p className="text-xs text-[#A7B1C2]">
+                    Air Waybill: <strong className="font-mono text-[#00D5FF]">{selectedOrderForDetail.awbNumber}</strong>
                   </p>
                 </div>
               </div>
               <button
-                onClick={() => setShowTrackingModal(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
+                onClick={() => setSelectedOrderForDetail(null)}
+                className="text-[#A7B1C2] hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 p-3.5 bg-gray-50 rounded-2xl border border-gray-100 my-4">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={selectedOrderForTracking.productImage}
-                  alt={selectedOrderForTracking.productShortName}
-                  className="w-12 h-12 rounded-xl object-contain bg-white border border-gray-200 p-1"
-                />
-                <div>
-                  <p className="font-bold text-gray-900">{selectedOrderForTracking.productName}</p>
-                  <p className="text-[11px] text-gray-500">{selectedOrderForTracking.customer} • {selectedOrderForTracking.formattedAmount}</p>
-                  <span className="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">
-                    {selectedOrderForTracking.status}
-                  </span>
-                </div>
+            {/* Product & Payment Details */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="p-4 rounded-xl bg-[#081529] border border-[#28334B] space-y-1.5">
+                <span className="font-bold text-white text-sm block">{selectedOrderForDetail.productName}</span>
+                <p className="text-[#A7B1C2]">Category: {selectedOrderForDetail.productCategory}</p>
+                <p className="text-[#E9B94F] font-bold text-sm">Value: {selectedOrderForDetail.formattedAmount}</p>
+                <p className="text-[#A7B1C2]">Payment: {selectedOrderForDetail.paymentType}</p>
               </div>
 
-              <div className="border-l border-gray-200 pl-3.5">
-                <p className="text-gray-500 text-[11px]">Assigned Rider:</p>
-                <p className="font-bold text-gray-900">{selectedOrderForTracking.riderName}</p>
-                <p className="text-[11px] text-gray-500">{selectedOrderForTracking.riderPhone}</p>
-                <p className="text-[11px] font-semibold text-blue-600 mt-1">ETA: {selectedOrderForTracking.eta}</p>
+              <div className="p-4 rounded-xl bg-[#081529] border border-[#28334B] space-y-1.5">
+                <span className="font-bold text-white text-sm block">Customer & Destination</span>
+                <p className="text-white font-medium">{selectedOrderForDetail.customerName}</p>
+                <p className="text-[#A7B1C2]">{selectedOrderForDetail.mobileNumber}</p>
+                <p className="text-[#A7B1C2]">{selectedOrderForDetail.deliveryAddress}, {selectedOrderForDetail.city} - {selectedOrderForDetail.pincode}</p>
               </div>
             </div>
 
-            <div className="space-y-4 px-2">
-              <h4 className="font-bold text-xs text-gray-800 uppercase tracking-wider">
-                Full Shipment Journey (8 Milestones)
-              </h4>
-              <div className="relative pl-6 space-y-6 before:content-[''] before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-200">
-                {(selectedOrderForTracking.trackingTimeline || []).map((step, idx) => (
-                  <div key={idx} className="relative">
-                    <div
-                      className={`absolute -left-6 top-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                        step.completed
-                          ? 'bg-emerald-500 text-white ring-4 ring-emerald-100'
-                          : step.active
-                          ? 'bg-blue-600 text-white ring-4 ring-blue-100 animate-pulse'
-                          : 'bg-gray-200 text-gray-500'
-                      }`}
-                    >
-                      {step.completed ? '✓' : idx + 1}
+            {/* Shipment & Rider Information */}
+            <div className="p-4 rounded-xl bg-[#081529] border border-[#28334B] grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <span className="text-[#A7B1C2] text-[10px] block">Courier Partner</span>
+                <span className="font-bold text-white">{selectedOrderForDetail.deliveryPartner}</span>
+              </div>
+              <div>
+                <span className="text-[#A7B1C2] text-[10px] block">Designated City Rider</span>
+                <span className="font-bold text-[#E9B94F]">{selectedOrderForDetail.rider}</span>
+                <span className="text-[10px] text-[#A7B1C2] block">{selectedOrderForDetail.riderPhone}</span>
+              </div>
+              <div>
+                <span className="text-[#A7B1C2] text-[10px] block">Expected Delivery ETA</span>
+                <span className="font-bold text-[#00C98B]">{selectedOrderForDetail.expectedDeliveryDate}</span>
+              </div>
+            </div>
+
+            {/* Delivery Timeline */}
+            <div>
+              <span className="font-bold text-xs text-white block mb-2">Milestone Tracking History</span>
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar text-xs">
+                {selectedOrderForDetail.trackingTimeline.map((step, idx) => (
+                  <div key={idx} className="p-2.5 rounded-lg bg-[#081529] border border-[#28334B] flex items-center justify-between">
+                    <div>
+                      <span className="font-bold text-white block">{step.stage}</span>
+                      <span className="text-[10px] text-[#A7B1C2]">{step.desc}</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <p className={`font-bold ${step.completed || step.active ? 'text-gray-900' : 'text-gray-400'}`}>
-                        {step.title}
-                      </p>
-                      <span className="text-[11px] text-gray-400 font-medium">{step.time}</span>
+                    <div className="text-right">
+                      <span className="text-[10px] text-[#00D5FF] font-mono block">{step.time}</span>
+                      <span className="text-[10px] text-[#A7B1C2]">{step.location}</span>
                     </div>
-                    <p className="text-[11px] text-gray-500 mt-0.5">{step.location}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="pt-4 border-t border-gray-100 mt-6 flex justify-end">
+            {/* Footer Buttons */}
+            <div className="flex items-center justify-between pt-3 border-t border-[#28334B]">
               <button
-                onClick={() => setShowTrackingModal(false)}
-                className="px-5 py-2 rounded-xl bg-[#071426] text-white font-bold cursor-pointer"
+                onClick={() => {
+                  setSelectedOrderForTracking(selectedOrderForDetail);
+                  setSelectedOrderForDetail(null);
+                  setActiveTab('tracking');
+                }}
+                className="flex items-center gap-1.5 text-xs font-bold text-[#00D5FF] hover:underline"
               >
-                Close Tracking
+                <MapPin className="w-3.5 h-3.5" />
+                <span>Open Live Map Tracking</span>
+              </button>
+
+              <button
+                onClick={() => setSelectedOrderForDetail(null)}
+                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs"
+              >
+                Close Details
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 4. CONTACT MODAL */}
-      {showContactModal && contactTarget && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+      {/* MODAL: CREATE SHIPMENT MODAL */}
+      {showCreateShipmentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#11172C] border border-[#28334B] rounded-2xl w-full max-w-lg p-6 shadow-2xl text-white space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#28334B]">
               <div className="flex items-center gap-2">
-                <Phone className="w-5 h-5 text-green-600" />
-                <h3 className="font-bold text-base text-[#071426]">Direct Contact</h3>
+                <Truck className="w-5 h-5 text-[#00D5FF]" />
+                <h3 className="font-serif font-bold text-base text-white">
+                  Create Outbound Watch Shipment
+                </h3>
               </div>
-              <button
-                onClick={() => setShowContactModal(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
+              <button onClick={() => setShowCreateShipmentModal(false)} className="text-[#A7B1C2] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 my-4">
-              <div className="p-3.5 rounded-2xl bg-gray-50 border border-gray-100">
-                <span className="text-[10px] uppercase font-bold text-gray-400">Rider Contact:</span>
-                <p className="font-bold text-sm text-gray-900 mt-0.5">{contactTarget.name}</p>
-                <p className="text-xs text-blue-600 font-mono font-bold">{contactTarget.phone}</p>
-                <a
-                  href={`tel:${contactTarget.phone}`}
-                  className="mt-2.5 w-full py-1.5 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <Phone className="w-3.5 h-3.5" />
-                  <span>Call Rider Now</span>
-                </a>
-              </div>
-
-              {contactTarget.customer && (
-                <div className="p-3.5 rounded-2xl bg-amber-50/60 border border-amber-100">
-                  <span className="text-[10px] uppercase font-bold text-gray-400">Customer Handover:</span>
-                  <p className="font-bold text-sm text-gray-900 mt-0.5">{contactTarget.customer}</p>
-                  <p className="text-xs text-amber-700 font-mono font-bold">{contactTarget.customerPhone}</p>
-                  <a
-                    href={`tel:${contactTarget.customerPhone}`}
-                    className="mt-2.5 w-full py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <Phone className="w-3.5 h-3.5" />
-                    <span>Call Customer</span>
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 5. SERVICE AREAS MODAL */}
-      {showServiceAreasModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <Layers className="w-5 h-5 text-[#D6A63C]" />
-                <h3 className="font-bold text-base text-[#071426]">Active Delivery Service Sectors</h3>
-              </div>
-              <button
-                onClick={() => setShowServiceAreasModal(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-3 my-4">
-              {[
-                { name: 'Gomti Nagar, Lucknow', pincode: '226010', riders: 'Rohan Singh, Vikas Patel', sla: 'Same Day (2h Express)' },
-                { name: 'Indira Nagar, Lucknow', pincode: '226016', riders: 'Amit Kumar', sla: 'Same Day (3h Express)' },
-                { name: 'Aliganj, Lucknow', pincode: '226024', riders: 'Neha Sharma', sla: 'Standard 4h SLA' },
-                { name: 'Hazratganj, Lucknow', pincode: '226001', riders: 'Vikas Patel', sla: 'Same Day' },
-                { name: 'Jankipuram, Lucknow', pincode: '226021', riders: 'Arjun Mishra', sla: 'Standard Next Day' },
-              ].map((area, idx) => (
-                <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-between">
-                  <div>
-                    <p className="font-bold text-gray-900">{area.name}</p>
-                    <p className="text-gray-500 text-[10px]">Pincode: {area.pincode} • Active: {area.riders}</p>
-                  </div>
-                  <span className="px-2 py-0.5 rounded bg-green-100 text-green-700 font-bold text-[10px]">
-                    {area.sla}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex justify-end pt-2 border-t border-gray-100">
-              <button
-                onClick={() => setShowServiceAreasModal(false)}
-                className="px-4 py-2 rounded-xl bg-[#071426] text-white font-bold cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 6. FULL LIVE MAP MODAL */}
-      {showFullMapModal && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-gray-100 text-xs flex flex-col h-[85vh]">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-blue-600" />
+            <form onSubmit={handleCreateShipmentSubmit} className="space-y-3.5 text-xs">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <h3 className="font-bold text-base text-[#071426]">Live GPS Delivery Radar (Lucknow Fleet)</h3>
-                  <p className="text-[11px] text-gray-500">4 Active Riders • 12 Active In-Transit Shipments</p>
+                  <label className="text-[#A7B1C2] font-semibold block mb-1">Customer Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={createShipmentForm.customerName}
+                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, customerName: e.target.value })}
+                    placeholder="e.g. Alok Singhal"
+                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#A7B1C2] font-semibold block mb-1">Mobile Number</label>
+                  <input
+                    type="text"
+                    required
+                    value={createShipmentForm.mobileNumber}
+                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, mobileNumber: e.target.value })}
+                    placeholder="+91 98765 00000"
+                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
+                  />
                 </div>
               </div>
-              <button
-                onClick={() => setShowFullMapModal(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
 
-            <div className="relative flex-1 my-4 rounded-2xl overflow-hidden bg-[#e5ece8] border border-gray-200">
-              <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 800 450">
-                <path d="M 0 320 Q 250 280, 480 340 T 800 270 L 800 450 L 0 450 Z" fill="#cbe3f5" opacity="0.8" />
-                <rect x="60" y="50" width="160" height="110" rx="15" fill="#d2e7d6" opacity="0.8" />
-                <rect x="520" y="80" width="180" height="130" rx="18" fill="#d2e7d6" opacity="0.8" />
-                <path d="M 0 120 L 800 150" stroke="#ffffff" strokeWidth="10" strokeLinecap="round" />
-                <path d="M 0 240 L 800 220" stroke="#ffffff" strokeWidth="8" />
-                <path d="M 220 0 L 280 450" stroke="#ffffff" strokeWidth="12" />
-                <path d="M 520 0 L 490 450" stroke="#ffffff" strokeWidth="10" />
-
-                <path d="M 120 380 Q 260 350, 420 280 T 680 180" fill="none" stroke="#2563EB" strokeWidth="6" strokeLinecap="round" strokeDasharray="6 3" />
-                <path d="M 120 380 Q 320 240, 520 180 T 700 80" fill="none" stroke="#10B981" strokeWidth="5" strokeLinecap="round" strokeDasharray="4 2" />
-              </svg>
-
-              <div className="absolute left-[120px] top-[380px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <div className="w-8 h-8 rounded-full bg-[#071426] text-white flex items-center justify-center text-sm shadow-xl border-2 border-white">
-                  🏠
-                </div>
-                <span className="text-[10px] font-bold bg-[#071426] text-white px-2 py-0.5 rounded shadow mt-1">
-                  Lucknow Central Hub
-                </span>
+              <div>
+                <label className="text-[#A7B1C2] font-semibold block mb-1">Watch Model</label>
+                <input
+                  type="text"
+                  required
+                  value={createShipmentForm.productName}
+                  onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, productName: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
+                />
               </div>
 
-              <div className="absolute left-[440px] top-[270px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm shadow-xl border-2 border-white ring-4 ring-blue-300">
-                  🛵
-                </div>
-                <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded shadow mt-1">
-                  Rohan Singh (ETA 12:40 PM)
-                </span>
+              <div>
+                <label className="text-[#A7B1C2] font-semibold block mb-1">Street Address</label>
+                <input
+                  type="text"
+                  required
+                  value={createShipmentForm.deliveryAddress}
+                  onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, deliveryAddress: e.target.value })}
+                  placeholder="Villa / Flat number, building, sector"
+                  className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
+                />
               </div>
-            </div>
 
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-gray-500 text-xs">
-                ℹ Verified real-time telemetry from rider mobile app.
-              </span>
-              <button
-                onClick={() => setShowFullMapModal(false)}
-                className="px-5 py-2 rounded-xl bg-[#071426] text-white font-bold cursor-pointer"
-              >
-                Close Map
-              </button>
-            </div>
+              <div className="grid grid-cols-3 gap-2.5">
+                <div>
+                  <label className="text-[#A7B1C2] font-semibold block mb-1">City</label>
+                  <input
+                    type="text"
+                    value={createShipmentForm.city}
+                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, city: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#A7B1C2] font-semibold block mb-1">State</label>
+                  <input
+                    type="text"
+                    value={createShipmentForm.state}
+                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, state: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#A7B1C2] font-semibold block mb-1">PIN Code</label>
+                  <input
+                    type="text"
+                    value={createShipmentForm.pincode}
+                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, pincode: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#A7B1C2] font-semibold block mb-1">Carrier Partner</label>
+                  <select
+                    value={createShipmentForm.deliveryPartner}
+                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, deliveryPartner: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white cursor-pointer"
+                  >
+                    {couriers.map((cp) => (
+                      <option key={cp.id} value={cp.name}>{cp.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[#A7B1C2] font-semibold block mb-1">Order Amount (₹)</label>
+                  <input
+                    type="number"
+                    value={createShipmentForm.orderAmount}
+                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, orderAmount: Number(e.target.value) })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white font-bold"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#28334B]">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateShipmentModal(false)}
+                  className="px-4 py-2 rounded-xl bg-white/5 text-[#A7B1C2]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#6500FF] to-[#8B00FF] hover:from-[#7310FF] hover:to-[#9B10FF] text-white font-bold"
+                >
+                  Generate Air Waybill & Label
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
 
-      {/* 7. SUPPORT / NEED HELP MODAL */}
+      {/* MODAL: HELP & LOGISTICS SUPPORT */}
       {showSupportModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 text-xs text-center">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#D6A63C] text-2xl flex items-center justify-center mx-auto mb-3">
-              🚚
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#11172C] border border-[#28334B] rounded-2xl w-full max-w-md p-6 shadow-2xl text-white space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#28334B]">
+              <div className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-[#E9B94F]" />
+                <h3 className="font-serif font-bold text-base text-white">
+                  Logistics Command Support
+                </h3>
+              </div>
+              <button onClick={() => setShowSupportModal(false)} className="text-[#A7B1C2] hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <h3 className="font-bold text-base text-[#071426] mb-1">Logistics Operations Helpdesk</h3>
-            <p className="text-gray-500 mb-4 leading-relaxed">
-              Assistance for delivery partners, route changes, emergency vehicle breakdown and parcel tracking.
-            </p>
-            <div className="p-3 bg-gray-50 rounded-2xl text-left space-y-2 mb-4 border border-gray-100">
-              <p className="text-gray-600">
-                <span className="font-bold text-gray-800">Dispatch Desk:</span> +91 98765 43210
-              </p>
-              <p className="text-gray-600">
-                <span className="font-bold text-gray-800">Email:</span> logistics@watchhub.in
-              </p>
-              <p className="text-gray-600">
-                <span className="font-bold text-gray-800">Shift Manager:</span> Amit Sharma
-              </p>
+
+            <div className="text-xs space-y-3">
+              <div className="p-3 rounded-xl bg-[#081529] border border-[#28334B] space-y-1">
+                <span className="font-bold text-white block">Central Dispatch Desk (24/7)</span>
+                <p className="text-[#A7B1C2]">Phone: +91 1800 209 8890 (Toll Free)</p>
+                <p className="text-[#00D5FF]">Email: logistics@watchhub.com</p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-[#081529] border border-[#28334B] space-y-1">
+                <span className="font-bold text-[#E9B94F] block">Rider Fleet Emergency Hotline</span>
+                <p className="text-[#A7B1C2]">Direct line for on-road rider assistance, vehicle breakdown and route divergence.</p>
+                <p className="text-white font-mono font-bold mt-1">+91 98110 99881</p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-[#081529] border border-[#28334B] space-y-1">
+                <span className="font-bold text-[#00C98B] block">Transit Insurance Claim Team</span>
+                <p className="text-[#A7B1C2]">For damaged packaging or inspection discrepancies.</p>
+                <p className="text-[#00D5FF]">claims@watchhub-insurance.com</p>
+              </div>
             </div>
+
             <button
               onClick={() => setShowSupportModal(false)}
-              className="w-full py-2.5 rounded-xl bg-[#D6A63C] text-[#071426] font-bold text-xs cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs"
             >
-              Close
+              Close Support Desk
             </button>
           </div>
         </div>
       )}
-    </div>
+    </DeliveryManagerLayout>
   );
 }
