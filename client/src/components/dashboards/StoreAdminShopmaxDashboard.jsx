@@ -712,6 +712,15 @@ export const StoreAdminShopmaxDashboard = ({
               >
                 Barcode Scanner
               </button>
+              <button
+                type="button"
+                onClick={() => onNavigateTab?.('pos')}
+                className="ml-auto text-[11px] font-bold text-[#00D9FF] hover:underline flex items-center gap-1 cursor-pointer"
+                title="Launch Full Dedicated POS Terminal Station"
+              >
+                <span>Full POS Terminal</span>
+                <span>↗</span>
+              </button>
             </div>
 
             {/* TAB 1: POS TERMINAL */}

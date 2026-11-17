@@ -181,6 +181,22 @@ export const AppRoutes = () => {
         }
       />
       <Route
+        path="/store-admin/pos"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.STORE_ADMIN, 'Store Admin', ROLES.SUPER_ADMIN, 'Super Admin']}>
+            <RoleDashboard initialTab="pos" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/pos"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.STORE_ADMIN, 'Store Admin', ROLES.SUPER_ADMIN, 'Super Admin']}>
+            <RoleDashboard initialTab="pos" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
         path="/admin/products"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.STORE_ADMIN, 'Store Admin', ROLES.SUPER_ADMIN, 'Super Admin']}>

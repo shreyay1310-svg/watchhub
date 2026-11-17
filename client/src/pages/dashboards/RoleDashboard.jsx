@@ -32,6 +32,7 @@ import {
 
 // Import All Role Module Components
 import StoreAdminShopmaxDashboard from '../../components/dashboards/StoreAdminShopmaxDashboard';
+import POSTerminalModule from '../../components/dashboards/modules/POSTerminalModule';
 import ProductsManagementModule from '../../components/dashboards/modules/ProductsManagementModule';
 import OrdersManagementModule from '../../components/dashboards/modules/OrdersManagementModule';
 import InventoryManagementModule from '../../components/dashboards/modules/InventoryManagementModule';
@@ -100,7 +101,6 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
   const renderActiveModule = () => {
     switch (activeTab) {
       case 'dashboard':
-      case 'pos':
         return (
           <StoreAdminShopmaxDashboard
             searchQuery={searchVal}
@@ -108,6 +108,8 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
             onOpenAddProduct={() => setShowAddProductModal(true)}
           />
         );
+      case 'pos':
+        return <POSTerminalModule />;
       case 'products':
         return <ProductsManagementModule />;
       case 'categories':
