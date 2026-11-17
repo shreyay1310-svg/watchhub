@@ -17,21 +17,23 @@ import {
 } from 'lucide-react';
 
 export default function ReorderAlertsModule({
-  products,
-  onGeneratePurchaseRequest,
-  onNavigateTab,
+  products = [],
+  onGeneratePurchaseRequest = () => {},
+  onNavigateTab = () => {},
 }) {
+  const safeProducts = Array.isArray(products) ? products : [];
+
   const [searchQuery, setSearchQuery] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('All');
   const [selectedProductIds, setSelectedProductIds] = useState([]);
 
   // Compute reorder items based on stock threshold
   const reorderItems = useMemo(() => {
-    return products
-      .filter((p) => p.availableQty <= p.reorderLevel || p.status === 'Low Stock' || p.status === 'Out of Stock')
+    return safeProducts
+      .filter((p) => p && ((p.availableQty || 0) <= (p.reorderLevel || 10) || p.status === 'Low Stock' || p.status === 'Out of Stock'))
       .map((p) => {
         let calculatedPriority = 'Low';
-        if (p.availableQty === 0 || p.status === 'Out of Stock') {
+        if ((p.availableQty || 0) === 0 || p.status === 'Out of Stock') {
           calculatedPriority = 'Critical';
         } else if (p.availableQty <= Math.ceil(p.minStock * 0.5)) {
           calculatedPriority = 'High';

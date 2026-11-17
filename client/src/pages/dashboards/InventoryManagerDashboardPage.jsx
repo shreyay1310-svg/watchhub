@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import InventoryManagerLayout from '../../components/inventory/InventoryManagerLayout';
 import {
   INITIAL_INVENTORY_PRODUCTS,
@@ -34,18 +35,99 @@ import {
   Check,
 } from 'lucide-react';
 
-export default function InventoryManagerDashboardPage() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+// Error Boundary to prevent any module issue from rendering a blank page
+class InventoryErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('[Inventory Manager Render Error]', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="bg-[#11123D] border border-rose-500/50 rounded-2xl p-6 text-white text-center space-y-4 my-8 max-w-xl mx-auto shadow-2xl">
+          <div className="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center text-xl font-bold">
+            ⚠️
+          </div>
+          <h2 className="text-xl font-bold">Inventory Module Initializing</h2>
+          <p className="text-xs text-[#A7B1C2]">
+            {this.state.error?.message || 'Recovering state buffer from vault master...'}
+          </p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              window.location.reload();
+            }}
+            className="px-4 py-2 bg-[#6500FF] hover:bg-[#5700db] text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
+          >
+            Reload Module
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+const PATH_TO_TAB = {
+  '/inventory-manager/dashboard': 'dashboard',
+  '/inventory-manager': 'dashboard',
+  '/inventory-manager/stock-overview': 'overview',
+  '/inventory-manager/inventory': 'stock',
+  '/inventory': 'stock',
+  '/inventory-manager/stock-movements': 'movements',
+  '/inventory-manager/stock-adjustments': 'adjustments',
+  '/inventory-manager/warehouses': 'warehouses',
+  '/inventory-manager/reorder-alerts': 'reorder',
+  '/inventory-manager/purchase-requests': 'requests',
+  '/inventory-manager/reports': 'reports',
+  '/inventory-manager/history': 'history',
+  '/inventory-manager/settings': 'settings',
+};
+
+const TAB_TO_PATH = {
+  dashboard: '/inventory-manager/dashboard',
+  overview: '/inventory-manager/stock-overview',
+  stock: '/inventory-manager/inventory',
+  movements: '/inventory-manager/stock-movements',
+  adjustments: '/inventory-manager/stock-adjustments',
+  warehouses: '/inventory-manager/warehouses',
+  reorder: '/inventory-manager/reorder-alerts',
+  requests: '/inventory-manager/purchase-requests',
+  reports: '/inventory-manager/reports',
+  history: '/inventory-manager/history',
+  settings: '/inventory-manager/settings',
+};
+
+export default function InventoryManagerDashboardPage({ initialTab }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const currentTabFromPath = PATH_TO_TAB[location.pathname] || initialTab || 'dashboard';
+  const [activeTab, setActiveTab] = useState(currentTabFromPath);
   const [selectedWarehouse, setSelectedWarehouse] = useState('All Warehouses');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Synchronize activeTab when browser URL changes (e.g. back/forward navigation or direct links)
+  useEffect(() => {
+    const tabFromRoute = PATH_TO_TAB[location.pathname];
+    if (tabFromRoute && tabFromRoute !== activeTab) {
+      setActiveTab(tabFromRoute);
+    }
+  }, [location.pathname]);
+
   // Live Shared State
-  const [products, setProducts] = useState(INITIAL_INVENTORY_PRODUCTS);
-  const [warehouses, setWarehouses] = useState(INITIAL_WAREHOUSES);
-  const [movements, setMovements] = useState(INITIAL_STOCK_MOVEMENTS);
-  const [adjustments, setAdjustments] = useState(INITIAL_STOCK_ADJUSTMENTS);
-  const [purchaseRequests, setPurchaseRequests] = useState(INITIAL_PURCHASE_REQUESTS);
-  const [history, setHistory] = useState(INITIAL_INVENTORY_HISTORY);
+  const [products, setProducts] = useState(INITIAL_INVENTORY_PRODUCTS || []);
+  const [warehouses, setWarehouses] = useState(INITIAL_WAREHOUSES || []);
+  const [movements, setMovements] = useState(INITIAL_STOCK_MOVEMENTS || []);
+  const [adjustments, setAdjustments] = useState(INITIAL_STOCK_ADJUSTMENTS || []);
+  const [purchaseRequests, setPurchaseRequests] = useState(INITIAL_PURCHASE_REQUESTS || []);
+  const [history, setHistory] = useState(INITIAL_INVENTORY_HISTORY || []);
 
   // Global Toast
   const [toastMessage, setToastMessage] = useState(null);
@@ -282,12 +364,15 @@ export default function InventoryManagerDashboardPage() {
 
   const handleNavigateTab = (tabId, opts = {}) => {
     setActiveTab(tabId);
+    if (TAB_TO_PATH[tabId] && location.pathname !== TAB_TO_PATH[tabId]) {
+      navigate(TAB_TO_PATH[tabId]);
+    }
   };
 
   return (
     <InventoryManagerLayout
       activeTab={activeTab}
-      onSelectTab={(tabId) => setActiveTab(tabId)}
+      onSelectTab={handleNavigateTab}
       selectedWarehouse={selectedWarehouse}
       onSelectWarehouse={(wh) => setSelectedWarehouse(wh)}
       onSearch={(q) => setSearchQuery(q)}
@@ -304,109 +389,112 @@ export default function InventoryManagerDashboardPage() {
         </div>
       )}
 
-      {/* MODULE 1: DASHBOARD */}
-      {activeTab === 'dashboard' && (
-        <DashboardModule
-          products={products}
-          warehouses={warehouses}
-          movements={movements}
-          adjustments={adjustments}
-          purchaseRequests={purchaseRequests}
-          onNavigateTab={handleNavigateTab}
-          onQuickStockAction={handleUpdateStock}
-        />
-      )}
+      {/* Dynamic Module Content with Error Boundary */}
+      <InventoryErrorBoundary>
+        {/* MODULE 1: DASHBOARD */}
+        {activeTab === 'dashboard' && (
+          <DashboardModule
+            products={products}
+            warehouses={warehouses}
+            movements={movements}
+            adjustments={adjustments}
+            purchaseRequests={purchaseRequests}
+            onNavigateTab={handleNavigateTab}
+            onQuickStockAction={handleUpdateStock}
+          />
+        )}
 
-      {/* MODULE 2: STOCK OVERVIEW */}
-      {activeTab === 'overview' && (
-        <StockOverviewModule
-          products={products}
-          warehouses={warehouses}
-          onNavigateTab={handleNavigateTab}
-        />
-      )}
+        {/* MODULE 2: STOCK OVERVIEW */}
+        {activeTab === 'overview' && (
+          <StockOverviewModule
+            products={products}
+            warehouses={warehouses}
+            onNavigateTab={handleNavigateTab}
+          />
+        )}
 
-      {/* MODULE 3: INVENTORY (STOCK) */}
-      {activeTab === 'stock' && (
-        <InventoryStockModule
-          products={products}
-          warehouses={warehouses}
-          onAddProduct={handleAddProduct}
-          onUpdateStock={handleUpdateStock}
-          onTransferStock={handleTransferStock}
-        />
-      )}
+        {/* MODULE 3: INVENTORY (STOCK) */}
+        {activeTab === 'stock' && (
+          <InventoryStockModule
+            products={products}
+            warehouses={warehouses}
+            onAddProduct={handleAddProduct}
+            onUpdateStock={handleUpdateStock}
+            onTransferStock={handleTransferStock}
+          />
+        )}
 
-      {/* MODULE 4: STOCK MOVEMENTS */}
-      {activeTab === 'movements' && (
-        <StockMovementsModule
-          movements={movements}
-          warehouses={warehouses}
-        />
-      )}
+        {/* MODULE 4: STOCK MOVEMENTS */}
+        {activeTab === 'movements' && (
+          <StockMovementsModule
+            movements={movements}
+            warehouses={warehouses}
+          />
+        )}
 
-      {/* MODULE 5: STOCK ADJUSTMENTS */}
-      {activeTab === 'adjustments' && (
-        <StockAdjustmentsModule
-          adjustments={adjustments}
-          products={products}
-          warehouses={warehouses}
-          onCreateAdjustment={handleCreateAdjustment}
-          onApproveRejectAdjustment={handleApproveRejectAdjustment}
-        />
-      )}
+        {/* MODULE 5: STOCK ADJUSTMENTS */}
+        {activeTab === 'adjustments' && (
+          <StockAdjustmentsModule
+            adjustments={adjustments}
+            products={products}
+            warehouses={warehouses}
+            onCreateAdjustment={handleCreateAdjustment}
+            onApproveRejectAdjustment={handleApproveRejectAdjustment}
+          />
+        )}
 
-      {/* MODULE 6: WAREHOUSE MANAGEMENT */}
-      {activeTab === 'warehouses' && (
-        <WarehouseManagementModule
-          warehouses={warehouses}
-          products={products}
-          onAddWarehouse={handleAddWarehouse}
-          onUpdateWarehouse={handleUpdateWarehouse}
-          onTransferStock={handleTransferStock}
-        />
-      )}
+        {/* MODULE 6: WAREHOUSE MANAGEMENT */}
+        {activeTab === 'warehouses' && (
+          <WarehouseManagementModule
+            warehouses={warehouses}
+            products={products}
+            onAddWarehouse={handleAddWarehouse}
+            onUpdateWarehouse={handleUpdateWarehouse}
+            onTransferStock={handleTransferStock}
+          />
+        )}
 
-      {/* MODULE 7: REORDER ALERTS */}
-      {activeTab === 'reorder' && (
-        <ReorderAlertsModule
-          products={products}
-          onGeneratePurchaseRequest={handleGeneratePurchaseRequest}
-          onNavigateTab={handleNavigateTab}
-        />
-      )}
+        {/* MODULE 7: REORDER ALERTS */}
+        {activeTab === 'reorder' && (
+          <ReorderAlertsModule
+            products={products}
+            onGeneratePurchaseRequest={handleGeneratePurchaseRequest}
+            onNavigateTab={handleNavigateTab}
+          />
+        )}
 
-      {/* MODULE 8: PURCHASE REQUESTS */}
-      {activeTab === 'requests' && (
-        <PurchaseRequestsModule
-          purchaseRequests={purchaseRequests}
-          products={products}
-          warehouses={warehouses}
-          onCreatePR={handleGeneratePurchaseRequest}
-          onUpdatePRStatus={handleUpdatePRStatus}
-        />
-      )}
+        {/* MODULE 8: PURCHASE REQUESTS */}
+        {activeTab === 'requests' && (
+          <PurchaseRequestsModule
+            purchaseRequests={purchaseRequests}
+            products={products}
+            warehouses={warehouses}
+            onCreatePR={handleGeneratePurchaseRequest}
+            onUpdatePRStatus={handleUpdatePRStatus}
+          />
+        )}
 
-      {/* MODULE 9: STOCK REPORTS */}
-      {activeTab === 'reports' && (
-        <StockReportsModule
-          products={products}
-          warehouses={warehouses}
-          movements={movements}
-        />
-      )}
+        {/* MODULE 9: STOCK REPORTS */}
+        {activeTab === 'reports' && (
+          <StockReportsModule
+            products={products}
+            warehouses={warehouses}
+            movements={movements}
+          />
+        )}
 
-      {/* MODULE 10: INVENTORY HISTORY */}
-      {activeTab === 'history' && (
-        <InventoryHistoryModule
-          history={history}
-        />
-      )}
+        {/* MODULE 10: INVENTORY HISTORY */}
+        {activeTab === 'history' && (
+          <InventoryHistoryModule
+            history={history}
+          />
+        )}
 
-      {/* MODULE 11: SETTINGS */}
-      {activeTab === 'settings' && (
-        <InventorySettingsModule />
-      )}
+        {/* MODULE 11: SETTINGS */}
+        {activeTab === 'settings' && (
+          <InventorySettingsModule />
+        )}
+      </InventoryErrorBoundary>
 
       {/* SUPPORT MODAL */}
       {showSupportModal && (

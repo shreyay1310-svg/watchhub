@@ -223,26 +223,66 @@ export const AppRoutes = () => {
         }
       />
 
-      {/* 3. Dedicated Inventory Manager Dashboard Routes */}
+      {/* 3. Dedicated Inventory Manager Dashboard Routes (All 11 Modules) */}
       <Route
         path="/inventory-manager/dashboard"
-        element={<InventoryManagerDashboardPage />}
+        element={<InventoryManagerDashboardPage initialTab="dashboard" />}
       />
       <Route
         path="/inventory-manager"
-        element={<InventoryManagerDashboardPage />}
+        element={<InventoryManagerDashboardPage initialTab="dashboard" />}
+      />
+      <Route
+        path="/inventory-manager/stock-overview"
+        element={<InventoryManagerDashboardPage initialTab="overview" />}
+      />
+      <Route
+        path="/inventory-manager/inventory"
+        element={<InventoryManagerDashboardPage initialTab="stock" />}
+      />
+      <Route
+        path="/inventory-manager/stock-movements"
+        element={<InventoryManagerDashboardPage initialTab="movements" />}
+      />
+      <Route
+        path="/inventory-manager/stock-adjustments"
+        element={<InventoryManagerDashboardPage initialTab="adjustments" />}
+      />
+      <Route
+        path="/inventory-manager/warehouses"
+        element={<InventoryManagerDashboardPage initialTab="warehouses" />}
+      />
+      <Route
+        path="/inventory-manager/reorder-alerts"
+        element={<InventoryManagerDashboardPage initialTab="reorder" />}
+      />
+      <Route
+        path="/inventory-manager/purchase-requests"
+        element={<InventoryManagerDashboardPage initialTab="requests" />}
+      />
+      <Route
+        path="/inventory-manager/reports"
+        element={<InventoryManagerDashboardPage initialTab="reports" />}
+      />
+      <Route
+        path="/inventory-manager/history"
+        element={<InventoryManagerDashboardPage initialTab="history" />}
+      />
+      <Route
+        path="/inventory-manager/settings"
+        element={<InventoryManagerDashboardPage initialTab="settings" />}
       />
       <Route
         path="/inventory"
-        element={<InventoryManagerDashboardPage />}
+        element={<InventoryManagerDashboardPage initialTab="stock" />}
       />
       <Route
         path="/store-admin/inventory"
-        element={<InventoryManagerDashboardPage />}
+        element={<InventoryManagerDashboardPage initialTab="dashboard" />}
       />
       <Route
         path="/admin/inventory"
-        element={<InventoryManagerDashboardPage />}
+        element={<InventoryManagerDashboardPage initialTab="dashboard" />}
       />
 
       {/* 4. Dedicated Delivery Manager Dashboard Routes */}

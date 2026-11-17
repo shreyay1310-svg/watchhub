@@ -18,12 +18,15 @@ import {
 } from 'lucide-react';
 
 export default function WarehouseManagementModule({
-  warehouses,
-  products,
-  onAddWarehouse,
-  onUpdateWarehouse,
-  onTransferStock,
+  warehouses = [],
+  products = [],
+  onAddWarehouse = () => {},
+  onUpdateWarehouse = () => {},
+  onTransferStock = () => {},
 }) {
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+  const safeProducts = Array.isArray(products) ? products : [];
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [editWarehouseItem, setEditWarehouseItem] = useState(null);
   const [viewWarehouseItem, setViewWarehouseItem] = useState(null);
@@ -42,9 +45,9 @@ export default function WarehouseManagementModule({
 
   // Transfer Form
   const [transferForm, setTransferForm] = useState({
-    productId: products[0]?.id || '',
-    fromWarehouse: warehouses[0]?.name || 'Main Central Vault',
-    toWarehouse: warehouses[1]?.name || 'Delhi Regional Warehouse',
+    productId: safeProducts[0]?.id || '',
+    fromWarehouse: safeWarehouses[0]?.name || 'Main Central Vault',
+    toWarehouse: safeWarehouses[1]?.name || safeWarehouses[0]?.name || 'Delhi Regional Warehouse',
     quantity: 2,
     notes: 'Inter-vault stock balance',
   });
@@ -158,14 +161,15 @@ export default function WarehouseManagementModule({
 
       {/* 2. Warehouse Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {warehouses.map((wh) => {
-          const whProducts = products.filter(
+        {safeWarehouses.map((wh) => {
+          const whProducts = safeProducts.filter(
             (p) => p.warehouse === wh.name || p.warehouseId === wh.id || p.warehouse === wh.code
           );
           const currentUnits = whProducts.reduce((sum, p) => sum + (p.totalQty || 0), 0);
           const lowStockCount = whProducts.filter((p) => p.status === 'Low Stock' || p.status === 'Out of Stock').length;
           const uniqueBrands = [...new Set(whProducts.map((p) => p.brand))];
-          const utilPercent = Math.min(100, Math.round((currentUnits / wh.capacityUnits) * 100));
+          const capacity = Number(wh.capacityUnits || wh.capacity || 5000);
+          const utilPercent = Math.min(100, Math.round((currentUnits / (capacity || 1)) * 100));
 
           return (
             <div
@@ -205,7 +209,7 @@ export default function WarehouseManagementModule({
                   </div>
                   <div>
                     <span className="text-[10px] text-[#A7B1C2] block">Vault Capacity</span>
-                    <span className="text-gray-300 font-mono">{wh.capacityUnits.toLocaleString()} units</span>
+                    <span className="text-gray-300 font-mono">{capacity.toLocaleString()} units</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-[#A7B1C2] block">Low Stock Items</span>

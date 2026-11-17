@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Boxes,
   PieChart,
@@ -29,20 +29,22 @@ export default function InventoryManagerSidebar({
   reorderAlertsCount = 18,
 }) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Exactly matching the 11 inventory navigation modules from the specification
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Boxes },
-    { id: 'overview', label: 'Stock Overview', icon: PieChart },
-    { id: 'stock', label: 'Inventory (Stock)', icon: Box },
-    { id: 'movements', label: 'Stock Movements', icon: ArrowRightLeft },
-    { id: 'adjustments', label: 'Stock Adjustments', icon: SlidersHorizontal },
-    { id: 'warehouses', label: 'Warehouse Management', icon: Building2 },
-    { id: 'reorder', label: 'Reorder Alerts', icon: Bell, badge: reorderAlertsCount ? `${reorderAlertsCount}` : null },
-    { id: 'requests', label: 'Purchase Requests', icon: FileSpreadsheet },
-    { id: 'reports', label: 'Stock Reports', icon: BarChart3 },
-    { id: 'history', label: 'Inventory History', icon: History },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'dashboard', label: 'Dashboard', icon: Boxes, path: '/inventory-manager/dashboard' },
+    { id: 'overview', label: 'Stock Overview', icon: PieChart, path: '/inventory-manager/stock-overview' },
+    { id: 'stock', label: 'Inventory (Stock)', icon: Box, path: '/inventory-manager/inventory' },
+    { id: 'movements', label: 'Stock Movements', icon: ArrowRightLeft, path: '/inventory-manager/stock-movements' },
+    { id: 'adjustments', label: 'Stock Adjustments', icon: SlidersHorizontal, path: '/inventory-manager/stock-adjustments' },
+    { id: 'warehouses', label: 'Warehouse Management', icon: Building2, path: '/inventory-manager/warehouses' },
+    { id: 'reorder', label: 'Reorder Alerts', icon: Bell, badge: reorderAlertsCount ? `${reorderAlertsCount}` : null, path: '/inventory-manager/reorder-alerts' },
+    { id: 'requests', label: 'Purchase Requests', icon: FileSpreadsheet, path: '/inventory-manager/purchase-requests' },
+    { id: 'reports', label: 'Stock Reports', icon: BarChart3, path: '/inventory-manager/reports' },
+    { id: 'history', label: 'Inventory History', icon: History, path: '/inventory-manager/history' },
+    { id: 'settings', label: 'Settings', icon: Settings, path: '/inventory-manager/settings' },
   ];
 
   return (
@@ -97,7 +99,7 @@ export default function InventoryManagerSidebar({
         <div className="flex-1 overflow-y-auto py-3 px-3 space-y-1 scrollbar-thin scrollbar-thumb-white/10 text-xs">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isSelected = activeTab === item.id;
+            const isSelected = activeTab === item.id || location.pathname === item.path;
 
             return (
               <button
@@ -105,6 +107,7 @@ export default function InventoryManagerSidebar({
                 type="button"
                 onClick={() => {
                   if (onSelectTab) onSelectTab(item.id);
+                  if (item.path) navigate(item.path);
                   if (onCloseMobile) onCloseMobile();
                 }}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition-all group cursor-pointer ${
@@ -157,7 +160,10 @@ export default function InventoryManagerSidebar({
               <div className="grid grid-cols-2 gap-1.5 pt-1 text-[11px]">
                 <button
                   type="button"
-                  onClick={() => onSelectTab && onSelectTab('settings')}
+                  onClick={() => {
+                    if (onSelectTab) onSelectTab('settings');
+                    navigate('/inventory-manager/settings');
+                  }}
                   className="py-1.5 px-2 rounded-lg bg-[#17165A] hover:bg-[#6500FF]/30 text-[#A7B1C2] hover:text-white flex items-center justify-center gap-1 border border-[#29305D] transition-colors cursor-pointer"
                   title="Profile & Vault Settings"
                 >

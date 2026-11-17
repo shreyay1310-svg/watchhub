@@ -47,23 +47,29 @@ import {
 } from 'recharts';
 
 export default function DashboardModule({
-  products,
-  warehouses,
-  movements,
-  adjustments,
-  purchaseRequests,
-  onNavigateTab,
-  onQuickStockAction,
+  products = [],
+  warehouses = [],
+  movements = [],
+  adjustments = [],
+  purchaseRequests = [],
+  onNavigateTab = () => {},
+  onQuickStockAction = () => {},
 }) {
   const [activityTab, setActivityTab] = useState('movements'); // movements, adjustments, requests, alerts
 
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+  const safeMovements = Array.isArray(movements) ? movements : [];
+  const safeAdjustments = Array.isArray(adjustments) ? adjustments : [];
+  const safePurchaseRequests = Array.isArray(purchaseRequests) ? purchaseRequests : [];
+
   // Compute live metrics
-  const totalProducts = products.length;
-  const totalStockUnits = products.reduce((acc, p) => acc + (p.totalQty || 0), 0);
-  const totalValuation = products.reduce((acc, p) => acc + (p.totalQty || 0) * (p.unitCost || 0), 0);
-  const lowStockCount = products.filter((p) => p.status === 'Low Stock').length;
-  const outOfStockCount = products.filter((p) => p.status === 'Out of Stock' || p.availableQty === 0).length;
-  const pendingPRs = purchaseRequests.filter((pr) => pr.status === 'Submitted' || pr.status === 'Under Review').length;
+  const totalProducts = safeProducts.length;
+  const totalStockUnits = safeProducts.reduce((acc, p) => acc + (p?.totalQty || 0), 0);
+  const totalValuation = safeProducts.reduce((acc, p) => acc + (p?.totalQty || 0) * (p?.unitCost || 0), 0);
+  const lowStockCount = safeProducts.filter((p) => p?.status === 'Low Stock').length;
+  const outOfStockCount = safeProducts.filter((p) => p?.status === 'Out of Stock' || (p?.availableQty || 0) === 0).length;
+  const pendingPRs = safePurchaseRequests.filter((pr) => pr?.status === 'Submitted' || pr?.status === 'Under Review').length;
 
   // Monthly Stock In vs Stock Out chart data
   const monthlyInOutData = [
@@ -87,8 +93,10 @@ export default function DashboardModule({
 
   // Category distribution
   const categoryMap = {};
-  products.forEach((p) => {
-    categoryMap[p.category] = (categoryMap[p.category] || 0) + (p.totalQty || 0);
+  safeProducts.forEach((p) => {
+    if (p?.category) {
+      categoryMap[p.category] = (categoryMap[p.category] || 0) + (p?.totalQty || 0);
+    }
   });
   const categoryData = Object.keys(categoryMap).map((cat) => ({
     name: cat,
@@ -96,8 +104,8 @@ export default function DashboardModule({
   }));
 
   // Low stock products for alerts
-  const lowStockProducts = products
-    .filter((p) => p.status === 'Low Stock' || p.status === 'Out of Stock' || p.availableQty <= p.reorderLevel)
+  const lowStockProducts = safeProducts
+    .filter((p) => p?.status === 'Low Stock' || p?.status === 'Out of Stock' || (p?.availableQty || 0) <= (p?.reorderLevel || 10))
     .slice(0, 6);
 
   const formatCurrency = (amount) => {
@@ -446,8 +454,10 @@ export default function DashboardModule({
             </button>
           </div>
           <div className="space-y-3">
-            {warehouses.map((wh) => {
-              const utilPercent = Math.round((wh.currentUnits / wh.capacityUnits) * 100);
+            {safeWarehouses.map((wh) => {
+              const capacity = Number(wh.capacityUnits || wh.capacity || 5000);
+              const current = Number(wh.currentUnits || 0);
+              const utilPercent = Math.min(100, Math.round((current / (capacity || 1)) * 100));
               return (
                 <div key={wh.id} className="p-2.5 rounded-xl bg-[#17165A]/40 border border-[#29305D]">
                   <div className="flex items-center justify-between text-xs mb-1">
@@ -461,8 +471,8 @@ export default function DashboardModule({
                     />
                   </div>
                   <div className="flex justify-between text-[10px] text-[#A7B1C2]">
-                    <span>{wh.currentUnits.toLocaleString()} units</span>
-                    <span>Cap: {wh.capacityUnits.toLocaleString()}</span>
+                    <span>{current.toLocaleString()} units</span>
+                    <span>Cap: {capacity.toLocaleString()}</span>
                   </div>
                 </div>
               );

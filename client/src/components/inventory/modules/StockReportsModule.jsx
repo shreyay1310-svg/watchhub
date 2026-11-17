@@ -29,7 +29,15 @@ import {
   Tooltip,
 } from 'recharts';
 
-export default function StockReportsModule({ products, warehouses, movements }) {
+export default function StockReportsModule({
+  products = [],
+  warehouses = [],
+  movements = [],
+}) {
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+  const safeMovements = Array.isArray(movements) ? movements : [];
+
   const [selectedReportId, setSelectedReportId] = useState('val');
   const [dateRange, setDateRange] = useState('Month to Date (Nov 2026)');
 

@@ -32,7 +32,14 @@ import {
   Legend,
 } from 'recharts';
 
-export default function StockOverviewModule({ products, warehouses, onNavigateTab }) {
+export default function StockOverviewModule({
+  products = [],
+  warehouses = [],
+  onNavigateTab = () => {},
+}) {
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+
   const [selectedWarehouse, setSelectedWarehouse] = useState('All');
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -41,25 +48,26 @@ export default function StockOverviewModule({ products, warehouses, onNavigateTa
   const [searchQuery, setSearchQuery] = useState('');
 
   // Unique filter lists
-  const brands = useMemo(() => ['All', ...new Set(products.map((p) => p.brand))], [products]);
-  const categories = useMemo(() => ['All', ...new Set(products.map((p) => p.category))], [products]);
+  const brands = useMemo(() => ['All', ...new Set(safeProducts.map((p) => p?.brand).filter(Boolean))], [safeProducts]);
+  const categories = useMemo(() => ['All', ...new Set(safeProducts.map((p) => p?.category).filter(Boolean))], [safeProducts]);
   const statuses = ['All', 'In Stock', 'Low Stock', 'Out of Stock'];
 
   // Filtered products
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
+    return safeProducts.filter((p) => {
+      if (!p) return false;
       const matchWh = selectedWarehouse === 'All' || p.warehouse === selectedWarehouse || p.warehouseId === selectedWarehouse;
       const matchBrand = selectedBrand === 'All' || p.brand === selectedBrand;
       const matchCat = selectedCategory === 'All' || p.category === selectedCategory;
       const matchStat = selectedStatus === 'All' || p.status === selectedStatus;
       const matchSearch =
         !searchQuery ||
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.brand.toLowerCase().includes(searchQuery.toLowerCase());
+        (p.name && p.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (p.sku && p.sku.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (p.brand && p.brand.toLowerCase().includes(searchQuery.toLowerCase()));
       return matchWh && matchBrand && matchCat && matchStat && matchSearch;
     });
-  }, [products, selectedWarehouse, selectedBrand, selectedCategory, selectedStatus, searchQuery]);
+  }, [safeProducts, selectedWarehouse, selectedBrand, selectedCategory, selectedStatus, searchQuery]);
 
   // Aggregate numbers for the 7 required summary cards
   const totalStock = filteredProducts.reduce((sum, p) => sum + (p.totalQty || 0), 0);

@@ -20,12 +20,16 @@ import {
 } from 'lucide-react';
 
 export default function PurchaseRequestsModule({
-  purchaseRequests,
-  products,
-  warehouses,
-  onCreatePR,
-  onUpdatePRStatus,
+  purchaseRequests = [],
+  products = [],
+  warehouses = [],
+  onCreatePR = () => {},
+  onUpdatePRStatus = () => {},
 }) {
+  const safePurchaseRequests = Array.isArray(purchaseRequests) ? purchaseRequests : [];
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showNewModal, setShowNewModal] = useState(false);
@@ -39,18 +43,19 @@ export default function PurchaseRequestsModule({
     priority: 'Standard',
     items: [
       {
-        productId: products[0]?.id || '',
-        name: products[0]?.name || '',
-        sku: products[0]?.sku || '',
+        productId: safeProducts[0]?.id || '',
+        name: safeProducts[0]?.name || '',
+        sku: safeProducts[0]?.sku || '',
         quantity: 10,
-        unitCost: products[0]?.unitCost || 780000,
+        unitCost: safeProducts[0]?.unitCost || 780000,
       },
     ],
     notes: 'Safety stock replenishment for upcoming festive boutique peak.',
   });
 
   const filteredPRs = useMemo(() => {
-    return purchaseRequests.filter((pr) => {
+    return safePurchaseRequests.filter((pr) => {
+      if (!pr) return false;
       const matchStatus = statusFilter === 'All' || pr.status === statusFilter || pr.stage === statusFilter;
       const matchSearch =
         !searchQuery ||

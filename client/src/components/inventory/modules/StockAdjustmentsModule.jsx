@@ -21,12 +21,16 @@ import {
 } from 'lucide-react';
 
 export default function StockAdjustmentsModule({
-  adjustments,
-  products,
-  warehouses,
-  onCreateAdjustment,
-  onApproveRejectAdjustment,
+  adjustments = [],
+  products = [],
+  warehouses = [],
+  onCreateAdjustment = () => {},
+  onApproveRejectAdjustment = () => {},
 }) {
+  const safeAdjustments = Array.isArray(adjustments) ? adjustments : [];
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showNewModal, setShowNewModal] = useState(false);
@@ -36,11 +40,11 @@ export default function StockAdjustmentsModule({
   // Form State matching Required Adjustment Form Fields:
   // Select Product, SKU, Select Warehouse, System Stock, Physical Stock, Difference Quantity, Adjustment Type, Reason, Description, Upload Supporting Documents
   const [formData, setFormData] = useState({
-    productId: products[0]?.id || '',
-    sku: products[0]?.sku || '',
+    productId: safeProducts[0]?.id || '',
+    sku: safeProducts[0]?.sku || '',
     warehouse: 'Main Central Vault',
-    recordedStock: products[0]?.totalQty || 24,
-    physicalStock: products[0]?.totalQty || 24,
+    recordedStock: safeProducts[0]?.totalQty || 24,
+    physicalStock: safeProducts[0]?.totalQty || 24,
     adjustmentType: 'Physical Count Reconciliation',
     reason: 'Physical Stock Correction',
     description: 'Quarterly safe cycle count discrepancy verified by dual custody inspection.',

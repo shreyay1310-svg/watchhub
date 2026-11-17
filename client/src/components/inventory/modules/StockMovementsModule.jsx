@@ -21,7 +21,10 @@ import {
   Boxes,
 } from 'lucide-react';
 
-export default function StockMovementsModule({ movements, warehouses }) {
+export default function StockMovementsModule({ movements = [], warehouses = [] }) {
+  const safeMovements = Array.isArray(movements) ? movements : [];
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [selectedWarehouse, setSelectedWarehouse] = useState('All');
@@ -44,7 +47,8 @@ export default function StockMovementsModule({ movements, warehouses }) {
 
   // Filter movements
   const filteredMovements = useMemo(() => {
-    return movements.filter((m) => {
+    return safeMovements.filter((m) => {
+      if (!m) return false;
       const matchType = selectedType === 'All' || m.type === selectedType;
       const matchWh =
         selectedWarehouse === 'All' ||
@@ -52,22 +56,21 @@ export default function StockMovementsModule({ movements, warehouses }) {
         (m.toLocation && m.toLocation.includes(selectedWarehouse));
       const matchSearch =
         !searchQuery ||
-        m.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (m.reference && m.reference.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (m.id && m.id.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (m.productName && m.productName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (m.sku && m.sku.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (m.performedBy && m.performedBy.toLowerCase().includes(searchQuery.toLowerCase()));
       return matchType && matchWh && matchSearch;
     });
-  }, [movements, selectedType, selectedWarehouse, searchQuery]);
+  }, [safeMovements, selectedType, selectedWarehouse, searchQuery]);
 
   // Top Summary Cards: Total Stock In, Total Stock Out, Warehouse Transfers, Returns
-  const totalStockIn = movements
-    .filter((m) => m.type === 'Stock In' || m.quantity > 0)
-    .reduce((s, m) => s + Math.abs(m.quantity || 0), 0);
+  const totalStockIn = safeMovements
+    .filter((m) => m?.type === 'Stock In' || (m?.quantity || 0) > 0)
+    .reduce((s, m) => s + Math.abs(m?.quantity || 0), 0);
 
-  const totalStockOut = movements
-    .filter((m) => m.type === 'Stock Out' || m.type === 'Sales Deduction' || (m.quantity < 0 && m.type !== 'Warehouse Transfer'))
+  const totalStockOut = safeMovements
+    .filter((m) => m?.type === 'Stock Out' || m?.type === 'Sales Deduction' || ((m?.quantity || 0) < 0 && m?.type !== 'Warehouse Transfer'))
     .reduce((s, m) => s + Math.abs(m.quantity || 0), 0);
 
   const totalTransfers = movements

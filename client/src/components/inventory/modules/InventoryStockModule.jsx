@@ -31,12 +31,15 @@ import {
 } from 'lucide-react';
 
 export default function InventoryStockModule({
-  products,
-  warehouses,
-  onAddProduct,
-  onUpdateStock,
-  onTransferStock,
+  products = [],
+  warehouses = [],
+  onAddProduct = () => {},
+  onUpdateStock = () => {},
+  onTransferStock = () => {},
 }) {
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeWarehouses = Array.isArray(warehouses) ? warehouses : [];
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedWarehouse, setSelectedWarehouse] = useState('All');
   const [selectedBrand, setSelectedBrand] = useState('All');
@@ -77,12 +80,12 @@ export default function InventoryStockModule({
   // Required ADD STOCK FORM Fields:
   // Select Product, SKU, Supplier, Warehouse, Quantity Received, Purchase Cost, Batch Number, Received Date, Invoice Number, Notes
   const [addStockForm, setAddStockForm] = useState({
-    productId: products[0]?.id || '',
-    sku: products[0]?.sku || '',
-    supplier: products[0]?.supplier || 'Rolex Geneva SA / Swiss Imports Ltd',
-    warehouse: products[0]?.warehouse || 'Main Central Vault',
+    productId: safeProducts[0]?.id || '',
+    sku: safeProducts[0]?.sku || '',
+    supplier: safeProducts[0]?.supplier || 'Rolex Geneva SA / Swiss Imports Ltd',
+    warehouse: safeProducts[0]?.warehouse || 'Main Central Vault',
     quantityReceived: 5,
-    purchaseCost: products[0]?.unitCost || 500000,
+    purchaseCost: safeProducts[0]?.unitCost || 500000,
     batchNumber: `BATCH-2026-${Math.floor(100 + Math.random() * 900)}`,
     receivedDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
     invoiceNumber: `INV-PO-${Math.floor(1000 + Math.random() * 9000)}`,

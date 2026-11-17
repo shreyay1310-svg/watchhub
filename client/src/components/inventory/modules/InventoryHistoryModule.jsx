@@ -15,7 +15,8 @@ import {
   RotateCcw,
 } from 'lucide-react';
 
-export default function InventoryHistoryModule({ history }) {
+export default function InventoryHistoryModule({ history = [] }) {
+  const safeHistory = Array.isArray(history) ? history : [];
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedChangeType, setSelectedChangeType] = useState('All');
 
@@ -29,18 +30,19 @@ export default function InventoryHistoryModule({ history }) {
   ];
 
   const filteredHistory = useMemo(() => {
-    return history.filter((h) => {
+    return safeHistory.filter((h) => {
+      if (!h) return false;
       const matchType = selectedChangeType === 'All' || h.changeType === selectedChangeType;
       const matchSearch =
         !searchQuery ||
-        h.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        h.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        h.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        h.modifiedBy.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        h.remarks.toLowerCase().includes(searchQuery.toLowerCase());
+        (h.id && h.id.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (h.productName && h.productName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (h.sku && h.sku.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (h.modifiedBy && h.modifiedBy.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (h.remarks && h.remarks.toLowerCase().includes(searchQuery.toLowerCase()));
       return matchType && matchSearch;
     });
-  }, [history, selectedChangeType, searchQuery]);
+  }, [safeHistory, selectedChangeType, searchQuery]);
 
   const exportAuditLog = () => {
     const headers = ['HistoryID,Date,Time,Product,SKU,Warehouse,Before,After,Diff,ChangeType,ModifiedBy,Remarks\n'];
