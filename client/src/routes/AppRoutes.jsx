@@ -19,6 +19,10 @@ import EditorialStoriesPage from '../pages/customer/EditorialStoriesPage';
 import StoryDetailPage from '../pages/customer/StoryDetailPage';
 import LoginPage from '../pages/auth/LoginPage';
 import SignupPage from '../pages/auth/SignupPage';
+import EmailVerificationPage from '../pages/auth/EmailVerificationPage';
+import EmailOtpLoginPage from '../pages/auth/EmailOtpLoginPage';
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import RoleDashboard from '../pages/dashboards/RoleDashboard';
 import InventoryManagerDashboardPage from '../pages/dashboards/InventoryManagerDashboardPage';
 import DeliveryManagerDashboardPage from '../pages/dashboards/DeliveryManagerDashboardPage';
@@ -165,6 +169,10 @@ export const AppRoutes = () => {
       {/* Authentication Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/verify-email" element={<EmailVerificationPage />} />
+      <Route path="/email-otp-login" element={<EmailOtpLoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       {/* Dynamic Role Dispatcher (/dashboard) */}
       <Route path="/dashboard" element={<RoleDashboardDispatcher />} />

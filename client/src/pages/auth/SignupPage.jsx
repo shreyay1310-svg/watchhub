@@ -8,27 +8,28 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
-  Gift,
-  Truck,
   Crown,
   Store,
   Package,
+  Truck,
   Headphones,
   CheckCircle2,
   ArrowRight,
-  RefreshCw,
-  Smartphone,
+  RotateCcw,
   KeyRound,
   Sparkles,
   ChevronDown,
+  Clock,
+  AlertTriangle,
 } from 'lucide-react';
 import { useAuth, ROLES } from '../../context/AuthContext';
+import OtpInput from '../../components/auth/OtpInput';
 
 export const SignupPage = () => {
-  const { register } = useAuth();
+  const { register, setUser } = useAuth();
   const navigate = useNavigate();
 
-  // Multi-step signup: 1: Details & Role, 2: OTP Verification, 3: "Account is being created..."
+  // Multi-step signup: 1: Details & Role, 2: Real Email OTP Verification, 3: Creation animation
   const [step, setStep] = useState(1);
 
   // Form Fields
@@ -41,19 +42,18 @@ export const SignupPage = () => {
   const [agreeTerms, setAgreeTerms] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // OTP State
-  const [generatedOtp, setGeneratedOtp] = useState('');
   const [enteredOtp, setEnteredOtp] = useState('');
   const [otpError, setOtpError] = useState('');
-  const [smsToast, setSmsToast] = useState(null);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendNotice, setResendNotice] = useState('');
 
   // Creation animation state
   const [creationProgress, setCreationProgress] = useState(15);
   const [creationStatus, setCreationStatus] = useState('Initializing profile credentials...');
 
-  // Available User Types / Roles
   const ROLE_OPTIONS = [
     {
       id: ROLES.CUSTOMER,
@@ -108,7 +108,7 @@ export const SignupPage = () => {
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
-  // Step 1: Validate details and send OTP
+  // Step 1: Validate details and send real Email OTP via Resend
   const handleProceedToOtp = async (e) => {
     e.preventDefault();
     setError('');
@@ -139,234 +139,230 @@ export const SignupPage = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      const tenDigit = cleanDigits.slice(-10);
-      const res = await fetch('/api/auth/send-otp', {
+      const cleanEmail = email.trim().toLowerCase();
+      const res = await fetch('/api/auth/send-email-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          identifier: tenDigit,
-          channel: 'sms',
+          email: cleanEmail,
+          name: name.trim(),
+          purpose: 'registration',
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.status === 'fail') {
+        setError(data.message || 'Failed to dispatch verification email.');
+        setLoading(false);
+        return;
+      }
+
+      setStep(2);
+      setResendCooldown(60);
+      setEnteredOtp('');
+      setOtpError('');
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to reach authentication server. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  // Resend Email OTP
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0) return;
+    setOtpError('');
+    setResendNotice('');
+
+    try {
+      const res = await fetch('/api/auth/resend-email-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
           purpose: 'registration',
         }),
       });
       const data = await res.json();
-      const code = data.devOtp || Math.floor(100000 + Math.random() * 900000).toString();
-      setGeneratedOtp(code);
-      setEnteredOtp(code);
 
-      // Trigger SMS Toast notification for realistic device preview
-      setSmsToast({
-        phone: `+91 ${tenDigit.slice(0, 5)} ${tenDigit.slice(5)}`,
-        otp: code,
-        time: 'Just now',
-      });
-      setTimeout(() => setSmsToast(null), 12000);
+      if (!res.ok || data.status === 'fail') {
+        setOtpError(data.message || 'Failed to resend code.');
+        return;
+      }
 
-      setStep(2);
       setResendCooldown(60);
-    } catch (err) {
-      console.warn('[OTP dispatch]', err);
-      // Fallback
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
-      setGeneratedOtp(code);
-      setEnteredOtp(code);
-      setStep(2);
-      setResendCooldown(60);
+      setResendNotice('A new verification code has been dispatched to your email.');
+      setTimeout(() => setResendNotice(''), 5000);
+    } catch {
+      setOtpError('Error contacting email service.');
     }
   };
 
-  // Step 2: Verify OTP and transition to creation animation
+  // Step 2: Verify Email OTP and complete backend registration
   const handleVerifyOtpAndCreate = async (e) => {
-    e.preventDefault();
-    const cleanDigits = phone.replace(/[^0-9]/g, '').slice(-10);
+    if (e) e.preventDefault();
+    if (enteredOtp.length !== 6) {
+      setOtpError('Please enter the complete 6-digit code.');
+      return;
+    }
+
+    setLoading(true);
+    setOtpError('');
 
     try {
-      const verifyRes = await fetch('/api/auth/verify-otp', {
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanDigits = phone.replace(/[^0-9]/g, '').slice(-10);
+
+      const verifyRes = await fetch('/api/auth/verify-email-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          identifier: cleanDigits,
-          code: enteredOtp,
+          email: cleanEmail,
+          otp: enteredOtp,
           purpose: 'registration',
+          name: name.trim(),
+          phone: '+91 ' + cleanDigits,
+          password: password,
+          role: role,
         }),
       });
+
       const verifyData = await verifyRes.json();
-      if (!verifyRes.ok && verifyData.status === 'fail' && enteredOtp !== generatedOtp) {
-        setOtpError(verifyData.message || 'Invalid 6-digit verification code.');
+
+      if (!verifyRes.ok || verifyData.status === 'fail') {
+        setOtpError(verifyData.message || 'Invalid or expired verification code.');
+        setLoading(false);
         return;
       }
-    } catch (err) {
-      // Fallback comparison
-      if (enteredOtp !== generatedOtp) {
-        setOtpError('Invalid 6-digit OTP code.');
-        return;
+
+      // Store authenticated session
+      if (verifyData.accessToken) {
+        localStorage.setItem('watchhub_token', verifyData.accessToken);
       }
-    }
+      if (verifyData.user && setUser) {
+        setUser(verifyData.user);
+      }
 
-    setOtpError('');
-    setStep(3); // Enter "User account is being created..." screen!
-    setCreationProgress(25);
-    setCreationStatus(`Creating ${currentRoleObj.label} profile...`);
-
-    setTimeout(() => {
-      setCreationProgress(65);
-      setCreationStatus(`Configuring ${currentRoleObj.label} permissions & 256-bit credentials...`);
-    }, 700);
-
-    setTimeout(async () => {
-      setCreationProgress(95);
-      setCreationStatus('Finalizing secure session...');
-
-      const cleanPhone = phone.replace(/[^0-9]/g, '').slice(-10);
-      await register(name, email, password, '+91 ' + cleanPhone, role);
-
-      setCreationProgress(100);
-      setCreationStatus('User account created successfully! Redirecting...');
+      setLoading(false);
+      setStep(3); // Enter creation animation
+      setCreationProgress(30);
+      setCreationStatus(`Creating verified ${currentRoleObj.label} profile...`);
 
       setTimeout(() => {
-        if (role === ROLES.CUSTOMER) {
-          navigate('/');
-        } else {
-          navigate('/dashboard');
-        }
-      }, 1000);
-    }, 1600);
+        setCreationProgress(75);
+        setCreationStatus(`Configuring permissions & secured encryption...`);
+      }, 700);
+
+      setTimeout(() => {
+        setCreationProgress(100);
+        setCreationStatus('Account activated successfully! Redirecting...');
+
+        setTimeout(() => {
+          if (role === ROLES.CUSTOMER) {
+            navigate('/');
+          } else {
+            navigate('/dashboard');
+          }
+        }, 900);
+      }, 1500);
+    } catch (err) {
+      setOtpError('Network verification error. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-watch-navy flex flex-col font-poppins selection:bg-watch-gold selection:text-black">
-      {/* ── Simulated SMS Push Notification Toast ── */}
-      {smsToast && (
-        <div className="fixed top-5 right-5 sm:right-8 z-[100] max-w-sm w-full bg-[#0D1522] text-white p-4 rounded-2xl shadow-2xl border border-[#C4913B]/50 animate-bounce-in flex items-start gap-3.5 backdrop-blur-md">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C4913B] to-[#8C601E] text-white flex items-center justify-center flex-shrink-0 shadow-md">
-            <Smartphone className="w-5 h-5" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold tracking-wider text-[#F5D88A] uppercase flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block"></span>
-                SMS Message · {smsToast.time}
-              </span>
-              <button
-                onClick={() => setSmsToast(null)}
-                className="text-gray-400 hover:text-white text-xs cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-            <p className="text-xs text-gray-100 font-medium mt-1 leading-snug">
-              WatchHub Registration: Your OTP is{' '}
-              <strong className="font-mono text-sm font-bold text-[#F5D88A] bg-black/40 px-1.5 py-0.5 rounded border border-[#C4913B]/40">
-                {smsToast.otp}
-              </strong>
-              . Valid for 10 minutes.
-            </p>
-            <p className="text-[10.5px] text-gray-400 mt-1 flex items-center gap-1">
-              <span>Delivered to</span>
-              <span className="text-gray-300 font-semibold">{smsToast.phone}</span>
-            </p>
-          </div>
+    <div className="min-h-screen bg-[#070918] flex flex-col font-sans selection:bg-[#00D9E8]/30 selection:text-white text-white">
+      {/* Top Navbar Header */}
+      <header className="h-16 border-b border-[#252D42] bg-[#091426]/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">
+        <Link to="/" className="flex items-center gap-2">
+          <span className="text-xl">👑</span>
+          <span className="text-lg font-black tracking-widest text-white font-serif">
+            WATCH<span className="text-[#00D9E8]">HUB</span>
+          </span>
+        </Link>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-[#A7B1C2] hidden sm:inline">Already a member?</span>
+          <Link
+            to="/login"
+            className="px-3.5 py-1.5 rounded-xl bg-[#111729] hover:bg-[#161F38] text-[#00D9E8] border border-[#252D42] font-semibold transition-colors"
+          >
+            Sign In
+          </Link>
         </div>
-      )}
-
-      {/* Top Navbar */}
-      <nav className="h-16 px-6 sm:px-12 bg-watch-navy-dark border-b border-white/10 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gray-900 to-watch-gold flex items-center justify-center text-lg border border-watch-gold/40 shadow">
-            ⌚
-          </div>
-          <div>
-            <h1 className="text-xl font-extrabold text-white leading-none">
-              Watch<span className="text-watch-gold">Hub</span>
-            </h1>
-            <p className="text-[9px] text-gray-400 mt-0.5">Premium Watches for Every Style</p>
-          </div>
-        </Link>
-        <Link to="/login" className="text-xs text-watch-gold font-semibold hover:underline flex items-center gap-1">
-          <span>Already have an account?</span>
-          <span className="font-bold underline">Login</span>
-        </Link>
-      </nav>
+      </header>
 
       {/* Main Container */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-[#0a111c]">
-        <div className="w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl bg-[#0b1320] border border-white/10 grid grid-cols-1 md:grid-cols-12">
-          
-          {/* Left Brand Panel */}
-          <div className="md:col-span-5 p-8 flex flex-col justify-between bg-gradient-to-br from-[#0c1524] to-[#121926] text-white border-b md:border-b-0 md:border-r border-white/5">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
+        <div className="w-full max-w-4xl bg-[#091426] border border-[#252D42] rounded-3xl overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-12">
+          {/* Left Luxury Showcase Banner */}
+          <div className="md:col-span-5 bg-gradient-to-br from-[#111729] via-[#091426] to-[#070918] p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#252D42]">
             <div>
-              <span className="text-xs font-bold text-watch-gold tracking-widest uppercase block mb-1">
-                JOIN WATCHHUB 2026
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight mb-6">
-                Create Your <br />
-                <span className="text-watch-gold">{currentRoleObj.label}</span>
-              </h2>
-
-              <div className="space-y-4 text-xs text-gray-300">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-watch-gold/10 border border-watch-gold/20 flex items-center justify-center text-watch-gold flex-shrink-0">
-                    <Gift className="w-4 h-4" />
-                  </div>
-                  <span>Flat 15% Welcome Voucher & luxury privileges</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-watch-gold/10 border border-watch-gold/20 flex items-center justify-center text-watch-gold flex-shrink-0">
-                    <Truck className="w-4 h-4" />
-                  </div>
-                  <span>Priority Free Express Shipping across all 28 states</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-watch-gold/10 border border-watch-gold/20 flex items-center justify-center text-watch-gold flex-shrink-0">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <span>Instant role verification with OTP security</span>
-                </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00D9E8]/10 text-[#00D9E8] border border-[#00D9E8]/30 text-[11px] font-semibold mb-6">
+                <span>✦</span>
+                <span>Haute Horlogerie Membership</span>
               </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight font-serif">
+                Join the Circle of Luxury Collectors
+              </h2>
+              <p className="text-xs text-[#A7B1C2] mt-3 leading-relaxed">
+                Gain verified access to limited-edition timepieces, private atelier viewings, certified authentications, and global armored delivery.
+              </p>
             </div>
 
-            <div className="pt-6 border-t border-white/10 text-xs text-gray-400 flex items-center justify-between">
-              <span>Trusted by 50,000+ members</span>
-              <span className="text-watch-gold font-bold">100% Authentic</span>
+            <div className="space-y-3 pt-6 border-t border-[#252D42]/60 text-xs text-[#A7B1C2]">
+              <div className="flex items-center gap-2.5">
+                <ShieldCheck className="w-4 h-4 text-[#00D9E8]" />
+                <span>100% Certified Authentic Movements</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
+                <span>Verified Email Identity Authentication</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Truck className="w-4 h-4 text-[#E7B43F]" />
+                <span>Secured Armored Transit Insurance</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Interactive Signup Panel */}
-          <div className="md:col-span-7 bg-[#10182D]/90 p-7 sm:p-9 relative text-[#F8FAFC]">
-            
-            {/* ════════════════════════════════════════════════════════════════
-                STEP 1: FILL DETAILS & SELECT USER TYPE
-                ════════════════════════════════════════════════════════════════ */}
+          {/* Right Form Container */}
+          <div className="md:col-span-7 bg-[#111729]/60 p-6 sm:p-9 relative">
+            {/* STEP 1: Registration Form */}
             {step === 1 && (
-              <div className="animate-fade-in">
-                <div className="flex items-center justify-between mb-4">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-[#252D42]">
                   <div>
-                    <h3 className="text-xl font-bold text-[#F8FAFC]">Create Account</h3>
-                    <p className="text-xs text-[#A6B1C8] mt-0.5">Select user type and fill in your details.</p>
+                    <h3 className="text-lg font-bold text-white">Create Your Account</h3>
+                    <p className="text-xs text-[#A7B1C2]">Step 1 of 2: Collector Details</p>
                   </div>
-                  <span className="text-[11px] font-bold text-watch-gold bg-watch-gold/10 px-2.5 py-1 rounded-full border border-watch-gold/20">
-                    Step 1 of 2
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#00D9E8]/15 text-[#00D9E8] border border-[#00D9E8]/30">
+                    Step 1 / 2
                   </span>
                 </div>
 
                 {error && (
-                  <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs p-2.5 rounded-xl mb-3 text-center">
-                    {error}
+                  <div className="p-3 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-xs text-[#EF4444] flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                    <span>{error}</span>
                   </div>
                 )}
 
-                <form onSubmit={handleProceedToOtp} className="space-y-3 text-xs">
-                  {/* ── Type of User (Role Selection) ── */}
+                <form onSubmit={handleProceedToOtp} className="space-y-3.5 text-xs">
+                  {/* Role Selection */}
                   <div>
-                    <label className="block text-[#F8FAFC] font-semibold mb-1">
-                      Type of User <span className="text-amber-600 font-normal">(User, Admin, Store Manager, etc.)</span>
+                    <label className="text-xs font-semibold text-[#A7B1C2] block mb-1">
+                      Account Type / Access Tier
                     </label>
                     <div className="relative">
                       <select
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
-                        className="w-full h-11 px-3.5 pr-9 rounded-xl border border-white/10 font-semibold text-[#F8FAFC] text-xs sm:text-sm focus:border-watch-gold outline-none bg-[#0B1022]/80 text-[#F8FAFC] appearance-none cursor-pointer"
+                        className="w-full bg-[#091426] text-white text-xs px-3 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8] appearance-none cursor-pointer"
                       >
                         {ROLE_OPTIONS.map((opt) => (
                           <option key={opt.id} value={opt.id}>
@@ -374,80 +370,86 @@ export const SignupPage = () => {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <ChevronDown className="w-4 h-4 text-[#A7B1C2] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
                   </div>
 
-                  {/* Full Name */}
+                  {/* Name */}
                   <div>
-                    <label className="block text-[#F8FAFC] font-semibold mb-1">Full Name</label>
+                    <label className="text-xs font-semibold text-[#A7B1C2] block mb-1">
+                      Full Name *
+                    </label>
                     <div className="relative">
-                      <User className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <User className="w-4 h-4 text-[#A7B1C2] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                       <input
                         type="text"
+                        required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="e.g. Ananya Singh"
-                        className="w-full h-10 pl-9 pr-3 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
-                        required
+                        placeholder="e.g. Vikram Singhania"
+                        className="w-full bg-[#091426] text-white text-xs pl-9 pr-3 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8]"
                       />
                     </div>
                   </div>
 
-                  {/* Email & Mobile Number Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {/* Email & Mobile */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[#F8FAFC] font-semibold mb-1">Email Address</label>
+                      <label className="text-xs font-semibold text-[#A7B1C2] block mb-1">
+                        Email Address (OTP will be sent here) *
+                      </label>
                       <div className="relative">
-                        <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Mail className="w-4 h-4 text-[#A7B1C2] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="email"
+                          required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="name@example.com"
-                          className="w-full h-10 pl-9 pr-3 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
-                          required
+                          placeholder="collector@example.com"
+                          className="w-full bg-[#091426] text-white text-xs pl-9 pr-3 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8]"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[#F8FAFC] font-semibold mb-1">Mobile Number (For OTP)</label>
-                      <div className="flex rounded-xl border border-white/10 overflow-hidden focus-within:border-watch-gold">
-                        <div className="bg-[#0B1022]/80 border-r border-white/10 px-2.5 flex items-center text-[11px] font-semibold text-[#A6B1C8]">
-                          +91
-                        </div>
+                      <label className="text-xs font-semibold text-[#A7B1C2] block mb-1">
+                        Mobile Number *
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 text-[#A7B1C2] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="tel"
                           maxLength={10}
+                          required
                           value={phone}
                           onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
                           placeholder="9876543210"
-                          className="w-full h-10 px-2.5 outline-none font-medium tracking-wide"
-                          required
+                          className="w-full bg-[#091426] text-white text-xs pl-9 pr-3 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8]"
                         />
                       </div>
                     </div>
                   </div>
 
-                  {/* Password & Confirm Password Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {/* Password & Confirm Password */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[#F8FAFC] font-semibold mb-1">Password</label>
+                      <label className="text-xs font-semibold text-[#A7B1C2] block mb-1">
+                        Password *
+                      </label>
                       <div className="relative">
-                        <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Lock className="w-4 h-4 text-[#A7B1C2] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type={showPassword ? 'text' : 'password'}
+                          required
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Min 6 characters"
-                          className="w-full h-10 pl-9 pr-8 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
-                          required
+                          className="w-full bg-[#091426] text-white text-xs pl-9 pr-10 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8]"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#A6B1C8]"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A7B1C2] hover:text-white"
                         >
                           {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                         </button>
@@ -455,197 +457,163 @@ export const SignupPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-[#F8FAFC] font-semibold mb-1">Confirm Password</label>
+                      <label className="text-xs font-semibold text-[#A7B1C2] block mb-1">
+                        Confirm Password *
+                      </label>
                       <div className="relative">
-                        <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Lock className="w-4 h-4 text-[#A7B1C2] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type={showPassword ? 'text' : 'password'}
+                          required
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          placeholder="Repeat password"
-                          className="w-full h-10 pl-9 pr-3 rounded-xl border border-white/10 focus:border-watch-gold outline-none"
-                          required
+                          placeholder="Confirm password"
+                          className="w-full bg-[#091426] text-white text-xs pl-9 pr-3 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8]"
                         />
                       </div>
                     </div>
                   </div>
 
-                  {/* Terms checkbox */}
-                  <label className="flex items-center gap-2 cursor-pointer pt-1">
+                  {/* Terms */}
+                  <label className="flex items-center gap-2 cursor-pointer pt-1 text-[#A7B1C2] text-[11px]">
                     <input
                       type="checkbox"
                       checked={agreeTerms}
                       onChange={(e) => setAgreeTerms(e.target.checked)}
-                      className="accent-watch-gold w-4 h-4 rounded cursor-pointer"
+                      className="accent-[#00D9E8] w-4 h-4 rounded cursor-pointer"
                     />
-                    <span className="text-[#A6B1C8] text-[11px]">
-                      I agree to the <span className="text-watch-gold font-bold hover:underline">Terms of Service</span> &{' '}
-                      <span className="text-watch-gold font-bold hover:underline">Privacy Policy</span>
+                    <span>
+                      I agree to the WatchHub Concierge Terms of Service &amp; Privacy Policy
                     </span>
                   </label>
 
                   <button
                     type="submit"
-                    className="w-full h-11 bg-gradient-to-r from-[#C4913B] to-[#AD7929] hover:from-[#B5822E] hover:to-[#9E6E24] text-white font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 mt-2 cursor-pointer"
+                    disabled={loading}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00D9E8] via-[#00B4D8] to-[#00D9E8] text-[#070918] font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,217,232,0.3)] hover:shadow-[0_0_30px_rgba(0,217,232,0.5)] transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
                   >
-                    <span>Proceed to Verify OTP</span>
-                    <ArrowRight className="w-4 h-4" />
+                    {loading ? (
+                      <span>Dispatching Email Code...</span>
+                    ) : (
+                      <>
+                        <span>Send Email Verification Code</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
                   </button>
                 </form>
               </div>
             )}
 
-            {/* ════════════════════════════════════════════════════════════════
-                STEP 2: OTP VERIFICATION ("phir sari details ke baad otp dale")
-                ════════════════════════════════════════════════════════════════ */}
+            {/* STEP 2: Dedicated Email OTP Verification */}
             {step === 2 && (
-              <div className="animate-fade-in py-2">
-                <div className="w-11 h-11 rounded-2xl bg-[#FAF7F2] border border-[#E8E2D5] flex items-center justify-center text-[#C4913B] mb-3">
-                  <KeyRound className="w-5 h-5" />
-                </div>
-
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className="text-xl font-bold text-[#F8FAFC]">Enter Verification OTP</h3>
-                  <span className="text-[11px] font-bold text-watch-gold bg-watch-gold/10 px-2.5 py-1 rounded-full border border-watch-gold/20">
-                    Step 2 of 2
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-[#252D42]">
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Verify Your Email</h3>
+                    <p className="text-xs text-[#A7B1C2]">Step 2 of 2: Enter 6-Digit Code</p>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E7B43F]/15 text-[#E7B43F] border border-[#E7B43F]/30">
+                    Step 2 / 2
                   </span>
                 </div>
-                <p className="text-xs text-[#A6B1C8] mb-4">
-                  Please enter the 6-digit OTP sent to your registered mobile and email.
-                </p>
+
+                <div className="p-3.5 rounded-2xl bg-[#091426] border border-[#252D42] text-center space-y-1">
+                  <p className="text-xs text-[#A7B1C2]">
+                    We sent a single-use verification code via Resend to:
+                  </p>
+                  <p className="text-xs font-bold text-[#00D9E8] truncate">{email}</p>
+                  <p className="text-[10px] text-[#64748B]">Please check your inbox &amp; spam folder.</p>
+                </div>
 
                 {otpError && (
-                  <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs p-2.5 rounded-xl mb-3 text-center">
-                    {otpError}
+                  <div className="p-3 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-xs text-[#EF4444] flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                    <span>{otpError}</span>
                   </div>
                 )}
 
-                {/* OTP Dispatch Banner */}
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50/60 border border-amber-200/90 p-3 rounded-2xl text-amber-950 text-xs shadow-xs mb-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-xs flex items-center gap-1.5 text-amber-900">
-                        <Smartphone className="w-4 h-4 text-[#C4913B]" />
-                        <span>SMS OTP Sent to <strong className="text-[#F8FAFC]">+91 {phone.slice(-10)}</strong></span>
-                      </p>
-                      <p className="text-[11px] text-amber-700 mt-0.5">
-                        Registering as: <strong className="font-semibold text-[#F8FAFC]">{currentRoleObj.label}</strong>
-                      </p>
-                    </div>
-                    <div className="bg-white border border-amber-200 px-3 py-1 rounded-xl text-center shadow-xs">
-                      <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">OTP CODE</span>
-                      <span className="font-mono text-base font-bold text-[#C4913B] tracking-wider">{generatedOtp}</span>
-                    </div>
+                {resendNotice && (
+                  <div className="p-3 rounded-xl bg-[#10B981]/15 border border-[#10B981]/30 text-xs text-[#10B981] flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                    <span>{resendNotice}</span>
                   </div>
+                )}
 
-                  {/* Direct Phone Delivery Links (WhatsApp & Native SMS) */}
-                  <div className="mt-2.5 pt-2 border-t border-amber-200/60 flex items-center gap-2 flex-wrap">
-                    <a
-                      href={`https://api.whatsapp.com/send?phone=91${phone.replace(/[^0-9]/g, '').slice(-10)}&text=${encodeURIComponent(
-                        `WatchHub Registration OTP: ${generatedOtp}. Valid for 10 minutes. Do not share with anyone.`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
-                    >
-                      <span>💬 Receive on WhatsApp</span>
-                    </a>
-                    <a
-                      href={`sms:+91${phone.replace(/[^0-9]/g, '').slice(-10)}?body=${encodeURIComponent(
-                        `Your WatchHub registration OTP is ${generatedOtp}`
-                      )}`}
-                      className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
-                    >
-                      <span>📲 Open in Messages App</span>
-                    </a>
-                  </div>
-                </div>
+                <form onSubmit={handleVerifyOtpAndCreate} className="space-y-4">
+                  <OtpInput
+                    value={enteredOtp}
+                    onChange={setEnteredOtp}
+                    length={6}
+                    disabled={loading}
+                    error={!!otpError}
+                  />
 
-                <form onSubmit={handleVerifyOtpAndCreate} className="space-y-4 text-xs">
-                  <div>
-                    <label className="block text-[#F8FAFC] font-semibold mb-1.5">Enter 6-Digit OTP</label>
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={enteredOtp}
-                      onChange={(e) => setEnteredOtp(e.target.value)}
-                      placeholder="e.g. 482910"
-                      className="w-full h-12 px-3 rounded-xl border border-white/10 font-mono text-center tracking-widest text-lg font-bold focus:border-watch-gold outline-none bg-[#0B1022]/80/50"
-                      required
-                      autoFocus
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs text-[#A6B1C8] pt-1">
-                    <button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="text-[#A6B1C8] hover:text-[#F8FAFC] underline cursor-pointer"
-                    >
-                      ← Edit details
-                    </button>
-
-                    {resendCooldown > 0 ? (
-                      <span className="text-gray-400 font-medium">Resend OTP in {resendCooldown}s</span>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => handleProceedToOtp(e)}
-                        className="text-watch-gold font-semibold hover:underline flex items-center gap-1 cursor-pointer"
-                      >
-                        <RefreshCw className="w-3 h-3" />
-                        <span>Resend OTP</span>
-                      </button>
-                    )}
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-[#A7B1C2]">
+                    <Clock className="w-3.5 h-3.5 text-[#00D9E8]" />
+                    <span>Valid for 5 minutes &bull; Max 5 attempts</span>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full h-11 bg-gradient-to-r from-[#C4913B] to-[#AD7929] hover:from-[#B5822E] hover:to-[#9E6E24] text-white font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-3"
+                    disabled={loading || enteredOtp.length !== 6}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00D9E8] via-[#00B4D8] to-[#00D9E8] text-[#070918] font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,217,232,0.3)] hover:shadow-[0_0_30px_rgba(0,217,232,0.5)] disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>Verify OTP & Create Account</span>
+                    {loading ? (
+                      <span>Verifying Credentials...</span>
+                    ) : (
+                      <>
+                        <ShieldCheck className="w-4 h-4" />
+                        <span>Verify Email &amp; Complete Registration</span>
+                      </>
+                    )}
                   </button>
+
+                  <div className="pt-2 border-t border-[#252D42] flex items-center justify-between text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="text-[#A7B1C2] hover:text-white"
+                    >
+                      &larr; Edit Details
+                    </button>
+
+                    {resendCooldown > 0 ? (
+                      <span className="text-[#64748B]">Resend in {resendCooldown}s</span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        className="text-[#00D9E8] font-bold hover:underline cursor-pointer flex items-center gap-1"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                        <span>Resend Code</span>
+                      </button>
+                    )}
+                  </div>
                 </form>
               </div>
             )}
 
-            {/* ════════════════════════════════════════════════════════════════
-                STEP 3: "user account is being created..." MESSAGE & PROGRESS
-                ════════════════════════════════════════════════════════════════ */}
+            {/* STEP 3: Account Creation Animation */}
             {step === 3 && (
-              <div className="py-10 text-center animate-fade-in flex flex-col items-center justify-center">
-                {/* Glowing rotating chronometer icon */}
-                <div className="relative mb-5">
-                  <div className="w-20 h-20 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center shadow-lg relative">
-                    <span className="text-3xl animate-pulse">⌚</span>
-                    <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#C4913B] animate-spin"></div>
-                  </div>
+              <div className="py-12 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-[#111729] border-2 border-[#00D9E8] text-[#00D9E8] flex items-center justify-center mx-auto text-2xl animate-spin">
+                  ⏳
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">Activating Collector Profile</h3>
+                  <p className="text-xs text-[#A7B1C2] mt-1">{creationStatus}</p>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-extrabold text-[#F8FAFC] mb-2">
-                  User account is being created...
-                </h3>
-                <p className="text-xs text-[#A6B1C8] mb-6 max-w-xs font-medium">
-                  {creationStatus}
-                </p>
-
-                {/* Animated Progress Bar */}
-                <div className="w-full max-w-xs bg-gray-100 rounded-full h-2.5 overflow-hidden border border-gray-200 mb-4">
+                <div className="w-full max-w-xs mx-auto bg-[#091426] rounded-full h-2 overflow-hidden border border-[#252D42]">
                   <div
-                    className="bg-gradient-to-r from-[#C4913B] to-[#F5D88A] h-full rounded-full transition-all duration-500 ease-out"
+                    className="bg-gradient-to-r from-[#00D9E8] to-[#E7B43F] h-full transition-all duration-500 ease-out"
                     style={{ width: `${creationProgress}%` }}
-                  ></div>
-                </div>
-
-                {/* Role and security indicator */}
-                <div className="inline-flex items-center gap-2 bg-[#0B1022]/80 border border-gray-200 px-3.5 py-1.5 rounded-full text-[11px] text-[#A6B1C8] font-medium">
-                  <Sparkles className="w-3.5 h-3.5 text-watch-gold" />
-                  <span>Configuring {currentRoleObj.label} access & privileges</span>
+                  />
                 </div>
               </div>
             )}
-
           </div>
         </div>
       </main>

@@ -516,8 +516,19 @@ export const LoginPage = () => {
               </button>
             </form>
 
+            {/* Sign in with Email OTP Option */}
+            <div className="mt-3">
+              <Link
+                to="/email-otp-login"
+                className="w-full h-11 border border-[#C4913B]/40 bg-[#FAF7F2] hover:bg-[#F4EFE6] rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-[#8C601E] shadow-xs transition-colors"
+              >
+                <Mail className="w-4 h-4 text-[#C4913B]" />
+                <span>Sign in with Email OTP (Passwordless)</span>
+              </Link>
+            </div>
+
             {/* Divider: OR CONTINUE WITH */}
-            <div className="relative my-6 text-center">
+            <div className="relative my-5 text-center">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-[#E5E0D6]"></div>
               </div>

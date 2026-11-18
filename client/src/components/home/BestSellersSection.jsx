@@ -176,22 +176,20 @@ export const BestSellersSection = ({ onToast }) => {
             <div
               key={item.id}
               onClick={() => navigate(`/product/${item.id}`)}
-              className={`group relative rounded-2xl p-3 sm:p-3.5 flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1.5 cursor-pointer bg-[#07111F] ${
-                isFeatured
-                  ? 'border-2 border-[#00D5FF] shadow-[0_0_25px_rgba(0,213,255,0.35)]'
-                  : 'border border-[#253247] hover:border-[#E9B94F]/60 hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)]'
-              }`}
+              className={`group relative rounded-2xl p-3 sm:p-3.5 flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1.5 cursor-pointer bg-[#07111F] ${isFeatured
+                ? 'border-2 border-[#00D5FF] shadow-[0_0_25px_rgba(0,213,255,0.35)]'
+                : 'border border-[#253247] hover:border-[#E9B94F]/60 hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)]'
+                }`}
             >
               <div>
                 {/* Image Container with Badges */}
                 <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#030914] flex items-center justify-center p-2 mb-3 border border-white/5">
                   {/* Badge: Top-Left */}
                   <div
-                    className={`absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded-md text-[9.5px] font-bold tracking-wider uppercase backdrop-blur-md ${
-                      item.badgeType === 'cyan'
-                        ? 'border border-[#00D5FF]/60 text-[#00D5FF] bg-[#00D5FF]/10'
-                        : 'border border-[#E9B94F]/60 text-[#E9B94F] bg-[#E9B94F]/10'
-                    }`}
+                    className={`absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded-md text-[9.5px] font-bold tracking-wider uppercase backdrop-blur-md ${item.badgeType === 'cyan'
+                      ? 'border border-[#00D5FF]/60 text-[#00D5FF] bg-[#00D5FF]/10'
+                      : 'border border-[#E9B94F]/60 text-[#E9B94F] bg-[#E9B94F]/10'
+                      }`}
                   >
                     <BadgeIcon className="w-2.5 h-2.5" />
                     <span>{item.badgeText}</span>
@@ -205,9 +203,8 @@ export const BestSellersSection = ({ onToast }) => {
                     title={inWish ? 'Remove from Wishlist' : 'Add to Wishlist'}
                   >
                     <Heart
-                      className={`w-3.5 h-3.5 transition-colors ${
-                        inWish ? 'text-[#FF35C8] fill-[#FF35C8]' : 'text-slate-300 hover:text-white'
-                      }`}
+                      className={`w-3.5 h-3.5 transition-colors ${inWish ? 'text-[#FF35C8] fill-[#FF35C8]' : 'text-slate-300 hover:text-white'
+                        }`}
                     />
                   </button>
 
@@ -231,11 +228,10 @@ export const BestSellersSection = ({ onToast }) => {
 
                 {/* Product Name */}
                 <h3
-                  className={`text-xs sm:text-[13px] font-bold tracking-tight leading-tight truncate transition-colors ${
-                    isFeatured
-                      ? 'text-[#00D5FF] group-hover:text-white'
-                      : 'text-white group-hover:text-[#E9B94F]'
-                  }`}
+                  className={`text-xs sm:text-[13px] font-bold tracking-tight leading-tight truncate transition-colors ${isFeatured
+                    ? 'text-[#00D5FF] group-hover:text-white'
+                    : 'text-white group-hover:text-[#E9B94F]'
+                    }`}
                 >
                   {item.name}
                 </h3>
