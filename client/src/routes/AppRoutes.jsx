@@ -101,7 +101,7 @@ const RoleDashboardDispatcher = () => {
   if (role === ROLES.DELIVERY_PARTNER || role === 'Delivery Partner') {
     return <Navigate to="/delivery-partner/dashboard" replace />;
   }
-  if (role === ROLES.CUSTOMER_SUPPORT || role === 'Customer Support Executive' || role === 'Customer Support') {
+  if (role === ROLES.CUSTOMER_SUPPORT || role === 'Customer Support Executive' || role === 'Customer Support' || role === 'Customer Support Manager') {
     return <Navigate to="/customer-support/dashboard" replace />;
   }
   if (role === ROLES.SUPER_ADMIN || role === 'Super Admin') {
@@ -371,20 +371,108 @@ export const AppRoutes = () => {
         }
       />
 
-      {/* 6. Dedicated Customer Support Dashboard Routes */}
+      {/* 6. Dedicated Customer Support Dashboard Routes (All 12 Sidebar Modules) */}
       <Route
         path="/customer-support/dashboard"
         element={
-          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <CustomerSupportDashboardPage />
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="dashboard" />
           </RoleProtectedRoute>
         }
       />
       <Route
         path="/customer-support"
         element={
-          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <CustomerSupportDashboardPage />
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="dashboard" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/tickets"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="tickets" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/live-chat"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="live-chat" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/customers"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="customers" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/orders-returns"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="orders-returns" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/refunds"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="refunds" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/escalations"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="escalations" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/knowledge-base"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="knowledge-base" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/canned-responses"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="canned-responses" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/reports"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="reports" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/team"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="team" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-support/settings"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.CUSTOMER_SUPPORT, 'Customer Support Executive', 'Customer Support Manager', 'Customer Support', ROLES.SUPER_ADMIN, 'Super Admin', ROLES.STORE_ADMIN, 'Store Admin']}>
+            <CustomerSupportDashboardPage initialTab="settings" />
           </RoleProtectedRoute>
         }
       />
