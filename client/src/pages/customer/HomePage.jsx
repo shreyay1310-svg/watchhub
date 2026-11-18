@@ -11,6 +11,7 @@ import { GLOBAL_BRANDS_60, getBrandDescription } from '../../data/brandsData';
 import CustomizeAndNewArrivalsSection from '../../components/home/CustomizeAndNewArrivalsSection';
 import BestSellersSection from '../../components/home/BestSellersSection';
 import CraftsmanshipStoriesSection from '../../components/home/CraftsmanshipStoriesSection';
+import WatchmakingVideoModal from '../../components/home/WatchmakingVideoModal';
 import {
   ShieldCheck,
   Award,
@@ -322,6 +323,18 @@ export const HomePage = () => {
                 <span>Customize Now</span>
                 <span className="text-[#F4B942]">★</span>
               </Link>
+
+              {/* Mobile Watchmaking Video Trigger Pill */}
+              <button
+                type="button"
+                onClick={() => setIsVideoModalOpen(true)}
+                className="lg:hidden py-3 px-4 rounded-xl border border-white/10 bg-white/5 hover:bg-[#00CFFF]/15 text-white hover:text-[#00CFFF] font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <div className="w-5 h-5 rounded-full bg-[#00CFFF] text-black flex items-center justify-center text-[10px]">
+                  <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
+                </div>
+                <span>Watchmaking Film</span>
+              </button>
             </div>
           </div>
 
@@ -379,24 +392,41 @@ export const HomePage = () => {
             {/* Watchmaking Video Preview Thumbnail Card */}
             <div
               onClick={() => setIsVideoModalOpen(true)}
-              className="w-44 bg-[#040C1A] border border-white/10 hover:border-[#00CFFF]/40 rounded-2xl p-2.5 shadow-[0_15px_30px_rgba(0,0,0,0.7)] group cursor-pointer transition-all"
+              className="w-48 bg-[#040C1A] border border-white/10 hover:border-[#00CFFF]/50 rounded-2xl p-2.5 shadow-[0_15px_30px_rgba(0,0,0,0.7)] group cursor-pointer transition-all hover:shadow-[0_0_20px_rgba(0,207,255,0.25)] hover:-translate-y-0.5"
             >
-              <div className="relative aspect-video rounded-xl overflow-hidden bg-black mb-2">
+              <div className="relative aspect-video rounded-xl overflow-hidden bg-black mb-2 border border-white/5">
                 <img
-                  src="/images/hero/chronoswiss_website_ref.jpg"
-                  alt="Watchmaker Atelier"
-                  className="w-full h-full object-cover opacity-75 group-hover:scale-105 transition-transform"
+                  src="/images/watchmaking_thumbnail.jpg"
+                  alt="Inside Watchmaking: The Art of Assembly"
+                  className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/images/watchmaking_poster.jpg';
+                  }}
                 />
+
+                {/* HOROLOGY FILM Badge */}
+                <div className="absolute top-1.5 left-1.5 z-10">
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-extrabold tracking-widest uppercase bg-black/80 backdrop-blur-md text-[#00CFFF] border border-[#00CFFF]/40 shadow-sm">
+                    HOROLOGY FILM
+                  </span>
+                </div>
+
+                {/* Cyan Play Button in Center */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 rounded-full bg-[#00CFFF] text-black flex items-center justify-center text-xs shadow-[0_0_15px_rgba(0,207,255,0.6)]">
+                  <div className="w-8 h-8 rounded-full bg-[#00CFFF] text-black flex items-center justify-center text-xs shadow-[0_0_20px_rgba(0,207,255,0.7)] group-hover:scale-110 transition-transform duration-300">
                     <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
                   </div>
                 </div>
               </div>
-              <p className="text-[10px] font-bold text-white leading-tight">
-                Watchmaking Video Preview
+
+              {/* Title & Subtitle */}
+              <p className="text-[10.5px] font-bold text-white leading-tight group-hover:text-[#00CFFF] transition-colors truncate">
+                Inside Watchmaking: The Art of Assembly
               </p>
-              <p className="text-[9px] text-[#A6B1C8] mt-0.5">Atelier Lucerne 4K</p>
+              <p className="text-[9px] text-[#A6B1C8] mt-0.5 truncate font-light">
+                From Tiny Components to a Masterpiece
+              </p>
             </div>
           </div>
         </div>
@@ -731,40 +761,11 @@ export const HomePage = () => {
         </section>
       </main>
 
-      {/* Atelier Video Modal */}
-      {isVideoModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fade-in font-sans">
-          <div className="bg-[#050D1A] rounded-3xl max-w-2xl w-full p-6 border border-[#00CFFF]/40 shadow-[0_0_50px_rgba(0,207,255,0.3)] relative animate-scale-up text-white">
-            <button
-              onClick={() => setIsVideoModalOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
-            >
-              ✕
-            </button>
-            <h3 className="text-lg font-serif font-bold mb-1">
-              Atelier Lucerne: Handcrafting the Flying Tourbillon
-            </h3>
-            <p className="text-xs text-gray-400 mb-4">
-              Watch master watchmakers calibrate hairsprings and engrave guilloché wave patterns.
-            </p>
-            <div className="aspect-video bg-black rounded-2xl overflow-hidden border border-white/10 flex items-center justify-center relative">
-              <img
-                src="/images/hero/chronoswiss_website_ref.jpg"
-                alt="Watchmaker Atelier"
-                className="w-full h-full object-cover opacity-60"
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-[#00CFFF] text-black flex items-center justify-center text-xl shadow-[0_0_30px_rgba(0,207,255,0.6)] animate-pulse">
-                  ▶
-                </div>
-                <span className="text-xs font-bold tracking-widest uppercase bg-black/70 px-3 py-1 rounded-full border border-white/20">
-                  4K Horology Documentary • 03:45
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Inside Watchmaking Assembly Video Modal */}
+      <WatchmakingVideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+      />
 
       <Footer />
     </div>
