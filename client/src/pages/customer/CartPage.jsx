@@ -4,6 +4,7 @@ import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
+import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 import {
   Trash2,
   Plus,
@@ -338,8 +339,8 @@ export const CartPage = () => {
                     {/* Watch Image Box with Dark Pedestal & Contain */}
                     <div className="relative w-full sm:w-36 h-36 rounded-xl bg-[#030914] border border-white/5 p-2 flex items-center justify-center flex-shrink-0 overflow-hidden">
                       <img
-                        src={item.image || '/images/products/watch_placeholder.png'}
-                        alt={item.name}
+                        src={getProductImage(item)}
+                        alt={getProductAlt(item)}
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = '/images/products/watch_placeholder.png';
@@ -727,8 +728,8 @@ export const CartPage = () => {
                       className="relative w-full aspect-[4/3] rounded-xl bg-[#030914] border border-white/5 p-2 flex items-center justify-center mb-3 cursor-pointer overflow-hidden"
                     >
                       <img
-                        src={rec.image}
-                        alt={rec.name}
+                        src={getProductImage(rec)}
+                        alt={getProductAlt(rec)}
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = '/images/products/watch_placeholder.png';

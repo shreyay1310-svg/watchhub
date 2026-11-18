@@ -6,6 +6,7 @@ import ProductCard from '../../components/common/ProductCard';
 import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
+import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 import { NAVBAR_PAGES_CONFIG } from '../../data/navbarPagesConfig';
 import {
   Heart,
@@ -767,11 +768,11 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
 
             <div className="relative w-44 h-44 sm:w-56 sm:h-56 flex-shrink-0 flex items-center justify-center z-10">
               <img
-                src="/images/hero/chronoswiss_tourbillon.jpg"
-                alt="WatchHub Atelier Customizer"
+                src="/images/products/chronoswiss-tourbillon.png"
+                alt="WatchHub Atelier Customizer - Chronoswiss Flying Tourbillon"
                 className="max-h-full max-w-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,207,255,0.35)]"
                 onError={(e) => {
-                  e.target.src = '/images/products/rolex-submariner.png';
+                  e.target.src = '/images/products/watch_placeholder.png';
                 }}
               />
             </div>
@@ -907,11 +908,11 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
               <div className="w-full h-64 bg-gradient-to-b from-[#060D1A] to-[#02060F] rounded-2xl flex items-center justify-center p-4 border border-white/10">
                 <img
-                  src={quickViewProduct.image}
-                  alt={quickViewProduct.name}
-                  className="max-h-full max-w-full object-contain"
+                  src={getProductImage(quickViewProduct)}
+                  alt={getProductAlt(quickViewProduct)}
+                  className="max-h-full max-w-full object-contain filter drop-shadow-2xl"
                   onError={(e) => {
-                    e.target.src = '/images/products/rolex-submariner.png';
+                    e.target.src = '/images/products/watch_placeholder.png';
                   }}
                 />
               </div>

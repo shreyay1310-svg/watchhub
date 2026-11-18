@@ -58,7 +58,7 @@ export const EDITORIAL_STORIES = [
         caption: 'Master horologist hand-inserting a gold gear into an open-heart escapement with antimagnetic tweezers.',
       },
       {
-        url: '/images/hero/chronoswiss_tourbillon.jpg',
+        url: '/images/products/chronoswiss-tourbillon.png',
         caption: 'Inverted flying tourbillon movement with electric blue CVD dial finish and chamfered regulator bridges.',
       },
       {

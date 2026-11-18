@@ -7,6 +7,7 @@ import { GLOBAL_BRANDS_60, getBrandDescription } from '../../data/brandsData';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
 import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
+import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 import {
   ExternalLink,
   ChevronRight,
@@ -473,8 +474,8 @@ export const BrandListingPage = () => {
                     className="w-full h-60 rounded-xl bg-gradient-to-b from-[#060D1A] to-[#02060F] p-4 flex items-center justify-center relative overflow-hidden cursor-pointer mb-3 border border-white/5 select-none"
                   >
                     <img
-                      src={watch.image}
-                      alt={watch.name}
+                      src={getProductImage(watch)}
+                      alt={getProductAlt(watch)}
                       className="max-h-full max-w-full w-auto h-auto object-contain object-center filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] group-hover:scale-105 transition-transform duration-300 block mx-auto"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -662,8 +663,8 @@ export const BrandListingPage = () => {
               {/* Left Uncropped Image */}
               <div className="h-64 rounded-2xl bg-[#020813] p-4 flex items-center justify-center border border-white/5">
                 <img
-                  src={quickViewProduct.image}
-                  alt={quickViewProduct.name}
+                  src={getProductImage(quickViewProduct)}
+                  alt={getProductAlt(quickViewProduct)}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = '/images/products/watch_placeholder.png';

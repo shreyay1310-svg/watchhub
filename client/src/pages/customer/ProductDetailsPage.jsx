@@ -6,6 +6,7 @@ import ProductCard from '../../components/common/ProductCard';
 import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
+import { getProductImage, getProductGallery, getProductAlt } from '../../utils/productImageMap';
 import {
   Heart,
   ShoppingCart,
@@ -37,7 +38,8 @@ export const ProductDetailsPage = () => {
     MOCK_PRODUCTS.find((p) => String(p.id).toLowerCase() === String(id).toLowerCase()) ||
     MOCK_PRODUCTS[0];
 
-  const [selectedImage, setSelectedImage] = useState(product?.image || '/images/products/watch_placeholder.png');
+  const initialImage = getProductImage(product);
+  const [selectedImage, setSelectedImage] = useState(initialImage);
   const [selectedDialColor, setSelectedDialColor] = useState('Paraiba Blue');
   const [selectedStrap, setSelectedStrap] = useState('Louisiana Alligator Leather');
   const [quantity, setQuantity] = useState(1);
@@ -50,7 +52,7 @@ export const ProductDetailsPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setSelectedImage(product?.image || '/images/products/watch_placeholder.png');
+    setSelectedImage(getProductImage(product));
   }, [id, product]);
 
   const showToast = (msg) => {
@@ -64,7 +66,7 @@ export const ProductDetailsPage = () => {
   const galleryImages = (
     product?.images && product.images.length > 0
       ? product.images
-      : [product?.image]
+      : getProductGallery(product)
   ).filter(Boolean);
 
   const dialColors = [

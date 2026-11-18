@@ -1109,9 +1109,9 @@ export const ManufacturingHubModule = () => {
               {/* Left: Watch Photo */}
               <div className="w-24 h-28 bg-[#0B1022]/80 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center p-1.5 flex-shrink-0 shadow-inner">
                 <img
-                  src={selectedCompany.heroWatch?.image || 'https://images.unsplash.com/photo-1526045431048-f857369baa09?auto=format&fit=crop&w=600&q=80'}
+                  src={selectedCompany.heroWatch?.image || '/images/products/rolex-submariner.png'}
                   alt={selectedCompany.name}
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full object-contain rounded-xl"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = '/images/products/watch_placeholder.png';

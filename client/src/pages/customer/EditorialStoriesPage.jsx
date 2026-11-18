@@ -25,7 +25,7 @@ export const EditorialStoriesPage = () => {
       author: 'Jean-Luc Mercier • Master Horologist',
       date: '14 November 2026',
       readTime: '6 min read',
-      image: '/images/hero/chronoswiss_tourbillon.jpg',
+      image: '/images/products/chronoswiss-tourbillon.png',
       content: [
         'In the tranquil canton of Lucerne, where watchmaking traditions date back centuries, Chronoswiss engineers achieved what many believed impossible: an inverted regulator movement where the balance spring and flying tourbillon cage hover suspended above the dial.',
         'Unlike traditional tourbillons nestled within the movement bridges, the flying tourbillon lacks an upper supporting bridge. It relies entirely on a micro-engineered ball-bearing mechanism calibrated to within 0.001 millimeters, granting unobstructed views of the balance oscillation.',

@@ -72,7 +72,7 @@ export const CustomerAccountPage = () => {
       status: 'Delivered',
       statusColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
       awb: 'AWB-SWISS-54910283',
-      image: '/images/hero/chronoswiss_tourbillon.jpg',
+      image: '/images/products/chronoswiss-tourbillon.png',
     },
   ];
 
@@ -206,6 +206,10 @@ export const CustomerAccountPage = () => {
                         <img
                           src={order.image}
                           alt={order.name}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '/images/products/watch_placeholder.png';
+                          }}
                           className="w-16 h-16 rounded-xl object-contain bg-[#061224] border border-white/10 p-1 flex-shrink-0"
                         />
                         <div>

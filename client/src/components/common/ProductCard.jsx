@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
+import { ProductImage } from './ProductImage';
+import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 
 export const getBrandInsignia = (brand) => {
   const b = (brand || '').toLowerCase();
@@ -68,15 +70,11 @@ export const ProductCard = ({
         onClick={handleCardClick}
         className="product-image-container w-full h-[250px] sm:h-[260px] bg-gradient-to-b from-[#060D1A] via-[#040914] to-[#02060F] flex items-center justify-center relative overflow-hidden p-4 cursor-pointer select-none"
       >
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = '/images/products/watch_placeholder.png';
-          }}
-          className="max-h-full max-w-full w-auto h-auto object-contain object-center block mx-auto filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] transition-transform duration-300 group-hover:scale-105"
+        <ProductImage
+          product={product}
+          hoverZoom
+          aspectRatio=""
+          containerClassName="w-full h-full bg-transparent"
         />
 
         {/* Discount Badge (Top-Left, non-blocking) */}

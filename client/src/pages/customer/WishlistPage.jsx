@@ -4,6 +4,7 @@ import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import { useCart } from '../../context/CartContext';
 import { Heart, ShoppingCart, Trash2, ArrowRight } from 'lucide-react';
+import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 
 export const WishlistPage = () => {
   const { wishlist, toggleWishlist, addToCart } = useCart();
@@ -29,19 +30,15 @@ export const WishlistPage = () => {
             {wishlist.map((p) => (
               <div key={p.id} className="card-luxury overflow-hidden flex flex-col justify-between group">
                 <div className="h-52 bg-[#040C1A] flex items-center justify-center relative overflow-hidden p-3 border-b border-white/10">
-                  {p.image ? (
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/images/products/watch_placeholder.png';
-                      }}
-                      className="max-h-full max-w-full object-contain object-center group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <span className="text-6xl">⌚</span>
-                  )}
+                  <img
+                    src={getProductImage(p)}
+                    alt={getProductAlt(p)}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/products/watch_placeholder.png';
+                    }}
+                    className="max-h-full max-w-full object-contain object-center group-hover:scale-105 transition-transform duration-300"
+                  />
                   <span className="absolute bottom-2 left-3 bg-watch-navy/80 text-watch-gold text-[9px] font-bold px-2 py-0.5 rounded">
                     {p.brand}
                   </span>

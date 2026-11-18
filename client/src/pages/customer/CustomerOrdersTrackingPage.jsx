@@ -662,6 +662,10 @@ WatchHub guarantees 100% authenticity, verified escapement rate, and official fa
                             <img
                               src={order.product.image}
                               alt={order.product.name}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '/images/products/watch_placeholder.png';
+                              }}
                               className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] transform group-hover:scale-105 transition-transform duration-300"
                             />
                             <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/60 border border-white/10 text-[9px] font-bold text-[#E9B94F] uppercase tracking-wider backdrop-blur-xs">
@@ -886,6 +890,10 @@ WatchHub guarantees 100% authenticity, verified escapement rate, and official fa
                       <img
                         src={currentOrder.product.image}
                         alt={currentOrder.product.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/images/products/watch_placeholder.png';
+                        }}
                         className="w-full h-full object-contain filter drop-shadow-md"
                       />
                     </div>
@@ -1546,7 +1554,15 @@ WatchHub guarantees 100% authenticity, verified escapement rate, and official fa
             </div>
 
             <div className="p-3 bg-[#081529] rounded-2xl border border-[#28334B] flex items-center gap-3">
-              <img src={currentOrder.product.image} alt={currentOrder.product.name} className="w-12 h-12 object-contain" />
+              <img
+                src={currentOrder.product.image}
+                alt={currentOrder.product.name}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/images/products/watch_placeholder.png';
+                }}
+                className="w-12 h-12 object-contain"
+              />
               <div>
                 <p className="text-xs font-bold text-white">{currentOrder.product.name}</p>
                 <p className="text-[11px] text-[#A7B1C2]">Order #{currentOrder.orderId} • Delivered on {currentOrder.shipment.deliveredDate}</p>

@@ -108,7 +108,7 @@ const POS_PRODUCT_CATALOG = [
     price: 585000,
     originalPrice: 650000,
     stock: 12,
-    image: '/images/products/omega-speedmaster.png',
+    image: '/images/products/omega-seamaster.png',
     dialSize: '42mm',
     movement: 'Calibre 8800 Master Chronometer',
     case: 'Stainless Steel & Ceramic',
@@ -142,7 +142,7 @@ const POS_PRODUCT_CATALOG = [
     price: 675000,
     originalPrice: 750000,
     stock: 6,
-    image: '/images/products/breitling-navitimer.png',
+    image: '/images/products/tag-heuer-monaco-racing.png',
     dialSize: '39mm x 39mm',
     movement: 'Calibre 11 Automatic Chronograph',
     case: 'Square Stainless Steel',
@@ -193,7 +193,7 @@ const POS_PRODUCT_CATALOG = [
     price: 3450000,
     originalPrice: 3800000,
     stock: 3,
-    image: '/images/hero/story_heritage.jpg',
+    image: '/images/products/patek-nautilus.png',
     dialSize: '40mm',
     movement: 'Calibre 26-330 S C Automatic',
     case: 'Steel with Porous Bezel',
@@ -210,7 +210,7 @@ const POS_PRODUCT_CATALOG = [
     price: 2850000,
     originalPrice: 3200000,
     stock: 4,
-    image: '/images/hero/chronoswiss_tourbillon.jpg',
+    image: '/images/products/chronoswiss-tourbillon.png',
     dialSize: '44mm',
     movement: 'Manufacture Calibre C.303 Flying Tourbillon',
     case: 'Stainless Steel with Electric Blue CVD',
@@ -227,7 +227,7 @@ const POS_PRODUCT_CATALOG = [
     price: 740000,
     originalPrice: 820000,
     stock: 9,
-    image: '/images/products/cartier-tank.png',
+    image: '/images/products/cartier_santos.jpg',
     dialSize: '39.8mm',
     movement: 'Calibre 1847 MC Automatic',
     case: 'Stainless Steel with SmartLink System',
@@ -1001,6 +1001,10 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
                       <img
                         src={p.image}
                         alt={p.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/images/products/watch_placeholder.png';
+                        }}
                         className="w-full h-full object-contain object-center filter drop-shadow group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />
@@ -1175,6 +1179,10 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
                     <img
                       src={it.image}
                       alt={it.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/images/products/watch_placeholder.png';
+                      }}
                       className="w-full h-full object-contain filter drop-shadow"
                     />
                   </div>

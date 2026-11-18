@@ -6,6 +6,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import GoogleMapAddressPicker from '../../components/common/GoogleMapAddressPicker';
+import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -232,7 +233,7 @@ export const CheckoutPage = () => {
       orderId: serverOrder?.orderId || `WH-${Math.floor(100000 + Math.random() * 900000)}`,
       awbNumber: serverOrder?.awbNumber || `AWB-SWISS-${Math.floor(10000000 + Math.random() * 90000000)}`,
       date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-      items: cart.length > 0 ? [...cart] : [{ name: 'Chronoswiss Open Gear Flying Tourbillon Paraiba', price: 3450000, quantity: 1, image: '/images/hero/chronoswiss_tourbillon.jpg' }],
+      items: cart.length > 0 ? [...cart] : [{ name: 'Chronoswiss Open Gear Flying Tourbillon Paraiba', price: 3450000, quantity: 1, image: '/images/products/chronoswiss-tourbillon.png' }],
       amount: grandTotal > 0 ? grandTotal : 3453500,
       shippingAddress: { ...address },
       shippingMethod,
@@ -878,13 +879,17 @@ export const CheckoutPage = () => {
                     name: 'Chronoswiss Open Gear Flying Tourbillon Paraiba',
                     price: 3450000,
                     quantity: 1,
-                    image: '/images/hero/chronoswiss_tourbillon.jpg',
+                    image: '/images/products/chronoswiss-tourbillon.png',
                   }
                 ]).map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3 py-2 border-b border-white/5">
                     <img
-                      src={item.image || '/images/hero/chronoswiss_tourbillon.jpg'}
-                      alt={item.name}
+                      src={getProductImage(item)}
+                      alt={getProductAlt(item)}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/images/products/watch_placeholder.png';
+                      }}
                       className="w-12 h-12 rounded-xl object-contain bg-[#020813] border border-white/10 p-1"
                     />
                     <div className="flex-1 min-w-0">

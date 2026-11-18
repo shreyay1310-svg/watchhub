@@ -132,7 +132,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'The Swatch Group India Pvt Ltd',
     lastUpdated: '16 Nov 2026, 05:15 PM',
-    image: '/images/products/omega-speedmaster.png',
+    image: '/images/products/omega-seamaster.png',
   },
   {
     id: 'inv-tag-001',
@@ -198,7 +198,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Slow Moving',
     supplier: 'LVMH Watch & Jewellery India',
     lastUpdated: '15 Nov 2026, 03:40 PM',
-    image: '/images/products/breitling-navitimer.png',
+    image: '/images/products/tag-heuer-monaco-racing.png',
   },
   {
     id: 'inv-sei-001',
@@ -297,7 +297,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'High Value Allocation',
     supplier: 'Patek Philippe SA Geneva',
     lastUpdated: '16 Nov 2026, 04:00 PM',
-    image: '/images/hero/story_heritage.jpg',
+    image: '/images/products/patek-nautilus.png',
   },
   {
     id: 'inv-chr-001',
@@ -330,7 +330,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Boutique Exclusive',
     supplier: 'Chronoswiss AG Lucerne',
     lastUpdated: '14 Nov 2026, 02:30 PM',
-    image: '/images/hero/chronoswiss_tourbillon.jpg',
+    image: '/images/products/chronoswiss-tourbillon.png',
   },
   {
     id: 'inv-car-001',
@@ -363,7 +363,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Normal',
     supplier: 'Richemont India Pvt Ltd',
     lastUpdated: '17 Nov 2026, 09:10 AM',
-    image: '/images/products/cartier-tank.png',
+    image: '/images/products/cartier_santos.jpg',
   },
   {
     id: 'inv-apl-001',
