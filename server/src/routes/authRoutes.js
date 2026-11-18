@@ -145,7 +145,7 @@ router.post('/register-with-otp', async (req, res) => {
     let existingUser = null;
     try {
       existingUser = await User.findOne({ email: email.toLowerCase().trim() });
-    } catch {}
+    } catch { }
 
     if (existingUser) {
       return res.status(400).json({ status: 'fail', message: 'An account with this email address already exists.' });
@@ -316,7 +316,7 @@ router.post('/login-with-otp', async (req, res) => {
       user = await User.findOne({
         $or: [{ email: identifier.toLowerCase().trim() }, { phone: identifier.trim() }],
       });
-    } catch {}
+    } catch { }
 
     if (!user) {
       user = {
