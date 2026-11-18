@@ -33,7 +33,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'Rolex Geneva SA / Swiss Imports Ltd',
     lastUpdated: '17 Nov 2026, 11:20 AM',
-    image: '/images/products/featured_rolex_submariner.jpg',
+    image: '/images/products/rolex-submariner.png',
   },
   {
     id: 'inv-rol-002',
@@ -66,7 +66,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'Rolex Geneva SA / Swiss Imports Ltd',
     lastUpdated: '17 Nov 2026, 10:45 AM',
-    image: '/images/products/featured_rolex_daytona.jpg',
+    image: '/images/products/rolex-daytona.png',
   },
   {
     id: 'inv-omg-001',
@@ -99,7 +99,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'The Swatch Group India Pvt Ltd',
     lastUpdated: '17 Nov 2026, 09:30 AM',
-    image: '/images/products/bestseller_omega.png',
+    image: '/images/products/omega-speedmaster.png',
   },
   {
     id: 'inv-omg-002',
@@ -132,7 +132,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'The Swatch Group India Pvt Ltd',
     lastUpdated: '16 Nov 2026, 05:15 PM',
-    image: '/images/products/featured_omega_speedmaster.jpg',
+    image: '/images/products/omega-speedmaster.png',
   },
   {
     id: 'inv-tag-001',
@@ -165,7 +165,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Normal',
     supplier: 'LVMH Watch & Jewellery India',
     lastUpdated: '17 Nov 2026, 08:20 AM',
-    image: '/images/products/bestseller_tag.png',
+    image: '/images/products/tag-heuer-carrera.png',
   },
   {
     id: 'inv-tag-002',
@@ -198,7 +198,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Slow Moving',
     supplier: 'LVMH Watch & Jewellery India',
     lastUpdated: '15 Nov 2026, 03:40 PM',
-    image: '/images/products/breitling_pilot.jpg',
+    image: '/images/products/breitling-navitimer.png',
   },
   {
     id: 'inv-sei-001',
@@ -231,7 +231,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'Seiko Watch India Pvt Ltd',
     lastUpdated: '17 Nov 2026, 11:00 AM',
-    image: '/images/products/bestseller_seiko.png',
+    image: '/images/products/seiko-prospex-diver.png',
   },
   {
     id: 'inv-tis-001',
@@ -264,7 +264,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'The Swatch Group India Pvt Ltd',
     lastUpdated: '17 Nov 2026, 11:35 AM',
-    image: '/images/products/bestseller_tissot.png',
+    image: '/images/products/tissot-prx.png',
   },
   {
     id: 'inv-pat-001',
@@ -363,7 +363,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Normal',
     supplier: 'Richemont India Pvt Ltd',
     lastUpdated: '17 Nov 2026, 09:10 AM',
-    image: '/images/products/cartier_tank.jpg',
+    image: '/images/products/cartier-tank.png',
   },
   {
     id: 'inv-apl-001',
@@ -396,7 +396,7 @@ export const INITIAL_INVENTORY_PRODUCTS = [
     velocity: 'Fast Moving',
     supplier: 'Apple India Direct Distributor',
     lastUpdated: '17 Nov 2026, 11:45 AM',
-    image: '/images/products/apple_watch_ultra.jpg',
+    image: '/images/products/apple-watch-ultra-2.png',
   },
 ];
 

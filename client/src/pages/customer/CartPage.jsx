@@ -45,7 +45,7 @@ const RECOMMENDATIONS = [
     discount: 10,
     rating: 4.9,
     reviewsCount: 412,
-    image: '/images/products/featured_rolex_daytona.jpg',
+    image: '/images/products/rolex-daytona.png',
   },
   {
     id: 'omega-speedmaster',
@@ -61,7 +61,7 @@ const RECOMMENDATIONS = [
     discount: 10,
     rating: 4.8,
     reviewsCount: 295,
-    image: '/images/products/bestseller_omega.png',
+    image: '/images/products/omega-speedmaster.png',
   },
   {
     id: 'tag-carrera-blue',
@@ -77,7 +77,7 @@ const RECOMMENDATIONS = [
     discount: 13,
     rating: 4.7,
     reviewsCount: 142,
-    image: '/images/products/bestseller_tag.png',
+    image: '/images/products/tag-heuer-carrera.png',
   },
   {
     id: 'seiko-prospex-diver',
@@ -93,7 +93,7 @@ const RECOMMENDATIONS = [
     discount: 15,
     rating: 4.6,
     reviewsCount: 276,
-    image: '/images/products/bestseller_seiko.png',
+    image: '/images/products/seiko-prospex-diver.png',
   },
   {
     id: 'tissot-prx-blue',
@@ -109,7 +109,7 @@ const RECOMMENDATIONS = [
     discount: 15,
     rating: 4.8,
     reviewsCount: 511,
-    image: '/images/products/bestseller_tissot.png',
+    image: '/images/products/tissot-prx.png',
   },
   {
     id: 'rolex-submariner-black',
@@ -125,7 +125,7 @@ const RECOMMENDATIONS = [
     discount: 14,
     rating: 4.9,
     reviewsCount: 320,
-    image: '/images/products/bestseller_rolex.png',
+    image: '/images/products/rolex-submariner.png',
   },
 ];
 
@@ -338,8 +338,12 @@ export const CartPage = () => {
                     {/* Watch Image Box with Dark Pedestal & Contain */}
                     <div className="relative w-full sm:w-36 h-36 rounded-xl bg-[#030914] border border-white/5 p-2 flex items-center justify-center flex-shrink-0 overflow-hidden">
                       <img
-                        src={item.image || '/images/products/featured_rolex_daytona.jpg'}
+                        src={item.image || '/images/products/watch_placeholder.png'}
                         alt={item.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/images/products/watch_placeholder.png';
+                        }}
                         className="w-full h-full object-contain object-center filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />
@@ -725,6 +729,10 @@ export const CartPage = () => {
                       <img
                         src={rec.image}
                         alt={rec.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/images/products/watch_placeholder.png';
+                        }}
                         className="w-full h-full object-contain filter drop-shadow group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />

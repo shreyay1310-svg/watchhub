@@ -30,7 +30,7 @@ export const BEST_SELLERS_PRODUCTS = [
     price: 1078000,
     originalPrice: 1250000,
     discount: 14,
-    image: '/images/products/bestseller_rolex.png',
+    image: '/images/products/rolex-submariner.png',
     isFeatured: false,
   },
   {
@@ -48,7 +48,7 @@ export const BEST_SELLERS_PRODUCTS = [
     price: 797500,
     originalPrice: 890000,
     discount: 10,
-    image: '/images/products/bestseller_omega.png',
+    image: '/images/products/omega-speedmaster.png',
     isFeatured: true, // Cyan highlighted border matching reference!
   },
   {
@@ -66,7 +66,7 @@ export const BEST_SELLERS_PRODUCTS = [
     price: 539000,
     originalPrice: 620000,
     discount: 13,
-    image: '/images/products/bestseller_tag.png',
+    image: '/images/products/tag-heuer-carrera.png',
     isFeatured: false,
   },
   {
@@ -84,7 +84,7 @@ export const BEST_SELLERS_PRODUCTS = [
     price: 203500,
     originalPrice: 240000,
     discount: 15,
-    image: '/images/products/bestseller_seiko.png',
+    image: '/images/products/seiko-prospex-diver.png',
     isFeatured: false,
   },
   {
@@ -102,7 +102,7 @@ export const BEST_SELLERS_PRODUCTS = [
     price: 46800,
     originalPrice: 55000,
     discount: 15,
-    image: '/images/products/bestseller_tissot.png',
+    image: '/images/products/tissot-prx.png',
     isFeatured: false,
   },
 ];
@@ -215,6 +215,10 @@ export const BestSellersSection = ({ onToast }) => {
                   <img
                     src={item.image}
                     alt={item.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/products/watch_placeholder.png';
+                    }}
                     className="w-full h-full object-contain object-center filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />

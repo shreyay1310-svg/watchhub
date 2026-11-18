@@ -350,7 +350,7 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
       customerName: createShipmentForm.customerName,
       mobileNumber: createShipmentForm.mobileNumber,
       email: createShipmentForm.email,
-      productImage: '/images/products/featured_rolex_submariner.jpg',
+      productImage: '/images/products/rolex-submariner.png',
       productName: createShipmentForm.productName,
       productCategory: 'Luxury Automatic',
       deliveryAddress: createShipmentForm.deliveryAddress,

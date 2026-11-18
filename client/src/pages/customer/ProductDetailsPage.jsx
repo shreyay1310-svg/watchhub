@@ -37,7 +37,7 @@ export const ProductDetailsPage = () => {
     MOCK_PRODUCTS.find((p) => String(p.id).toLowerCase() === String(id).toLowerCase()) ||
     MOCK_PRODUCTS[0];
 
-  const [selectedImage, setSelectedImage] = useState(product?.image || '/images/hero/chronoswiss_tourbillon.jpg');
+  const [selectedImage, setSelectedImage] = useState(product?.image || '/images/products/watch_placeholder.png');
   const [selectedDialColor, setSelectedDialColor] = useState('Paraiba Blue');
   const [selectedStrap, setSelectedStrap] = useState('Louisiana Alligator Leather');
   const [quantity, setQuantity] = useState(1);
@@ -50,7 +50,7 @@ export const ProductDetailsPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setSelectedImage(product?.image || '/images/hero/chronoswiss_tourbillon.jpg');
+    setSelectedImage(product?.image || '/images/products/watch_placeholder.png');
   }, [id, product]);
 
   const showToast = (msg) => {
@@ -60,13 +60,12 @@ export const ProductDetailsPage = () => {
 
   const isFavorited = isInWishlist(product?.id);
 
-  // Gallery items
-  const galleryImages = [
-    product?.image,
-    '/images/hero/chronoswiss_tourbillon.jpg',
-    '/images/hero/chronograph_black.jpg',
-    '/images/products/featured_rolex_submariner.jpg',
-  ].filter(Boolean);
+  // Gallery items - product-specific images only
+  const galleryImages = (
+    product?.images && product.images.length > 0
+      ? product.images
+      : [product?.image]
+  ).filter(Boolean);
 
   const dialColors = [
     { name: 'Paraiba Blue', hex: '#00CFFF' },
@@ -186,6 +185,10 @@ export const ProductDetailsPage = () => {
                 <img
                   src={selectedImage}
                   alt={product.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/images/products/watch_placeholder.png';
+                  }}
                   className="max-h-full max-w-full object-contain filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.85)] select-none pointer-events-none transition-all duration-300"
                 />
               </div>
@@ -230,6 +233,10 @@ export const ProductDetailsPage = () => {
                   <img
                     src={img}
                     alt={`Thumbnail ${idx + 1}`}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/products/watch_placeholder.png';
+                    }}
                     className="h-full w-full object-contain"
                   />
                 </button>

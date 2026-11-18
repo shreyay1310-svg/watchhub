@@ -347,7 +347,7 @@ export const COMPANIES_DATA = [
     website: 'https://www.omegawatches.com',
     heroWatch: {
       name: 'Omega Seamaster Diver 300M Co-Axial',
-      image: '/images/products/omega_speedmaster.jpg',
+      image: '/images/products/omega-speedmaster.png',
     },
     workforce: '2,500+ Specialists',
     annualCapacity: '500,000 Luxury Watches/Year',
@@ -368,7 +368,7 @@ export const COMPANIES_DATA = [
     website: 'https://www.seikowatches.com',
     heroWatch: {
       name: 'Grand Seiko Snowflake Spring Drive',
-      image: '/images/products/rolex_daytona.jpg',
+      image: '/images/products/rolex-daytona.png',
     },
     workforce: '12,000+ Employees',
     annualCapacity: '10 Million Watches/Year',
@@ -1114,7 +1114,7 @@ export const ManufacturingHubModule = () => {
                   className="w-full h-full object-cover rounded-xl"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = '/images/ref_crops/hero-watch-center.jpg';
+                    e.target.src = '/images/products/watch_placeholder.png';
                   }}
                 />
               </div>

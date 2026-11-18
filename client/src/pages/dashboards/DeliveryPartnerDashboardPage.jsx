@@ -52,7 +52,7 @@ export default function DeliveryPartnerDashboardPage() {
       phone: '+91 98765 11223',
       address: 'House 42, Gomti Nagar Extension, Lucknow',
       product: 'Rolex Submariner Date 41mm',
-      image: '/images/products/featured_rolex_submariner.jpg',
+      image: '/images/products/rolex-submariner.png',
       amount: '₹18,999 (Prepaid UPI)',
       otp: '4829',
       status: 'Out for Delivery',
@@ -65,7 +65,7 @@ export default function DeliveryPartnerDashboardPage() {
       phone: '+91 98765 44556',
       address: 'Flat 302, Royal Enclave, Indira Nagar, Lucknow',
       product: 'Omega Speedmaster Professional',
-      image: '/images/products/featured_omega_speedmaster.jpg',
+      image: '/images/products/omega-speedmaster.png',
       amount: '₹16,499 (Cash on Delivery)',
       otp: '7391',
       status: 'Out for Delivery',
@@ -78,7 +78,7 @@ export default function DeliveryPartnerDashboardPage() {
       phone: '+91 98765 77889',
       address: 'Sector B, Aliganj Main Market, Lucknow',
       product: 'Cartier Tank Must Rose Gold',
-      image: '/images/products/featured_cartier_tank.jpg',
+      image: '/images/products/cartier-tank.png',
       amount: '₹3,49,000 (Prepaid Card)',
       otp: '5512',
       status: 'Out for Delivery',
@@ -91,7 +91,7 @@ export default function DeliveryPartnerDashboardPage() {
       phone: '+91 98765 99001',
       address: 'Near GPO, Hazratganj, Lucknow',
       product: 'Apple Watch Series 10',
-      image: '/images/products/featured_apple_watch.jpg',
+      image: '/images/products/apple-watch-s10.png',
       amount: '₹46,900 (Prepaid NetBanking)',
       otp: '8210',
       status: 'Assigned',
@@ -299,7 +299,7 @@ export default function DeliveryPartnerDashboardPage() {
                         alt={delivery.product}
                         className="w-full h-full object-contain"
                         onError={(e) => {
-                          e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                          e.target.src = '/images/products/rolex-submariner.png';
                         }}
                       />
                     </div>

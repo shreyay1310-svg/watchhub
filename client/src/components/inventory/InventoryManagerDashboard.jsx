@@ -80,7 +80,7 @@ const INITIAL_INVENTORY_ITEMS = [
     minLevel: 5,
     status: 'In Stock',
     lastUpdated: '05 Nov, 11:25 AM',
-    image: '/images/products/featured_rolex_submariner.jpg',
+    image: '/images/products/rolex-submariner.png',
   },
   {
     id: 'inv_002',
@@ -97,7 +97,7 @@ const INITIAL_INVENTORY_ITEMS = [
     minLevel: 5,
     status: 'In Stock',
     lastUpdated: '05 Nov, 10:40 AM',
-    image: '/images/products/featured_rolex_daytona.jpg',
+    image: '/images/products/rolex-daytona.png',
   },
   {
     id: 'inv_003',
@@ -114,7 +114,7 @@ const INITIAL_INVENTORY_ITEMS = [
     minLevel: 10,
     status: 'Low Stock',
     lastUpdated: '04 Nov, 06:15 PM',
-    image: '/images/products/featured_omega_speedmaster.jpg',
+    image: '/images/products/omega-speedmaster.png',
   },
   {
     id: 'inv_004',
@@ -131,7 +131,7 @@ const INITIAL_INVENTORY_ITEMS = [
     minLevel: 5,
     status: 'Out of Stock',
     lastUpdated: '04 Nov, 02:10 PM',
-    image: '/images/products/featured_omega_seamaster.jpg',
+    image: '/images/products/omega-seamaster.png',
   },
   {
     id: 'inv_005',
@@ -148,7 +148,7 @@ const INITIAL_INVENTORY_ITEMS = [
     minLevel: 5,
     status: 'In Stock',
     lastUpdated: '03 Nov, 04:20 PM',
-    image: '/images/products/featured_cartier_tank.jpg',
+    image: '/images/products/cartier-tank.png',
   },
   {
     id: 'inv_006',
@@ -165,7 +165,7 @@ const INITIAL_INVENTORY_ITEMS = [
     minLevel: 3,
     status: 'In Stock',
     lastUpdated: '02 Nov, 03:15 PM',
-    image: '/images/products/featured_patek_nautilus.jpg',
+    image: '/images/products/patek-nautilus.png',
   },
   {
     id: 'inv_007',
@@ -182,7 +182,7 @@ const INITIAL_INVENTORY_ITEMS = [
     minLevel: 10,
     status: 'In Stock',
     lastUpdated: '01 Nov, 05:40 PM',
-    image: '/images/products/featured_apple_watch.jpg',
+    image: '/images/products/apple-watch-s10.png',
   },
 ];
 
@@ -1024,7 +1024,7 @@ export default function InventoryManagerDashboard({
                             alt={item.productName}
                             className="w-full h-full object-contain"
                             onError={(e) => {
-                              e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                              e.target.src = '/images/products/rolex-submariner.png';
                             }}
                           />
                         </div>

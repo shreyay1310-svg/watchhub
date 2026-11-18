@@ -50,7 +50,7 @@ export const CustomizeWatchPage = () => {
       price: grandTotal,
       originalPrice: Math.round(grandTotal * 1.25),
       discount: 20,
-      image: '/images/products/featured_rolex_submariner.jpg',
+      image: '/images/products/rolex-submariner.png',
       rating: 5.0,
       reviewsCount: 1,
       inStock: true,

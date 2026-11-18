@@ -62,10 +62,10 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.9,
     reviewsCount: 3840,
     isFeatured: true,
-    image: '/images/products/featured_rolex_submariner.jpg',
+    image: '/images/products/rolex-submariner.png',
     images: [
-      '/images/products/featured_rolex_submariner.jpg',
-      '/images/products/featured_rolex_daytona.jpg',
+      '/images/products/rolex-submariner.png',
+      '/images/products/rolex-daytona.png',
     ],
     specifications: {
       dialSize: '41 mm',
@@ -106,8 +106,8 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.9,
     reviewsCount: 4120,
     isFeatured: true,
-    image: '/images/products/featured_rolex_daytona.jpg',
-    images: ['/images/products/featured_rolex_daytona.jpg'],
+    image: '/images/products/rolex-daytona.png',
+    images: ['/images/products/rolex-daytona.png'],
     specifications: {
       dialSize: '40 mm',
       dialShape: 'Round',
@@ -146,8 +146,8 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.8,
     reviewsCount: 2950,
     isFeatured: true,
-    image: '/images/products/featured_omega_speedmaster.jpg',
-    images: ['/images/products/featured_omega_speedmaster.jpg'],
+    image: '/images/products/omega-speedmaster.png',
+    images: ['/images/products/omega-speedmaster.png'],
     specifications: {
       dialSize: '42 mm',
       dialShape: 'Round',
@@ -187,8 +187,8 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.8,
     reviewsCount: 2100,
     isFeatured: true,
-    image: '/images/products/featured_omega_seamaster.jpg',
-    images: ['/images/products/featured_omega_seamaster.jpg'],
+    image: '/images/products/omega-seamaster.png',
+    images: ['/images/products/omega-seamaster.png'],
     specifications: {
       dialSize: '42 mm',
       dialShape: 'Round',
@@ -227,8 +227,8 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.9,
     reviewsCount: 540,
     isFeatured: true,
-    image: '/images/products/featured_patek_nautilus.jpg',
-    images: ['/images/products/featured_patek_nautilus.jpg'],
+    image: '/images/products/patek-nautilus.png',
+    images: ['/images/products/patek-nautilus.png'],
     specifications: {
       dialSize: '40 mm',
       dialShape: 'Porothole Octagonal',
@@ -267,8 +267,8 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.8,
     reviewsCount: 420,
     isFeatured: true,
-    image: '/images/products/featured_ap_royal_oak.jpg',
-    images: ['/images/products/featured_ap_royal_oak.jpg'],
+    image: '/images/products/ap-royal-oak.png',
+    images: ['/images/products/ap-royal-oak.png'],
     specifications: {
       dialSize: '41 mm',
       dialShape: 'Octagonal with 8 Screws',
@@ -307,8 +307,8 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.7,
     reviewsCount: 980,
     isFeatured: true,
-    image: '/images/products/featured_cartier_tank.jpg',
-    images: ['/images/products/featured_cartier_tank.jpg'],
+    image: '/images/products/cartier-tank.png',
+    images: ['/images/products/cartier-tank.png'],
     specifications: {
       dialSize: '33 mm',
       dialShape: 'Rectangular',
@@ -347,8 +347,8 @@ const SEED_ADMIN_PRODUCTS = [
     rating: 4.6,
     reviewsCount: 6200,
     isFeatured: true,
-    image: '/images/products/featured_apple_watch.jpg',
-    images: ['/images/products/featured_apple_watch.jpg'],
+    image: '/images/products/apple-watch-s10.png',
+    images: ['/images/products/apple-watch-s10.png'],
     specifications: {
       dialSize: '46 mm',
       dialShape: 'Curved Rectangle',
@@ -412,7 +412,7 @@ export const ProductsManagementModule = () => {
     lowStockThreshold: 10,
     warehouseLocation: 'Zone A - Luxury Vault',
     barcode: '',
-    image: '/images/products/featured_rolex_submariner.jpg',
+    image: '/images/products/rolex-submariner.png',
     description: '',
     isFeatured: false,
     status: 'Active',
@@ -1131,6 +1131,10 @@ export const ProductsManagementModule = () => {
                           <img
                             src={p.image}
                             alt={p.name}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = '/images/products/watch_placeholder.png';
+                            }}
                             className="w-full h-full object-contain"
                           />
                         </div>
@@ -1872,7 +1876,7 @@ export const ProductsManagementModule = () => {
                       type="text"
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      placeholder="/images/products/featured_rolex_submariner.jpg"
+                      placeholder="/images/products/rolex-submariner.png"
                       className="w-full h-10 px-3 rounded-xl border border-white/10"
                     />
                     <div className="mt-2 w-24 h-24 rounded-xl border border-white/10 bg-[#0B1022]/80 p-2 flex items-center justify-center">
@@ -1963,6 +1967,10 @@ export const ProductsManagementModule = () => {
                   <img
                     src={showDetailsModal.image}
                     alt={showDetailsModal.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/products/watch_placeholder.png';
+                    }}
                     className="w-48 h-48 object-contain"
                   />
                 </div>

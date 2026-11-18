@@ -48,7 +48,7 @@ export const CustomerAccountPage = () => {
       status: 'Delivered',
       statusColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
       awb: 'AWB-SWISS-91823712',
-      image: '/images/products/featured_rolex_submariner.jpg',
+      image: '/images/products/rolex-submariner.png',
     },
     {
       id: 'WH125620',
@@ -60,7 +60,7 @@ export const CustomerAccountPage = () => {
       status: 'In Transit',
       statusColor: 'text-[#00CFFF] bg-[#00CFFF]/10 border-[#00CFFF]/30',
       awb: 'AWB-SWISS-78321045',
-      image: '/images/products/tissot_prx.jpg',
+      image: '/images/products/tissot-prx.png',
     },
     {
       id: 'WH124801',

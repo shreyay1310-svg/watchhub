@@ -75,7 +75,7 @@ const INITIAL_POS_ITEMS = [
     name: 'Rolex Submariner',
     price: 980000,
     qty: 1,
-    image: '/images/products/rolex_submariner.jpg',
+    image: '/images/products/rolex-submariner.png',
     sku: 'WH-ROL-001',
   },
   {
@@ -83,7 +83,7 @@ const INITIAL_POS_ITEMS = [
     name: 'Omega Speedmaster',
     price: 725000,
     qty: 1,
-    image: '/images/products/omega_speedmaster.jpg',
+    image: '/images/products/omega-speedmaster.png',
     sku: 'WH-OMG-001',
   },
   {
@@ -91,7 +91,7 @@ const INITIAL_POS_ITEMS = [
     name: 'TAG Heuer Carrera',
     price: 490000,
     qty: 1,
-    image: '/images/products/tag_heuer_carrera.jpg',
+    image: '/images/products/tag-heuer-carrera.png',
     sku: 'WH-TAG-001',
   },
   {
@@ -99,7 +99,7 @@ const INITIAL_POS_ITEMS = [
     name: 'Tissot PRX',
     price: 42500,
     qty: 1,
-    image: '/images/products/tissot_prx.jpg',
+    image: '/images/products/tissot-prx.png',
     sku: 'WH-TIS-001',
   },
 ];
@@ -111,28 +111,28 @@ const TOP_WATCHES_DATA = [
     name: 'Rolex Submariner',
     sold: 245,
     revenue: '₹24,01,000',
-    image: '/images/products/rolex_submariner.jpg',
+    image: '/images/products/rolex-submariner.png',
   },
   {
     id: 'tw-2',
     name: 'Omega Speedmaster',
     sold: 186,
     revenue: '₹13,48,500',
-    image: '/images/products/omega_speedmaster.jpg',
+    image: '/images/products/omega-speedmaster.png',
   },
   {
     id: 'tw-3',
     name: 'TAG Heuer Carrera',
     sold: 162,
     revenue: '₹7,93,800',
-    image: '/images/products/tag_heuer_carrera.jpg',
+    image: '/images/products/tag-heuer-carrera.png',
   },
   {
     id: 'tw-4',
     name: 'Tissot PRX',
     sold: 135,
     revenue: '₹5,73,750',
-    image: '/images/products/tissot_prx.jpg',
+    image: '/images/products/tissot-prx.png',
   },
 ];
 
@@ -255,7 +255,7 @@ export const StoreAdminShopmaxDashboard = ({
         name: `Scanned Watch (${skuCode})`,
         price: 350000,
         qty: 1,
-        image: '/images/products/rolex_submariner.jpg',
+        image: '/images/products/rolex-submariner.png',
         sku: skuCode,
       };
       setPosCart((prev) => [newItem, ...prev]);
@@ -603,7 +603,7 @@ export const StoreAdminShopmaxDashboard = ({
                             alt={watch.name}
                             className="w-9 h-9 rounded-xl object-contain bg-black/40 border border-white/10 p-0.5 flex-shrink-0"
                             onError={(e) => {
-                              e.target.src = '/images/products/rolex_submariner.jpg';
+                              e.target.src = '/images/products/rolex-submariner.png';
                             }}
                           />
                           <span className="font-semibold text-white truncate max-w-[140px]">
@@ -739,7 +739,7 @@ export const StoreAdminShopmaxDashboard = ({
                           alt={item.name}
                           className="w-10 h-10 rounded-xl object-contain bg-black/40 border border-white/10 p-0.5 flex-shrink-0"
                           onError={(e) => {
-                            e.target.src = '/images/products/rolex_submariner.jpg';
+                            e.target.src = '/images/products/rolex-submariner.png';
                           }}
                         />
                         <div>
@@ -962,7 +962,7 @@ export const StoreAdminShopmaxDashboard = ({
                 alt="New Collection Luxury Watch"
                 className="w-full h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] transform hover:scale-105 transition-transform"
                 onError={(e) => {
-                  e.target.src = '/images/products/featured_rolex_daytona.jpg';
+                  e.target.src = '/images/products/rolex-daytona.png';
                 }}
               />
             </div>

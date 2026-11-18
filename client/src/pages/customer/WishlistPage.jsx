@@ -33,6 +33,10 @@ export const WishlistPage = () => {
                     <img
                       src={p.image}
                       alt={p.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/images/products/watch_placeholder.png';
+                      }}
                       className="max-h-full max-w-full object-contain object-center group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (

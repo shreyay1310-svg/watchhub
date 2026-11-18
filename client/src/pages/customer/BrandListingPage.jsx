@@ -97,7 +97,7 @@ export const BrandListingPage = () => {
         discount: 12,
         rating: 4.9,
         reviewsCount: 148,
-        image: '/images/products/featured_rolex_submariner.jpg',
+        image: '/images/products/rolex-submariner.png',
         movement: 'Manufacture Calibre Automatic',
         waterResistance: '100M / 10 ATM',
         caseMaterial: 'Satin-Brushed Stainless Steel',
@@ -115,7 +115,7 @@ export const BrandListingPage = () => {
         discount: 15,
         rating: 4.8,
         reviewsCount: 92,
-        image: '/images/products/featured_omega_speedmaster.jpg',
+        image: '/images/products/omega-speedmaster.png',
         movement: 'Manual Mechanical Chronograph',
         waterResistance: '50M / 5 ATM',
         caseMaterial: 'Grade 5 Lightweight Titanium',
@@ -133,7 +133,7 @@ export const BrandListingPage = () => {
         discount: 14,
         rating: 4.7,
         reviewsCount: 176,
-        image: '/images/products/featured_omega_seamaster.jpg',
+        image: '/images/products/omega-seamaster.png',
         movement: 'Automatic Co-Axial Diver',
         waterResistance: '300M / 1000ft Professional',
         caseMaterial: 'Stainless Steel with Ceramic Bezel',
@@ -151,7 +151,7 @@ export const BrandListingPage = () => {
         discount: 10,
         rating: 4.9,
         reviewsCount: 64,
-        image: '/images/products/featured_cartier_tank.jpg',
+        image: '/images/products/cartier-tank.png',
         movement: 'Ultra-Thin Automatic Calibre',
         waterResistance: '30M / 3 ATM',
         caseMaterial: 'Rose Gold PVD & White Sunburst Dial',
@@ -169,7 +169,7 @@ export const BrandListingPage = () => {
         discount: 14,
         rating: 4.6,
         reviewsCount: 230,
-        image: '/images/products/featured_apple_watch.jpg',
+        image: '/images/products/apple-watch-s10.png',
         movement: 'Connected Digital Sensor Core',
         waterResistance: '50M Water Resistant',
         caseMaterial: 'Space-Grade Aluminum',
@@ -477,7 +477,8 @@ export const BrandListingPage = () => {
                       alt={watch.name}
                       className="max-h-full max-w-full w-auto h-auto object-contain object-center filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] group-hover:scale-105 transition-transform duration-300 block mx-auto"
                       onError={(e) => {
-                        e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                        e.target.onerror = null;
+                        e.target.src = '/images/products/watch_placeholder.png';
                       }}
                     />
 
@@ -663,6 +664,10 @@ export const BrandListingPage = () => {
                 <img
                   src={quickViewProduct.image}
                   alt={quickViewProduct.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/images/products/watch_placeholder.png';
+                  }}
                   className="max-h-full max-w-full object-contain filter drop-shadow-2xl"
                 />
               </div>

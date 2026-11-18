@@ -74,7 +74,7 @@ export default function InventoryStockModule({
     unitCost: 500000,
     sellingPrice: 750000,
     supplier: 'Swiss Horology Imports Ltd',
-    image: '/images/products/featured_rolex_submariner.jpg',
+    image: '/images/products/rolex-submariner.png',
   });
 
   const formatSafeDate = (dateVal) => {
@@ -209,7 +209,7 @@ export default function InventoryStockModule({
       velocity: 'Fast Moving',
       supplier: newProductForm.supplier,
       lastUpdated: 'Just now',
-      image: newProductForm.image || '/images/products/featured_rolex_submariner.jpg',
+      image: newProductForm.image || '/images/products/rolex-submariner.png',
     };
     onAddProduct(newProduct);
     setShowAddProductModal(false);
@@ -485,7 +485,7 @@ export default function InventoryStockModule({
                       {/* Image */}
                       <td className="py-3 px-3">
                         <img
-                          src={p?.image || '/images/products/featured_rolex_submariner.jpg'}
+                          src={p?.image || '/images/products/rolex-submariner.png'}
                           alt={p?.name || 'Watch'}
                           className="w-10 h-10 rounded-xl object-contain bg-black/40 border border-[#29305D] p-0.5 shrink-0"
                         />

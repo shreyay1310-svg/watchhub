@@ -18,7 +18,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 220500,
       grandTotal: 1445500,
       promoCode: 'HOROLOGYVIP',
-      image: '/images/products/featured_rolex_submariner.jpg',
+      image: '/images/products/rolex-submariner.png',
       warranty: '5-Year International Rolex Guarantee & Certified Chronometer Provenance Certificate',
     },
     customer: {
@@ -157,7 +157,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 1395000,
       grandTotal: 9145000,
       promoCode: 'CONCIERGEGOLD',
-      image: '/images/products/featured_patek_nautilus.jpg',
+      image: '/images/products/patek-nautilus.png',
       warranty: 'Patek Philippe Geneva Seal & WatchHub Registered Collector Certificate',
     },
     customer: {
@@ -226,7 +226,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 691200,
       grandTotal: 4531200,
       promoCode: 'WELCOMEWATCH',
-      image: '/images/products/featured_ap_royal_oak.jpg',
+      image: '/images/products/ap-royal-oak.png',
       warranty: '5-Year Audemars Piguet Manufacturer Warranty & WatchHub Certified Authenticity Card',
     },
     customer: {
@@ -295,7 +295,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 126000,
       grandTotal: 826000,
       promoCode: 'SPEEDMASTERVIP',
-      image: '/images/products/featured_omega_speedmaster.jpg',
+      image: '/images/products/omega-speedmaster.png',
       warranty: '5-Year Omega International Warranty + METAS Certificate of Precision',
     },
     customer: {
@@ -364,7 +364,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 114300,
       grandTotal: 749300,
       promoCode: 'CARTIERELITE',
-      image: '/images/products/featured_cartier_tank.jpg',
+      image: '/images/products/cartier-tank.png',
       warranty: '8-Year Extended Cartier Care Warranty & Red Box Presentation Box',
     },
     customer: {
@@ -433,7 +433,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 11250,
       grandTotal: 73750,
       promoCode: 'FIRSTBUY',
-      image: '/images/products/tissot_prx.jpg',
+      image: '/images/products/tissot-prx.png',
       warranty: '2-Year Tissot International Official Warranty',
     },
     customer: {
@@ -502,7 +502,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 144000,
       grandTotal: 944000,
       promoCode: 'BREITLINGPILOT',
-      image: '/images/products/breitling_pilot.jpg',
+      image: '/images/products/breitling-navitimer.png',
       warranty: 'Breitling Manufacturer Warranty',
     },
     customer: {
@@ -569,7 +569,7 @@ export const CUSTOMER_ORDERS_DATA = [
       taxes: 148500,
       grandTotal: 973500,
       promoCode: 'CARRERAVIP',
-      image: '/images/products/tag_heuer_carrera.jpg',
+      image: '/images/products/tag-heuer-carrera.png',
       warranty: 'TAG Heuer 2-Year International Warranty',
     },
     customer: {

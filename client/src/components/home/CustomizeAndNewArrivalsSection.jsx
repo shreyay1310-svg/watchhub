@@ -258,7 +258,7 @@ export const CustomizeAndNewArrivalsSection = () => {
                 alt="WatchHub Bespoke Blue Dial Watch"
                 className="max-h-full max-w-full object-contain filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.9)] group-hover/watch:scale-105 transition-transform duration-500 ease-out"
                 onError={(e) => {
-                  e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                  e.target.src = '/images/products/rolex-submariner.png';
                 }}
               />
             </Link>

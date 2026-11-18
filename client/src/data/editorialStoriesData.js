@@ -62,7 +62,7 @@ export const EDITORIAL_STORIES = [
         caption: 'Inverted flying tourbillon movement with electric blue CVD dial finish and chamfered regulator bridges.',
       },
       {
-        url: '/images/products/bestseller_rolex.png',
+        url: '/images/products/rolex-submariner.png',
         caption: 'Precision-calibrated automatic chronometer movement tested in six positions and extreme temperature variations.',
       },
     ],
@@ -127,7 +127,7 @@ export const EDITORIAL_STORIES = [
         caption: 'Traditional hand-turned guilloché dial and decoupled hour/minute registers.',
       },
       {
-        url: '/images/products/bestseller_omega.png',
+        url: '/images/products/omega-speedmaster.png',
         caption: 'Historic chronograph heritage spanning observatory chronometry and space exploration.',
       },
     ],
@@ -188,11 +188,11 @@ export const EDITORIAL_STORIES = [
         caption: 'Classic aviator chronograph resting alongside antique nautical maps and navigational brass compass.',
       },
       {
-        url: '/images/products/bestseller_tag.png',
+        url: '/images/products/tag-heuer-carrera.png',
         caption: 'High-speed motor racing chronograph inspired by the Carrera Panamericana endurance rally.',
       },
       {
-        url: '/images/products/bestseller_seiko.png',
+        url: '/images/products/seiko-prospex-diver.png',
         caption: 'Professional diver timepiece built for deep oceanic exploration with luminescent markers.',
       },
     ],

@@ -352,7 +352,7 @@ export const HomePage = () => {
                 alt={currentHero.title}
                 className="max-h-full max-w-full object-contain filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.95)] transition-all duration-500 ease-out group-hover:scale-105 select-none animate-fade-in"
                 onError={(e) => {
-                  e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                  e.target.src = '/images/products/rolex-submariner.png';
                 }}
               />
             </Link>

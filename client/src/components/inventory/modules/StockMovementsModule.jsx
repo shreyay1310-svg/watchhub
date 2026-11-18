@@ -293,7 +293,7 @@ export default function StockMovementsModule({ movements = [], warehouses = [] }
                       <td className="py-3 px-3">
                         <div className="flex items-center gap-2">
                           <img
-                            src={m.productImage || '/images/products/featured_rolex_submariner.jpg'}
+                            src={m.productImage || '/images/products/rolex-submariner.png'}
                             alt={m.productName}
                             className="w-8 h-8 rounded-lg object-contain bg-black/40 border border-[#29305D] shrink-0"
                           />

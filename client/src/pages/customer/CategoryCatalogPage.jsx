@@ -771,7 +771,7 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                 alt="WatchHub Atelier Customizer"
                 className="max-h-full max-w-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,207,255,0.35)]"
                 onError={(e) => {
-                  e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                  e.target.src = '/images/products/rolex-submariner.png';
                 }}
               />
             </div>
@@ -911,7 +911,7 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                   alt={quickViewProduct.name}
                   className="max-h-full max-w-full object-contain"
                   onError={(e) => {
-                    e.target.src = '/images/products/featured_rolex_submariner.jpg';
+                    e.target.src = '/images/products/rolex-submariner.png';
                   }}
                 />
               </div>

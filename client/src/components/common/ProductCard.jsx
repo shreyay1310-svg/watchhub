@@ -74,7 +74,7 @@ export const ProductCard = ({
           loading="lazy"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = '/images/products/featured_rolex_submariner.jpg';
+            e.target.src = '/images/products/watch_placeholder.png';
           }}
           className="max-h-full max-w-full w-auto h-auto object-contain object-center block mx-auto filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] transition-transform duration-300 group-hover:scale-105"
         />
