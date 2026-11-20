@@ -54,7 +54,12 @@ export const createRazorpayOrder = async ({ amount, currency = 'INR', receipt, n
 
 // 2. Verify HMAC SHA-256 Payment Signature
 export const verifyRazorpayPaymentSignature = ({ razorpay_order_id, razorpay_payment_id, razorpay_signature }) => {
-  const secret = process.env.RAZORPAY_KEY_SECRET || 'watchhub_test_secret_key';
+  const secret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!secret) {
+    console.error('[Razorpay Error] RAZORPAY_KEY_SECRET is not configured.');
+    return false;
+  }
 
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
     return false;
@@ -65,15 +70,14 @@ export const verifyRazorpayPaymentSignature = ({ razorpay_order_id, razorpay_pay
     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest('hex');
 
-  const isValid = generatedSignature === razorpay_signature;
+  const bufExpected = Buffer.from(generatedSignature, 'utf8');
+  const bufReceived = Buffer.from(razorpay_signature, 'utf8');
 
-  // In local test sandbox mode
-  if (!isValid && process.env.NODE_ENV !== 'production' && razorpay_order_id.startsWith('order_')) {
-    console.info('[Razorpay Sandbox] Accepted test signature for dev workflow.');
-    return true;
+  if (bufExpected.length !== bufReceived.length) {
+    return false;
   }
 
-  return isValid;
+  return crypto.timingSafeEqual(bufExpected, bufReceived);
 };
 
 // 3. Fetch Real Payment Status from Razorpay API

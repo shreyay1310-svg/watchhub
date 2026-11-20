@@ -1,0 +1,39 @@
+================================================================================
+WATCHHUB ATELIER — SQL SERVER 2025 DATABASE INTEGRITY VERIFICATION
+Host: 127.0.0.1:1433 | Database: WatchHubDB | Engine: Microsoft SQL Server 2025
+ORM: Prisma 6.19.3 | Verification Timestamp: 2026-11-20T07:35:36.546Z
+================================================================================
+
+TABLE COUNT AND INTEGRITY SUMMARY (24 Relational Tables):
+--------------------------------------------------------------------------------
+_prisma_migrations             :      1 records
+Addresses                      :      3 records
+AuditLogs                      :      0 records
+Brands                         :     28 records
+Categories                     :      8 records
+Coupons                        :      3 records
+Deliveries                     :      3 records
+DeliveryLocationPings          :      3 records
+Inventory                      :     36 records
+OrderItems                     :      3 records
+Orders                         :      6 records
+OTPVerifications               :      0 records
+Payments                       :      3 records
+Permissions                    :     21 records
+ProductImages                  :     33 records
+Products                       :     33 records
+RolePermissions                :     22 records
+Roles                          :      7 records
+StockTransactions              :      5 records
+SupportMessages                :     14 records
+SupportTickets                 :      6 records
+UserRoles                      :      9 records
+Users                          :      9 records
+Warehouses                     :      3 records
+--------------------------------------------------------------------------------
+TOTAL MONITORED RECORDS    :    259 records
+PRIMARY ENCRYPTION ENGINE   : bcrypt (Salt Rounds: 10)
+OTP CRYPTOGRAPHIC HASH      : HMAC-SHA256 (otpSecretKey)
+REFERENTIAL INTEGRITY       : ACTIVE (Cascading FKs enforced by SQL Server engine)
+TRANSACTION ISOLATION       : READ COMMITTED / SNAPSHOT
+================================================================================

@@ -13,12 +13,14 @@ import {
 } from 'lucide-react';
 import OtpInput from '../../components/auth/OtpInput';
 import GoldenStarsBackground from '../../components/common/GoldenStarsBackground';
+import { safeAuthFetch } from '../../utils/authApiHelper';
 
 export const ResetPasswordPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
 
+  const [phone, setPhone] = useState(queryParams.get('phone') || '');
   const [email, setEmail] = useState(queryParams.get('email') || '');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -39,8 +41,8 @@ export const ResetPasswordPage = () => {
     e.preventDefault();
     setError('');
 
-    if (!email) {
-      setError('Please provide the account email address.');
+    if (!phone && !email) {
+      setError('Please provide the account phone number or email address.');
       return;
     }
     if (otp.length !== 6) {
@@ -59,20 +61,19 @@ export const ResetPasswordPage = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/reset-password', {
+      const endpoint = phone ? '/api/auth/reset-password-phone' : '/api/auth/reset-password';
+      const payload = phone
+        ? { phone: phone.replace(/[^0-9]/g, '').slice(-10), otp, newPassword }
+        : { email: email.trim().toLowerCase(), otp, newPassword };
+
+      const result = await safeAuthFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email.trim().toLowerCase(),
-          otp,
-          newPassword,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-
-      if (!res.ok || data.status === 'fail') {
-        setError(data.message || 'Failed to reset password. Please check your code.');
+      if (!result.ok) {
+        setError(result.error);
         setLoading(false);
         return;
       }
@@ -84,29 +85,34 @@ export const ResetPasswordPage = () => {
         navigate('/login');
       }, 2500);
     } catch {
-      setError('Network communication failure. Please try again.');
+      setError('An unexpected communication error occurred. Please try again.');
       setLoading(false);
     }
   };
 
   const handleResend = async () => {
-    if (resendCooldown > 0 || !email) return;
+    if (resendCooldown > 0 || (!email && !phone)) return;
     setError('');
 
     try {
-      const res = await fetch('/api/auth/resend-email-otp', {
+      const endpoint = phone ? '/api/auth/send-phone-otp' : '/api/auth/resend-email-otp';
+      const payload = phone
+        ? { phone, purpose: 'password_reset' }
+        : { email: email.trim().toLowerCase(), purpose: 'password_reset' };
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), purpose: 'password_reset' }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data.status !== 'fail' && data.status !== 'error') {
         setResendCooldown(60);
       } else {
         setError(data.message || 'Failed to resend code.');
       }
     } catch {
-      setError('Error contacting email gateway.');
+      setError('Error contacting SMS / email gateway.');
     }
   };
 
@@ -153,7 +159,7 @@ export const ResetPasswordPage = () => {
                 Enter the 6-digit code sent to:
               </p>
               <span className="text-xs font-semibold text-[#00D9E8] bg-[#111729] px-3 py-1 rounded-full border border-[#252D42] inline-block mt-1">
-                {email || 'your email'}
+                {phone ? `+91 ${phone}` : (email || 'your account')}
               </span>
             </div>
 

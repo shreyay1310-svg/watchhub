@@ -2,16 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WatchHub – Premium Watches for Every Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>WatchHub – Luxury Watches, Horology Atelier &amp; Customization</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore WatchHub for authentic luxury watches from Rolex, Omega, Patek Philippe, and TAG Heuer. Experience our 3D Watch Customizer Studio and Horology Atelier." />
+    <meta name="keywords" content="luxury watches, rolex, omega, patek philippe, mechanical watches, buy watches online india, custom watches, swiss watches" />
+    <meta name="author" content="WatchHub Luxury Horology Ltd." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://watchhub.in/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://watchhub.in/" />
+    <meta property="og:title" content="WatchHub – Luxury Watches, Horology Atelier &amp; Customization" />
+    <meta property="og:description" content="Explore WatchHub for authentic luxury watches from Rolex, Omega, Patek Philippe, and TAG Heuer. Experience our 3D Watch Customizer Studio and Horology Atelier." />
+    <meta property="og:image" content="https://watchhub.in/images/hero/hero_rolex_submariner.jpg" />
+    <meta property="og:site_name" content="WatchHub" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://watchhub.in/" />
+    <meta name="twitter:title" content="WatchHub – Luxury Watches, Horology Atelier &amp; Customization" />
+    <meta name="twitter:description" content="Explore WatchHub for authentic luxury watches from Rolex, Omega, Patek Philippe, and TAG Heuer. Experience our 3D Watch Customizer Studio and Horology Atelier." />
+    <meta name="twitter:image" content="https://watchhub.in/images/hero/hero_rolex_submariner.jpg" />
+    <meta name="twitter:site" content="@WatchHubOfficial" />
+
+    <!-- Progressive Web App (PWA) Tags -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#070918" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="WatchHub" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/icons/favicon-64x64.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Organization Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://watchhub.in/#organization",
+          "name": "WatchHub",
+          "url": "https://watchhub.in/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://watchhub.in/icons/icon-512x512.png",
+            "width": 512,
+            "height": 512
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+91-1800-WATCHHUB",
+            "contactType": "Customer Support",
+            "areaServed": "IN",
+            "availableLanguage": ["English", "Hindi"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://watchhub.in/#website",
+          "url": "https://watchhub.in/",
+          "name": "WatchHub",
+          "publisher": { "@id": "https://watchhub.in/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://watchhub.in/products?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body class="bg-watch-light text-watch-dark font-poppins antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-

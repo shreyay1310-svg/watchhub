@@ -478,6 +478,7 @@ export const CustomerDrawer = ({ isOpen, onClose }) => {
                 onClick={() => {
                   logout();
                   onClose();
+                  navigate('/login', { replace: true });
                 }}
                 className="text-[11px] text-rose-400 hover:text-rose-300 font-semibold cursor-pointer"
               >

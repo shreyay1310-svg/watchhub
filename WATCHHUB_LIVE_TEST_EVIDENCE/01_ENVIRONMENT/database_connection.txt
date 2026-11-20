@@ -1,0 +1,8 @@
+WATCHHUB ATELIER — LOCAL ENVIRONMENT VERIFICATION PROOF
+Timestamp: 2026-11-20T07:34:16.175Z
+Backend Health: success (HTTP 200)
+Backend Message: WatchHub E-Commerce REST API is live and operational.
+Target DB: Microsoft SQL Server 2025 (WatchHubDB @ 127.0.0.1:1433)
+Frontend: http://localhost:5173
+Chrome Binary: C:\Program Files\Google\Chrome\Application\chrome.exe
+Node Runtime: v26.4.0

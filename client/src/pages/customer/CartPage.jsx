@@ -5,6 +5,9 @@ import Footer from '../../components/common/Footer';
 import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { getProductImage, getProductAlt } from '../../utils/productImageMap';
+import SEO from '../../components/common/SEO';
+import CartOrderSummary from '../../components/cart/CartOrderSummary';
+import { RECOMMENDATIONS } from '../../data/cartRecommendations';
 import {
   Trash2,
   Plus,
@@ -29,106 +32,6 @@ import {
   X,
   Check,
 } from 'lucide-react';
-
-// Recommended complementary timepieces for "You May Also Like" carousel
-const RECOMMENDATIONS = [
-  {
-    id: 'rolex-daytona',
-    name: 'Rolex Cosmograph Daytona Gold',
-    brand: 'ROLEX',
-    category: 'Luxury Chronograph',
-    dialSize: '40mm',
-    movement: 'Calibre 4130 Superlative Chronometer',
-    caseMaterial: '18K Yellow Gold',
-    warranty: '5 Years Official International Warranty',
-    price: 2199900,
-    originalPrice: 2450000,
-    discount: 10,
-    rating: 4.9,
-    reviewsCount: 412,
-    image: '/images/products/rolex-daytona.png',
-  },
-  {
-    id: 'omega-speedmaster',
-    name: 'Omega Speedmaster Professional Moonwatch',
-    brand: 'OMEGA',
-    category: 'Master Chronometer',
-    dialSize: '42mm',
-    movement: 'Calibre 3861 Manual Co-Axial',
-    caseMaterial: '316L Stainless Steel',
-    warranty: '5 Years Official Omega Warranty',
-    price: 797500,
-    originalPrice: 890000,
-    discount: 10,
-    rating: 4.8,
-    reviewsCount: 295,
-    image: '/images/products/omega-speedmaster.png',
-  },
-  {
-    id: 'tag-carrera-blue',
-    name: 'TAG Heuer Carrera Calibre 5',
-    brand: 'TAG HEUER',
-    category: 'Automatic Sport Elegance',
-    dialSize: '39mm',
-    movement: 'Calibre 5 Automatic',
-    caseMaterial: 'Fine-Brushed Steel',
-    warranty: '2 Years Manufacturer Warranty',
-    price: 539000,
-    originalPrice: 620000,
-    discount: 13,
-    rating: 4.7,
-    reviewsCount: 142,
-    image: '/images/products/tag-heuer-carrera.png',
-  },
-  {
-    id: 'seiko-prospex-diver',
-    name: 'Seiko Prospex 200M Diver',
-    brand: 'SEIKO',
-    category: 'Professional Diver',
-    dialSize: '44mm',
-    movement: '6R35 Automatic (70h Reserve)',
-    caseMaterial: 'Stainless Steel with Super-Hard Coating',
-    warranty: '3 Years International Warranty',
-    price: 203500,
-    originalPrice: 240000,
-    discount: 15,
-    rating: 4.6,
-    reviewsCount: 276,
-    image: '/images/products/seiko-prospex-diver.png',
-  },
-  {
-    id: 'tissot-prx-blue',
-    name: 'Tissot PRX Powermatic 80 Blue',
-    brand: 'TISSOT',
-    category: 'Integrated Bracelet',
-    dialSize: '40mm',
-    movement: 'Powermatic 80 with Nivachron',
-    caseMaterial: '316L Stainless Steel',
-    warranty: '2 Years Official Tissot Warranty',
-    price: 46800,
-    originalPrice: 55000,
-    discount: 15,
-    rating: 4.8,
-    reviewsCount: 511,
-    image: '/images/products/tissot-prx.png',
-  },
-  {
-    id: 'rolex-submariner-black',
-    name: 'Rolex Submariner Date 41mm',
-    brand: 'ROLEX',
-    category: 'Oyster Perpetual Diver',
-    dialSize: '41mm',
-    movement: 'Calibre 3235 Chronometer',
-    caseMaterial: 'Oystersteel with Cerachrom',
-    warranty: '5 Years Official International Warranty',
-    price: 1078000,
-    originalPrice: 1250000,
-    discount: 14,
-    rating: 4.9,
-    reviewsCount: 320,
-    image: '/images/products/rolex-submariner.png',
-  },
-];
 
 export const CartPage = () => {
   const {
@@ -212,6 +115,7 @@ export const CartPage = () => {
 
   return (
     <div className="min-h-screen bg-[#030914] text-[#F8FAFC] flex flex-col font-sans selection:bg-[#E9B94F] selection:text-black">
+      <SEO title="Your Shopping Bag | WatchHub" noindex={true} />
       <CustomerNavbar />
 
       {/* Floating Action Toast */}
@@ -448,11 +352,10 @@ export const CartPage = () => {
                                 : `❤️ Added ${item.name} to wishlist`
                             );
                           }}
-                          className={`w-8 h-8 rounded-lg border flex items-center justify-center text-xs transition-all ${
-                            inWish
+                          className={`w-8 h-8 rounded-lg border flex items-center justify-center text-xs transition-all ${inWish
                               ? 'bg-rose-500/10 border-rose-500/50 text-rose-400'
                               : 'bg-[#081426] border-[#26364D] text-slate-400 hover:text-white hover:border-[#E9B94F]/40'
-                          }`}
+                            }`}
                           title={inWish ? 'Remove from Wishlist' : 'Save to Wishlist'}
                         >
                           <Heart className={`w-3.5 h-3.5 ${inWish ? 'fill-current' : ''}`} />
@@ -539,9 +442,8 @@ export const CartPage = () => {
                 {/* Feedback message */}
                 {couponMsg && !appliedCoupon && (
                   <p
-                    className={`text-[11px] font-mono ${
-                      couponMsg.success ? 'text-[#00C98B]' : 'text-rose-400'
-                    }`}
+                    className={`text-[11px] font-mono ${couponMsg.success ? 'text-[#00C98B]' : 'text-rose-400'
+                      }`}
                   >
                     {couponMsg.message}
                   </p>
@@ -572,96 +474,18 @@ export const CartPage = () => {
               </div>
 
               {/* 4. ORDER SUMMARY CARD */}
-              <div className="bg-[#0B1628] border border-[#26364D] rounded-2xl p-6 space-y-4 shadow-xl text-xs text-white">
-                <h2 className="text-base font-serif font-bold text-white border-b border-[#26364D]/60 pb-3 flex items-center justify-between">
-                  <span>Order Summary</span>
-                  <span className="font-sans text-[11px] font-normal text-slate-400 font-mono">
-                    {uniqueItemsCount} {uniqueItemsCount === 1 ? 'Item' : 'Items'}
-                  </span>
-                </h2>
-
-                <div className="space-y-2.5 font-mono">
-                  {/* Total MRP */}
-                  <div className="flex justify-between text-[#A7B1C2]">
-                    <span>Total MRP</span>
-                    <span className="text-white">{formatPrice(mrpTotal)}</span>
-                  </div>
-
-                  {/* Product Discount */}
-                  <div className="flex justify-between text-[#A7B1C2]">
-                    <span>Product Discount</span>
-                    <span className="text-[#00C98B] font-bold">
-                      -{formatPrice(Math.max(0, mrpTotal - subtotal))}
-                    </span>
-                  </div>
-
-                  {/* Coupon Discount */}
-                  {appliedCoupon && (
-                    <div className="flex justify-between text-[#A7B1C2]">
-                      <span className="text-[#00C98B]">
-                        Coupon Savings ({appliedCoupon.percent}%)
-                      </span>
-                      <span className="text-[#00C98B] font-bold">
-                        -{formatPrice(couponDiscount)}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Delivery Charges */}
-                  <div className="flex justify-between text-[#A7B1C2]">
-                    <span>Delivery Charges</span>
-                    <span>
-                      {deliveryCharges === 0 ? (
-                        <span className="text-[#00C98B] font-bold">FREE (Complimentary)</span>
-                      ) : (
-                        <span>{formatPrice(deliveryCharges)}</span>
-                      )}
-                    </span>
-                  </div>
-
-                  {/* Taxes */}
-                  <div className="flex justify-between text-[#A7B1C2]">
-                    <span>Tax & Duties</span>
-                    <span className="text-slate-400">Included in Price</span>
-                  </div>
-                </div>
-
-                {/* Grand Total */}
-                <div className="border-t border-[#26364D]/80 pt-4 flex justify-between items-baseline">
-                  <div>
-                    <span className="text-sm font-bold text-white block">Grand Total</span>
-                    <span className="text-[10px] text-slate-400 font-light">
-                      All international duties inclusive
-                    </span>
-                  </div>
-                  <span className="text-2xl font-bold font-mono text-[#E9B94F]">
-                    {formatPrice(totalAmount)}
-                  </span>
-                </div>
-
-                {/* Savings Banner */}
-                {totalSavings > 0 && (
-                  <div className="p-3 bg-[#00C98B]/10 border border-[#00C98B]/40 text-[#00C98B] rounded-xl text-[11.5px] font-semibold text-center font-mono">
-                    🎉 You are saving {formatPrice(totalSavings)} on this acquisition!
-                  </div>
-                )}
-
-                {/* Proceed to Checkout CTA */}
-                <button
-                  type="button"
-                  onClick={handleCheckout}
-                  className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#E9B94F] to-[#D4A33B] hover:brightness-110 text-black text-xs font-bold uppercase tracking-wider shadow-[0_4px_20px_rgba(233,185,79,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
-                >
-                  <span>PROCEED TO CHECKOUT</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                {/* Security Footnote */}
-                <div className="pt-2 text-center text-[10.5px] text-slate-400 flex items-center justify-center gap-1.5 font-light">
-                  <Lock className="w-3.5 h-3.5 text-[#E9B94F]" />
-                  <span>256-bit SSL Encrypted & Verified Secure Payment</span>
-                </div>
-              </div>
+              <CartOrderSummary
+                uniqueItemsCount={uniqueItemsCount}
+                mrpTotal={mrpTotal}
+                subtotal={subtotal}
+                appliedCoupon={appliedCoupon}
+                couponDiscount={couponDiscount}
+                deliveryCharges={deliveryCharges}
+                totalAmount={totalAmount}
+                totalSavings={totalSavings}
+                handleCheckout={handleCheckout}
+                formatPrice={formatPrice}
+              />
             </div>
           </div>
         )}
@@ -748,9 +572,8 @@ export const CartPage = () => {
                               : `❤️ Saved ${rec.name} to wishlist`
                           );
                         }}
-                        className={`absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-xs transition-colors ${
-                          inWish ? 'text-rose-400' : 'text-slate-400 hover:text-white'
-                        }`}
+                        className={`absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-xs transition-colors ${inWish ? 'text-rose-400' : 'text-slate-400 hover:text-white'
+                          }`}
                         title="Wishlist"
                       >
                         <Heart className={`w-3.5 h-3.5 ${inWish ? 'fill-current' : ''}`} />

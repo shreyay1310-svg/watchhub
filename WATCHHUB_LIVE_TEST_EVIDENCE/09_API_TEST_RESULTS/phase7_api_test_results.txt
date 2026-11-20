@@ -1,0 +1,36 @@
+﻿
+================================================================================
+WATCHHUB PHASE 7 — RELEASE READINESS & SECURITY AUDIT SUITE
+Target Database: Microsoft SQL Server 2025 (WatchHubDB @ 127.0.0.1:1433)
+================================================================================
+
+Phase 7 Test Server active at: http://127.0.0.1:53174
+
+  [PASS] TC_P7_001: Razorpay Authentic HMAC-SHA256 Signature Verified -> OrderId: order_test_1795160172854
+  [PASS] TC_P7_002: Tampered Razorpay Signature Strictly Rejected
+  [PASS] TC_P7_003: Incomplete Payment Parameters Safely Rejected
+  [PASS] TC_P7_004: Razorpay Raw Webhook Signature Verification
+[0mPOST /api/payments/create-order [32m200[0m 203.722 ms - 175[0m
+  [PASS] TC_P7_005: Server-Side Order Calculation Enforces Subtotal, Shipping & Discount -> Calculated: ₹21500
+[0mPOST /api/payments/create-order [33m400[0m 0.326 ms - 107[0m
+  [PASS] TC_P7_006: Empty Cart Checkout Rejected with HTTP 400
+[0mPOST /api/payments/validate-coupon [33m400[0m 15.180 ms - 124[0m
+  [PASS] TC_P7_007: Coupon Under-Threshold Order Rejected with HTTP 400
+[0mPOST /api/payments/validate-coupon [33m400[0m 1.049 ms - 103[0m
+  [PASS] TC_P7_008: Non-existent Coupon Code Rejected with HTTP 400
+[0mPOST /api/inventory/adjust-stock [33m400[0m 4.383 ms - 114[0m
+  [PASS] TC_P7_009: Strict Negative Inventory Reduction Blocked with HTTP 400 -> Cannot reduce 528 units. Current stock is only 28. Negative inventory is prohibited.
+  [PASS] TC_P7_010: RFC 2606 Test Domain Detected by isReservedTestDomain
+[Local SMTP Test Sandbox] Intercepted reserved test domain (ph***2@watchhub.test). Simulated delivery SUCCESS without external SMTP bounce.
+  [PASS] TC_P7_011: Local SMTP Sandbox Traps Test Domain Without Gmail MX Bounce
+[0mPOST /api/auth/register [32m201[0m 90.117 ms - 670[0m
+[0mGET /api/dashboard/super-admin [33m403[0m 0.378 ms - 103[0m
+  [PASS] TC_P7_012: Customer Denied Super Admin KPI Access (HTTP 403)
+[0mPOST /api/inventory/add-stock [33m403[0m 0.335 ms - 103[0m
+  [PASS] TC_P7_013: Customer Denied Inventory Stock Ingestion (HTTP 403)
+  [PASS] TC_P7_014: Disposable Test Records Cleaned Up (Zero Baseline Modification)
+
+================================================================================
+PHASE 7 TOTAL TESTS: 14 | PASSED: 14 | FAILED: 0
+================================================================================
+

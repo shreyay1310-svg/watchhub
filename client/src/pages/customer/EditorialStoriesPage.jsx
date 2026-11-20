@@ -71,7 +71,7 @@ export const EditorialStoriesPage = () => {
       <CustomerNavbar />
 
       <main className="max-w-[1280px] mx-auto px-4 sm:px-8 py-10 w-full flex-1">
-        
+
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-bold text-[#F4B942] tracking-widest uppercase block">
@@ -131,7 +131,7 @@ export const EditorialStoriesPage = () => {
             ARTICLE BODY & CHAPTER SELECTOR
             ════════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Main Article Content (lg:col-span-8) */}
           <article className="lg:col-span-8 bg-[#040C1A] border border-white/10 rounded-3xl p-8 space-y-5 text-sm text-gray-300 leading-relaxed font-serif">
             <h3 className="text-xl font-sans font-bold text-white mb-2">{current.title}</h3>
@@ -155,11 +155,10 @@ export const EditorialStoriesPage = () => {
               <div
                 key={s.id}
                 onClick={() => setSelectedArticle(idx)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                  selectedArticle === idx
-                    ? 'bg-[#061224] border-[#00CFFF] shadow-[0_0_20px_rgba(0,207,255,0.2)]'
-                    : 'bg-[#040C1A] border-white/10 hover:border-white/20'
-                }`}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer ${selectedArticle === idx
+                  ? 'bg-[#061224] border-[#00CFFF] shadow-[0_0_20px_rgba(0,207,255,0.2)]'
+                  : 'bg-[#040C1A] border-white/10 hover:border-white/20'
+                  }`}
               >
                 <span className="text-[9px] font-bold text-[#00CFFF] uppercase tracking-wider block mb-1">
                   {s.tag}

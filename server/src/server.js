@@ -4,13 +4,15 @@ dotenv.config();
 import http from 'http';
 import { Server } from 'socket.io';
 import app from './app.js';
-import { connectDB } from './config/db.js';
+import { connectDB, disconnectDB } from './config/db.js';
+import { otpCleanupWorker } from './services/otpCleanupWorker.js';
 
 const PORT = process.env.PORT || 5000;
 
 // Connect to Database & Start HTTP Server with Socket.IO
 const startServer = async () => {
   await connectDB();
+  otpCleanupWorker.start();
 
   const httpServer = http.createServer(app);
 
@@ -66,17 +68,42 @@ const startServer = async () => {
     console.log(`[WatchHub Server] Socket.IO Live GPS Tracking ready.`);
   });
 
-  // Graceful shutdown
-  const shutdown = () => {
-    console.log('\n[WatchHub Server] Shutting down gracefully...');
-    server.close(() => {
-      console.log('[WatchHub Server] Closed out remaining connections.');
+  // Graceful shutdown sequence: Stop HTTP -> Stop Workers -> Await in-flight DB ops -> Disconnect DB
+  let isShuttingDown = false;
+  const shutdown = async (signal) => {
+    if (isShuttingDown) return;
+    isShuttingDown = true;
+    console.log(`\n[WatchHub Server] Received ${signal}. Shutting down gracefully...`);
+
+    const shutdownTimeout = setTimeout(() => {
+      console.error('[WatchHub Server] Graceful shutdown timed out. Forcing process exit.');
+      process.exit(1);
+    }, 10000);
+
+    try {
+      // 1. Stop accepting new HTTP requests
+      await new Promise((resolve) => server.close(resolve));
+      console.log('[WatchHub Server] HTTP and WebSocket listeners closed.');
+
+      // 2. Stop scheduling cleanup batches and await in-flight cleanup work
+      await otpCleanupWorker.stop(5000);
+
+      // 3. Disconnect Prisma client cleanly
+      await disconnectDB();
+      console.log('[WatchHub Server] Database disconnected cleanly.');
+
+      clearTimeout(shutdownTimeout);
+      console.log('[WatchHub Server] Graceful shutdown completed.');
       process.exit(0);
-    });
+    } catch (err) {
+      console.error('[WatchHub Server] Error during shutdown:', err);
+      clearTimeout(shutdownTimeout);
+      process.exit(1);
+    }
   };
 
-  process.on('SIGTERM', shutdown);
-  process.on('SIGINT', shutdown);
+  process.once('SIGTERM', () => shutdown('SIGTERM'));
+  process.once('SIGINT', () => shutdown('SIGINT'));
 };
 
 startServer();

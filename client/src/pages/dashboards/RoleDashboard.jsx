@@ -28,6 +28,7 @@ import {
   CheckCircle,
   AlertTriangle,
   Upload,
+  Rocket,
 } from 'lucide-react';
 
 // Import All Role Module Components
@@ -45,6 +46,8 @@ import DeliveryModule from '../../components/dashboards/modules/DeliveryModule';
 import ReportsAnalyticsModule from '../../components/dashboards/modules/ReportsAnalyticsModule';
 import ManufacturingHubModule from '../../components/dashboards/modules/ManufacturingHubModule';
 import CustomizationManagementModule from '../../components/dashboards/modules/CustomizationManagementModule';
+import ReleaseManagementModule from '../../components/dashboards/modules/ReleaseManagementModule';
+import SEO from '../../components/common/SEO';
 
 export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
   const { user, switchRole, logout } = useAuth();
@@ -95,6 +98,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
     { id: 'reviews', label: 'Reviews & Ratings', icon: Star },
     { id: 'reports', label: 'Reports & Analytics', icon: BarChart3 },
     { id: 'manufacturing_hub', label: 'Manufacturing Hub', icon: Factory },
+    { id: 'releases', label: 'Release Management', icon: Rocket, badge: 'v1.1' },
     { id: 'settings', label: 'Store Settings', icon: Settings },
   ];
 
@@ -159,6 +163,9 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
         return <ReportsAnalyticsModule />;
       case 'manufacturing_hub':
         return <ManufacturingHubModule />;
+      case 'releases':
+      case 'release_management':
+        return <ReleaseManagementModule />;
       case 'custom_watches':
         return <CustomizationManagementModule />;
       case 'settings':
@@ -207,6 +214,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
 
   return (
     <div className="min-h-screen bg-[#050B2D] text-white flex font-sans antialiased select-none">
+      <SEO title="Administrative Management Portal | WatchHub" noindex={true} />
       
       {/* ════════════════════════════════════════════════════════════════
           1. FIXED LEFT SIDEBAR (Dark Indigo #101B68)

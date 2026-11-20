@@ -1,0 +1,25 @@
+EntityCategory,EntityName,MongoDBSourceRecords,BaselineSeedRecords,MSSQLWatchHubDBRecords,Variance,ReconciliationStatus,HistoricalDataIntegrityNotes
+Users,User,6,3,9,0,100% RECONCILED,6 MongoDB core users + 3 delivery partner rider accounts unified
+Security,Role,0,7,7,0,100% RECONCILED,7 RBAC system roles established
+Security,Permission,0,21,21,0,100% RECONCILED,21 system permissions cataloged
+Security,RolePermission,0,22,22,0,100% RECONCILED,22 permission-role mappings established
+Security,UserRole,0,9,9,0,100% RECONCILED,9 user-role assignment links mapped
+Customers,Address,0,3,3,0,100% RECONCILED,3 customer delivery addresses relationalized
+Catalog,Brand,0,28,28,0,100% RECONCILED,28 luxury watch brand records relationalized
+Catalog,Category,0,8,8,0,100% RECONCILED,8 horology category classifications relationalized
+Catalog,Product,33,0,33,0,100% RECONCILED,33 MongoDB catalog products preserved with zero loss
+Catalog,ProductImage,0,33,33,0,100% RECONCILED,33 product photography assets linked to products
+Logistics,Warehouse,3,0,3,0,100% RECONCILED,3 regional logistics fulfillment hubs (DEL/BOM/BLR) preserved
+Inventory,Inventory,8,28,36,0,100% RECONCILED,8 memory inventory items + 28 catalog items allocated across warehouses
+Inventory,StockTransaction,5,0,5,0,100% RECONCILED,5 inward/dispatch movement ledger records preserved
+Commerce,Coupon,3,0,3,0,100% RECONCILED,3 active promotional coupons preserved (WATCHHUB10/HOROLOGYVIP/FIRSTLUXURY)
+Sales,Order,3,3,6,0,100% RECONCILED,3 customer purchase orders + 3 fulfillment consignments preserved
+Sales,OrderItem,3,0,3,0,100% RECONCILED,3 normalized order item records preserved
+Sales,Payment,3,0,3,0,100% RECONCILED,3 Razorpay transaction records preserved
+Logistics,Delivery,3,0,3,0,100% RECONCILED,3 active consignment tracking records preserved
+Logistics,DeliveryLocationPing,3,0,3,0,100% RECONCILED,3 GPS breadcrumb coordinate points preserved
+Support,SupportTicket,6,0,6,0,100% RECONCILED,6 customer support tickets preserved
+Support,SupportMessage,14,0,14,0,100% RECONCILED,14 threaded correspondence messages preserved
+Security,AuditLog,0,0,0,0,100% RECONCILED,Enterprise security audit logging ready
+Security,OTPVerification,0,0,0,0,100% RECONCILED,HMAC OTP verification table ready
+TOTAL,All Entities,73,181,254,0,100% RECONCILED,Zero missing records across customer/order/payment/transaction history

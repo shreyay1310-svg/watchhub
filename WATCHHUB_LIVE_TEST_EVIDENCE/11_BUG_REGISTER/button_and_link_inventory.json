@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Explore Collection CTA",
+    "screen": "Homepage",
+    "action": "Click",
+    "expected": "Navigate to catalog",
+    "actual": "Navigated to /products",
+    "status": "PASS",
+    "apiEndpoint": "/api/products"
+  },
+  {
+    "name": "Search Submit",
+    "screen": "Navbar",
+    "action": "Press Enter",
+    "expected": "Filter products by keyword",
+    "actual": "Rendered matching timepieces",
+    "status": "PASS",
+    "apiEndpoint": "/api/products?search=Rolex"
+  },
+  {
+    "name": "Brand Filter: Rolex",
+    "screen": "Product Catalog",
+    "action": "Click",
+    "expected": "Filter products",
+    "actual": "Applied filter",
+    "status": "PASS",
+    "apiEndpoint": "/api/products"
+  },
+  {
+    "name": "Sort Selector",
+    "screen": "Product Catalog",
+    "action": "Select",
+    "expected": "Sort products by price",
+    "actual": "Sorted products",
+    "status": "PASS",
+    "apiEndpoint": "N/A"
+  },
+  {
+    "name": "Add to Wishlist",
+    "screen": "Product Details",
+    "action": "Click",
+    "expected": "Toggle item to customer wishlist",
+    "actual": "Wishlist state updated",
+    "status": "PASS",
+    "apiEndpoint": "/api/users/wishlist"
+  },
+  {
+    "name": "Add to Bag CTA",
+    "screen": "Product Details",
+    "action": "Click",
+    "expected": "Add product to cart session",
+    "actual": "Item added, cart badge incremented",
+    "status": "PASS",
+    "apiEndpoint": "N/A"
+  },
+  {
+    "name": "Armoured Delivery Selector",
+    "screen": "Checkout Page",
+    "action": "Select",
+    "expected": "Set shipping method to armoured (₹3500)",
+    "actual": "Updated payable total",
+    "status": "PASS",
+    "apiEndpoint": "N/A"
+  },
+  {
+    "name": "Confirm & Pay Securely",
+    "screen": "Checkout Page",
+    "action": "Click",
+    "expected": "Initialize Razorpay order",
+    "actual": "Order created on backend",
+    "status": "PASS",
+    "apiEndpoint": "/api/payments/create-order"
+  },
+  {
+    "name": "Password Sign In",
+    "screen": "Login Page",
+    "action": "Submit",
+    "expected": "Authenticate with bcrypt credentials",
+    "actual": "Dispatched tokens",
+    "status": "PASS",
+    "apiEndpoint": "/api/auth/login"
+  },
+  {
+    "name": "Create Atelier Account",
+    "screen": "Signup Page",
+    "action": "Submit",
+    "expected": "Register customer profile",
+    "actual": "Dispatched tokens & created user",
+    "status": "PASS",
+    "apiEndpoint": "/api/auth/register"
+  },
+  {
+    "name": "Send Recovery Code",
+    "screen": "Forgot Password",
+    "action": "Submit",
+    "expected": "Request reset OTP",
+    "actual": "Triggered non-enumerating API response",
+    "status": "PASS",
+    "apiEndpoint": "/api/auth/forgot-password"
+  },
+  {
+    "name": "Reset Password CTA",
+    "screen": "Reset Password",
+    "action": "Submit",
+    "expected": "Verify OTP & hash new password",
+    "actual": "Updated credentials in SQL Server",
+    "status": "PASS",
+    "apiEndpoint": "/api/auth/reset-password"
+  },
+  {
+    "name": "Edit Profile",
+    "screen": "Customer Account",
+    "action": "Click",
+    "expected": "Update customer display name",
+    "actual": "Updated profile via API",
+    "status": "PASS",
+    "apiEndpoint": "/api/users/profile"
+  },
+  {
+    "name": "Add Address",
+    "screen": "Customer Account",
+    "action": "Click",
+    "expected": "Save new shipping destination",
+    "actual": "Saved address",
+    "status": "PASS",
+    "apiEndpoint": "/api/users/addresses"
+  },
+  {
+    "name": "Track Another Parcel",
+    "screen": "Delivery Tracking",
+    "action": "Click",
+    "expected": "Search tracking query",
+    "actual": "Loaded consignment",
+    "status": "PASS",
+    "apiEndpoint": "/api/tracking/:query"
+  },
+  {
+    "name": "Generate Analytics Report",
+    "screen": "Super Admin Dashboard",
+    "action": "Click",
+    "expected": "Export KPI report",
+    "actual": "Report generated",
+    "status": "PASS",
+    "apiEndpoint": "/api/dashboard/super-admin"
+  },
+  {
+    "name": "Launch POS Terminal",
+    "screen": "Store Admin Dashboard",
+    "action": "Click",
+    "expected": "Open in-store retail checkout",
+    "actual": "POS panel active",
+    "status": "PASS",
+    "apiEndpoint": "N/A"
+  },
+  {
+    "name": "Adjust Stock",
+    "screen": "Inventory Dashboard",
+    "action": "Click",
+    "expected": "Open stock reconciliation modal",
+    "actual": "Modal opened",
+    "status": "PASS",
+    "apiEndpoint": "/api/inventory/adjust-stock"
+  },
+  {
+    "name": "Create Shipment",
+    "screen": "Delivery Dashboard",
+    "action": "Click",
+    "expected": "Generate consignment AWB",
+    "actual": "AWB generated",
+    "status": "PASS",
+    "apiEndpoint": "/api/delivery/create-shipment"
+  },
+  {
+    "name": "Open Ticket Drawer",
+    "screen": "Support Dashboard",
+    "action": "Click",
+    "expected": "View ticket details",
+    "actual": "Drawer displayed",
+    "status": "PASS",
+    "apiEndpoint": "/api/support"
+  }
+]

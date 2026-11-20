@@ -98,7 +98,7 @@ export const CustomerAccountPage = () => {
       <CustomerNavbar />
 
       <main className="max-w-[1440px] mx-auto px-4 sm:px-8 py-10 w-full flex-1">
-        
+
         {/* Account Header */}
         <div className="bg-gradient-to-r from-[#061224] via-[#040C1A] to-[#020813] border border-white/10 rounded-3xl p-6 sm:p-8 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-[0_15px_40px_rgba(0,0,0,0.6)]">
           <div className="flex items-center gap-4">
@@ -140,7 +140,7 @@ export const CustomerAccountPage = () => {
             2-COLUMN LAYOUT: SIDEBAR NAV + CONTENT VIEW
             ════════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* ── LEFT NAVIGATION TABS (lg:col-span-3) ── */}
           <aside className="lg:col-span-3 bg-[#040C1A] border border-white/10 rounded-3xl p-3 space-y-1">
             {navItems.map((item) => {
@@ -151,11 +151,10 @@ export const CustomerAccountPage = () => {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-gradient-to-r from-[#00CFFF]/20 to-[#00A3FF]/10 text-[#00CFFF] border border-[#00CFFF]/30 shadow-[0_0_15px_rgba(0,207,255,0.15)]'
-                      : 'text-[#A6B1C8] hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${isActive
+                    ? 'bg-gradient-to-r from-[#00CFFF]/20 to-[#00A3FF]/10 text-[#00CFFF] border border-[#00CFFF]/30 shadow-[0_0_15px_rgba(0,207,255,0.15)]'
+                    : 'text-[#A6B1C8] hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon className="w-4 h-4" />
@@ -173,7 +172,7 @@ export const CustomerAccountPage = () => {
 
           {/* ── RIGHT MAIN PANEL (lg:col-span-9) ── */}
           <section className="lg:col-span-9 bg-[#040C1A] border border-white/10 rounded-3xl p-6 sm:p-8 min-h-[500px]">
-            
+
             {/* 1. MY ORDERS TAB (Exact match to Section 12) */}
             {activeTab === 'orders' && (
               <div className="space-y-6 animate-fade-in text-xs">

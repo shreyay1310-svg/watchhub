@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User.js';
 
 // Verify JWT Access Token
 export const authenticate = async (req, res, next) => {
@@ -23,16 +22,6 @@ export const authenticate = async (req, res, next) => {
       req.user = decoded;
       return next();
     } catch (jwtErr) {
-      // Development and offline mock fallback
-      if (token.includes('jwt_') || token.includes('mock_')) {
-        const roleHeader = req.headers['x-user-role'] || req.headers['role'];
-        req.user = {
-          id: 'usr_dev_session',
-          role: roleHeader || 'Inventory Manager',
-          permissions: ['all'],
-        };
-        return next();
-      }
       return res.status(401).json({ status: 'fail', message: 'Invalid or expired authentication token.' });
     }
   } catch (err) {

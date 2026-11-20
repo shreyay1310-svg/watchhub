@@ -67,6 +67,8 @@ export const CartProvider = ({ children }) => {
     setAppliedCoupon(null);
   };
 
+  const getCartTotal = () => subtotal;
+
   // Wishlist Functions
   const toggleWishlist = (product) => {
     setWishlist((prev) => {
@@ -116,6 +118,7 @@ export const CartProvider = ({ children }) => {
         removeFromCart,
         updateQuantity,
         clearCart,
+        getCartTotal,
         toggleWishlist,
         isInWishlist,
         subtotal,

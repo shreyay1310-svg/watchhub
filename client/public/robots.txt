@@ -1,0 +1,48 @@
+# WatchHub Robots.txt
+# Enterprise Search Engine Crawler Optimization
+
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /categories
+Allow: /brands
+Allow: /brand/
+Allow: /product/
+Allow: /new-arrivals
+Allow: /best-sellers
+Allow: /luxury
+Allow: /watches
+Allow: /mens-watches
+Allow: /womens-watches
+Allow: /smartwatches
+Allow: /collections
+Allow: /limited-edition
+Allow: /customize-watch
+Allow: /editorial-stories
+Allow: /warranty-service
+Allow: /store-locator
+
+# Disallow private user accounts, dashboards, checkout, cart & administrative portals
+Disallow: /super-admin/
+Disallow: /store-admin/
+Disallow: /inventory-manager/
+Disallow: /delivery-manager/
+Disallow: /delivery-partner/
+Disallow: /customer-support/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /signup
+Disallow: /email-verify
+Disallow: /email-otp-login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /api/
+
+# Crawler Rate & Host specification
+Crawl-delay: 1
+Host: https://watchhub.in
+
+# XML Sitemaps
+Sitemap: https://watchhub.in/sitemap.xml

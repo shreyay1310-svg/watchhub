@@ -1,0 +1,429 @@
+// WatchHub Microsoft SQL Server Enterprise Schema (22 Relational Tables)
+// Database: Microsoft SQL Server (MSSQL)
+// Generator: Prisma Client JS
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+// 1. ROLES & ACCESS CONTROL
+model Role {
+  roleId          Int              @id @default(autoincrement()) @map("RoleId")
+  roleName        String           @unique @db.NVarChar(50) @map("RoleName")
+  description     String?          @db.NVarChar(255) @map("Description")
+  createdAt       DateTime         @default(now()) @map("CreatedAt")
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@map("Roles")
+}
+
+model Permission {
+  permissionId    Int              @id @default(autoincrement()) @map("PermissionId")
+  permissionCode  String           @unique @db.NVarChar(100) @map("PermissionCode")
+  moduleName      String           @db.NVarChar(50) @map("ModuleName")
+  description     String?          @db.NVarChar(255) @map("Description")
+  rolePermissions RolePermission[]
+
+  @@map("Permissions")
+}
+
+model RolePermission {
+  roleId       Int        @map("RoleId")
+  permissionId Int        @map("PermissionId")
+  role         Role       @relation(fields: [roleId], references: [roleId], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [permissionId], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("RolePermissions")
+}
+
+model User {
+  userId               String                 @id @default(uuid()) @map("UserId")
+  fullName             String                 @db.NVarChar(120) @map("FullName")
+  email                String                 @unique @db.NVarChar(255) @map("Email")
+  phone                String?                @unique @db.NVarChar(20) @map("Phone")
+  passwordHash         String                 @db.NVarChar(255) @map("PasswordHash")
+  avatarUrl            String?                @db.NVarChar(500) @map("AvatarUrl")
+  isActive             Boolean                @default(true) @map("IsActive")
+  isEmailVerified      Boolean                @default(false) @map("IsEmailVerified")
+  isPhoneVerified      Boolean                @default(false) @map("IsPhoneVerified")
+  createdAt            DateTime               @default(now()) @map("CreatedAt")
+  updatedAt            DateTime               @default(now()) @updatedAt @map("UpdatedAt")
+  userRoles            UserRole[]
+  addresses            Address[]
+  managedWarehouses    Warehouse[]            @relation("WarehouseManager")
+  stockTransactions    StockTransaction[]     @relation("TransactionPerformer")
+  orders               Order[]                @relation("CustomerOrders")
+  assignedDeliveries   Delivery[]             @relation("RiderDeliveries")
+  locationPings        DeliveryLocationPing[] @relation("RiderPings")
+  customerTickets      SupportTicket[]        @relation("CustomerTickets")
+  assignedTickets      SupportTicket[]        @relation("AssignedAgentTickets")
+  supportMessages      SupportMessage[]       @relation("MessageSender")
+  auditLogs            AuditLog[]             @relation("AuditPerformer")
+
+  @@index([email], name: "IX_Users_Email")
+  @@index([phone], name: "IX_Users_Phone")
+  @@map("Users")
+}
+
+model UserRole {
+  userId     String   @map("UserId")
+  roleId     Int      @map("RoleId")
+  assignedAt DateTime @default(now()) @map("AssignedAt")
+  user       User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  role       Role     @relation(fields: [roleId], references: [roleId], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("UserRoles")
+}
+
+model Address {
+  addressId    String   @id @default(uuid()) @map("AddressId")
+  userId       String   @map("UserId")
+  fullName     String   @db.NVarChar(120) @map("FullName")
+  street       String   @db.NVarChar(255) @map("Street")
+  apartment    String?  @db.NVarChar(100) @map("Apartment")
+  landmark     String?  @db.NVarChar(150) @map("Landmark")
+  city         String   @db.NVarChar(80) @map("City")
+  state        String   @db.NVarChar(80) @map("State")
+  pincode      String   @db.NVarChar(10) @map("Pincode")
+  country      String   @default("India") @db.NVarChar(60) @map("Country")
+  phone        String   @db.NVarChar(20) @map("Phone")
+  addressType  String   @default("Home") @db.NVarChar(20) @map("AddressType")
+  latitude     Decimal? @db.Decimal(10, 7) @map("Latitude")
+  longitude    Decimal? @db.Decimal(10, 7) @map("Longitude")
+  isDefault    Boolean  @default(false) @map("IsDefault")
+  createdAt    DateTime @default(now()) @map("CreatedAt")
+  user         User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  orders       Order[]
+
+  @@index([userId], name: "IX_Addresses_UserId")
+  @@map("Addresses")
+}
+
+model OTPVerification {
+  otpId               String    @id @default(uuid()) @map("OtpId")
+  identifier          String    @db.NVarChar(255) @map("Identifier")
+  otpHash             String    @db.NVarChar(128) @map("OtpHash")
+  channel             String    @db.NVarChar(20) @map("Channel")
+  purpose             String    @db.NVarChar(40) @map("Purpose")
+  attempts            Int       @default(0) @map("Attempts")
+  isVerified          Boolean   @default(false) @map("IsVerified")
+  dispatchToken       String?   @db.NVarChar(64) @map("DispatchToken")
+  dispatchState       String    @default("ACTIVE") @db.NVarChar(20) @map("DispatchState")
+  dispatchLockedUntil DateTime? @map("DispatchLockedUntil")
+  resendCooldownUntil DateTime  @map("ResendCooldownUntil")
+  expiresAt           DateTime  @map("ExpiresAt")
+  createdAt           DateTime  @default(now()) @map("CreatedAt")
+
+  @@unique([identifier, purpose], name: "identifier_purpose", map: "UQ_OTPVerifications_Identifier_Purpose")
+  @@index([identifier, purpose, expiresAt], name: "IX_OTP_Identifier_Purpose")
+  @@index([expiresAt], name: "IX_OTP_ExpiresAt")
+  @@index([dispatchLockedUntil], name: "IX_OTP_DispatchLockedUntil")
+  @@map("OTPVerifications")
+}
+
+// 2. PRODUCT CATALOG & BRANDS
+model Brand {
+  brandId        Int       @id @default(autoincrement()) @map("BrandId")
+  slug           String    @unique @db.NVarChar(80) @map("Slug")
+  name           String    @unique @db.NVarChar(100) @map("Name")
+  originCountry  String    @default("Switzerland") @db.NVarChar(60) @map("OriginCountry")
+  heritageYear   Int?      @map("HeritageYear")
+  logoUrl        String?   @db.NVarChar(500) @map("LogoUrl")
+  bannerUrl      String?   @db.NVarChar(500) @map("BannerUrl")
+  description    String?   @db.NVarChar(max) @map("Description")
+  isLuxuryTier   Boolean   @default(true) @map("IsLuxuryTier")
+  isActive       Boolean   @default(true) @map("IsActive")
+  products       Product[]
+
+  @@map("Brands")
+}
+
+model Category {
+  categoryId       Int        @id @default(autoincrement()) @map("CategoryId")
+  categorySlug     String     @unique @db.NVarChar(80) @map("CategorySlug")
+  name             String     @unique @db.NVarChar(100) @map("Name")
+  description      String?    @db.NVarChar(max) @map("Description")
+  iconName         String?    @db.NVarChar(50) @map("IconName")
+  bannerUrl        String?    @db.NVarChar(500) @map("BannerUrl")
+  parentCategoryId Int?       @map("ParentCategoryId")
+  isActive         Boolean    @default(true) @map("IsActive")
+  parentCategory   Category?  @relation("SubCategories", fields: [parentCategoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction)
+  subCategories    Category[] @relation("SubCategories")
+  products         Product[]
+
+  @@map("Categories")
+}
+
+model Product {
+  productId          String             @id @default(uuid()) @map("ProductId")
+  sku                String             @unique @db.NVarChar(50) @map("Sku")
+  brandId            Int                @map("BrandId")
+  categoryId         Int                @map("CategoryId")
+  name               String             @db.NVarChar(200) @map("Name")
+  subTitle           String?            @db.NVarChar(255) @map("SubTitle")
+  gender             String             @default("Men") @db.NVarChar(20) @map("Gender")
+  movementType       String             @db.NVarChar(50) @map("MovementType")
+  caseMaterial       String             @db.NVarChar(80) @map("CaseMaterial")
+  dialColor          String             @db.NVarChar(50) @map("DialColor")
+  strapMaterial      String             @db.NVarChar(80) @map("StrapMaterial")
+  waterResistance    String             @db.NVarChar(50) @map("WaterResistance")
+  price              Decimal            @db.Decimal(12, 2) @map("Price")
+  originalPrice      Decimal            @db.Decimal(12, 2) @map("OriginalPrice")
+  costPrice          Decimal            @default(0) @db.Decimal(12, 2) @map("CostPrice")
+  discountPercentage Decimal            @default(0) @db.Decimal(5, 2) @map("DiscountPercentage")
+  lowStockThreshold  Int                @default(5) @map("LowStockThreshold")
+  isFeatured         Boolean            @default(false) @map("IsFeatured")
+  isActive           Boolean            @default(true) @map("IsActive")
+  description        String             @db.NVarChar(max) @map("Description")
+  createdAt          DateTime           @default(now()) @map("CreatedAt")
+  updatedAt          DateTime           @default(now()) @updatedAt @map("UpdatedAt")
+  brand              Brand              @relation(fields: [brandId], references: [brandId])
+  category           Category           @relation(fields: [categoryId], references: [categoryId])
+  productImages      ProductImage[]
+  inventory          Inventory[]
+  stockTransactions  StockTransaction[]
+  orderItems         OrderItem[]
+
+  @@index([sku], name: "IX_Products_Sku")
+  @@index([brandId], name: "IX_Products_BrandId")
+  @@index([categoryId], name: "IX_Products_CategoryId")
+  @@index([price], name: "IX_Products_Price")
+  @@map("Products")
+}
+
+model ProductImage {
+  imageId      Int      @id @default(autoincrement()) @map("ImageId")
+  productId    String   @map("ProductId")
+  imageUrl     String   @db.NVarChar(500) @map("ImageUrl")
+  displayOrder Int      @default(0) @map("DisplayOrder")
+  isPrimary    Boolean  @default(false) @map("IsPrimary")
+  product      Product  @relation(fields: [productId], references: [productId], onDelete: Cascade)
+
+  @@index([productId], name: "IX_ProductImages_ProductId")
+  @@map("ProductImages")
+}
+
+// 3. INVENTORY & WAREHOUSES
+model Warehouse {
+  warehouseId       Int                @id @default(autoincrement()) @map("WarehouseId")
+  warehouseCode     String             @unique @db.NVarChar(30) @map("WarehouseCode")
+  name              String             @db.NVarChar(120) @map("Name")
+  address           String             @db.NVarChar(255) @map("Address")
+  city              String             @db.NVarChar(80) @map("City")
+  state             String             @db.NVarChar(80) @map("State")
+  contactPhone      String             @db.NVarChar(20) @map("ContactPhone")
+  managerId         String?            @map("ManagerId")
+  isActive          Boolean            @default(true) @map("IsActive")
+  manager           User?              @relation("WarehouseManager", fields: [managerId], references: [userId])
+  inventory         Inventory[]
+  stockTransactions StockTransaction[]
+
+  @@map("Warehouses")
+}
+
+model Inventory {
+  inventoryId     String    @id @default(uuid()) @map("InventoryId")
+  productId       String    @map("ProductId")
+  warehouseId     Int       @map("WarehouseId")
+  currentStock    Int       @default(0) @map("CurrentStock")
+  reservedStock   Int       @default(0) @map("ReservedStock")
+  lastRestockedAt DateTime? @map("LastRestockedAt")
+  updatedAt       DateTime  @default(now()) @updatedAt @map("UpdatedAt")
+  product         Product   @relation(fields: [productId], references: [productId])
+  warehouse       Warehouse @relation(fields: [warehouseId], references: [warehouseId])
+
+  @@unique([productId, warehouseId], name: "UQ_Product_Warehouse")
+  @@map("Inventory")
+}
+
+model StockTransaction {
+  transactionId      String    @id @default(uuid()) @map("TransactionId")
+  productId          String    @map("ProductId")
+  warehouseId        Int       @map("WarehouseId")
+  transactionType    String    @db.NVarChar(30) @map("TransactionType")
+  quantityChange     Int       @map("QuantityChange")
+  referenceNumber    String?   @db.NVarChar(100) @map("ReferenceNumber")
+  performedByUserId  String    @map("PerformedByUserId")
+  notes              String?   @db.NVarChar(500) @map("Notes")
+  createdAt          DateTime  @default(now()) @map("CreatedAt")
+  product            Product   @relation(fields: [productId], references: [productId], onDelete: NoAction, onUpdate: NoAction)
+  warehouse          Warehouse @relation(fields: [warehouseId], references: [warehouseId], onDelete: NoAction, onUpdate: NoAction)
+  performedBy        User      @relation("TransactionPerformer", fields: [performedByUserId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([productId, warehouseId, createdAt], name: "IX_StockTransactions_Product_Warehouse")
+  @@map("StockTransactions")
+}
+
+// 4. ORDERS, PAYMENTS & COUPONS
+model Coupon {
+  couponId           Int       @id @default(autoincrement()) @map("CouponId")
+  code               String    @unique @db.NVarChar(50) @map("Code")
+  discountPercentage Decimal   @db.Decimal(5, 2) @map("DiscountPercentage")
+  maxDiscountAmount  Decimal?  @db.Decimal(10, 2) @map("MaxDiscountAmount")
+  minOrderAmount     Decimal   @default(0) @db.Decimal(12, 2) @map("MinOrderAmount")
+  validFrom          DateTime  @map("ValidFrom")
+  validUntil         DateTime  @map("ValidUntil")
+  usageLimit         Int       @default(1000) @map("UsageLimit")
+  timesUsed          Int       @default(0) @map("TimesUsed")
+  isActive           Boolean   @default(true) @map("IsActive")
+  createdAt          DateTime  @default(now()) @map("CreatedAt")
+
+  @@map("Coupons")
+}
+
+model Order {
+  orderId             String          @id @default(uuid()) @map("OrderId")
+  orderNumber         String          @unique @db.NVarChar(50) @map("OrderNumber")
+  customerId          String          @map("CustomerId")
+  shippingAddressId   String          @map("ShippingAddressId")
+  orderStatus         String          @default("Confirmed") @db.NVarChar(30) @map("OrderStatus")
+  subtotal            Decimal         @db.Decimal(12, 2) @map("Subtotal")
+  shippingFee         Decimal         @default(0) @db.Decimal(10, 2) @map("ShippingFee")
+  discountAmount      Decimal         @default(0) @db.Decimal(10, 2) @map("DiscountAmount")
+  totalAmount         Decimal         @db.Decimal(12, 2) @map("TotalAmount")
+  shippingMethod      String          @default("Armoured Transit") @db.NVarChar(50) @map("ShippingMethod")
+  specialInstructions String?         @db.NVarChar(500) @map("SpecialInstructions")
+  createdAt           DateTime        @default(now()) @map("CreatedAt")
+  updatedAt           DateTime        @default(now()) @updatedAt @map("UpdatedAt")
+  customer            User            @relation("CustomerOrders", fields: [customerId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+  shippingAddress     Address         @relation(fields: [shippingAddressId], references: [addressId], onDelete: NoAction, onUpdate: NoAction)
+  orderItems          OrderItem[]
+  payments            Payment[]
+  deliveries          Delivery[]
+  supportTickets      SupportTicket[]
+
+  @@index([orderNumber], name: "IX_Orders_OrderNumber")
+  @@index([customerId], name: "IX_Orders_CustomerId")
+  @@index([orderStatus], name: "IX_Orders_Status")
+  @@map("Orders")
+}
+
+model OrderItem {
+  orderItemId String   @id @default(uuid()) @map("OrderItemId")
+  orderId     String   @map("OrderId")
+  productId   String   @map("ProductId")
+  unitPrice   Decimal  @db.Decimal(12, 2) @map("UnitPrice")
+  quantity    Int      @default(1) @map("Quantity")
+  order       Order    @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [productId])
+
+  @@index([orderId], name: "IX_OrderItems_OrderId")
+  @@map("OrderItems")
+}
+
+model Payment {
+  paymentId          String    @id @default(uuid()) @map("PaymentId")
+  orderId            String    @map("OrderId")
+  razorpayOrderId    String    @unique @db.NVarChar(100) @map("RazorpayOrderId")
+  razorpayPaymentId  String?   @unique @db.NVarChar(100) @map("RazorpayPaymentId")
+  razorpaySignature  String?   @db.NVarChar(255) @map("RazorpaySignature")
+  amount             Decimal   @db.Decimal(12, 2) @map("Amount")
+  currency           String    @default("INR") @db.NVarChar(10) @map("Currency")
+  paymentStatus      String    @default("Created") @db.NVarChar(30) @map("PaymentStatus")
+  paymentMethod      String    @default("UPI") @db.NVarChar(40) @map("PaymentMethod")
+  failureReason      String?   @db.NVarChar(500) @map("FailureReason")
+  capturedAt         DateTime? @map("CapturedAt")
+  createdAt          DateTime  @default(now()) @map("CreatedAt")
+  order              Order     @relation(fields: [orderId], references: [orderId])
+
+  @@index([orderId], name: "IX_Payments_OrderId")
+  @@index([razorpayOrderId], name: "IX_Payments_RazorpayOrderId")
+  @@map("Payments")
+}
+
+// 5. DELIVERIES & REAL-TIME LOGISTICS
+model Delivery {
+  deliveryId              String                 @id @default(uuid()) @map("DeliveryId")
+  orderId                 String                 @map("OrderId")
+  courierPartner          String                 @default("BlueDart Express") @db.NVarChar(80) @map("CourierPartner")
+  trackingNumber          String                 @unique @db.NVarChar(100) @map("TrackingNumber")
+  assignedRiderId         String?                @map("AssignedRiderId")
+  deliveryStatus          String                 @default("Scheduled") @db.NVarChar(30) @map("DeliveryStatus")
+  deliveryHandoverOtp     String                 @db.NVarChar(10) @map("DeliveryHandoverOtp")
+  dispatchedAt            DateTime?              @map("DispatchedAt")
+  deliveredAt             DateTime?              @map("DeliveredAt")
+  proofOfDeliveryPhotoUrl String?                @db.NVarChar(500) @map("ProofOfDeliveryPhotoUrl")
+  createdAt               DateTime               @default(now()) @map("CreatedAt")
+  order                   Order                  @relation(fields: [orderId], references: [orderId], onDelete: NoAction, onUpdate: NoAction)
+  assignedRider           User?                  @relation("RiderDeliveries", fields: [assignedRiderId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+  locationPings           DeliveryLocationPing[]
+
+  @@map("Deliveries")
+}
+
+model DeliveryLocationPing {
+  pingId         BigInt   @id @default(autoincrement()) @map("PingId")
+  deliveryId     String   @map("DeliveryId")
+  riderId        String   @map("RiderId")
+  latitude       Decimal  @db.Decimal(10, 7) @map("Latitude")
+  longitude      Decimal  @db.Decimal(10, 7) @map("Longitude")
+  speedKmh       Decimal? @db.Decimal(5, 2) @map("SpeedKmh")
+  headingDegrees Decimal? @db.Decimal(5, 2) @map("HeadingDegrees")
+  pingTimestamp  DateTime @default(now()) @map("PingTimestamp")
+  delivery       Delivery @relation(fields: [deliveryId], references: [deliveryId], onDelete: Cascade)
+  rider          User     @relation("RiderPings", fields: [riderId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([deliveryId, pingTimestamp], name: "IX_DeliveryLocationPings_DeliveryId")
+  @@map("DeliveryLocationPings")
+}
+
+// 6. SUPPORT TICKETS, MESSAGES & AUDIT
+model SupportTicket {
+  ticketId        String           @id @default(uuid()) @map("TicketId")
+  ticketNumber    String           @unique @db.NVarChar(30) @map("TicketNumber")
+  customerId      String           @map("CustomerId")
+  orderId         String?          @map("OrderId")
+  subject         String           @db.NVarChar(200) @map("Subject")
+  category        String           @db.NVarChar(50) @map("Category")
+  priority        String           @default("Normal") @db.NVarChar(20) @map("Priority")
+  status          String           @default("Open") @db.NVarChar(20) @map("Status")
+  assignedAgentId String?          @map("AssignedAgentId")
+  createdAt       DateTime         @default(now()) @map("CreatedAt")
+  updatedAt       DateTime         @default(now()) @updatedAt @map("UpdatedAt")
+  customer        User             @relation("CustomerTickets", fields: [customerId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+  order           Order?           @relation(fields: [orderId], references: [orderId], onDelete: NoAction, onUpdate: NoAction)
+  assignedAgent   User?            @relation("AssignedAgentTickets", fields: [assignedAgentId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+  messages        SupportMessage[]
+
+  @@index([customerId], name: "IX_SupportTickets_CustomerId")
+  @@index([status, priority], name: "IX_SupportTickets_Status_Priority")
+  @@map("SupportTickets")
+}
+
+model SupportMessage {
+  messageId      String        @id @default(uuid()) @map("MessageId")
+  ticketId       String        @map("TicketId")
+  senderUserId   String        @map("SenderUserId")
+  messageText    String        @db.NVarChar(max) @map("MessageText")
+  attachmentUrl  String?       @db.NVarChar(500) @map("AttachmentUrl")
+  isInternalNote Boolean       @default(false) @map("IsInternalNote")
+  sentAt         DateTime      @default(now()) @map("SentAt")
+  ticket         SupportTicket @relation(fields: [ticketId], references: [ticketId], onDelete: Cascade)
+  sender         User          @relation("MessageSender", fields: [senderUserId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("SupportMessages")
+}
+
+model AuditLog {
+  auditId            BigInt   @id @default(autoincrement()) @map("AuditId")
+  performedByUserId  String?  @map("PerformedByUserId")
+  action             String   @db.NVarChar(80) @map("Action")
+  moduleName         String   @db.NVarChar(60) @map("ModuleName")
+  targetEntityId     String?  @db.NVarChar(100) @map("TargetEntityId")
+  detailsJson        String?  @db.NVarChar(max) @map("DetailsJson")
+  ipAddress          String?  @db.NVarChar(50) @map("IpAddress")
+  createdAt          DateTime @default(now()) @map("CreatedAt")
+  performedBy        User?    @relation("AuditPerformer", fields: [performedByUserId], references: [userId])
+
+  @@index([moduleName, createdAt], name: "IX_AuditLogs_Module_CreatedAt")
+  @@map("AuditLogs")
+}

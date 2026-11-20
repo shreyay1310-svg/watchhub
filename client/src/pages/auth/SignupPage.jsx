@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useAuth, ROLES } from '../../context/AuthContext';
 import OtpInput from '../../components/auth/OtpInput';
+import { safeAuthFetch } from '../../utils/authApiHelper';
 
 export const SignupPage = () => {
   const { register, setUser } = useAuth();
@@ -31,6 +32,7 @@ export const SignupPage = () => {
 
   // Multi-step signup: 1: Details & Role, 2: Real Email OTP Verification, 3: Creation animation
   const [step, setStep] = useState(1);
+  const [verifyChannel, setVerifyChannel] = useState('email'); // 'email' or 'phone'
 
   // Form Fields
   const [role, setRole] = useState(ROLES.CUSTOMER);
@@ -47,6 +49,7 @@ export const SignupPage = () => {
   // OTP State
   const [enteredOtp, setEnteredOtp] = useState('');
   const [otpError, setOtpError] = useState('');
+  const [otpSuccessMessage, setOtpSuccessMessage] = useState('');
   const [resendCooldown, setResendCooldown] = useState(0);
   const [resendNotice, setResendNotice] = useState('');
 
@@ -108,7 +111,7 @@ export const SignupPage = () => {
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
-  // Step 1: Validate details and send real Email OTP via Resend
+  // Step 1: Validate details and send OTP via Email (or Phone SMS)
   const handleProceedToOtp = async (e) => {
     e.preventDefault();
     setError('');
@@ -117,7 +120,9 @@ export const SignupPage = () => {
       setError('Please enter your full name.');
       return;
     }
-    if (!email.trim() || !email.includes('@')) {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
@@ -142,67 +147,73 @@ export const SignupPage = () => {
     setLoading(true);
 
     try {
-      const cleanEmail = email.trim().toLowerCase();
-      const res = await fetch('/api/auth/send-email-otp', {
+      const endpoint = verifyChannel === 'phone' ? '/api/auth/send-phone-otp' : '/api/auth/send-email-otp';
+      const payload = verifyChannel === 'phone'
+        ? { phone: cleanDigits, name: name.trim(), purpose: 'registration' }
+        : { email: cleanEmail, name: name.trim(), purpose: 'registration' };
+
+      const result = await safeAuthFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: cleanEmail,
-          name: name.trim(),
-          purpose: 'registration',
-        }),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-
-      if (!res.ok || data.status === 'fail') {
-        setError(data.message || 'Failed to dispatch verification email.');
+      if (!result.ok) {
+        setError(result.error || "We couldn't send the verification code. Please try again.");
         setLoading(false);
         return;
       }
 
       setStep(2);
-      setResendCooldown(60);
+      setOtpSuccessMessage(result.data?.message || 'Verification code sent to your email address.');
+      setResendCooldown(result.data?.cooldownSeconds || 60);
       setEnteredOtp('');
       setOtpError('');
       setLoading(false);
-    } catch (err) {
-      setError('Failed to reach authentication server. Please try again.');
+    } catch {
+      setError("We couldn't send the verification code. Please try again.");
       setLoading(false);
     }
   };
 
-  // Resend Email OTP
+  // Resend OTP
   const handleResendOtp = async () => {
-    if (resendCooldown > 0) return;
+    if (resendCooldown > 0 || loading) return;
     setOtpError('');
     setResendNotice('');
+    setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/resend-email-otp', {
+      const cleanEmail = (email || '').trim().toLowerCase();
+      const cleanDigits = phone.replace(/[^0-9]/g, '').slice(-10);
+      const endpoint = verifyChannel === 'phone' ? '/api/auth/send-phone-otp' : '/api/auth/resend-email-otp';
+      const payload = verifyChannel === 'phone'
+        ? { phone: cleanDigits, purpose: 'registration' }
+        : { email: cleanEmail, purpose: 'registration' };
+
+      const result = await safeAuthFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email.trim().toLowerCase(),
-          purpose: 'registration',
-        }),
+        body: JSON.stringify(payload),
       });
-      const data = await res.json();
 
-      if (!res.ok || data.status === 'fail') {
-        setOtpError(data.message || 'Failed to resend code.');
+      if (!result.ok) {
+        setOtpError(result.error || "We couldn't send the verification code. Please try again.");
+        setLoading(false);
         return;
       }
 
-      setResendCooldown(60);
-      setResendNotice('A new verification code has been dispatched to your email.');
+      setResendCooldown(result.data?.cooldownSeconds || 60);
+      setResendNotice(result.data?.message || 'Verification code sent to your email address.');
       setTimeout(() => setResendNotice(''), 5000);
+      setLoading(false);
     } catch {
-      setOtpError('Error contacting email service.');
+      setOtpError("We couldn't send the verification code. Please try again.");
+      setLoading(false);
     }
   };
 
-  // Step 2: Verify Email OTP and complete backend registration
+  // Step 2: Verify OTP and complete backend registration
   const handleVerifyOtpAndCreate = async (e) => {
     if (e) e.preventDefault();
     if (enteredOtp.length !== 6) {
@@ -214,30 +225,49 @@ export const SignupPage = () => {
     setOtpError('');
 
     try {
-      const cleanEmail = email.trim().toLowerCase();
+      const cleanEmail = (email || '').trim().toLowerCase();
       const cleanDigits = phone.replace(/[^0-9]/g, '').slice(-10);
 
-      const verifyRes = await fetch('/api/auth/verify-email-otp', {
+      const endpoint = verifyChannel === 'phone' ? '/api/auth/verify-phone-otp' : '/api/auth/verify-email-otp';
+      const payload = verifyChannel === 'phone'
+        ? {
+            phone: cleanDigits,
+            otp: enteredOtp.trim(),
+            purpose: 'registration',
+            name: name.trim(),
+            email: cleanEmail,
+            password: password,
+            role: role,
+          }
+        : {
+            email: cleanEmail,
+            otp: enteredOtp.trim(),
+            purpose: 'registration',
+            name: name.trim(),
+            phone: '+91 ' + cleanDigits,
+            password: password,
+            role: role,
+          };
+
+      const result = await safeAuthFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: cleanEmail,
-          otp: enteredOtp,
-          purpose: 'registration',
-          name: name.trim(),
-          phone: '+91 ' + cleanDigits,
-          password: password,
-          role: role,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      const verifyData = await verifyRes.json();
-
-      if (!verifyRes.ok || verifyData.status === 'fail') {
-        setOtpError(verifyData.message || 'Invalid or expired verification code.');
+      if (!result.ok) {
+        let msg = result.error;
+        if (result.data?.expired) {
+          msg = 'Your verification code has expired. Request a new code.';
+        } else if (!msg || msg.toLowerCase().includes('invalid') || msg.toLowerCase().includes('mismatch')) {
+          msg = 'Invalid verification code. Please try again.';
+        }
+        setOtpError(msg);
         setLoading(false);
         return;
       }
+
+      const verifyData = result.data || {};
 
       // Store authenticated session
       if (verifyData.accessToken) {
@@ -474,6 +504,39 @@ export const SignupPage = () => {
                     </div>
                   </div>
 
+                  {/* Select OTP Delivery Channel */}
+                  <div>
+                    <label className="text-xs font-semibold text-[#A7B1C2] block mb-1">
+                      Send 6-Digit Verification Code Via:
+                    </label>
+                    <div className="grid grid-cols-2 p-1 bg-[#091426] rounded-xl border border-[#252D42]">
+                      <button
+                        type="button"
+                        onClick={() => setVerifyChannel('phone')}
+                        className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          verifyChannel === 'phone'
+                            ? 'bg-gradient-to-r from-[#00D9E8] to-[#00B4D8] text-[#070918] shadow'
+                            : 'text-[#A7B1C2] hover:text-white'
+                        }`}
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        <span>Phone SMS</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setVerifyChannel('email')}
+                        className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          verifyChannel === 'email'
+                            ? 'bg-gradient-to-r from-[#00D9E8] to-[#00B4D8] text-[#070918] shadow'
+                            : 'text-[#A7B1C2] hover:text-white'
+                        }`}
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        <span>Email Inbox</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Terms */}
                   <label className="flex items-center gap-2 cursor-pointer pt-1 text-[#A7B1C2] text-[11px]">
                     <input
@@ -490,13 +553,13 @@ export const SignupPage = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00D9E8] via-[#00B4D8] to-[#00D9E8] text-[#070918] font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,217,232,0.3)] hover:shadow-[0_0_30px_rgba(0,217,232,0.5)] transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00D9E8] via-[#00B4D8] to-[#00D9E8] text-[#070918] font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,217,232,0.3)] hover:shadow-[0_0_30px_rgba(0,217,232,0.5)] disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
                   >
                     {loading ? (
-                      <span>Dispatching Email Code...</span>
+                      <span>Dispatching Verification Code...</span>
                     ) : (
                       <>
-                        <span>Send Email Verification Code</span>
+                        <span>Send {verifyChannel === 'phone' ? 'Phone SMS' : 'Email'} Verification Code</span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}
@@ -505,12 +568,14 @@ export const SignupPage = () => {
               </div>
             )}
 
-            {/* STEP 2: Dedicated Email OTP Verification */}
+            {/* STEP 2: Dedicated OTP Verification */}
             {step === 2 && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-[#252D42]">
                   <div>
-                    <h3 className="text-lg font-bold text-white">Verify Your Email</h3>
+                    <h3 className="text-lg font-bold text-white">
+                      Verify Your {verifyChannel === 'phone' ? 'Mobile Phone' : 'Email'}
+                    </h3>
                     <p className="text-xs text-[#A7B1C2]">Step 2 of 2: Enter 6-Digit Code</p>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E7B43F]/15 text-[#E7B43F] border border-[#E7B43F]/30">
@@ -520,11 +585,22 @@ export const SignupPage = () => {
 
                 <div className="p-3.5 rounded-2xl bg-[#091426] border border-[#252D42] text-center space-y-1">
                   <p className="text-xs text-[#A7B1C2]">
-                    We sent a single-use verification code via Resend to:
+                    We sent a single-use 6-digit verification code to:
                   </p>
-                  <p className="text-xs font-bold text-[#00D9E8] truncate">{email}</p>
-                  <p className="text-[10px] text-[#64748B]">Please check your inbox &amp; spam folder.</p>
+                  <p className="text-xs font-bold text-[#00D9E8] truncate">
+                    {verifyChannel === 'phone' ? `+91 ${phone.replace(/[^0-9]/g, '').slice(-10)}` : email.trim().toLowerCase()}
+                  </p>
+                  <p className="text-[10px] text-[#64748B]">
+                    {verifyChannel === 'phone' ? 'Please check your phone SMS messages.' : 'Please check your inbox & spam folder.'}
+                  </p>
                 </div>
+
+                {otpSuccessMessage && (
+                  <div className="p-3 rounded-xl bg-[#10B981]/15 border border-[#10B981]/30 text-xs text-[#10B981] flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                    <span>{otpSuccessMessage}</span>
+                  </div>
+                )}
 
                 {otpError && (
                   <div className="p-3 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-xs text-[#EF4444] flex items-center gap-2">

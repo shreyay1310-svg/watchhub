@@ -1,0 +1,129 @@
+{
+  "screens": [
+    {
+      "name": "Homepage",
+      "route": "/",
+      "status": "PASS",
+      "notes": "Luxury hero carousel, craftsmanship teaser, brand navigation rendered."
+    },
+    {
+      "name": "Search Results",
+      "route": "/products?search=Rolex",
+      "status": "PASS",
+      "notes": "Filtered catalog by query \"Rolex\""
+    },
+    {
+      "name": "Product Catalog",
+      "route": "/products",
+      "status": "PASS",
+      "notes": "33 products retrieved with categories and brand filters."
+    },
+    {
+      "name": "Product Details",
+      "route": "http://localhost:5173/products/1",
+      "status": "PASS",
+      "notes": "High-res gallery, calibre specifications, Add to Bag buttons."
+    },
+    {
+      "name": "Cart Page",
+      "route": "/cart",
+      "status": "PASS",
+      "notes": "Cart summary, quantity selectors, and coupon engine active."
+    },
+    {
+      "name": "Checkout Page",
+      "route": "/checkout",
+      "status": "PASS",
+      "notes": "Shipping address fields, armoured courier option, Razorpay launch CTA."
+    },
+    {
+      "name": "Login Page",
+      "route": "/login",
+      "status": "PASS",
+      "notes": "Dual auth support: standard password and email OTP login."
+    },
+    {
+      "name": "Signup Page",
+      "route": "/signup",
+      "status": "PASS",
+      "notes": "Collector registration form with inline field validation."
+    },
+    {
+      "name": "Forgot Password Page",
+      "route": "/forgot-password",
+      "status": "PASS",
+      "notes": "Non-enumerating email submission with rate-limit cooldown."
+    },
+    {
+      "name": "Reset Password Page",
+      "route": "/reset-password",
+      "status": "PASS",
+      "notes": "6-digit OTP entry, password verification, atomic update."
+    },
+    {
+      "name": "Customer Account",
+      "route": "/account",
+      "status": "PASS",
+      "notes": "Profile update, delivery address management, order history."
+    },
+    {
+      "name": "Delivery Tracking",
+      "route": "/tracking/WH20261125",
+      "status": "PASS",
+      "notes": "Consignment timeline, Delhivery courier metadata, status badge."
+    },
+    {
+      "name": "Super Admin Dashboard",
+      "route": "/dashboard/super-admin",
+      "status": "PASS",
+      "notes": "Live SQL Server revenue KPIs (₹44,76,397), 33 products, role metrics."
+    },
+    {
+      "name": "Store Admin Dashboard",
+      "route": "/dashboard/store-admin",
+      "status": "PASS",
+      "notes": "Store metrics, order fulfillment queue, POS terminal panel."
+    },
+    {
+      "name": "Inventory Dashboard",
+      "route": "/inventory",
+      "status": "PASS",
+      "notes": "Warehouse stock levels, low-stock warnings, inward restock requests."
+    },
+    {
+      "name": "Delivery Dashboard",
+      "route": "/delivery",
+      "status": "PASS",
+      "notes": "Live courier telemetry, partner assignment, dispatch schedule."
+    },
+    {
+      "name": "Customer Support Dashboard",
+      "route": "/support",
+      "status": "PASS",
+      "notes": "Ticket resolution queue, client inquiries, refund authorization."
+    }
+  ],
+  "consoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "location": {
+        "url": "http://localhost:5000/api/auth/login",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "location": {
+        "url": "http://localhost:5000/api/auth/login",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ],
+  "totalButtons": 20
+}

@@ -508,6 +508,7 @@ export const CustomerNavbar = () => {
                         onClick={() => {
                           logout();
                           setProfileOpen(false);
+                          navigate('/login', { replace: true });
                         }}
                         className="w-full text-left px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 cursor-pointer mt-1 border-t border-white/10"
                       >

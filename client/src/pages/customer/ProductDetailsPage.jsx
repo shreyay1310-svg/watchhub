@@ -7,6 +7,7 @@ import { useCart } from '../../context/CartContext';
 import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
 import { getProductImage, getProductGallery, getProductAlt } from '../../utils/productImageMap';
+import SEO from '../../components/common/SEO';
 import {
   Heart,
   ShoppingCart,
@@ -99,6 +100,34 @@ export const ProductDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-[#020813] text-[#F8FAFC] flex flex-col font-sans selection:bg-[#F4B942] selection:text-black">
+      {product && (
+        <SEO
+          title={`${product.name} – ${product.brand} Luxury Timepiece | WatchHub`}
+          description={product.description || `Buy certified authentic ${product.name} by ${product.brand}. Features premium automatic movement, sapphire crystal, and official warranty.`}
+          canonical={`https://watchhub.in/product/${product.id}`}
+          ogImage={getProductImage(product)}
+          ogType="product"
+          structuredData={{
+            '@type': 'Product',
+            name: product.name,
+            image: getProductImage(product),
+            description: product.description || `${product.brand} luxury timepiece`,
+            brand: {
+              '@type': 'Brand',
+              name: product.brand,
+            },
+            sku: product.sku || product.id,
+            offers: {
+              '@type': 'Offer',
+              url: `https://watchhub.in/product/${product.id}`,
+              priceCurrency: 'INR',
+              price: product.price,
+              availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              itemCondition: 'https://schema.org/NewCondition',
+            },
+          }}
+        />
+      )}
       <CustomerNavbar />
 
       {/* Toast Notification */}
@@ -127,11 +156,11 @@ export const ProductDetailsPage = () => {
             MAIN 2-COLUMN SECTION: LEFT GALLERY + RIGHT PRODUCT SUMMARY
             ════════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
-          
+
           {/* ── LEFT COLUMN: High-Res Watch Photography, Zoom & 360 ── */}
           <div className="lg:col-span-7 space-y-4">
             <div className="relative rounded-3xl bg-gradient-to-b from-[#061224] via-[#040C1A] to-[#020813] border border-white/10 p-6 sm:p-10 flex items-center justify-center min-h-[460px] sm:min-h-[560px] overflow-hidden group shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
-              
+
               {/* Electric blue subtle background glow */}
               <div className="absolute inset-0 bg-radial from-[#00CFFF]/15 via-transparent to-transparent pointer-events-none blur-3xl" />
 
@@ -152,11 +181,10 @@ export const ProductDetailsPage = () => {
                 <button
                   type="button"
                   onClick={() => setIs360Active(!is360Active)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    is360Active
-                      ? 'bg-[#00CFFF] text-black shadow-[0_0_15px_rgba(0,207,255,0.4)]'
-                      : 'bg-white/10 text-white hover:bg-white/20 border border-white/10'
-                  }`}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${is360Active
+                    ? 'bg-[#00CFFF] text-black shadow-[0_0_15px_rgba(0,207,255,0.4)]'
+                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/10'
+                    }`}
                   title="Interactive 360 Rotation"
                 >
                   <RotateCw className={`w-3.5 h-3.5 ${is360Active ? 'animate-spin' : ''}`} />
@@ -176,9 +204,8 @@ export const ProductDetailsPage = () => {
 
               {/* Main Watch Image (Guaranteed 100% Uncropped with object-fit: contain) */}
               <div
-                className={`relative z-10 w-full h-[400px] sm:h-[480px] flex items-center justify-center transition-transform duration-300 ${
-                  isZoomed ? 'scale-125 cursor-zoom-out' : 'cursor-zoom-in'
-                }`}
+                className={`relative z-10 w-full h-[400px] sm:h-[480px] flex items-center justify-center transition-transform duration-300 ${isZoomed ? 'scale-125 cursor-zoom-out' : 'cursor-zoom-in'
+                  }`}
                 style={{
                   transform: is360Active ? `rotate(${rotationAngle}deg)` : undefined,
                 }}
@@ -226,11 +253,10 @@ export const ProductDetailsPage = () => {
                     setSelectedImage(img);
                     setIs360Active(false);
                   }}
-                  className={`h-24 sm:h-28 rounded-2xl bg-[#061224] border p-2 flex items-center justify-center transition-all cursor-pointer overflow-hidden ${
-                    selectedImage === img
-                      ? 'border-[#00CFFF] shadow-[0_0_15px_rgba(0,207,255,0.3)]'
-                      : 'border-white/10 hover:border-white/30 opacity-70 hover:opacity-100'
-                  }`}
+                  className={`h-24 sm:h-28 rounded-2xl bg-[#061224] border p-2 flex items-center justify-center transition-all cursor-pointer overflow-hidden ${selectedImage === img
+                    ? 'border-[#00CFFF] shadow-[0_0_15px_rgba(0,207,255,0.3)]'
+                    : 'border-white/10 hover:border-white/30 opacity-70 hover:opacity-100'
+                    }`}
                 >
                   <img
                     src={img}
@@ -310,11 +336,10 @@ export const ProductDetailsPage = () => {
                     key={color.name}
                     type="button"
                     onClick={() => setSelectedDialColor(color.name)}
-                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                      selectedDialColor === color.name
-                        ? 'ring-2 ring-[#00CFFF] ring-offset-2 ring-offset-[#020813] scale-110'
-                        : 'opacity-70 hover:opacity-100 hover:scale-105'
-                    }`}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${selectedDialColor === color.name
+                      ? 'ring-2 ring-[#00CFFF] ring-offset-2 ring-offset-[#020813] scale-110'
+                      : 'opacity-70 hover:opacity-100 hover:scale-105'
+                      }`}
                     style={{ backgroundColor: color.hex }}
                     title={color.name}
                   >
@@ -337,11 +362,10 @@ export const ProductDetailsPage = () => {
                     key={st.name}
                     type="button"
                     onClick={() => setSelectedStrap(st.name)}
-                    className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer ${
-                      selectedStrap === st.name
-                        ? 'bg-[#F4B942]/15 border-[#F4B942] text-[#F4B942] shadow-[0_0_12px_rgba(244,185,66,0.2)]'
-                        : 'bg-white/5 border-white/10 text-gray-300 hover:border-white/20'
-                    }`}
+                    className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer ${selectedStrap === st.name
+                      ? 'bg-[#F4B942]/15 border-[#F4B942] text-[#F4B942] shadow-[0_0_12px_rgba(244,185,66,0.2)]'
+                      : 'bg-white/5 border-white/10 text-gray-300 hover:border-white/20'
+                      }`}
                   >
                     <span className="block truncate">{st.label}</span>
                   </button>
@@ -387,11 +411,10 @@ export const ProductDetailsPage = () => {
                 <button
                   type="button"
                   onClick={() => toggleWishlist(product)}
-                  className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                    isFavorited
-                      ? 'bg-[#FF35C8]/20 border-[#FF35C8] text-[#FF35C8]'
-                      : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/30'
-                  }`}
+                  className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${isFavorited
+                    ? 'bg-[#FF35C8]/20 border-[#FF35C8] text-[#FF35C8]'
+                    : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/30'
+                    }`}
                   title="Save to Wishlist"
                 >
                   <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
@@ -454,11 +477,10 @@ export const ProductDetailsPage = () => {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-4 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-[#00CFFF]/20 to-[#00A3FF]/20 text-[#00CFFF] border border-[#00CFFF]/40 shadow-xs'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
+                className={`py-2 px-4 rounded-xl transition-all whitespace-nowrap cursor-pointer ${activeTab === tab.id
+                  ? 'bg-gradient-to-r from-[#00CFFF]/20 to-[#00A3FF]/20 text-[#00CFFF] border border-[#00CFFF]/40 shadow-xs'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
               >
                 {tab.label}
               </button>

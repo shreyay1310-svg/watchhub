@@ -1,5 +1,5 @@
 import express from 'express';
-import { User } from '../models/User.js';
+import { prisma } from '../config/prisma.js';
 import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -8,46 +8,55 @@ const router = express.Router();
 // GET /api/users/addresses
 router.get('/addresses', async (req, res) => {
   try {
-    const userEmail = req.query.email || 'collector@watchhub.com';
-    let user = null;
+    const userEmail = req.query.email || 'customer@watchhub.com';
+    let addresses = [];
+
     try {
-      user = await User.findOne({ email: userEmail.toLowerCase().trim() });
+      const user = await prisma.user.findFirst({
+        where: { email: userEmail.toLowerCase().trim() },
+        include: { addresses: true },
+      });
+
+      if (user && user.addresses.length > 0) {
+        addresses = user.addresses.map((a) => ({
+          addressId: a.addressId,
+          fullName: a.fullName,
+          street: a.street,
+          apartment: a.apartment,
+          landmark: a.landmark,
+          city: a.city,
+          state: a.state,
+          pincode: a.pincode,
+          country: a.country,
+          phone: a.phone,
+          addressType: a.addressType,
+          lat: a.latitude ? Number(a.latitude) : 28.4595,
+          lng: a.longitude ? Number(a.longitude) : 77.0850,
+          isDefault: a.isDefault,
+        }));
+      }
     } catch {}
 
-    const addresses = user?.addresses || [
-      {
-        addressId: 'addr_default_01',
-        fullName: 'Alexander Sterling',
-        street: 'Penthouse 14B, The Oberoi Sky Heights, Golf Course Road',
-        apartment: 'Suite 14B',
-        landmark: 'Near DLF CyberCity',
-        city: 'Gurugram',
-        state: 'Haryana',
-        pincode: '122002',
-        country: 'India',
-        phone: '+91 98765 43210',
-        addressType: 'Home',
-        lat: 28.4595,
-        lng: 77.0850,
-        isDefault: true,
-      },
-      {
-        addressId: 'addr_office_02',
-        fullName: 'Alexander Sterling',
-        street: 'Level 24, Express Towers, Nariman Point',
-        apartment: 'Office 2401',
-        landmark: 'Opposite Marine Drive',
-        city: 'Mumbai',
-        state: 'Maharashtra',
-        pincode: '400021',
-        country: 'India',
-        phone: '+91 98765 43210',
-        addressType: 'Office',
-        lat: 18.9280,
-        lng: 72.8228,
-        isDefault: false,
-      },
-    ];
+    if (addresses.length === 0) {
+      addresses = [
+        {
+          addressId: 'addr_default_01',
+          fullName: 'Alexander Sterling',
+          street: 'Penthouse 14B, The Oberoi Sky Heights, Golf Course Road',
+          apartment: 'Suite 14B',
+          landmark: 'Near DLF CyberCity',
+          city: 'Gurugram',
+          state: 'Haryana',
+          pincode: '122002',
+          country: 'India',
+          phone: '+91 98765 43210',
+          addressType: 'Home',
+          lat: 28.4595,
+          lng: 77.0850,
+          isDefault: true,
+        },
+      ];
+    }
 
     return res.status(200).json({ status: 'success', addresses });
   } catch (err) {
@@ -76,40 +85,50 @@ router.post('/addresses', async (req, res) => {
       isDefault = false,
     } = req.body;
 
-    const newAddress = {
-      addressId: `addr_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-      fullName: fullName || 'Valued Collector',
-      street,
-      apartment,
-      landmark,
-      city,
-      state,
-      pincode,
-      country,
-      phone,
-      addressType,
-      lat: Number(lat || 28.6139),
-      lng: Number(lng || 77.2090),
-      isDefault: Boolean(isDefault),
-    };
+    const user = await prisma.user.findFirst({
+      where: email ? { email: email.toLowerCase().trim() } : { userRoles: { some: { role: { roleName: 'Customer' } } } },
+    });
 
-    if (email) {
-      try {
-        const user = await User.findOne({ email: email.toLowerCase().trim() });
-        if (user) {
-          if (newAddress.isDefault) {
-            user.addresses.forEach((a) => (a.isDefault = false));
-          }
-          user.addresses.push(newAddress);
-          await user.save();
-        }
-      } catch {}
+    let savedAddress = null;
+    if (user) {
+      if (isDefault) {
+        await prisma.address.updateMany({
+          where: { userId: user.userId },
+          data: { isDefault: false },
+        });
+      }
+
+      savedAddress = await prisma.address.create({
+        data: {
+          userId: user.userId,
+          fullName: fullName || user.fullName,
+          street: street || 'WatchHub Luxury Suite',
+          apartment,
+          landmark,
+          city: city || 'Mumbai',
+          state: state || 'Maharashtra',
+          pincode: pincode || '400050',
+          country,
+          phone: phone || user.phone || '+91 99887 66554',
+          addressType,
+          latitude: lat ? Number(lat) : undefined,
+          longitude: lng ? Number(lng) : undefined,
+          isDefault: Boolean(isDefault),
+        },
+      });
     }
 
     return res.status(201).json({
       status: 'success',
       message: 'Delivery address saved with GPS coordinates.',
-      address: newAddress,
+      address: savedAddress || {
+        addressId: `addr_${Date.now()}`,
+        fullName,
+        street,
+        city,
+        pincode,
+        isDefault,
+      },
     });
   } catch (err) {
     return res.status(500).json({ status: 'error', message: err.message });
@@ -123,18 +142,18 @@ router.put('/addresses/:addressId', async (req, res) => {
     const { addressId } = req.params;
     const { email, ...updates } = req.body;
 
-    if (email) {
-      try {
-        const user = await User.findOne({ email: email.toLowerCase().trim() });
-        if (user) {
-          const idx = user.addresses.findIndex((a) => a.addressId === addressId);
-          if (idx !== -1) {
-            user.addresses[idx] = { ...user.addresses[idx].toObject(), ...updates };
-            await user.save();
-          }
-        }
-      } catch {}
-    }
+    await prisma.address.updateMany({
+      where: { addressId },
+      data: {
+        fullName: updates.fullName || undefined,
+        street: updates.street || undefined,
+        city: updates.city || undefined,
+        state: updates.state || undefined,
+        pincode: updates.pincode || undefined,
+        phone: updates.phone || undefined,
+        isDefault: updates.isDefault !== undefined ? Boolean(updates.isDefault) : undefined,
+      },
+    });
 
     return res.status(200).json({
       status: 'success',
@@ -152,22 +171,75 @@ router.put('/addresses/:addressId', async (req, res) => {
 router.delete('/addresses/:addressId', async (req, res) => {
   try {
     const { addressId } = req.params;
-    const { email } = req.query;
 
-    if (email) {
-      try {
-        const user = await User.findOne({ email: email.toLowerCase().trim() });
-        if (user) {
-          user.addresses = user.addresses.filter((a) => a.addressId !== addressId);
-          await user.save();
-        }
-      } catch {}
-    }
+    await prisma.address.deleteMany({
+      where: { addressId },
+    });
 
     return res.status(200).json({
       status: 'success',
       message: 'Address deleted successfully.',
       addressId,
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+});
+
+// 5. Get Authenticated User Profile
+// GET /api/users/profile
+router.get('/profile', authenticate, async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { userId: req.user.id },
+      include: {
+        addresses: true,
+        userRoles: { include: { role: true } },
+      },
+    });
+    if (!user) return res.status(404).json({ status: 'fail', message: 'User profile not found.' });
+
+    return res.status(200).json({
+      status: 'success',
+      user: {
+        id: user.userId,
+        name: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        avatar: user.avatarUrl,
+        role: user.userRoles[0]?.role?.roleName || 'Customer',
+        addresses: user.addresses,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+});
+
+// 6. Update Authenticated User Profile
+// PUT /api/users/profile
+router.put('/profile', authenticate, async (req, res) => {
+  try {
+    const { name, phone, avatar } = req.body;
+    const updated = await prisma.user.update({
+      where: { userId: req.user.id },
+      data: {
+        fullName: name || undefined,
+        phone: phone || undefined,
+        avatarUrl: avatar || undefined,
+      },
+    });
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Profile updated successfully.',
+      user: {
+        id: updated.userId,
+        name: updated.fullName,
+        email: updated.email,
+        phone: updated.phone,
+        avatar: updated.avatarUrl,
+      },
     });
   } catch (err) {
     return res.status(500).json({ status: 'error', message: err.message });

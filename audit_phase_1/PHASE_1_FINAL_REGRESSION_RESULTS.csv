@@ -1,0 +1,44 @@
+Test ID,Category,Module & Scenario,Expected Result,Actual Result,Status,Evidence Reference
+TC_BUILD_001,Frontend Build,Vite Production Build (`vite build`),Build succeeds with exit code 0,Vite v6.4.5 built in 12.58s with code-split chunks (vendor/charts/icons),PASS,audit_phase_1/PHASE_1_EVIDENCE/frontend_build.log
+TC_PWA_001,PWA Readiness,Service Worker & Precache Asset Generation,SW generated with precached assets,dist/sw.js and workbox-dc9ef1b3.js created (184 entries),PASS,audit_phase_1/PHASE_1_EVIDENCE/frontend_build.log
+TC_ANDR_001,Mobile Build,Capacitor Signed APK verification,APK signed and present,WatchHub-v1.0.0.apk present (8.86 MB),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_API_001,Core API,GET /api/health endpoint,HTTP 200 with status: success,HTTP 200 OK (status: success),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_API_002,Core API,GET /api root endpoint returns platform roles,HTTP 200 with 6 operational roles,HTTP 200 with 6 operational roles listed,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_API_003,Core API,POST /api/newsletter reject invalid email,HTTP 400 validation rejection,HTTP 400 Please enter a valid email address,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_API_004,Core API,Fallback 404 route handling,HTTP 404 fail JSON,HTTP 404 Cannot find route on this server,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_APP_001,App Update,GET /api/app/version semantic check,HTTP 200 with current app version,HTTP 200 semantic version v1.1.0,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_AUTH_001,Authentication,POST /api/auth/login empty payload validation,HTTP 400 validation error,HTTP 400 Please provide email and password,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_AUTH_002,Authentication,POST /api/auth/login non-existent user credentials rejection,HTTP 401 unauthorized,HTTP 401 Invalid email or password,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_AUTH_003,Authentication,GET /api/auth/me without JWT token rejection,HTTP 401 Authentication required,HTTP 401 Authentication required. No token provided.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_OTP_001,OTP System,POST /api/auth/send-email-otp invalid email format validation,HTTP 400 fail,HTTP 400 A valid email address is required.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_OTP_002,OTP System,POST /api/auth/verify-email-otp malformed OTP (<6 digits),HTTP 400 fail,HTTP 400 Verification code must be exactly 6 digits.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_PROD_001,Products,GET /api/products returns product catalog,HTTP 200 with catalog array,HTTP 200 (Array of catalog watches returned),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_PROD_002,Products,GET /api/products/:id with nonexistent ID returns 404,HTTP 404 failure,HTTP 404 Product not found,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_SEC_001,Security RBAC,POST /api/products requires authentication & Store Admin role,HTTP 401/403 Unauthorized,HTTP 401 Authentication required. No token provided.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_SEC_002,Security RBAC,Bypass test: Bearer mock_token should be rejected,HTTP 401 Token Invalid,HTTP 401 Invalid or expired authentication token.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_SEC_003,Security Headers,Helmet security headers inspection,Security headers present,Active (x-dns-prefetch-control / frame options present),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DASH_001,Role Dashboards,GET /api/dashboard/super-admin RBAC check,HTTP 401/403 Unauthorized,HTTP 401 Authentication required. No token provided.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DASH_002,Role Dashboards,GET /api/dashboard/store-admin RBAC check,HTTP 401/403 Unauthorized,HTTP 401 Authentication required. No token provided.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DASH_003,Role Dashboards,GET /api/dashboard/inventory-manager RBAC check,HTTP 401/403 Unauthorized,HTTP 401 Authentication required. No token provided.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DASH_004,Role Dashboards,GET /api/dashboard/delivery-manager RBAC check,HTTP 401/403 Unauthorized,HTTP 401 Authentication required. No token provided.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DASH_005,Role Dashboards,GET /api/dashboard/customer-support RBAC check,HTTP 401/403 Unauthorized,HTTP 401 Authentication required. No token provided.,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_INV_001,Inventory Manager,GET /api/inventory fetch inventory items,HTTP 200 array of stock items,HTTP 200 (10 stock items returned),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_INV_002,Inventory Manager,GET /api/inventory/warehouses list warehouses,HTTP 200 warehouses list,HTTP 200 with warehouse array,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_INV_003,Inventory Manager,GET /api/inventory/movements stock movement audit,HTTP 200 movement array,HTTP 200 with movement history log,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DEL_001,Delivery Manager,GET /api/delivery active shipments bundle,HTTP 200 delivery data bundle,HTTP 200 (Shipments & KPIs returned),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DEL_002,Delivery Manager,GET /api/delivery delivery partner roster,HTTP 200 delivery partner roster,HTTP 200 (Roster returned),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DEL_003,Delivery Partner,POST /api/delivery/verify-otp invalid OTP rejection,HTTP 400/404 fail,HTTP 404 Shipment not found,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_SUP_001,Customer Support,GET /api/support customer support bundle,HTTP 200 support bundle,HTTP 200 (Tickets & KPIs returned),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_SUP_002,Customer Support,GET /api/support support KPIs and trend data,HTTP 200 with ticket KPIs,HTTP 200 (Stats returned),PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_PAY_001,Payment Gateway,POST /api/payments/create-order Razorpay initiation,HTTP 200 with orderId,HTTP 200 orderId generated,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_PAY_002,Payment Gateway,POST /api/payments/verify forged Razorpay signature,HTTP 400 signature verification failed,HTTP 400 Cryptographic signature verification failed,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_TRK_001,Order Tracking,GET /api/tracking/order/:id lookup tracking record,HTTP 200/404 gracefully,HTTP 404 Graceful fail JSON,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DB_001,Database,MongoDB local connection status,Connection established,Connection failed: connect EACCES 127.0.0.1:27017,BLOCKED,Decommissioning MongoDB in favor of Microsoft SQL Server,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_DB_MSSQL_001,Database,Microsoft SQL Server localhost connection,Connection established,Named Pipes [5] Server not accessible,BLOCKED,Prerequisite: start SQL Server Express service or provide Azure SQL URI,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_INT_001,Email Integration,Google Gmail SMTP verification,Transporter verifies successfully,Transporter connected and verified successfully,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_INT_002,SMS Integration,Fast2SMS delivery test,SMS dispatched to mobile,Fast2SMS returned 414 IP restriction (Dev API),BLOCKED,Prerequisite: whitelist server IP on fast2sms.com portal,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_INT_003,Maps Integration,Google Maps API key validation,Key configured,Key configured in .env and client,BLOCKED,Prerequisite: enable billing on Google Cloud Console for geocoding quota,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_RBAC_001,Frontend RBAC,Store Admin route guard (/store-admin/dashboard),Redirects unauthenticated user to /login,Redirects correctly to /login,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log
+TC_RBAC_002,Frontend RBAC,Inventory Manager route guard (/inventory-manager/dashboard),Redirects unauthenticated user to /login,Wrapped in RoleProtectedRoute; redirects correctly to /login,PASS,audit_phase_1/PHASE_1_EVIDENCE/frontend_build.log
+TC_RBAC_003,Frontend RBAC,Delivery Manager route guard (/delivery-manager/dashboard),Redirects unauthenticated user to /login,Wrapped in RoleProtectedRoute; redirects correctly to /login,PASS,audit_phase_1/PHASE_1_EVIDENCE/frontend_build.log
+TC_RBAC_004,Frontend RBAC,Delivery Partner route guard (/delivery-partner/dashboard),Redirects unauthenticated user to /login,Redirects correctly to /login,PASS,audit_phase_1/PHASE_1_EVIDENCE/backend_api_tests.log

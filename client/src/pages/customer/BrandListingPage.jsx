@@ -287,7 +287,7 @@ export const BrandListingPage = () => {
       </div>
 
       <main className="max-w-[1440px] mx-auto px-4 sm:px-8 py-8 space-y-10 w-full flex-1">
-        
+
         {/* ════════════════════════════════════════════════════════════════
             1. LUXURY BRAND HERO BANNER & OFFICIAL LINK
             ════════════════════════════════════════════════════════════════ */}
@@ -297,7 +297,7 @@ export const BrandListingPage = () => {
           <div className="absolute bottom-0 left-10 w-80 h-80 bg-radial from-[#F4B942]/10 via-transparent to-transparent blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            
+
             {/* Left: Brand Identity & Verification */}
             <div className="space-y-3 max-w-2xl">
               <div className="flex flex-wrap items-center gap-2.5">
@@ -372,7 +372,7 @@ export const BrandListingPage = () => {
             2. FILTER & SORT TOOLBAR
             ════════════════════════════════════════════════════════════════ */}
         <section className="bg-[#040C1A] border border-white/[0.08] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 text-xs">
-          
+
           {/* Left Filters */}
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="font-bold text-slate-400 flex items-center gap-1.5 mr-1">
@@ -422,19 +422,19 @@ export const BrandListingPage = () => {
             {(selectedCollection !== 'All' ||
               selectedMovement !== 'All' ||
               selectedPriceRange !== 'All') && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCollection('All');
-                  setSelectedMovement('All');
-                  setSelectedPriceRange('All');
-                }}
-                className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 cursor-pointer"
-              >
-                <RotateCcw className="w-3 h-3" />
-                <span>Reset</span>
-              </button>
-            )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCollection('All');
+                    setSelectedMovement('All');
+                    setSelectedPriceRange('All');
+                  }}
+                  className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Reset</span>
+                </button>
+              )}
           </div>
 
           {/* Right Sort & Count */}
@@ -510,9 +510,8 @@ export const BrandListingPage = () => {
                         e.stopPropagation();
                         toggleWishlist(watch);
                       }}
-                      className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-xs transition-colors cursor-pointer shadow-md ${
-                        inWish ? 'text-[#FF35C8]' : 'text-slate-400 hover:text-white'
-                      }`}
+                      className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-xs transition-colors cursor-pointer shadow-md ${inWish ? 'text-[#FF35C8]' : 'text-slate-400 hover:text-white'
+                        }`}
                       title={inWish ? 'Remove from Wishlist' : 'Add to Wishlist'}
                     >
                       <Heart className={`w-3.5 h-3.5 ${inWish ? 'fill-current' : ''}`} />

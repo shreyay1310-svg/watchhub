@@ -1,46 +1,55 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { APP_VERSION } from '../config/version';
+import { activateUpdateAndReload, setOnUpdateFoundCallback } from '../utils/pwaRegister';
 
 const AppUpdateContext = createContext(null);
 
 const DEFAULT_CHANGELOG = [
-  '3D Interactive Global Horology Manufacturing Hub with 60 FPS globe spin',
-  'Real-Time Courier Waypoint Milestone Tracker & AWB Lookup',
-  'Pre-Shipment Pick & Pack Workstation with Barcode Scanning',
-  'Customer Support Helpdesk with Instant UPI Refund Authorizations',
-  'Curated 2026 Swiss Haute Horlogerie catalog with 28+ world brands'
+  'Inside Watchmaking: 9-stage interactive mechanical watch assembly cinematic video',
+  'High-resolution, uncropped luxury watch catalog assets across all collections',
+  'Progressive Web App (PWA) with offline fallback and standalone app installation',
+  'Enterprise SEO suite with Schema.org JSON-LD microdata and automated XML Sitemap',
+  'Real-time Service Worker version update detection and seamless asset migration',
 ];
 
-// Helper to strictly detect if running inside the Android APK
 export const isRunningInApk = () => {
   if (typeof window === 'undefined') return false;
-
-  // 1. Android Native JavascriptInterface injected by MainActivity.java
   if (window.AndroidInstaller) return true;
-
-  // 2. Custom User-Agent tag added by WatchHub Android APK WebSettings
   if (typeof navigator !== 'undefined' && /WatchHubNativeApp/i.test(navigator.userAgent)) {
     return true;
   }
-
-  // 3. Android Standalone WebView checks
   const isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
   const isWebView = isAndroid && (/(wv|\.0\.0\.0)/i.test(navigator.userAgent) || window.matchMedia('(display-mode: standalone)').matches);
   if (isWebView && window.AndroidInstaller) return true;
-
-  // 4. Explicit query parameter for debugging APK mode (?app=apk or #apk)
   if (typeof window !== 'undefined' && (window.location.search.includes('source=apk') || window.location.hash.includes('apk'))) {
     return true;
   }
-
   return false;
+};
+
+// Compare two semantic version strings: returns 1 if v1 > v2, -1 if v1 < v2, 0 if equal
+export const compareSemVer = (v1, v2) => {
+  if (!v1 || !v2) return 0;
+  const p1 = v1.replace(/^v/i, '').split('.').map((n) => parseInt(n, 10) || 0);
+  const p2 = v2.replace(/^v/i, '').split('.').map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+    const num1 = p1[i] || 0;
+    const num2 = p2[i] || 0;
+    if (num1 > num2) return 1;
+    if (num1 < num2) return -1;
+  }
+  return 0;
 };
 
 export const AppUpdateProvider = ({ children }) => {
   const [currentVersion, setCurrentVersion] = useState(() => {
-    return localStorage.getItem('watchhub_app_version') || '1.0.0';
+    return localStorage.getItem('watchhub_app_version') || APP_VERSION;
   });
-  const [latestVersion, setLatestVersion] = useState('1.1.0');
+  const [latestVersion, setLatestVersion] = useState(APP_VERSION);
+  const [minimumVersion, setMinimumVersion] = useState('1.0.0');
+  const [forceUpdate, setForceUpdate] = useState(false);
+  const [releaseDate, setReleaseDate] = useState('2026-11-18');
   const [hasUpdate, setHasUpdate] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -48,21 +57,27 @@ export const AppUpdateProvider = ({ children }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloadComplete, setDownloadComplete] = useState(false);
-  const [changelog, setChangelog] = useState(DEFAULT_CHANGELOG);
+  const [releaseNotes, setReleaseNotes] = useState(DEFAULT_CHANGELOG);
   const [apkDownloadUrl, setApkDownloadUrl] = useState('/downloads/WatchHub-latest.apk');
   const [fileSize, setFileSize] = useState('12.8 MB');
   const [statusMessage, setStatusMessage] = useState('');
+  const [pwaWorkerWaiting, setPwaWorkerWaiting] = useState(false);
 
-  // Check version on mount ONLY if running inside the Android APK!
+  // Hook into Service Worker update found callback
   useEffect(() => {
-    // If running in regular web browser on PC/Laptop or Mobile Chrome, NEVER auto-open the popup!
-    if (!isRunningInApk()) {
-      return;
-    }
+    setOnUpdateFoundCallback(() => {
+      console.log('[AppUpdate] New PWA service worker installed in background.');
+      setPwaWorkerWaiting(true);
+      setHasUpdate(true);
+      setShowUpdateModal(true);
+    });
+  }, []);
 
+  // Check version on mount
+  useEffect(() => {
     const timer = setTimeout(() => {
       checkForUpdates(false);
-    }, 1500);
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -74,17 +89,27 @@ export const AppUpdateProvider = ({ children }) => {
     try {
       const res = await axios.get(`/api/app/version?current=${currentVersion}`).catch(() => null);
 
-      if (res && res.data && res.data.latestVersion) {
-        const serverVersion = res.data.latestVersion;
-        setLatestVersion(serverVersion);
-        if (res.data.changelog) setChangelog(res.data.changelog);
-        if (res.data.apkUrl) setApkDownloadUrl(res.data.apkUrl);
-        if (res.data.fileSize) setFileSize(res.data.fileSize);
+      if (res && res.data) {
+        const serverVersion = res.data.version || res.data.latestVersion || APP_VERSION;
+        const minVer = res.data.minimumVersion || '1.0.0';
+        const isForced = !!res.data.forceUpdate || compareSemVer(currentVersion, minVer) < 0;
 
-        if (serverVersion !== currentVersion) {
+        setLatestVersion(serverVersion);
+        setMinimumVersion(minVer);
+        setForceUpdate(isForced);
+        if (res.data.releaseDate) setReleaseDate(res.data.releaseDate);
+        if (res.data.releaseNotes) setReleaseNotes(res.data.releaseNotes);
+        if (res.data.apkUrl) setApkDownloadUrl(res.data.apkUrl);
+
+        // Check if an upgrade is available (serverVersion > currentVersion)
+        const updateAvailable = compareSemVer(serverVersion, currentVersion) > 0;
+
+        if (updateAvailable || isForced) {
           setHasUpdate(true);
-          // STRICT RULE: Only show update popup if inside Android APK, or if user explicitly clicked "Check for Updates" manually
-          if (isRunningInApk() || manual) {
+          const isRemindedLater = sessionStorage.getItem(`watchhub_remind_later_${serverVersion}`);
+
+          // Always show if forced, or if manually triggered, or if not snoozed for current session
+          if (isForced || manual || !isRemindedLater) {
             setShowUpdateModal(true);
           }
           setStatusMessage(`New version v${serverVersion} available!`);
@@ -95,36 +120,45 @@ export const AppUpdateProvider = ({ children }) => {
             alert(`✅ You are using the latest version of WatchHub (v${currentVersion}). No update required.`);
           }
         }
-      } else {
-        // Fallback simulation check
-        if (latestVersion !== currentVersion) {
-          setHasUpdate(true);
-          if (isRunningInApk() || manual) {
-            setShowUpdateModal(true);
-          }
-          setStatusMessage(`New version v${latestVersion} available!`);
-        } else {
-          setHasUpdate(false);
-          setStatusMessage(`WatchHub is up to date (v${currentVersion})`);
-          if (manual) {
-            alert(`✅ You are using the latest version of WatchHub (v${currentVersion}). No update required.`);
-          }
-        }
       }
     } catch (err) {
-      console.warn('Version check error:', err);
+      console.warn('[AppUpdate] Version check failed:', err);
     } finally {
       setIsChecking(false);
     }
   };
 
-  // Trigger Download & In-App APK Upgrade
-  const downloadAndInstallUpdate = () => {
+  // Perform Update (Web PWA or Native APK)
+  const performUpdate = () => {
+    // 1. If running inside Android APK, execute native APK installer
+    if (isRunningInApk()) {
+      downloadAndInstallApk();
+      return;
+    }
+
+    // 2. If running as Web PWA / Browser, activate waiting service worker and refresh
+    setIsDownloading(true);
+    setStatusMessage('Activating latest WatchHub build...');
+
+    // Small delay for clean visual feedback
+    setTimeout(() => {
+      localStorage.setItem('watchhub_app_version', latestVersion);
+      setCurrentVersion(latestVersion);
+      setHasUpdate(false);
+      setShowUpdateModal(false);
+      setIsDownloading(false);
+
+      // Trigger Service Worker activation
+      activateUpdateAndReload();
+    }, 800);
+  };
+
+  // Trigger Download & In-App APK Upgrade (for Android wrapper)
+  const downloadAndInstallApk = () => {
     setIsDownloading(true);
     setDownloadProgress(0);
     setDownloadComplete(false);
 
-    // Simulate smooth download progress
     const interval = setInterval(() => {
       setDownloadProgress((prev) => {
         if (prev >= 98) {
@@ -132,9 +166,7 @@ export const AppUpdateProvider = ({ children }) => {
           setDownloadComplete(true);
           setIsDownloading(false);
 
-          // Trigger physical APK download & Android Package Installer intent
           triggerApkDownloadAndInstall();
-
           return 100;
         }
         const increment = Math.floor(Math.random() * 14) + 8;
@@ -144,7 +176,6 @@ export const AppUpdateProvider = ({ children }) => {
   };
 
   const triggerApkDownloadAndInstall = () => {
-    // 1. Download file via anchor
     const link = document.createElement('a');
     link.href = apkDownloadUrl;
     link.download = 'WatchHub-update.apk';
@@ -152,7 +183,6 @@ export const AppUpdateProvider = ({ children }) => {
     link.click();
     document.body.removeChild(link);
 
-    // 2. If running inside Android WebView native bridge, trigger native installer intent
     if (window.AndroidInstaller && typeof window.AndroidInstaller.installApk === 'function') {
       try {
         window.AndroidInstaller.installApk('WatchHub-update.apk');
@@ -161,15 +191,22 @@ export const AppUpdateProvider = ({ children }) => {
       }
     }
 
-    // Update local storage version to latest
     localStorage.setItem('watchhub_app_version', latestVersion);
     setCurrentVersion(latestVersion);
     setHasUpdate(false);
   };
 
-  const simulateNewVersionRelease = (newVer = '1.2.0') => {
+  const snoozeUpdate = () => {
+    if (forceUpdate) return; // Cannot snooze mandatory updates
+    sessionStorage.setItem(`watchhub_remind_later_${latestVersion}`, 'true');
+    setShowUpdateModal(false);
+  };
+
+  const simulateNewVersionRelease = (newVer = '1.2.0', notes = null, mandatory = false) => {
     setLatestVersion(newVer);
     setHasUpdate(true);
+    setForceUpdate(mandatory);
+    if (notes) setReleaseNotes(notes);
     setIsManualTrigger(true);
     setShowUpdateModal(true);
   };
@@ -179,6 +216,9 @@ export const AppUpdateProvider = ({ children }) => {
       value={{
         currentVersion,
         latestVersion,
+        minimumVersion,
+        forceUpdate,
+        releaseDate,
         hasUpdate,
         isChecking,
         showUpdateModal,
@@ -187,13 +227,14 @@ export const AppUpdateProvider = ({ children }) => {
         isDownloading,
         downloadProgress,
         downloadComplete,
-        changelog,
+        releaseNotes,
         apkDownloadUrl,
         fileSize,
         statusMessage,
         isApk: isRunningInApk(),
         checkForUpdates,
-        downloadAndInstallUpdate,
+        performUpdate,
+        snoozeUpdate,
         simulateNewVersionRelease,
       }}
     >

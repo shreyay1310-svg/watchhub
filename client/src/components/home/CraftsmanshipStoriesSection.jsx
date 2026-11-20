@@ -5,6 +5,9 @@ import {
   Crown,
   BookOpen,
   ArrowRight,
+  ExternalLink,
+  Sparkles,
+  Play,
 } from 'lucide-react';
 import { EDITORIAL_STORIES } from '../../data/editorialStoriesData';
 
@@ -13,33 +16,106 @@ export const CraftsmanshipStoriesSection = () => {
   // Card 1 starts highlighted with glowing cyan border matching the reference screenshot
   const [activeCardId, setActiveCardId] = useState('craftsmanship');
 
+  // Exact YouTube Shorts video configuration
+  const YOUTUBE_SHORTS_ID = 'yzfdv0Tfkz0';
+  const YOUTUBE_SHORTS_URL = 'https://youtube.com/shorts/yzfdv0Tfkz0?si=7D9eQ5hAnliytgMW';
+  const EMBED_URL = `https://www.youtube-nocookie.com/embed/${YOUTUBE_SHORTS_ID}?rel=0&modestbranding=1&playsinline=1`;
+
   return (
-    <section className="space-y-10 select-none py-6">
-      {/* 1. CENTERED SECTION HEADER matching reference screenshot */}
+    <section className="space-y-12 select-none py-8" id="watchmaking-craftsmanship">
+      {/* ── 1. SECTION HEADER ── */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        {/* Top Label with Gold Flourishes */}
+        {/* Top Gold Flourish Eyebrow */}
         <div className="flex items-center justify-center gap-3">
-          <div className="w-10 sm:w-14 h-[1px] bg-gradient-to-r from-transparent via-[#E9B94F]/60 to-[#E9B94F]" />
+          <div className="w-10 sm:w-16 h-[1px] bg-gradient-to-r from-transparent via-[#E9B94F]/60 to-[#E9B94F]" />
           <span className="text-[#E9B94F] text-xs font-serif">✦</span>
-          <span className="text-[10.5px] sm:text-[11.5px] font-bold text-[#E9B94F] tracking-[0.28em] uppercase font-serif">
-            WATCH THROUGH TIME
+          <span className="text-[10px] sm:text-[11px] font-bold text-[#E9B94F] tracking-[0.3em] uppercase font-serif">
+            BEHIND THE CRAFTSMANSHIP
           </span>
           <span className="text-[#E9B94F] text-xs font-serif">✦</span>
-          <div className="w-10 sm:w-14 h-[1px] bg-gradient-to-l from-transparent via-[#E9B94F]/60 to-[#E9B94F]" />
+          <div className="w-10 sm:w-16 h-[1px] bg-gradient-to-l from-transparent via-[#E9B94F]/60 to-[#E9B94F]" />
         </div>
 
-        {/* Main Heading with Champagne Gold Accent */}
+        {/* Section Heading */}
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-snug">
-          Craftsmanship, <span className="text-[#E9B94F]">Heritage & Stories</span>
+          THE ART OF <span className="text-[#E9B94F]">WATCHMAKING</span>
         </h2>
 
         {/* Subtitle */}
         <p className="text-xs sm:text-sm text-[#94A3B8] max-w-xl mx-auto font-light leading-relaxed">
-          Dive into the artistry, legacy and timeless stories behind the world's most iconic watches.
+          Precision, patience and timeless craftsmanship.
         </p>
       </div>
 
-      {/* 2. THREE PREMIUM STORY CARDS (Single Row on Desktop) */}
+      {/* ── 2. FEATURED 9:16 YOUTUBE SHORTS VIDEO SHOWCASE ── */}
+      <div className="max-w-4xl mx-auto px-2 sm:px-4">
+        <div className="relative rounded-3xl bg-gradient-to-b from-[#0B1528] via-[#060D1A] to-[#030712] border border-[#E9B94F]/25 hover:border-[#E9B94F]/45 p-6 sm:p-8 lg:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(233,185,79,0.08)] transition-all duration-300">
+          {/* Subtle Ambient Background Pedestal Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-[#E9B94F]/5 blur-3xl rounded-full pointer-events-none" />
+
+          {/* Video Metadata Header */}
+          <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8 space-y-2.5 relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#E9B94F]/10 text-[#E9B94F] border border-[#E9B94F]/30 shadow-sm">
+              <Sparkles className="w-3 h-3 text-[#E9B94F]" />
+              <span>ATELIER CINEMATIC REEL • YOUTUBE SHORTS</span>
+            </div>
+
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-serif font-bold text-white tracking-tight">
+              Inside the Art of Watchmaking
+            </h3>
+
+            <p className="text-xs sm:text-sm text-[#94A3B8] font-light leading-relaxed max-w-lg mx-auto">
+              Discover the intricate craftsmanship, precision engineering and attention to detail behind the creation of fine timepieces.
+            </p>
+          </div>
+
+          {/* Centered Responsive 9:16 Video Player Container */}
+          <div className="flex flex-col items-center justify-center relative z-10">
+            <div className="w-full max-w-[290px] sm:max-w-[340px] md:max-w-[360px] aspect-[9/16] rounded-2xl sm:rounded-3xl overflow-hidden bg-black border-2 border-[#E9B94F]/35 shadow-[0_15px_45px_rgba(0,0,0,0.9),0_0_30px_rgba(233,185,79,0.18)] relative group">
+              {/* YouTube Embed iframe */}
+              <iframe
+                src={EMBED_URL}
+                title="Inside the Art of Watchmaking"
+                loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Fallback & External Link Bar */}
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
+              <a
+                href={YOUTUBE_SHORTS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold text-[#E9B94F] bg-[#E9B94F]/10 hover:bg-[#E9B94F]/20 border border-[#E9B94F]/40 transition-all duration-300 shadow-[0_0_15px_rgba(233,185,79,0.12)] hover:shadow-[0_0_25px_rgba(233,185,79,0.25)] group/yt cursor-pointer"
+              >
+                <Play className="w-3.5 h-3.5 fill-[#E9B94F] text-[#E9B94F]" />
+                <span>Open Original on YouTube Shorts</span>
+                <ExternalLink className="w-3.5 h-3.5 transition-transform duration-300 group-hover/yt:translate-x-0.5 group-hover/yt:-translate-y-0.5" />
+              </a>
+
+              <span className="text-[11px] text-[#64748B] font-light">
+                User-controlled playback &bull; 9:16 HD Vertical Format
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. ATELIER COMPANION STORIES DIVIDER ── */}
+      <div className="pt-4 text-center max-w-xl mx-auto space-y-2">
+        <div className="flex items-center justify-center gap-3">
+          <div className="w-8 h-[1px] bg-white/10" />
+          <span className="text-[10px] font-bold text-[#94A3B8] tracking-[0.25em] uppercase font-serif">
+            EXPLORE ATELIER HERITAGE &amp; STORIES
+          </span>
+          <div className="w-8 h-[1px] bg-white/10" />
+        </div>
+      </div>
+
+      {/* ── 4. THREE PREMIUM STORY CARDS (Preserved Exact Functionality) ── */}
       <div 
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7"
         onMouseLeave={() => setActiveCardId('craftsmanship')}

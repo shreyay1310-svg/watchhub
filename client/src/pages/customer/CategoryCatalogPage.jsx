@@ -8,29 +8,12 @@ import { useCurrencyLanguage } from '../../context/CurrencyLanguageContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
 import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 import { NAVBAR_PAGES_CONFIG } from '../../data/navbarPagesConfig';
+import CatalogQuickViewModal from '../../components/catalog/CatalogQuickViewModal';
+import CatalogMobileFilterDrawer from '../../components/catalog/CatalogMobileFilterDrawer';
 import {
-  Heart,
-  ShoppingCart,
-  Star,
-  SlidersHorizontal,
-  ChevronDown,
-  ChevronRight,
-  RotateCcw,
-  Sparkles,
-  ShieldCheck,
-  Truck,
-  Award,
-  Zap,
-  Check,
-  Eye,
-  X,
-  ArrowRight,
-  Filter,
-  Layers,
-  Sparkle,
-  Compass,
-  Grid3X3,
-  LayoutGrid
+  Heart, ShoppingCart, Star, SlidersHorizontal, ChevronDown, ChevronRight, RotateCcw,
+  Sparkles, ShieldCheck, Truck, Award, Zap, Check, Eye, X, ArrowRight, Filter,
+  Layers, Sparkle, Compass, Grid3X3, LayoutGrid
 } from 'lucide-react';
 
 export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
@@ -243,9 +226,8 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
             <Link
               to={config.route}
               onClick={() => handleSubChange('all')}
-              className={`transition-colors ${
-                selectedSub === 'all' ? 'text-[#F4B942] font-semibold' : 'hover:text-[#00CFFF]'
-              }`}
+              className={`transition-colors ${selectedSub === 'all' ? 'text-[#F4B942] font-semibold' : 'hover:text-[#00CFFF]'
+                }`}
             >
               {config.badge}
             </Link>
@@ -313,11 +295,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                       key={sub.id}
                       type="button"
                       onClick={() => handleSubChange(sub.id, sub.link)}
-                      className={`p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between group ${
-                        isActive
-                          ? 'bg-gradient-to-r from-[#00CFFF]/20 to-[#1265FF]/20 border-[#00CFFF] text-white shadow-[0_0_20px_rgba(0,207,255,0.25)]'
-                          : 'bg-[#040C1A]/80 border-white/10 text-[#A6B1C8] hover:border-[#F4B942]/50 hover:text-white hover:bg-white/5'
-                      }`}
+                      className={`p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between group ${isActive
+                        ? 'bg-gradient-to-r from-[#00CFFF]/20 to-[#1265FF]/20 border-[#00CFFF] text-white shadow-[0_0_20px_rgba(0,207,255,0.25)]'
+                        : 'bg-[#040C1A]/80 border-white/10 text-[#A6B1C8] hover:border-[#F4B942]/50 hover:text-white hover:bg-white/5'
+                        }`}
                     >
                       <span className="text-xl mb-1.5 block group-hover:scale-110 transition-transform">
                         {sub.icon}
@@ -336,7 +317,7 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
         {/* 4. Main Two-Column Layout: Left Filters + Right Product Grid */}
         <section className="max-w-[1440px] mx-auto px-4 sm:px-8 pt-8">
           <div className="flex flex-col lg:flex-row gap-8 items-start">
-            
+
             {/* ── LEFT DESKTOP FILTER SIDEBAR ── */}
             <aside className="hidden lg:block w-72 flex-shrink-0 space-y-6 bg-[#040C1A]/80 backdrop-blur-md border border-white/10 rounded-2xl p-5 sticky top-28">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
@@ -367,11 +348,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                       key={sub.id}
                       type="button"
                       onClick={() => handleSubChange(sub.id, sub.link)}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors cursor-pointer ${
-                        selectedSub === sub.id
-                          ? 'bg-[#00CFFF]/20 text-[#00CFFF] font-bold border border-[#00CFFF]/30'
-                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                      }`}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors cursor-pointer ${selectedSub === sub.id
+                        ? 'bg-[#00CFFF]/20 text-[#00CFFF] font-bold border border-[#00CFFF]/30'
+                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        }`}
                     >
                       <span className="flex items-center gap-2">
                         <span>{sub.icon}</span>
@@ -393,11 +373,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                     <button
                       type="button"
                       onClick={() => handleBrandChange('all')}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs flex items-center justify-between cursor-pointer ${
-                        selectedBrand === 'all'
-                          ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold'
-                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                      }`}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs flex items-center justify-between cursor-pointer ${selectedBrand === 'all'
+                        ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold'
+                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        }`}
                     >
                       <span>All Brands</span>
                       <span className="text-[10px] text-gray-500">{baseCategoryProducts.length}</span>
@@ -407,11 +386,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                         key={brand}
                         type="button"
                         onClick={() => handleBrandChange(brand)}
-                        className={`w-full text-left px-3 py-1.5 rounded-lg text-xs flex items-center justify-between cursor-pointer ${
-                          selectedBrand.toLowerCase() === brand.toLowerCase()
-                            ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold border border-[#F4B942]/30'
-                            : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                        }`}
+                        className={`w-full text-left px-3 py-1.5 rounded-lg text-xs flex items-center justify-between cursor-pointer ${selectedBrand.toLowerCase() === brand.toLowerCase()
+                          ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold border border-[#F4B942]/30'
+                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                          }`}
                       >
                         <span className="truncate">{brand}</span>
                         <span className="text-[10px] text-gray-500">{count}</span>
@@ -438,11 +416,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                       key={p.id}
                       type="button"
                       onClick={() => setSelectedPriceRange(p.id)}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg flex items-center justify-between cursor-pointer ${
-                        selectedPriceRange === p.id
-                          ? 'bg-[#00CFFF]/20 text-[#00CFFF] font-bold'
-                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                      }`}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg flex items-center justify-between cursor-pointer ${selectedPriceRange === p.id
+                        ? 'bg-[#00CFFF]/20 text-[#00CFFF] font-bold'
+                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        }`}
                     >
                       <span>{p.label}</span>
                       {selectedPriceRange === p.id && <Check className="w-3.5 h-3.5 text-[#00CFFF]" />}
@@ -469,11 +446,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                       key={m.id}
                       type="button"
                       onClick={() => setSelectedMovement(m.id)}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg flex items-center justify-between cursor-pointer ${
-                        selectedMovement === m.id
-                          ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold'
-                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                      }`}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg flex items-center justify-between cursor-pointer ${selectedMovement === m.id
+                        ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold'
+                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        }`}
                     >
                       <span>{m.label}</span>
                       {selectedMovement === m.id && <Check className="w-3.5 h-3.5 text-[#F4B942]" />}
@@ -498,11 +474,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                       key={r.id}
                       type="button"
                       onClick={() => setSelectedRating(r.id)}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg flex items-center justify-between cursor-pointer ${
-                        selectedRating === r.id
-                          ? 'bg-[#00CFFF]/20 text-[#00CFFF] font-bold'
-                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                      }`}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg flex items-center justify-between cursor-pointer ${selectedRating === r.id
+                        ? 'bg-[#00CFFF]/20 text-[#00CFFF] font-bold'
+                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        }`}
                     >
                       <span>{r.label}</span>
                       {selectedRating === r.id && <Check className="w-3.5 h-3.5 text-[#00CFFF]" />}
@@ -527,10 +502,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
 
             {/* ── RIGHT PRODUCT CONTENT ── */}
             <div className="flex-1 w-full space-y-6">
-              
+
               {/* Toolbar: Count, Mobile Filter Button, Active Pills, Sort & Grid Switcher */}
               <div className="bg-[#040C1A]/80 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                
+
                 {/* Left: Product Count & Mobile Filter Trigger */}
                 <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
                   <button
@@ -578,9 +553,8 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                     <button
                       type="button"
                       onClick={() => setGridCols(3)}
-                      className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
-                        gridCols === 3 ? 'bg-[#00CFFF]/20 text-[#00CFFF]' : 'text-gray-400 hover:text-white'
-                      }`}
+                      className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${gridCols === 3 ? 'bg-[#00CFFF]/20 text-[#00CFFF]' : 'text-gray-400 hover:text-white'
+                        }`}
                       title="3 Columns"
                     >
                       <Grid3X3 className="w-4 h-4" />
@@ -588,9 +562,8 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                     <button
                       type="button"
                       onClick={() => setGridCols(4)}
-                      className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
-                        gridCols === 4 ? 'bg-[#00CFFF]/20 text-[#00CFFF]' : 'text-gray-400 hover:text-white'
-                      }`}
+                      className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${gridCols === 4 ? 'bg-[#00CFFF]/20 text-[#00CFFF]' : 'text-gray-400 hover:text-white'
+                        }`}
                       title="4 Columns"
                     >
                       <LayoutGrid className="w-4 h-4" />
@@ -652,9 +625,8 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
               {/* Product Grid */}
               {filteredProducts.length > 0 ? (
                 <div
-                  className={`grid grid-cols-1 sm:grid-cols-2 ${
-                    gridCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4'
-                  } gap-6`}
+                  className={`grid grid-cols-1 sm:grid-cols-2 ${gridCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4'
+                    } gap-6`}
                 >
                   {paginatedProducts.map((product) => (
                     <div key={product.id} className="relative group">
@@ -714,11 +686,10 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
                         setCurrentPage(pageNum);
                         window.scrollTo({ top: 350, behavior: 'smooth' });
                       }}
-                      className={`w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        currentPage === pageNum
-                          ? 'bg-gradient-to-r from-[#00CFFF] to-[#1265FF] text-white shadow-md shadow-[#00CFFF]/30'
-                          : 'bg-[#040C1A] border border-white/10 text-gray-300 hover:bg-white/5 hover:text-white'
-                      }`}
+                      className={`w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer ${currentPage === pageNum
+                        ? 'bg-gradient-to-r from-[#00CFFF] to-[#1265FF] text-white shadow-md shadow-[#00CFFF]/30'
+                        : 'bg-[#040C1A] border border-white/10 text-gray-300 hover:bg-white/5 hover:text-white'
+                        }`}
                     >
                       {pageNum}
                     </button>
@@ -781,191 +752,27 @@ export const CategoryCatalogPage = ({ pageKey = 'watches' }) => {
       </main>
 
       {/* 7. Mobile Filters Slide-over Drawer */}
-      {mobileFilterOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden animate-fade-in">
-          <div
-            onClick={() => setMobileFilterOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md cursor-pointer"
-          />
-          <div className="relative z-10 w-full max-w-xs bg-[#040A17] border-r border-[#00CFFF]/20 h-full p-5 overflow-y-auto space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <span className="font-bold text-white text-sm">Filters & Refinements</span>
-              <button
-                type="button"
-                onClick={() => setMobileFilterOpen(false)}
-                className="p-1 text-gray-400 hover:text-white cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Mobile Subcategories */}
-            <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-[#A6B1C8] block mb-2">
-                Subcategory
-              </label>
-              <div className="space-y-1">
-                {config.subcategories.map((sub) => (
-                  <button
-                    key={sub.id}
-                    type="button"
-                    onClick={() => {
-                      handleSubChange(sub.id, sub.link);
-                      setMobileFilterOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between ${
-                      selectedSub === sub.id
-                        ? 'bg-[#00CFFF]/20 text-[#00CFFF] font-bold'
-                        : 'text-gray-300 hover:bg-white/5'
-                    }`}
-                  >
-                    <span>
-                      {sub.icon} {sub.label}
-                    </span>
-                    {selectedSub === sub.id && <Check className="w-3.5 h-3.5" />}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Brands */}
-            {availableBrands.length > 0 && (
-              <div className="pt-3 border-t border-white/10">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#A6B1C8] block mb-2">
-                  Brand
-                </label>
-                <div className="space-y-1 max-h-40 overflow-y-auto">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleBrandChange('all');
-                      setMobileFilterOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 rounded-lg text-xs ${
-                      selectedBrand === 'all'
-                        ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold'
-                        : 'text-gray-300'
-                    }`}
-                  >
-                    All Brands ({baseCategoryProducts.length})
-                  </button>
-                  {availableBrands.map(([brand, count]) => (
-                    <button
-                      key={brand}
-                      type="button"
-                      onClick={() => {
-                        handleBrandChange(brand);
-                        setMobileFilterOpen(false);
-                      }}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs flex items-center justify-between ${
-                        selectedBrand.toLowerCase() === brand.toLowerCase()
-                          ? 'bg-[#F4B942]/20 text-[#F4B942] font-bold'
-                          : 'text-gray-300'
-                      }`}
-                    >
-                      <span>{brand}</span>
-                      <span className="text-[10px] text-gray-500">{count}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="pt-4 border-t border-white/10 flex gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  handleResetFilters();
-                  setMobileFilterOpen(false);
-                }}
-                className="flex-1 py-2 rounded-xl bg-white/5 text-xs text-gray-300 hover:text-white"
-              >
-                Reset
-              </button>
-              <button
-                type="button"
-                onClick={() => setMobileFilterOpen(false)}
-                className="flex-1 py-2 rounded-xl bg-[#00CFFF] text-xs font-bold text-black"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CatalogMobileFilterDrawer
+        isOpen={mobileFilterOpen}
+        onClose={() => setMobileFilterOpen(false)}
+        config={config}
+        selectedSub={selectedSub}
+        handleSubChange={handleSubChange}
+        availableBrands={availableBrands}
+        selectedBrand={selectedBrand}
+        handleBrandChange={handleBrandChange}
+        baseCategoryProductsCount={baseCategoryProducts.length}
+        handleResetFilters={handleResetFilters}
+      />
 
       {/* 8. Quick View Modal */}
-      {quickViewProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#040C1A] border border-[#00CFFF]/40 rounded-3xl max-w-2xl w-full p-6 text-white relative shadow-2xl space-y-4">
-            <button
-              onClick={() => setQuickViewProduct(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-              <div className="w-full h-64 bg-gradient-to-b from-[#060D1A] to-[#02060F] rounded-2xl flex items-center justify-center p-4 border border-white/10">
-                <img
-                  src={getProductImage(quickViewProduct)}
-                  alt={getProductAlt(quickViewProduct)}
-                  className="max-h-full max-w-full object-contain filter drop-shadow-2xl"
-                  onError={(e) => {
-                    e.target.src = '/images/products/watch_placeholder.png';
-                  }}
-                />
-              </div>
-
-              <div className="space-y-3">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#F4B942]">
-                  {quickViewProduct.brand} • {quickViewProduct.category}
-                </span>
-                <h3 className="text-lg font-bold font-serif leading-snug">
-                  {quickViewProduct.name}
-                </h3>
-                <div className="flex items-baseline gap-3">
-                  <span className="text-xl font-bold text-[#00CFFF]">
-                    {formatPrice(quickViewProduct.price)}
-                  </span>
-                  {quickViewProduct.originalPrice && (
-                    <span className="text-xs text-gray-500 line-through">
-                      {formatPrice(quickViewProduct.originalPrice)}
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-gray-400 line-clamp-3 leading-relaxed">
-                  {quickViewProduct.description}
-                </p>
-
-                <div className="pt-2 flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      addToCart(quickViewProduct);
-                      setQuickViewProduct(null);
-                    }}
-                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[#00CFFF] to-[#1265FF] text-white font-bold text-xs shadow-md shadow-[#00CFFF]/25 cursor-pointer flex items-center justify-center gap-2 hover:opacity-90"
-                  >
-                    <ShoppingCart className="w-4 h-4" />
-                    <span>Add to Cart</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigate(`/product/${quickViewProduct.id}`);
-                      setQuickViewProduct(null);
-                    }}
-                    className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold cursor-pointer"
-                  >
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <CatalogQuickViewModal
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+        onAddToCart={addToCart}
+        onNavigateDetails={(id) => navigate(`/product/${id}`)}
+        formatPrice={formatPrice}
+      />
 
       {/* 9. Global WatchHub Footer */}
       <Footer />

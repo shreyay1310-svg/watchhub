@@ -12,6 +12,7 @@ import CustomizeAndNewArrivalsSection from '../../components/home/CustomizeAndNe
 import BestSellersSection from '../../components/home/BestSellersSection';
 import CraftsmanshipStoriesSection from '../../components/home/CraftsmanshipStoriesSection';
 import WatchmakingVideoModal from '../../components/home/WatchmakingVideoModal';
+import SEO from '../../components/common/SEO';
 import {
   ShieldCheck,
   Award,
@@ -248,6 +249,12 @@ export const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#020813] text-[#F8FAFC] flex flex-col font-sans selection:bg-[#F4B942] selection:text-black">
+      <SEO
+        title="WatchHub – Luxury Watches, Horology Atelier & Customization"
+        description="India's Premier Luxury Watch E-Commerce & Horology Atelier. Discover authentic Rolex, Omega, Patek Philippe, and Breitling timepieces with interactive 3D customization."
+        canonical="https://watchhub.in/"
+        ogImage="https://watchhub.in/images/hero/hero_rolex_submariner.jpg"
+      />
       <CustomerNavbar />
 
       {/* Toast Alert */}

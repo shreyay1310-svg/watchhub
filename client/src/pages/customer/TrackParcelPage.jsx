@@ -28,6 +28,7 @@ import {
 import { CustomerNavbar } from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import { findTrackingOrder, MOCK_ORDERS } from '../../data/trackingData';
+import DeliveryAlertsModal from '../../components/tracking/DeliveryAlertsModal';
 
 export default function TrackParcelPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -741,126 +742,17 @@ export default function TrackParcelPage() {
       {/* ════════════════════════════════════════════════════════════════
           4. GET DELIVERY UPDATES MODAL (WhatsApp, SMS, Email alerts)
           ════════════════════════════════════════════════════════════════ */}
-      {showUpdatesModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-white/10 overflow-hidden animate-scaleUp">
-            {/* Modal Header */}
-            <div className="bg-[#0B121C] text-white p-5 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-[#D4A84F]/20 border border-[#D4A84F]/40 flex items-center justify-center text-[#D4A84F]">
-                  <Bell className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-sm">Delivery Alerts Subscription</h3>
-                  <p className="text-[11px] text-gray-400">Order: {currentOrder.orderId}</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowUpdatesModal(false)}
-                className="text-gray-400 hover:text-white p-1 rounded-lg"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Modal Form */}
-            <form onSubmit={handleSubscribeUpdates} className="p-5 space-y-4">
-              <p className="text-xs text-[#A6B1C8]">
-                Choose how you would like to receive real-time notifications for milestone updates:
-              </p>
-
-              {/* Notification Channel Checkboxes */}
-              <div className="space-y-2.5">
-                <label className="flex items-center justify-between p-3 rounded-xl border border-white/10 bg-[#0B1022]/80/50 cursor-pointer hover:border-[#D4A84F]">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-lg">💬</span>
-                    <div>
-                      <p className="text-xs font-bold text-[#F8FAFC]">WhatsApp Instant Alerts</p>
-                      <p className="text-[11px] text-[#A6B1C8]">Live milestone updates on WhatsApp</p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={updateChannels.whatsapp}
-                    onChange={(e) =>
-                      setUpdateChannels({ ...updateChannels, whatsapp: e.target.checked })
-                    }
-                    className="w-4 h-4 accent-[#D4A84F] rounded cursor-pointer"
-                  />
-                </label>
-
-                <label className="flex items-center justify-between p-3 rounded-xl border border-white/10 bg-[#0B1022]/80/50 cursor-pointer hover:border-[#D4A84F]">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-lg">📱</span>
-                    <div>
-                      <p className="text-xs font-bold text-[#F8FAFC]">SMS Out-for-Delivery Alerts</p>
-                      <p className="text-[11px] text-[#A6B1C8]">OTP & driver contact when dispatched</p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={updateChannels.sms}
-                    onChange={(e) =>
-                      setUpdateChannels({ ...updateChannels, sms: e.target.checked })
-                    }
-                    className="w-4 h-4 accent-[#D4A84F] rounded cursor-pointer"
-                  />
-                </label>
-
-                <label className="flex items-center justify-between p-3 rounded-xl border border-white/10 bg-[#0B1022]/80/50 cursor-pointer hover:border-[#D4A84F]">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-lg">✉️</span>
-                    <div>
-                      <p className="text-xs font-bold text-[#F8FAFC]">Email Delivery Confirmation</p>
-                      <p className="text-[11px] text-[#A6B1C8]">Official invoice and warranty certificate</p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={updateChannels.email}
-                    onChange={(e) =>
-                      setUpdateChannels({ ...updateChannels, email: e.target.checked })
-                    }
-                    className="w-4 h-4 accent-[#D4A84F] rounded cursor-pointer"
-                  />
-                </label>
-              </div>
-
-              {/* Phone Input */}
-              <div>
-                <label className="block text-xs font-bold text-[#A6B1C8] mb-1">
-                  Mobile Number
-                </label>
-                <input
-                  type="tel"
-                  value={updatePhone}
-                  onChange={(e) => setUpdatePhone(e.target.value)}
-                  placeholder="+91 98765 43210"
-                  className="w-full h-10 px-3 text-xs rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#D4A84F]"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={updateSubscribed}
-                  className="w-full h-11 bg-[#D4A84F] hover:bg-[#c3973e] text-black font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
-                >
-                  {updateSubscribed ? (
-                    <span className="flex items-center gap-1.5">
-                      <Check className="w-4 h-4" /> Preferences Saved!
-                    </span>
-                  ) : (
-                    <span>Save Alert Preferences</span>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <DeliveryAlertsModal
+        isOpen={showUpdatesModal}
+        onClose={() => setShowUpdatesModal(false)}
+        currentOrder={currentOrder}
+        handleSubscribeUpdates={handleSubscribeUpdates}
+        updateChannels={updateChannels}
+        setUpdateChannels={setUpdateChannels}
+        updatePhoneInput={updatePhone}
+        setUpdatePhoneInput={setUpdatePhone}
+        subscribedSuccess={updateSubscribed}
+      />
 
       <Footer />
     </div>

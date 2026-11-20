@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import SEO from '../../components/common/SEO';
 import {
   Mail,
   Lock,
@@ -23,11 +24,14 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { useAuth, ROLES } from '../../context/AuthContext';
+import { getRoleDashboardPath } from '../../routes/ProtectedRoute';
 import luxuryHeroPanel from '../../assets/images/luxury-hero-panel.jpg';
 import GoldenStarsBackground from '../../components/common/GoldenStarsBackground';
+import GoogleAuthModal from '../../components/auth/GoogleAuthModal';
+import ForgotPasswordModal from '../../components/auth/ForgotPasswordModal';
 
 export const LoginPage = () => {
-  const { login, loginWithGoogle, resetPassword } = useAuth();
+  const { login, loginWithGoogle, resetPassword, user, isAuthenticated, authLoading } = useAuth();
   const [account, setAccount] = useState('customer@watchhub.com');
   const [password, setPassword] = useState('Admin@123');
   const [showPassword, setShowPassword] = useState(false);
@@ -36,6 +40,19 @@ export const LoginPage = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // If already authenticated, redirect to destination or role dashboard immediately
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && user) {
+      const fromPath = location.state?.from?.pathname;
+      if (fromPath && fromPath !== '/login') {
+        navigate(fromPath, { replace: true });
+      } else {
+        navigate(getRoleDashboardPath(user.role), { replace: true });
+      }
+    }
+  }, [authLoading, isAuthenticated, user, location, navigate]);
 
   // Modals state
   const [showGoogleModal, setShowGoogleModal] = useState(false);
@@ -170,21 +187,12 @@ export const LoginPage = () => {
     if (res.success) {
       setSuccessMessage(`Welcome back! Logged in as ${res.user.name || selectedRole}.`);
       setTimeout(() => {
-        const userRole = res.user.role;
-        if (userRole === ROLES.INVENTORY_MANAGER || userRole === 'Inventory Manager') {
-          navigate('/inventory-manager/dashboard');
-        } else if (userRole === ROLES.DELIVERY_MANAGER || userRole === 'Delivery Manager') {
-          navigate('/delivery-manager/dashboard');
-        } else if (userRole === ROLES.DELIVERY_PARTNER || userRole === 'Delivery Partner') {
-          navigate('/delivery-partner/dashboard');
-        } else if (userRole === ROLES.CUSTOMER_SUPPORT || userRole === 'Customer Support Executive' || userRole === 'Customer Support') {
-          navigate('/customer-support/dashboard');
-        } else if (userRole === ROLES.SUPER_ADMIN || userRole === 'Super Admin') {
-          navigate('/super-admin/dashboard');
-        } else if (userRole === ROLES.STORE_ADMIN || userRole === 'Store Admin') {
-          navigate('/store-admin/dashboard');
+        const fromPath = location.state?.from?.pathname;
+        if (fromPath && fromPath !== '/login') {
+          navigate(fromPath, { replace: true });
         } else {
-          navigate('/');
+          const dest = getRoleDashboardPath(res.user.role);
+          navigate(dest, { replace: true });
         }
       }, 700);
     } else {
@@ -212,7 +220,12 @@ export const LoginPage = () => {
     if (res.success) {
       setSuccessMessage(`Google Account Linked! Welcome back, ${accountName}.`);
       setTimeout(() => {
-        navigate('/');
+        const fromPath = location.state?.from?.pathname;
+        if (fromPath && fromPath !== '/login') {
+          navigate(fromPath, { replace: true });
+        } else {
+          navigate(getRoleDashboardPath(res.user?.role || ROLES.CUSTOMER), { replace: true });
+        }
       }, 700);
     }
   };
@@ -353,6 +366,7 @@ export const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-[#050912] flex items-center justify-center p-3 sm:p-6 lg:p-10 font-poppins selection:bg-[#C59341] selection:text-white relative overflow-hidden">
+      <SEO title="Secure Sign In | WatchHub Luxury Horology" noindex={true} />
       {/* ── Premium Animated Golden Stars Background (Pointer-events: none, z-0) ── */}
       <GoldenStarsBackground />
 
@@ -565,164 +579,27 @@ export const LoginPage = () => {
 
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════
-          GOOGLE OAUTH ACCOUNT SELECTION & LINKING MODAL
-          ════════════════════════════════════════════════════════════════ */}
-      {showGoogleModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in font-poppins">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-gray-200 relative animate-scale-up">
-            <button
-              onClick={() => {
-                setShowGoogleModal(false);
-                setShowAddGoogleAccount(false);
-                setGoogleAddError('');
-              }}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            {/* Google Brand Header */}
-            <div className="flex items-center gap-2.5 mb-1.5">
-              <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-              </svg>
-              <h4 className="font-bold text-gray-900 text-base">Sign in with Google</h4>
-            </div>
-            <p className="text-xs text-gray-500 mb-4">Choose an account to link with WatchHub</p>
-
-            {googleLoading ? (
-              <div className="py-10 flex flex-col items-center justify-center gap-3">
-                <RefreshCw className="w-8 h-8 text-[#4285F4] animate-spin" />
-                <span className="text-xs font-semibold text-gray-700">Linking Google Account...</span>
-                <span className="text-[11px] text-gray-400">Verifying secure OAuth credentials</span>
-              </div>
-            ) : (
-              <div className="space-y-2.5">
-                {/* List of Connected Google Accounts */}
-                <div className="space-y-2 max-h-56 overflow-y-auto pr-0.5">
-                  {googleAccounts.map((acc) => (
-                    <button
-                      key={acc.id}
-                      onClick={() => handleGoogleSelect(acc.name, acc.email)}
-                      className="w-full flex items-center justify-between p-2.5 sm:p-3 rounded-2xl border border-gray-200/90 hover:bg-[#F8FAFD] hover:border-[#4285F4]/50 transition-all text-left cursor-pointer group shadow-2xs"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div
-                          className="w-9 h-9 rounded-full text-white flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0"
-                          style={{ backgroundColor: acc.avatarBg || '#4285F4' }}
-                        >
-                          {acc.initial || acc.name[0]}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-gray-900 truncate group-hover:text-[#1a73e8] transition-colors">
-                            {acc.name}
-                          </p>
-                          <p className="text-[11px] text-gray-500 truncate">{acc.email}</p>
-                        </div>
-                      </div>
-                      <span className="text-[10px] text-gray-400 bg-gray-100 group-hover:bg-[#E8F0FE] group-hover:text-[#1967D2] px-2 py-0.5 rounded-full font-medium transition-colors flex-shrink-0 ml-2">
-                        {acc.badge || 'Google'}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Add/Link Another Google Account Form */}
-                {showAddGoogleAccount ? (
-                  <form onSubmit={handleAddNewGoogleAccount} className="p-3.5 bg-gray-50 rounded-2xl border border-gray-200/90 space-y-2.5 text-xs animate-fade-in">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-gray-800 text-[11px] flex items-center gap-1.5">
-                        <UserPlus className="w-3.5 h-3.5 text-[#4285F4]" />
-                        Link Another Google Account
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowAddGoogleAccount(false);
-                          setGoogleAddError('');
-                        }}
-                        className="text-gray-400 hover:text-gray-600 text-xs"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-
-                    {googleAddError && (
-                      <p className="text-[11px] text-rose-600 bg-rose-50 p-1.5 rounded-lg border border-rose-200">{googleAddError}</p>
-                    )}
-
-                    <div>
-                      <label className="block text-[11px] font-semibold text-gray-600 mb-1">Your Full Name</label>
-                      <input
-                        type="text"
-                        value={newGoogleName}
-                        onChange={(e) => setNewGoogleName(e.target.value)}
-                        placeholder="e.g. Vikram Malhotra"
-                        className="w-full h-9 px-3 rounded-xl border border-gray-300 text-xs outline-none focus:border-[#4285F4] bg-white"
-                        required
-                        autoFocus
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-semibold text-gray-600 mb-1">Google Email Address</label>
-                      <input
-                        type="email"
-                        value={newGoogleEmail}
-                        onChange={(e) => setNewGoogleEmail(e.target.value)}
-                        placeholder="e.g. yourname@gmail.com"
-                        className="w-full h-9 px-3 rounded-xl border border-gray-300 text-xs outline-none focus:border-[#4285F4] bg-white"
-                        required
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full h-9 bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold rounded-xl text-xs shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Link & Continue with this Account</span>
-                    </button>
-                  </form>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setShowAddGoogleAccount(true)}
-                    className="w-full flex items-center gap-3 p-3 rounded-2xl border border-dashed border-gray-300 hover:border-[#4285F4] hover:bg-blue-50/40 text-gray-700 transition-all text-left text-xs font-medium cursor-pointer"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                      <Plus className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800">Use another Google account</p>
-                      <p className="text-[10.5px] text-gray-500">Link your personal Gmail or Google Workspace</p>
-                    </div>
-                  </button>
-                )}
-
-                {/* Footer security notes */}
-                <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
-                  <span className="flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Google OAuth 2.0 Verified
-                  </span>
-                  <a
-                    href="https://accounts.google.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#4285F4] hover:underline"
-                  >
-                    accounts.google.com
-                  </a>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* GOOGLE OAUTH ACCOUNT SELECTION & LINKING MODAL */}
+      <GoogleAuthModal
+        isOpen={showGoogleModal}
+        onClose={() => {
+          setShowGoogleModal(false);
+          setShowAddGoogleAccount(false);
+          setGoogleAddError('');
+        }}
+        googleLoading={googleLoading}
+        googleAccounts={googleAccounts}
+        handleGoogleSelect={handleGoogleSelect}
+        showAddGoogleAccount={showAddGoogleAccount}
+        setShowAddGoogleAccount={setShowAddGoogleAccount}
+        googleAddError={googleAddError}
+        setGoogleAddError={setGoogleAddError}
+        newGoogleName={newGoogleName}
+        setNewGoogleName={setNewGoogleName}
+        newGoogleEmail={newGoogleEmail}
+        setNewGoogleEmail={setNewGoogleEmail}
+        handleAddNewGoogleAccount={handleAddNewGoogleAccount}
+      />
 
       {/* ── Realistic Simulated Mobile SMS Toast Notification ── */}
       {smsToast && (
@@ -761,258 +638,35 @@ export const LoginPage = () => {
       {/* ════════════════════════════════════════════════════════════════
           FORGOT PASSWORD & INSTANT OTP RESET MODAL
           ════════════════════════════════════════════════════════════════ */}
-      {showForgotModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in font-poppins">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-gray-200 relative animate-scale-up">
-            <button
-              onClick={() => {
-                setShowForgotModal(false);
-                setSmsToast(null);
-              }}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="w-10 h-10 rounded-xl bg-[#FAF7F2] border border-[#E8E2D5] flex items-center justify-center text-[#C4913B] mb-3">
-              <KeyRound className="w-5 h-5" />
-            </div>
-
-            <h3 className="text-xl font-bold text-gray-900">Reset Your Password</h3>
-            <p className="text-xs text-gray-500 mt-0.5 mb-4">
-              {forgotStep === 1
-                ? (forgotChannel === 'phone'
-                  ? 'Enter customer mobile number to receive an instant verification OTP via SMS.'
-                  : 'Enter your registered email address to receive an instant verification OTP.')
-                : `Enter the 6-digit OTP sent to your ${forgotChannel === 'phone' ? 'mobile number' : 'email'} and choose your new password.`}
-            </p>
-
-            {/* Step 1: Channel Switcher (Mobile SMS vs Email) */}
-            {forgotStep === 1 && (
-              <div className="grid grid-cols-2 gap-1.5 p-1 bg-gray-100 rounded-2xl mb-4 text-xs font-semibold">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setForgotChannel('phone');
-                    setForgotError('');
-                  }}
-                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${forgotChannel === 'phone'
-                    ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
-                    : 'text-gray-500 hover:text-gray-800'
-                    }`}
-                >
-                  <Smartphone className="w-4 h-4" />
-                  <span>Mobile SMS OTP</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setForgotChannel('email');
-                    setForgotError('');
-                  }}
-                  className={`h-9 rounded-xl flex items-center justify-center gap-1.5 transition-all ${forgotChannel === 'email'
-                    ? 'bg-white text-[#C4913B] shadow-sm font-bold border border-gray-200/80'
-                    : 'text-gray-500 hover:text-gray-800'
-                    }`}
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>Email Address</span>
-                </button>
-              </div>
-            )}
-
-            {forgotError && (
-              <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs p-2.5 rounded-xl mb-3 text-center">
-                {forgotError}
-              </div>
-            )}
-
-            {forgotSuccess && (
-              <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-2.5 rounded-xl mb-3 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>{forgotSuccess}</span>
-              </div>
-            )}
-
-            {forgotStep === 1 ? (
-              <form onSubmit={handleSendOtp} className="space-y-4 text-xs">
-                {forgotChannel === 'phone' ? (
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1.5">Customer Mobile Number</label>
-                    <div className="flex rounded-xl border border-gray-300 overflow-hidden focus-within:border-[#C4913B] focus-within:ring-2 focus-within:ring-[#C4913B]/20 transition-all">
-                      <div className="bg-gray-50 border-r border-gray-300 px-3 flex items-center gap-1.5 text-gray-700 font-semibold text-xs sm:text-sm select-none">
-                        <span>🇮🇳</span>
-                        <span>+91</span>
-                      </div>
-                      <input
-                        type="tel"
-                        maxLength={10}
-                        value={forgotPhone}
-                        onChange={(e) => setForgotPhone(e.target.value.replace(/[^0-9]/g, ''))}
-                        placeholder="98765 43210"
-                        className="w-full h-11 px-3 text-xs sm:text-sm outline-none font-medium tracking-wide text-gray-900"
-                        required
-                        autoFocus
-                      />
-                    </div>
-                    <div className="flex items-center justify-between text-[11px] text-gray-400 mt-1.5">
-                      <span className="flex items-center gap-1 text-emerald-600 font-medium">
-                        <ShieldCheck className="w-3.5 h-3.5" /> SMS OTP Delivery Ready
-                      </span>
-                      <span>Default: 9876543210</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1.5">Registered Email</label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="email"
-                        value={forgotEmail}
-                        onChange={(e) => setForgotEmail(e.target.value)}
-                        placeholder="you@watchhub.com"
-                        className="w-full h-11 pl-10 pr-3 rounded-xl border border-gray-300 text-xs sm:text-sm focus:border-[#C4913B] outline-none"
-                        required
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full h-11 bg-gradient-to-r from-[#C4913B] to-[#AD7929] hover:from-[#B5822E] hover:to-[#9E6E24] text-white font-semibold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2"
-                >
-                  <Smartphone className="w-4 h-4" />
-                  <span>{forgotChannel === 'phone' ? 'Send OTP to Customer Mobile' : 'Send Verification OTP'}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleResetSubmit} className="space-y-3.5 text-xs">
-                {/* Generated OTP Notice with Mobile badge */}
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50/60 border border-amber-200/90 p-3 rounded-2xl text-amber-950 text-xs shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-xs flex items-center gap-1.5 text-amber-900">
-                        {forgotChannel === 'phone' ? (
-                          <>
-                            <Smartphone className="w-4 h-4 text-[#C4913B]" />
-                            <span>OTP sent via SMS to <strong className="text-gray-900">+91 {forgotPhone}</strong></span>
-                          </>
-                        ) : (
-                          <>
-                            <Mail className="w-4 h-4 text-[#C4913B]" />
-                            <span>OTP sent to <strong className="text-gray-900">{forgotEmail}</strong></span>
-                          </>
-                        )}
-                      </p>
-                      <p className="text-[11px] text-amber-700 mt-0.5">Auto-filled for instant verification convenience.</p>
-                    </div>
-                    <div className="bg-white border border-amber-200 px-2.5 py-1 rounded-xl text-center shadow-xs">
-                      <span className="text-[9px] uppercase tracking-wider text-gray-400 block font-bold">OTP</span>
-                      <span className="font-mono text-sm font-bold text-[#C4913B] tracking-wider">{generatedOtp}</span>
-                    </div>
-                  </div>
-
-                  {/* Direct Phone Delivery Links */}
-                  {forgotChannel === 'phone' && (
-                    <div className="mt-2.5 pt-2 border-t border-amber-200/60 flex items-center gap-2 flex-wrap">
-                      <a
-                        href={`https://api.whatsapp.com/send?phone=91${forgotPhone.replace(/[^0-9]/g, '').slice(-10)}&text=${encodeURIComponent(
-                          `WatchHub Password Reset OTP: ${generatedOtp}. Valid for 10 minutes. Do not share with anyone.`
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
-                      >
-                        <span>💬 Receive on WhatsApp</span>
-                      </a>
-                      <a
-                        href={`sms:+91${forgotPhone.replace(/[^0-9]/g, '').slice(-10)}?body=${encodeURIComponent(
-                          `Your WatchHub password reset OTP is ${generatedOtp}`
-                        )}`}
-                        className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg shadow-xs transition-colors"
-                      >
-                        <span>📲 Open in Messages App</span>
-                      </a>
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Enter 6-Digit OTP</label>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={enteredOtp}
-                    onChange={(e) => setEnteredOtp(e.target.value)}
-                    placeholder="e.g. 482910"
-                    className="w-full h-10 px-3 rounded-xl border border-gray-300 font-mono text-center tracking-widest text-base font-bold focus:border-[#C4913B] outline-none bg-gray-50/50"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">New Password</label>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="At least 6 characters"
-                    className="w-full h-10 px-3 rounded-xl border border-gray-300 text-xs focus:border-[#C4913B] outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Confirm New Password</label>
-                  <input
-                    type="password"
-                    value={confirmNewPassword}
-                    onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    placeholder="Re-enter new password"
-                    className="w-full h-10 px-3 rounded-xl border border-gray-300 text-xs focus:border-[#C4913B] outline-none"
-                    required
-                  />
-                </div>
-
-                {/* Resend Link and Channel Info */}
-                <div className="flex items-center justify-between text-[11px] text-gray-500 pt-0.5">
-                  <button
-                    type="button"
-                    onClick={() => setForgotStep(1)}
-                    className="text-gray-500 hover:text-gray-800 underline"
-                  >
-                    Change number
-                  </button>
-
-                  {resendCooldown > 0 ? (
-                    <span className="text-gray-400 font-medium">Resend SMS in {resendCooldown}s</span>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={(e) => handleSendOtp(e)}
-                      className="text-[#C4913B] font-semibold hover:underline flex items-center gap-1"
-                    >
-                      <RefreshCw className="w-3 h-3" />
-                      <span>Resend OTP on Mobile</span>
-                    </button>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full h-11 bg-gradient-to-r from-[#C4913B] to-[#AD7929] hover:from-[#B5822E] hover:to-[#9E6E24] text-white font-semibold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 mt-2"
-                >
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Verify OTP & Update Password</span>
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
+      {/* FORGOT PASSWORD & INSTANT OTP RESET MODAL */}
+      <ForgotPasswordModal
+        isOpen={showForgotModal}
+        onClose={() => {
+          setShowForgotModal(false);
+          setSmsToast(null);
+        }}
+        forgotStep={forgotStep}
+        setForgotStep={setForgotStep}
+        forgotChannel={forgotChannel}
+        setForgotChannel={setForgotChannel}
+        forgotError={forgotError}
+        setForgotError={setForgotError}
+        forgotSuccess={forgotSuccess}
+        forgotPhone={forgotPhone}
+        setForgotPhone={setForgotPhone}
+        forgotEmail={forgotEmail}
+        setForgotEmail={setForgotEmail}
+        handleSendOtp={handleSendOtp}
+        generatedOtp={generatedOtp}
+        enteredOtp={enteredOtp}
+        setEnteredOtp={setEnteredOtp}
+        newPassword={newPassword}
+        setNewPassword={setNewPassword}
+        confirmNewPassword={confirmNewPassword}
+        setConfirmNewPassword={setConfirmNewPassword}
+        resendCooldown={resendCooldown}
+        handleResetSubmit={handleResetSubmit}
+      />
 
     </div>
   );

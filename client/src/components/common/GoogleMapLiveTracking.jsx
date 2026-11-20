@@ -102,7 +102,7 @@ export default function GoogleMapLiveTracking({
     securityCode: 'SEC-8924',
   });
 
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAK25btTdE6-2bU8D1K51pY1m3StDOSC-U';
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
   // 1. Load Google Maps JS SDK
   useEffect(() => {

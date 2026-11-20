@@ -15,6 +15,8 @@ import ReturnsPickupsModule from '../../components/delivery/modules/ReturnsPicku
 import DeliveryReportsModule from '../../components/delivery/modules/DeliveryReportsModule';
 import ServiceAreasModule from '../../components/delivery/modules/ServiceAreasModule';
 import DeliverySettingsModule from '../../components/delivery/modules/DeliverySettingsModule';
+import CreateShipmentModal from '../../components/delivery/CreateShipmentModal';
+import DeliveryOrderDetailsModal from '../../components/delivery/DeliveryOrderDetailsModal';
 
 // Central Data Store
 import {
@@ -658,261 +660,25 @@ export default function DeliveryManagerDashboardPage({ initialTab = 'dashboard' 
       </DeliveryErrorBoundary>
 
       {/* MODAL: ORDER DETAILS DRAWER / MODAL */}
-      {selectedOrderForDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#11172C] border border-[#28334B] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl text-white space-y-5 custom-scrollbar">
-            {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#28334B]">
-              <div className="flex items-center gap-3">
-                <img
-                  src={selectedOrderForDetail.productImage}
-                  alt={selectedOrderForDetail.productName}
-                  className="w-14 h-14 rounded-xl object-contain bg-[#081529] border border-[#28334B] p-1 flex-shrink-0"
-                />
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-serif font-bold text-lg text-white">
-                      Order #{selectedOrderForDetail.orderId}
-                    </h3>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        selectedOrderForDetail.deliveryStatus === 'Delivered'
-                          ? 'bg-[#00C98B]/20 text-[#00C98B]'
-                          : 'bg-[#00D5FF]/20 text-[#00D5FF]'
-                      }`}
-                    >
-                      {selectedOrderForDetail.deliveryStatus}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#A7B1C2]">
-                    Air Waybill: <strong className="font-mono text-[#00D5FF]">{selectedOrderForDetail.awbNumber}</strong>
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedOrderForDetail(null)}
-                className="text-[#A7B1C2] hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Product & Payment Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-4 rounded-xl bg-[#081529] border border-[#28334B] space-y-1.5">
-                <span className="font-bold text-white text-sm block">{selectedOrderForDetail.productName}</span>
-                <p className="text-[#A7B1C2]">Category: {selectedOrderForDetail.productCategory}</p>
-                <p className="text-[#E9B94F] font-bold text-sm">Value: {selectedOrderForDetail.formattedAmount}</p>
-                <p className="text-[#A7B1C2]">Payment: {selectedOrderForDetail.paymentType}</p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-[#081529] border border-[#28334B] space-y-1.5">
-                <span className="font-bold text-white text-sm block">Customer & Destination</span>
-                <p className="text-white font-medium">{selectedOrderForDetail.customerName}</p>
-                <p className="text-[#A7B1C2]">{selectedOrderForDetail.mobileNumber}</p>
-                <p className="text-[#A7B1C2]">{selectedOrderForDetail.deliveryAddress}, {selectedOrderForDetail.city} - {selectedOrderForDetail.pincode}</p>
-              </div>
-            </div>
-
-            {/* Shipment & Rider Information */}
-            <div className="p-4 rounded-xl bg-[#081529] border border-[#28334B] grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-              <div>
-                <span className="text-[#A7B1C2] text-[10px] block">Courier Partner</span>
-                <span className="font-bold text-white">{selectedOrderForDetail.deliveryPartner}</span>
-              </div>
-              <div>
-                <span className="text-[#A7B1C2] text-[10px] block">Designated City Rider</span>
-                <span className="font-bold text-[#E9B94F]">{selectedOrderForDetail.rider}</span>
-                <span className="text-[10px] text-[#A7B1C2] block">{selectedOrderForDetail.riderPhone}</span>
-              </div>
-              <div>
-                <span className="text-[#A7B1C2] text-[10px] block">Expected Delivery ETA</span>
-                <span className="font-bold text-[#00C98B]">{selectedOrderForDetail.expectedDeliveryDate}</span>
-              </div>
-            </div>
-
-            {/* Delivery Timeline */}
-            <div>
-              <span className="font-bold text-xs text-white block mb-2">Milestone Tracking History</span>
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar text-xs">
-                {selectedOrderForDetail.trackingTimeline.map((step, idx) => (
-                  <div key={idx} className="p-2.5 rounded-lg bg-[#081529] border border-[#28334B] flex items-center justify-between">
-                    <div>
-                      <span className="font-bold text-white block">{step.stage}</span>
-                      <span className="text-[10px] text-[#A7B1C2]">{step.desc}</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-[#00D5FF] font-mono block">{step.time}</span>
-                      <span className="text-[10px] text-[#A7B1C2]">{step.location}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Footer Buttons */}
-            <div className="flex items-center justify-between pt-3 border-t border-[#28334B]">
-              <button
-                onClick={() => {
-                  setSelectedOrderForTracking(selectedOrderForDetail);
-                  setSelectedOrderForDetail(null);
-                  setActiveTab('tracking');
-                }}
-                className="flex items-center gap-1.5 text-xs font-bold text-[#00D5FF] hover:underline"
-              >
-                <MapPin className="w-3.5 h-3.5" />
-                <span>Open Live Map Tracking</span>
-              </button>
-
-              <button
-                onClick={() => setSelectedOrderForDetail(null)}
-                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs"
-              >
-                Close Details
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeliveryOrderDetailsModal
+        selectedOrder={selectedOrderForDetail}
+        onClose={() => setSelectedOrderForDetail(null)}
+        onOpenTracking={(order) => {
+          setSelectedOrderForTracking(order);
+          setSelectedOrderForDetail(null);
+          setActiveTab('tracking');
+        }}
+      />
 
       {/* MODAL: CREATE SHIPMENT MODAL */}
-      {showCreateShipmentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#11172C] border border-[#28334B] rounded-2xl w-full max-w-lg p-6 shadow-2xl text-white space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#28334B]">
-              <div className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-[#00D5FF]" />
-                <h3 className="font-serif font-bold text-base text-white">
-                  Create Outbound Watch Shipment
-                </h3>
-              </div>
-              <button onClick={() => setShowCreateShipmentModal(false)} className="text-[#A7B1C2] hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateShipmentSubmit} className="space-y-3.5 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[#A7B1C2] font-semibold block mb-1">Customer Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={createShipmentForm.customerName}
-                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, customerName: e.target.value })}
-                    placeholder="e.g. Alok Singhal"
-                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
-                  />
-                </div>
-                <div>
-                  <label className="text-[#A7B1C2] font-semibold block mb-1">Mobile Number</label>
-                  <input
-                    type="text"
-                    required
-                    value={createShipmentForm.mobileNumber}
-                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, mobileNumber: e.target.value })}
-                    placeholder="+91 98765 00000"
-                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[#A7B1C2] font-semibold block mb-1">Watch Model</label>
-                <input
-                  type="text"
-                  required
-                  value={createShipmentForm.productName}
-                  onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, productName: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-[#A7B1C2] font-semibold block mb-1">Street Address</label>
-                <input
-                  type="text"
-                  required
-                  value={createShipmentForm.deliveryAddress}
-                  onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, deliveryAddress: e.target.value })}
-                  placeholder="Villa / Flat number, building, sector"
-                  className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-2.5">
-                <div>
-                  <label className="text-[#A7B1C2] font-semibold block mb-1">City</label>
-                  <input
-                    type="text"
-                    value={createShipmentForm.city}
-                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, city: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
-                  />
-                </div>
-                <div>
-                  <label className="text-[#A7B1C2] font-semibold block mb-1">State</label>
-                  <input
-                    type="text"
-                    value={createShipmentForm.state}
-                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, state: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white"
-                  />
-                </div>
-                <div>
-                  <label className="text-[#A7B1C2] font-semibold block mb-1">PIN Code</label>
-                  <input
-                    type="text"
-                    value={createShipmentForm.pincode}
-                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, pincode: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white font-mono"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[#A7B1C2] font-semibold block mb-1">Carrier Partner</label>
-                  <select
-                    value={createShipmentForm.deliveryPartner}
-                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, deliveryPartner: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white cursor-pointer"
-                  >
-                    {couriers.map((cp) => (
-                      <option key={cp.id} value={cp.name}>{cp.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[#A7B1C2] font-semibold block mb-1">Order Amount (₹)</label>
-                  <input
-                    type="number"
-                    value={createShipmentForm.orderAmount}
-                    onChange={(e) => setCreateShipmentForm({ ...createShipmentForm, orderAmount: Number(e.target.value) })}
-                    className="w-full px-3 py-2 rounded-xl bg-[#081529] border border-[#28334B] text-white font-bold"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#28334B]">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateShipmentModal(false)}
-                  className="px-4 py-2 rounded-xl bg-white/5 text-[#A7B1C2]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#6500FF] to-[#8B00FF] hover:from-[#7310FF] hover:to-[#9B10FF] text-white font-bold"
-                >
-                  Generate Air Waybill & Label
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <CreateShipmentModal
+        isOpen={showCreateShipmentModal}
+        onClose={() => setShowCreateShipmentModal(false)}
+        form={createShipmentForm}
+        setForm={setCreateShipmentForm}
+        onSubmit={handleCreateShipmentSubmit}
+        couriers={couriers}
+      />
 
       {/* MODAL: HELP & LOGISTICS SUPPORT */}
       {showSupportModal && (

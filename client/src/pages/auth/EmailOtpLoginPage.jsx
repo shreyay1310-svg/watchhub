@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Mail,
   ShieldCheck,
@@ -13,10 +13,13 @@ import {
 import OtpInput from '../../components/auth/OtpInput';
 import GoldenStarsBackground from '../../components/common/GoldenStarsBackground';
 import { useAuth } from '../../context/AuthContext';
+import { safeAuthFetch } from '../../utils/authApiHelper';
+import { getRoleDashboardPath } from '../../routes/ProtectedRoute';
 
 export const EmailOtpLoginPage = () => {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const location = useLocation();
+  const { setUser, user, isAuthenticated, authLoading } = useAuth();
 
   const [step, setStep] = useState(1); // 1: Email Input, 2: 6-digit OTP
   const [email, setEmail] = useState('');
@@ -25,6 +28,18 @@ export const EmailOtpLoginPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+
+  // If already authenticated, redirect to destination or role dashboard immediately
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && user) {
+      const fromPath = location.state?.from?.pathname;
+      if (fromPath && fromPath !== '/login' && fromPath !== '/email-otp-login') {
+        navigate(fromPath, { replace: true });
+      } else {
+        navigate(getRoleDashboardPath(user.role), { replace: true });
+      }
+    }
+  }, [authLoading, isAuthenticated, user, location, navigate]);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -35,7 +50,9 @@ export const EmailOtpLoginPage = () => {
   // Step 1: Request Sign-in OTP
   const handleRequestOtp = async (e) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
@@ -44,28 +61,26 @@ export const EmailOtpLoginPage = () => {
     setError('');
 
     try {
-      const res = await fetch('/api/auth/send-email-otp', {
+      const result = await safeAuthFetch('/api/auth/send-email-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: email.trim().toLowerCase(),
+          email: cleanEmail,
           purpose: 'login',
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok && data.status === 'fail') {
-        setError(data.message || 'Failed to dispatch sign-in code.');
+      if (!result.ok) {
+        setError(result.error || "We couldn't send the verification code. Please try again.");
         setLoading(false);
         return;
       }
 
       setStep(2);
-      setResendCooldown(60);
+      setResendCooldown(result.data?.cooldownSeconds || 60);
       setLoading(false);
     } catch {
-      setError('Network communication failure. Please try again.');
+      setError("We couldn't send the verification code. Please try again.");
       setLoading(false);
     }
   };
@@ -82,7 +97,7 @@ export const EmailOtpLoginPage = () => {
     setError('');
 
     try {
-      const res = await fetch('/api/auth/email-login', {
+      const result = await safeAuthFetch('/api/auth/email-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -91,14 +106,13 @@ export const EmailOtpLoginPage = () => {
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok || data.status === 'fail') {
-        setError(data.message || 'Verification failed. Please check your code.');
+      if (!result.ok) {
+        setError(result.error);
         setLoading(false);
         return;
       }
 
+      const data = result.data || {};
       setSuccess(true);
       setLoading(false);
 
@@ -110,8 +124,13 @@ export const EmailOtpLoginPage = () => {
       }
 
       setTimeout(() => {
-        navigate('/');
-      }, 1800);
+        const fromPath = location.state?.from?.pathname;
+        if (fromPath && fromPath !== '/login' && fromPath !== '/email-otp-login') {
+          navigate(fromPath, { replace: true });
+        } else {
+          navigate(getRoleDashboardPath(data.user?.role), { replace: true });
+        }
+      }, 1200);
     } catch {
       setError('Authentication failure. Please try again.');
       setLoading(false);
@@ -129,7 +148,7 @@ export const EmailOtpLoginPage = () => {
         body: JSON.stringify({ email: email.trim().toLowerCase(), purpose: 'login' }),
       });
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data.status !== 'fail' && data.status !== 'error') {
         setResendCooldown(60);
       } else {
         setError(data.message || 'Failed to resend code.');

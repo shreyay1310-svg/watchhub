@@ -1,0 +1,98 @@
+[
+  {
+    "name": "_prisma_migrations",
+    "count": 1
+  },
+  {
+    "name": "Addresses",
+    "count": 3
+  },
+  {
+    "name": "AuditLogs",
+    "count": 0
+  },
+  {
+    "name": "Brands",
+    "count": 28
+  },
+  {
+    "name": "Categories",
+    "count": 8
+  },
+  {
+    "name": "Coupons",
+    "count": 3
+  },
+  {
+    "name": "Deliveries",
+    "count": 3
+  },
+  {
+    "name": "DeliveryLocationPings",
+    "count": 3
+  },
+  {
+    "name": "Inventory",
+    "count": 36
+  },
+  {
+    "name": "OrderItems",
+    "count": 3
+  },
+  {
+    "name": "Orders",
+    "count": 6
+  },
+  {
+    "name": "OTPVerifications",
+    "count": 0
+  },
+  {
+    "name": "Payments",
+    "count": 3
+  },
+  {
+    "name": "Permissions",
+    "count": 21
+  },
+  {
+    "name": "ProductImages",
+    "count": 33
+  },
+  {
+    "name": "Products",
+    "count": 33
+  },
+  {
+    "name": "RolePermissions",
+    "count": 22
+  },
+  {
+    "name": "Roles",
+    "count": 7
+  },
+  {
+    "name": "StockTransactions",
+    "count": 5
+  },
+  {
+    "name": "SupportMessages",
+    "count": 14
+  },
+  {
+    "name": "SupportTickets",
+    "count": 6
+  },
+  {
+    "name": "UserRoles",
+    "count": 9
+  },
+  {
+    "name": "Users",
+    "count": 9
+  },
+  {
+    "name": "Warehouses",
+    "count": 3
+  }
+]

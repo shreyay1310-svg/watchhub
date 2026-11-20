@@ -1,0 +1,24 @@
+EntityName,SourceSystem,SourceCount,TargetSystem,TargetTable,TargetCount,Variance,Status,ReconciliationNotes
+Users,MongoDB/Snapshot,6,MSSQL WatchHubDB,User,9,+3,RECONCILED,Source 6 users + 3 delivery partner riders unified into User table
+Roles,System Configuration,7,MSSQL WatchHubDB,Role,7,0,RECONCILED,Complete 7-role RBAC hierarchy established
+Permissions,System Configuration,21,MSSQL WatchHubDB,Permission,21,0,RECONCILED,Full granular permission catalog seeded
+RolePermissions,System Configuration,22,MSSQL WatchHubDB,RolePermission,22,0,RECONCILED,Topological RBAC matrix mapped
+UserRoles,System Configuration,9,MSSQL WatchHubDB,UserRole,9,0,RECONCILED,All 9 users mapped to respective operational roles
+Addresses,System Configuration,3,MSSQL WatchHubDB,Address,3,0,RECONCILED,Customer addresses relationalized
+Brands,Catalog Data,28,MSSQL WatchHubDB,Brand,28,0,RECONCILED,All 28 luxury horology brand records relationalized
+Categories,Catalog Data,8,MSSQL WatchHubDB,Category,8,0,RECONCILED,All 8 timepiece classifications relationalized
+Products,MongoDB/Snapshot,33,MSSQL WatchHubDB,Product,33,0,RECONCILED,100% of luxury watch catalog migrated
+ProductImages,Catalog Data,33,MSSQL WatchHubDB,ProductImage,33,0,RECONCILED,All product photography assets linked to products
+Warehouses,Snapshot/Config,3,MSSQL WatchHubDB,Warehouse,3,0,RECONCILED,Regional fulfillment hubs (DEL/BOM/BLR) created
+Inventory,In-Memory State,8,MSSQL WatchHubDB,Inventory,36,+28,RECONCILED,Expanded 8 memory items + 28 catalog items across warehouses
+StockTransactions,In-Memory State,5,MSSQL WatchHubDB,StockTransaction,5,0,RECONCILED,Historical stock movement ledger persisted
+Coupons,In-Memory State,3,MSSQL WatchHubDB,Coupon,3,0,RECONCILED,Configurable coupon rules persisted to database
+Orders,MongoDB/Snapshot,3,MSSQL WatchHubDB,Order,6,+3,RECONCILED,3 customer orders + 3 fulfillment consignments persisted
+OrderItems,Orders Subdocument,3,MSSQL WatchHubDB,OrderItem,3,0,RECONCILED,Embedded order line items normalized into OrderItem table
+Payments,MongoDB/Snapshot,3,MSSQL WatchHubDB,Payment,3,0,RECONCILED,Gateway payment verification records normalized
+Deliveries,In-Memory State,3,MSSQL WatchHubDB,Delivery,3,0,RECONCILED,Shipment tracking, courier assignment, and OTPs persisted
+DeliveryLocationPings,In-Memory State,3,MSSQL WatchHubDB,DeliveryLocationPing,3,0,RECONCILED,Live GPS breadcrumbs migrated to relational table
+SupportTickets,In-Memory State,6,MSSQL WatchHubDB,SupportTicket,6,0,RECONCILED,Customer support tickets persisted to database
+SupportMessages,In-Memory State,14,MSSQL WatchHubDB,SupportMessage,14,0,RECONCILED,Threaded ticket messages normalized into SupportMessage table
+AuditLogs,MongoDB/Snapshot,0,MSSQL WatchHubDB,AuditLog,0,0,RECONCILED,Security audit logging schema deployed and operational
+OTPVerifications,MongoDB/Snapshot,0,MSSQL WatchHubDB,OTPVerification,0,0,RECONCILED,Ephemeral HMAC OTP schema deployed and operational

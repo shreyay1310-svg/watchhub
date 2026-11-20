@@ -1,16 +1,8 @@
-import mongoose from 'mongoose';
+/**
+ * Centralized Database Connection Adapter for WatchHub
+ * Powered by Microsoft SQL Server 2025 & Prisma ORM 6.19.3
+ */
+import { prisma, connectDB, disconnectDB } from './prisma.js';
 
-export const connectDB = async () => {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/watchhub';
-  try {
-    const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000,
-    });
-    console.log(`[Database] MongoDB Connected: ${conn.connection.host}/${conn.connection.name}`);
-    return conn;
-  } catch (err) {
-    console.warn(`[Database Warning] MongoDB connection failed (${err.message}). Running in mock/standalone mode.`);
-    return null;
-  }
-};
-
+export { prisma, connectDB, disconnectDB };
+export default connectDB;

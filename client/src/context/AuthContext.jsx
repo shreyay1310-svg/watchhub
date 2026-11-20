@@ -13,79 +13,92 @@ export const ROLES = {
   DELIVERY_PARTNER: 'Delivery Partner',
 };
 
-// Default mock user profiles for development & testing of all roles
+// Role UI Metadata (Display avatars and labels only; not used for authentication)
 export const MOCK_STAFF_ACCOUNTS = {
-  [ROLES.SUPER_ADMIN]: {
-    id: 'usr_super_admin',
-    name: 'Vikram Malhotra',
-    email: 'superadmin@watchhub.com',
-    role: ROLES.SUPER_ADMIN,
-    avatar: '👑',
-    permissions: ['all'],
-  },
-  [ROLES.STORE_ADMIN]: {
-    id: 'usr_store_admin',
-    name: 'Aanya Singhania',
-    email: 'admin@watchhub.com',
-    role: ROLES.STORE_ADMIN,
-    avatar: '🏪',
-    permissions: ['products.manage', 'categories.manage', 'offers.manage', 'orders.manage'],
-  },
-  [ROLES.INVENTORY_MANAGER]: {
-    id: 'usr_inv_mgr',
-    name: 'Rajesh Mehta',
-    email: 'inventory@watchhub.com',
-    role: ROLES.INVENTORY_MANAGER,
-    avatar: '📦',
-    permissions: ['inventory.manage', 'stock.adjust', 'warehouses.manage', 'stock.movements', 'reorder.alerts'],
-  },
-  [ROLES.DELIVERY_MANAGER]: {
-    id: 'usr_delivery_mgr',
-    name: 'Karan Verma',
-    email: 'delivery@watchhub.com',
-    role: ROLES.DELIVERY_MANAGER,
-    avatar: '🚚',
-    permissions: ['orders.assigned', 'shipments.manage', 'tracking.update'],
-  },
-  [ROLES.CUSTOMER_SUPPORT]: {
-    id: 'usr_support_exec',
-    name: 'Pooja Sharma',
-    email: 'support@watchhub.com',
-    role: ROLES.CUSTOMER_SUPPORT,
-    avatar: '🎧',
-    permissions: ['tickets.manage', 'refunds.request', 'orders.lookup'],
-  },
-  [ROLES.DELIVERY_PARTNER]: {
-    id: 'usr_delivery_rider',
-    name: 'Rohan Singh',
-    email: 'rider@watchhub.com',
-    role: ROLES.DELIVERY_PARTNER,
-    avatar: '🛵',
-    permissions: ['delivery.partner', 'order.complete', 'otp.verify'],
-  },
-  [ROLES.CUSTOMER]: {
-    id: 'usr_customer_demo',
-    name: 'Arjun Kapoor',
-    email: 'customer@watchhub.com',
-    phone: '+91 98765 43210',
-    role: ROLES.CUSTOMER,
-    avatar: '👤',
-    permissions: ['orders.own', 'cart.own', 'wishlist.own'],
-  },
+  [ROLES.SUPER_ADMIN]: { role: ROLES.SUPER_ADMIN, name: 'Super Admin', avatar: '👑' },
+  [ROLES.STORE_ADMIN]: { role: ROLES.STORE_ADMIN, name: 'Store Admin', avatar: '🏪' },
+  [ROLES.INVENTORY_MANAGER]: { role: ROLES.INVENTORY_MANAGER, name: 'Inventory Manager', avatar: '📦' },
+  [ROLES.DELIVERY_MANAGER]: { role: ROLES.DELIVERY_MANAGER, name: 'Delivery Manager', avatar: '🚚' },
+  [ROLES.CUSTOMER_SUPPORT]: { role: ROLES.CUSTOMER_SUPPORT, name: 'Customer Support Executive', avatar: '🎧' },
+  [ROLES.DELIVERY_PARTNER]: { role: ROLES.DELIVERY_PARTNER, name: 'Delivery Partner', avatar: '🛵' },
+  [ROLES.CUSTOMER]: { role: ROLES.CUSTOMER, name: 'Customer', avatar: '👤' },
 };
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('watchhub_auth_user');
-      return saved ? JSON.parse(saved) : MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER];
+      return saved ? JSON.parse(saved) : null;
     } catch (e) {
       console.warn('Failed to parse saved user from localStorage', e);
-      return MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER];
+      return null;
     }
   });
-  const [token, setToken] = useState(() => localStorage.getItem('watchhub_token') || 'mock_jwt_token_2026');
+
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem('watchhub_token');
+    // Ensure no legacy mock tokens persist in state
+    if (savedToken && (savedToken.startsWith('mock_') || savedToken.startsWith('jwt_user_token_'))) {
+      localStorage.removeItem('watchhub_token');
+      return null;
+    }
+    return savedToken || null;
+  });
+
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Initial authentication verification against backend /api/auth/me
+  useEffect(() => {
+    let isMounted = true;
+
+    const verifySession = async () => {
+      const savedToken = localStorage.getItem('watchhub_token');
+      if (!savedToken) {
+        if (isMounted) {
+          setUser(null);
+          setToken(null);
+          localStorage.removeItem('watchhub_auth_user');
+          setAuthLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const response = await api.get('/auth/me', {
+          headers: { Authorization: `Bearer ${savedToken}` },
+        });
+
+        if (response.data && response.data.status === 'success' && response.data.user) {
+          if (isMounted) {
+            const verifiedUser = response.data.user;
+            setUser(verifiedUser);
+            setToken(savedToken);
+            localStorage.setItem('watchhub_auth_user', JSON.stringify(verifiedUser));
+          }
+        } else {
+          throw new Error('Invalid authentication response');
+        }
+      } catch (err) {
+        console.warn('[AuthContext] Session verification failed:', err.message);
+        if (isMounted) {
+          setUser(null);
+          setToken(null);
+          localStorage.removeItem('watchhub_token');
+          localStorage.removeItem('watchhub_auth_user');
+        }
+      } finally {
+        if (isMounted) {
+          setAuthLoading(false);
+        }
+      }
+    };
+
+    verifySession();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -95,242 +108,141 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Helper to get registered users from localStorage
-  const getRegisteredUsers = () => {
-    try {
-      const saved = localStorage.getItem('watchhub_registered_users');
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem('watchhub_token', token);
+    } else {
+      localStorage.removeItem('watchhub_token');
     }
-  };
+  }, [token]);
 
-  // Helper to save registered user
-  const saveRegisteredUser = (userData) => {
-    try {
-      const all = getRegisteredUsers();
-      all[userData.email.toLowerCase()] = userData;
-      localStorage.setItem('watchhub_registered_users', JSON.stringify(all));
-    } catch (e) {
-      console.error('Failed to save user', e);
-    }
-  };
-
-  // Register new account with role selection (Customer, Admin, Store Manager, etc.)
+  // Register new account through database API
   const register = async (name, email, password, phone = '', role = ROLES.CUSTOMER) => {
     setLoading(true);
     try {
-      await new Promise((res) => setTimeout(res, 500));
-      
-      const roleAvatars = {
-        [ROLES.SUPER_ADMIN]: '👑',
-        [ROLES.STORE_ADMIN]: '🏪',
-        [ROLES.INVENTORY_MANAGER]: '📦',
-        [ROLES.DELIVERY_MANAGER]: '🚚',
-        [ROLES.CUSTOMER_SUPPORT]: '🎧',
-        [ROLES.CUSTOMER]: '👤',
-      };
-
-      const rolePermissions = {
-        [ROLES.SUPER_ADMIN]: ['all'],
-        [ROLES.STORE_ADMIN]: ['products.manage', 'categories.manage', 'offers.manage', 'orders.manage'],
-        [ROLES.INVENTORY_MANAGER]: ['inventory.manage', 'stock.adjust', 'warehouses.manage'],
-        [ROLES.DELIVERY_MANAGER]: ['orders.assigned', 'shipments.manage', 'tracking.update'],
-        [ROLES.CUSTOMER_SUPPORT]: ['tickets.manage', 'refunds.request', 'orders.lookup'],
-        [ROLES.CUSTOMER]: ['orders.own', 'cart.own', 'wishlist.own'],
-      };
-
-      const newUser = {
-        id: `usr_${Date.now()}`,
+      const cleanEmail = email.trim().toLowerCase();
+      const response = await api.post('/auth/register', {
         name: name.trim(),
-        email: email.trim().toLowerCase(),
-        password: password,
+        email: cleanEmail,
+        password,
         phone: phone.trim(),
         role: role || ROLES.CUSTOMER,
-        avatar: roleAvatars[role] || '👤',
-        permissions: rolePermissions[role] || ['orders.own', 'cart.own', 'wishlist.own'],
-        createdAt: new Date().toISOString(),
-      };
+      });
 
-      saveRegisteredUser(newUser);
-      setUser(newUser);
-      setToken('jwt_user_token_' + Date.now());
-      localStorage.setItem('watchhub_token', 'jwt_user_token_' + Date.now());
-      return { success: true, user: newUser };
+      if (response.data && response.data.status === 'success') {
+        const newUser = response.data.user;
+        const accessToken = response.data.accessToken;
+        setUser(newUser);
+        setToken(accessToken);
+        setAuthLoading(false);
+        localStorage.setItem('watchhub_token', accessToken);
+        localStorage.setItem('watchhub_auth_user', JSON.stringify(newUser));
+        return { success: true, user: newUser };
+      }
+      return { success: false, message: response.data?.message || 'Registration failed.' };
     } catch (err) {
-      return { success: false, message: err.message };
+      const message = err.response?.data?.message || err.message || 'Registration failed.';
+      return { success: false, message };
     } finally {
       setLoading(false);
     }
   };
 
-  // Login handler with backend credentials verification & role mapping
+  // Production authentication: strictly verified by cryptographic backend API
   const login = async (identifier, password, selectedRole = null) => {
     setLoading(true);
     try {
       const cleanEmail = (identifier || '').trim().toLowerCase();
+      const response = await api.post('/auth/login', {
+        email: cleanEmail,
+        password,
+        role: selectedRole,
+      });
 
-      // 1. Attempt Real Backend API Authentication
-      try {
-        const response = await api.post('/auth/login', { email: cleanEmail, password });
-        if (response.data && response.data.status === 'success' && response.data.user) {
-          const serverUser = response.data.user;
-          const serverToken = response.data.accessToken || 'jwt_server_token_' + Date.now();
-          setUser(serverUser);
-          setToken(serverToken);
-          localStorage.setItem('watchhub_token', serverToken);
-          localStorage.setItem('watchhub_auth_user', JSON.stringify(serverUser));
-          return { success: true, user: serverUser };
-        }
-      } catch (apiErr) {
-        // Backend returned an error or unreachable; proceed to robust offline/local authentication
-        console.warn('[Auth] Server API login skipped/offline, using authenticated role engine:', apiErr?.response?.data?.message || apiErr.message);
+      if (response.data && response.data.status === 'success' && response.data.user) {
+        const serverUser = response.data.user;
+        const serverToken = response.data.accessToken;
+
+        setUser(serverUser);
+        setToken(serverToken);
+        setAuthLoading(false);
+        localStorage.setItem('watchhub_token', serverToken);
+        localStorage.setItem('watchhub_auth_user', JSON.stringify(serverUser));
+        return { success: true, user: serverUser };
       }
 
-      await new Promise((res) => setTimeout(res, 400));
-      const registered = getRegisteredUsers();
-
-      // 2. Check if user exists in custom registered accounts
-      if (registered[cleanEmail]) {
-        const regUser = registered[cleanEmail];
-        if (regUser.password && regUser.password !== password) {
-          const savedPwd = localStorage.getItem(`pwd_${cleanEmail}`);
-          if (!savedPwd || savedPwd !== password) {
-            return {
-              success: false,
-              message: 'Incorrect password for this email. Use "Forgot password?" to reset.',
-            };
-          }
-        }
-        setUser(regUser);
-        setToken('jwt_registered_token_' + Date.now());
-        localStorage.setItem('watchhub_token', 'jwt_registered_token_' + Date.now());
-        localStorage.setItem('watchhub_auth_user', JSON.stringify(regUser));
-        return { success: true, user: regUser };
-      }
-
-      // 3. Strict Staff Role Detection from Credentials/Selection
-      let matchedUser = null;
-
-      if (cleanEmail.includes('inventory')) {
-        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.INVENTORY_MANAGER] };
-      } else if (cleanEmail.includes('rider') || cleanEmail.includes('partner')) {
-        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.DELIVERY_PARTNER] };
-      } else if (cleanEmail.includes('delivery')) {
-        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.DELIVERY_MANAGER] };
-      } else if (cleanEmail.includes('support')) {
-        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.CUSTOMER_SUPPORT] };
-      } else if (cleanEmail.includes('super')) {
-        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.SUPER_ADMIN] };
-      } else if (cleanEmail.includes('admin') || cleanEmail.includes('store')) {
-        matchedUser = { ...MOCK_STAFF_ACCOUNTS[ROLES.STORE_ADMIN] };
-      } else if (selectedRole && MOCK_STAFF_ACCOUNTS[selectedRole]) {
-        matchedUser = { ...MOCK_STAFF_ACCOUNTS[selectedRole] };
-      }
-
-      if (matchedUser) {
-        matchedUser.email = cleanEmail;
-      } else {
-        // Fallback customer account
-        matchedUser = {
-          id: `usr_${Date.now()}`,
-          name: cleanEmail.split('@')[0],
-          email: cleanEmail,
-          role: ROLES.CUSTOMER,
-          avatar: '👤',
-          permissions: ['orders.own', 'cart.own', 'wishlist.own'],
-        };
-        saveRegisteredUser({ ...matchedUser, password });
-      }
-
-      setUser(matchedUser);
-      setToken('mock_jwt_token_val_2026');
-      localStorage.setItem('watchhub_token', 'mock_jwt_token_val_2026');
-      localStorage.setItem('watchhub_auth_user', JSON.stringify(matchedUser));
-      return { success: true, user: matchedUser };
-    } catch (err) {
-      return { success: false, message: err.message };
+      return {
+        success: false,
+        message: response.data?.message || 'Invalid credentials. Please verify your email and password.',
+      };
+    } catch (apiErr) {
+      const message =
+        apiErr.response?.data?.message ||
+        'Authentication failed. Please verify your email and password.';
+      return { success: false, message };
     } finally {
       setLoading(false);
     }
   };
 
-  // Google OAuth Login handler
+  // Google OAuth Login handler via API
   const loginWithGoogle = async (customGoogleUser = null) => {
     setLoading(true);
     try {
-      await new Promise((res) => setTimeout(res, 450));
-      const googleUser = customGoogleUser || {
-        id: `usr_google_${Date.now()}`,
-        name: 'Shreyas Y.',
-        email: 'shreyas.watchhub@gmail.com',
-        role: ROLES.CUSTOMER,
-        avatar: '👤',
-        provider: 'Google OAuth 2.0',
-        permissions: ['orders.own', 'cart.own', 'wishlist.own'],
-      };
-      saveRegisteredUser(googleUser);
-      setUser(googleUser);
-      setToken('mock_jwt_google_token_2026');
-      localStorage.setItem('watchhub_token', 'mock_jwt_google_token_2026');
-      localStorage.setItem('watchhub_auth_user', JSON.stringify(googleUser));
-      return { success: true, user: googleUser };
+      if (!customGoogleUser || !customGoogleUser.token) {
+        return {
+          success: false,
+          message: 'Google Sign-In requires an active Google OAuth token from Identity Provider.',
+        };
+      }
+      const response = await api.post('/auth/google', { token: customGoogleUser.token });
+      if (response.data && response.data.status === 'success') {
+        const googleUser = response.data.user;
+        const serverToken = response.data.accessToken;
+        setUser(googleUser);
+        setToken(serverToken);
+        setAuthLoading(false);
+        localStorage.setItem('watchhub_token', serverToken);
+        localStorage.setItem('watchhub_auth_user', JSON.stringify(googleUser));
+        return { success: true, user: googleUser };
+      }
+      return { success: false, message: response.data?.message || 'Google authentication failed.' };
     } catch (err) {
-      return { success: false, message: err.message };
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Google authentication service unreachable.',
+      };
     } finally {
       setLoading(false);
     }
   };
 
-  // Reset password handler (supports email or mobile number)
+  // Reset password handler via API
   const resetPassword = async (identifier, newPassword) => {
     try {
-      await new Promise((res) => setTimeout(res, 350));
       const cleanId = (identifier || '').trim().toLowerCase();
-      const cleanPhone = cleanId.replace(/[^0-9]/g, '');
-
-      // Store password for this identifier directly
-      localStorage.setItem(`pwd_${cleanId}`, newPassword);
-      if (cleanPhone.length >= 10) {
-        localStorage.setItem(`pwd_${cleanPhone.slice(-10)}`, newPassword);
-        localStorage.setItem(`pwd_customer@watchhub.com`, newPassword);
+      const response = await api.post('/auth/reset-password', {
+        email: cleanId,
+        newPassword,
+      });
+      if (response.data && response.data.status === 'success') {
+        return { success: true, message: 'Password updated successfully. Please log in.' };
       }
-
-      // Update in registered users database
-      const all = getRegisteredUsers();
-      let matchedEmail = cleanId;
-
-      if (!cleanId.includes('@') && cleanPhone.length >= 10) {
-        for (const [em, u] of Object.entries(all)) {
-          const userPhone = (u.phone || '').replace(/[^0-9]/g, '');
-          if (userPhone && userPhone.includes(cleanPhone.slice(-10))) {
-            matchedEmail = em;
-            break;
-          }
-        }
-        if (!all[matchedEmail]) {
-          matchedEmail = 'customer@watchhub.com';
-        }
-      }
-
-      if (all[matchedEmail]) {
-        all[matchedEmail].password = newPassword;
-      }
-      if (all['customer@watchhub.com']) {
-        all['customer@watchhub.com'].password = newPassword;
-      }
-      localStorage.setItem('watchhub_registered_users', JSON.stringify(all));
-
-      return { success: true, email: matchedEmail, message: 'Password updated successfully!' };
+      return { success: false, message: response.data?.message || 'Failed to update password.' };
     } catch (err) {
-      return { success: false, message: err.message };
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Failed to update password.',
+      };
     }
   };
 
-  // Switch role directly (for testing all 6 dashboards seamlessly)
+  // Switch role handler: restricted to active session role delegation
   const switchRole = (roleName) => {
-    if (MOCK_STAFF_ACCOUNTS[roleName]) {
-      setUser(MOCK_STAFF_ACCOUNTS[roleName]);
+    if (user && (user.role === ROLES.SUPER_ADMIN || user.role === roleName)) {
+      const updatedUser = { ...user, activeRole: roleName };
+      setUser(updatedUser);
+      localStorage.setItem('watchhub_auth_user', JSON.stringify(updatedUser));
     }
   };
 
@@ -347,15 +259,17 @@ export const AuthProvider = ({ children }) => {
         user,
         setUser,
         token,
+        setToken,
         loading,
+        authLoading,
         login,
         register,
         loginWithGoogle,
         resetPassword,
         logout,
         switchRole,
-        isAuthenticated: !!user,
-        role: user?.role || ROLES.CUSTOMER,
+        isAuthenticated: !!user && !!token && !authLoading,
+        role: user?.activeRole || user?.role || ROLES.CUSTOMER,
       }}
     >
       {children}
@@ -364,4 +278,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
+export default AuthContext;

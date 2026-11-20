@@ -1,305 +1,67 @@
-import { Product } from '../models/Product.js';
+import { prisma } from '../config/prisma.js';
 
-// Pre-seeded rich catalog matching the Store Admin reference UI
-export const INITIAL_PRODUCTS = [
-  {
-    id: 'p_rol_001',
-    name: 'Rolex Submariner Date 41mm',
-    sku: 'WH-ROL-001',
-    category: 'Luxury Watches',
-    brand: 'Rolex',
-    price: 18999,
-    originalPrice: 24999,
-    costPrice: 12000,
-    discount: 24,
-    stock: 24,
-    status: 'Active',
-    rating: 4.9,
-    reviewsCount: 3840,
-    isFeatured: true,
-    image: '/images/products/rolex-submariner.png',
-    images: ['/images/products/rolex-submariner.png'],
-    specifications: {
-      dialSize: '41 mm',
-      dialShape: 'Round',
-      dialColor: 'Black',
-      caseMaterial: 'Oystersteel',
-      caseColor: 'Silver',
-      strapMaterial: 'Stainless Steel',
-      strapColor: 'Silver',
-      movementType: 'Automatic Self-Winding',
-      displayType: 'Analog',
-      waterResistance: '300M Diver',
-      watchWeight: '155g',
-      warranty: '5 Years Official International Warranty',
-      countryOfOrigin: 'Switzerland',
-    },
-    warehouseLocation: 'Zone A - Luxury Vault (L-12)',
-    barcode: '8901234567890',
-    description: 'The benchmark among divers watches. Features Oystersteel case with Cerachrom unidirectional rotating ceramic bezel and Chromalight luminescent dial.',
-  },
-  {
-    id: 'p_rol_002',
-    name: 'Rolex Cosmograph Daytona Gold',
-    sku: 'WH-ROL-002',
-    category: 'Luxury Watches',
-    brand: 'Rolex',
-    price: 21999,
-    originalPrice: 29999,
-    costPrice: 14500,
-    discount: 27,
-    stock: 18,
-    status: 'Active',
-    rating: 4.9,
-    reviewsCount: 4120,
-    isFeatured: true,
-    image: '/images/products/rolex-daytona.png',
-    images: ['/images/products/rolex-daytona.png'],
-    specifications: {
-      dialSize: '40 mm',
-      dialShape: 'Round',
-      dialColor: 'Champagne Gold',
-      caseMaterial: '18 ct Yellow Gold',
-      caseColor: 'Gold',
-      strapMaterial: '18 ct Yellow Gold',
-      strapColor: 'Gold',
-      movementType: 'Calibre 4130 Chronograph',
-      displayType: 'Chronograph',
-      waterResistance: '100M Water Resistant',
-      watchWeight: '190g',
-      warranty: '5 Years Official International Warranty',
-      countryOfOrigin: 'Switzerland',
-    },
-    warehouseLocation: 'Zone A - Luxury Vault (L-15)',
-    barcode: '8901234567891',
-    description: 'Iconic motor racing chronograph designed for endurance racing drivers. 18 ct yellow gold with champagne sunburst dial and engraved tachymetric bezel.',
-  },
-  {
-    id: 'p_omg_001',
-    name: 'Omega Speedmaster Professional',
-    sku: 'WH-OMG-001',
-    category: 'Men\'s Watches',
-    brand: 'Omega',
-    price: 16499,
-    originalPrice: 22000,
-    costPrice: 11000,
-    discount: 25,
-    stock: 32,
-    status: 'Active',
-    rating: 4.8,
-    reviewsCount: 2950,
-    isFeatured: true,
-    image: '/images/products/omega-speedmaster.png',
-    images: ['/images/products/omega-speedmaster.png'],
-    specifications: {
-      dialSize: '42 mm',
-      dialShape: 'Round',
-      dialColor: 'Matte Black',
-      caseMaterial: 'Stainless Steel',
-      caseColor: 'Silver',
-      strapMaterial: 'Stainless Steel Bracelet',
-      strapColor: 'Silver',
-      movementType: 'Manual-Winding Co-Axial Master Chronometer 3861',
-      displayType: 'Chronograph',
-      waterResistance: '50M Water Resistant',
-      watchWeight: '138g',
-      warranty: '5 Years International Warranty',
-      countryOfOrigin: 'Switzerland',
-    },
-    warehouseLocation: 'Zone A - Luxury Vault (M-04)',
-    barcode: '8901234567892',
-    description: 'The legendary Moonwatch. Tested on all six lunar missions. Hesalite crystal and Seahorse medallion caseback.',
-  },
-  {
-    id: 'p_omg_002',
-    name: 'Omega Seamaster Diver 300M',
-    sku: 'WH-OMG-002',
-    category: 'Sports Watches',
-    brand: 'Omega',
-    price: 14999,
-    originalPrice: 19999,
-    costPrice: 9800,
-    discount: 25,
-    stock: 15,
-    status: 'Active',
-    rating: 4.8,
-    reviewsCount: 2100,
-    isFeatured: true,
-    image: '/images/products/omega-seamaster.png',
-    images: ['/images/products/omega-seamaster.png'],
-    specifications: {
-      dialSize: '42 mm',
-      dialShape: 'Round',
-      dialColor: 'Wave-Engraved Blue Ceramic',
-      caseMaterial: 'Stainless Steel',
-      caseColor: 'Silver',
-      strapMaterial: 'Steel Bracelet',
-      strapColor: 'Silver',
-      movementType: 'Automatic Co-Axial Master Chronometer 8800',
-      displayType: 'Analog',
-      waterResistance: '300M Professional Diver',
-      watchWeight: '162g',
-      warranty: '5 Years Official International Warranty',
-      countryOfOrigin: 'Switzerland',
-    },
-    warehouseLocation: 'Zone B - Sports Vault (S-08)',
-    barcode: '8901234567893',
-    description: 'Since 1993, the Seamaster Diver 300M has enjoyed a legendary following. Laser-engraved wave dial with helium escape valve.',
-  },
-  {
-    id: 'p_pp_001',
-    name: 'Patek Philippe Nautilus 5711',
-    sku: 'WH-PP-001',
-    category: 'Luxury Watches',
-    brand: 'Patek Philippe',
-    price: 5499000,
-    originalPrice: 5999000,
-    costPrice: 4200000,
-    discount: 8,
-    stock: 5,
-    status: 'Active',
-    rating: 4.9,
-    reviewsCount: 540,
-    isFeatured: true,
-    image: '/images/products/patek-nautilus.png',
-    images: ['/images/products/patek-nautilus.png'],
-    specifications: {
-      dialSize: '40 mm',
-      dialShape: 'Porothole Octagonal',
-      dialColor: 'Gradated Blue Sunburst',
-      caseMaterial: 'Stainless Steel',
-      caseColor: 'Silver',
-      strapMaterial: 'Steel Bracelet',
-      strapColor: 'Silver',
-      movementType: 'Mechanical Self-Winding Caliber 26-330 S C',
-      displayType: 'Analog',
-      waterResistance: '120M Water Resistant',
-      watchWeight: '115g',
-      warranty: 'Geneva Seal Lifetime Certified Warranty',
-      countryOfOrigin: 'Switzerland',
-    },
-    warehouseLocation: 'Zone A - Ultra High Vault (U-01)',
-    barcode: '8901234567894',
-    description: 'With the rounded octagonal shape of its bezel, ingenious porthole construction and horizontally embossed dial, the Nautilus has epitomized the elegant sports watch since 1976.',
-  },
-  {
-    id: 'p_ap_001',
-    name: 'Audemars Piguet Royal Oak',
-    sku: 'WH-AP-001',
-    category: 'Luxury Watches',
-    brand: 'Audemars Piguet',
-    price: 4299000,
-    originalPrice: 4899000,
-    costPrice: 3300000,
-    discount: 12,
-    stock: 6,
-    status: 'Active',
-    rating: 4.8,
-    reviewsCount: 420,
-    isFeatured: true,
-    image: '/images/products/ap-royal-oak.png',
-    images: ['/images/products/ap-royal-oak.png'],
-    specifications: {
-      dialSize: '41 mm',
-      dialShape: 'Octagonal with 8 Screws',
-      dialColor: 'Grande Tapisserie Grey',
-      caseMaterial: 'Stainless Steel',
-      caseColor: 'Silver',
-      strapMaterial: 'Steel Integrated Bracelet',
-      strapColor: 'Silver',
-      movementType: 'Calibre 4302 Selfwinding',
-      displayType: 'Analog',
-      waterResistance: '50M Water Resistant',
-      watchWeight: '148g',
-      warranty: '5 Years Official Manufacture Warranty',
-      countryOfOrigin: 'Switzerland',
-    },
-    warehouseLocation: 'Zone A - Ultra High Vault (U-03)',
-    barcode: '8901234567895',
-    description: 'The iconic octagonal steel watch created by Gerald Genta. Hand-finished satin brushing, white gold hexagonal screws and Grande Tapisserie dial.',
-  },
-  {
-    id: 'p_car_001',
-    name: 'Cartier Tank Must',
-    sku: 'WH-CAR-001',
-    category: 'Women\'s Watches',
-    brand: 'Cartier',
-    price: 349000,
-    originalPrice: 389000,
-    costPrice: 240000,
-    discount: 10,
-    stock: 12,
-    status: 'Active',
-    rating: 4.7,
-    reviewsCount: 980,
-    isFeatured: true,
-    image: '/images/products/cartier-tank.png',
-    images: ['/images/products/cartier-tank.png'],
-    specifications: {
-      dialSize: '33 mm',
-      dialShape: 'Rectangular',
-      dialColor: 'Silvered Opaline Dial',
-      caseMaterial: 'Rose Gold & Steel',
-      caseColor: 'Rose Gold',
-      strapMaterial: 'Alligator Leather',
-      strapColor: 'Burgundy / Brown',
-      movementType: 'High Autonomy Quartz Movement',
-      displayType: 'Analog Roman Numerals',
-      waterResistance: '30M Water Resistant',
-      watchWeight: '62g',
-      warranty: '8 Years Cartier Care Warranty',
-      countryOfOrigin: 'Switzerland',
-    },
-    warehouseLocation: 'Zone B - Women\'s Vault (W-02)',
-    barcode: '8901234567896',
-    description: 'Created by Louis Cartier in 1917, the legendary Tank watch is a timeless icon of Parisian luxury with blue cabochon spinel crown and blued-steel sword hands.',
-  },
-  {
-    id: 'p_apl_001',
-    name: 'Apple Watch Series 10',
-    sku: 'WH-APL-001',
-    category: 'Smartwatches',
-    brand: 'Apple',
-    price: 46900,
-    originalPrice: 54900,
-    costPrice: 38000,
-    discount: 15,
-    stock: 28,
-    status: 'Active',
-    rating: 4.6,
-    reviewsCount: 6200,
-    isFeatured: true,
-    image: '/images/products/apple-watch-s10.png',
-    images: ['/images/products/apple-watch-s10.png'],
-    specifications: {
-      dialSize: '46 mm',
-      dialShape: 'Curved Rectangle',
-      dialColor: 'Always-On Retina OLED',
-      caseMaterial: 'Jet Black Aluminium',
-      caseColor: 'Midnight Black',
-      strapMaterial: 'Fluoroelastomer Sport Band',
-      strapColor: 'Midnight',
-      movementType: 'S10 SiP with 64-bit Dual-Core',
-      displayType: 'OLED Touchscreen 2000 nits',
-      waterResistance: '50M Swimproof',
-      watchWeight: '36.4g',
-      warranty: '1 Year Apple Official Warranty + AppleCare+',
-      countryOfOrigin: 'USA',
-    },
-    warehouseLocation: 'Zone C - Electronics Vault (E-10)',
-    barcode: '8901234567897',
-    description: 'Thinnest Apple Watch ever with our biggest display. Advanced ECG, sleep apnea detection, blood oxygen monitor and fastest charging ever.',
-  },
-];
+// Helper to format Prisma Product into standard Store & API Product format
+const mapPrismaProduct = (p) => {
+  const images = p.productImages && p.productImages.length > 0
+    ? p.productImages.map((img) => img.imageUrl)
+    : [p.imageUrl || '/images/products/featured_rolex_submariner.jpg'];
 
-// In-memory products state for live operations
-let productsCache = [...INITIAL_PRODUCTS];
+  const primaryImage = images[0];
+  const stock = p.inventory && p.inventory.length > 0
+    ? p.inventory.reduce((sum, inv) => sum + inv.currentStock, 0)
+    : 10;
+
+  const cost = Number(p.costPrice || Math.round(Number(p.price) * 0.65));
+  const price = Number(p.price);
+  const original = Number(p.originalPrice || price);
+
+  return {
+    id: p.productId,
+    productId: p.productId,
+    name: p.name,
+    sku: p.sku,
+    category: p.category?.name || 'Luxury',
+    brand: p.brand?.name || 'Swiss Horology',
+    price,
+    originalPrice: original,
+    costPrice: cost,
+    discount: Number(p.discountPercentage || (original > price ? Math.round(((original - price) / original) * 100) : 0)),
+    stock,
+    status: p.isActive ? (stock === 0 ? 'Out of Stock' : 'Active') : 'Draft',
+    rating: 4.8,
+    reviewsCount: 120,
+    isFeatured: p.isFeatured,
+    image: primaryImage,
+    images,
+    specifications: {
+      caseMaterial: p.caseMaterial || 'Stainless Steel',
+      dialColor: p.dialColor || 'Black',
+      strapMaterial: p.strapMaterial || 'Steel / Leather',
+      movementType: p.movementType || 'Automatic',
+      waterResistance: p.waterResistance || '100M Water Resistant',
+      gender: p.gender || 'Men',
+    },
+    description: p.description || p.name,
+    createdAt: p.createdAt ? new Date(p.createdAt).toISOString() : new Date().toISOString(),
+  };
+};
 
 // GET /api/products
 export const getProducts = async (req, res) => {
   try {
     const { status, category, brand, search, featured } = req.query;
-    let list = [...productsCache];
+
+    const dbProducts = await prisma.product.findMany({
+      include: {
+        brand: true,
+        category: true,
+        productImages: { orderBy: { displayOrder: 'asc' } },
+        inventory: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    let list = dbProducts.map(mapPrismaProduct);
 
     if (status && status !== 'All') {
       list = list.filter((p) => p.status.toLowerCase() === status.toLowerCase());
@@ -323,31 +85,53 @@ export const getProducts = async (req, res) => {
       );
     }
 
-    res.status(200).json({
+    const total = dbProducts.length;
+    const active = list.filter((p) => p.status === 'Active').length;
+    const draft = list.filter((p) => p.status === 'Draft').length;
+    const outOfStock = list.filter((p) => p.stock === 0 || p.status === 'Out of Stock').length;
+
+    return res.status(200).json({
       status: 'success',
       count: list.length,
       data: list,
       stats: {
-        total: productsCache.length,
-        active: productsCache.filter((p) => p.status === 'Active').length,
-        draft: productsCache.filter((p) => p.status === 'Draft').length,
-        outOfStock: productsCache.filter((p) => p.stock === 0 || p.status === 'Out of Stock').length,
-        averageRating: 4.6,
+        total,
+        active,
+        draft,
+        outOfStock,
+        averageRating: 4.8,
       },
     });
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    return res.status(500).json({ status: 'error', message: err.message });
   }
 };
 
 // GET /api/products/:id
 export const getProductById = async (req, res) => {
-  const { id } = req.params;
-  const product = productsCache.find((p) => p.id === id || p.sku.toUpperCase() === id.toUpperCase());
-  if (!product) {
-    return res.status(404).json({ status: 'fail', message: 'Product not found.' });
+  try {
+    const { id } = req.params;
+
+    const product = await prisma.product.findFirst({
+      where: {
+        OR: [{ productId: id }, { sku: id.toUpperCase() }],
+      },
+      include: {
+        brand: true,
+        category: true,
+        productImages: true,
+        inventory: true,
+      },
+    });
+
+    if (!product) {
+      return res.status(404).json({ status: 'fail', message: 'Product not found.' });
+    }
+
+    return res.status(200).json({ status: 'success', data: mapPrismaProduct(product) });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
   }
-  res.status(200).json({ status: 'success', data: product });
 };
 
 // POST /api/products
@@ -361,8 +145,8 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    // Check SKU duplicate
-    const existing = productsCache.find((p) => p.sku.toUpperCase() === sku.toUpperCase());
+    const cleanSku = sku.toUpperCase().trim();
+    const existing = await prisma.product.findUnique({ where: { sku: cleanSku } });
     if (existing) {
       return res.status(400).json({
         status: 'fail',
@@ -370,45 +154,76 @@ export const createProduct = async (req, res) => {
       });
     }
 
+    // Resolve Brand
+    const brandSlug = brand.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const dbBrand = await prisma.brand.upsert({
+      where: { slug: brandSlug },
+      update: {},
+      create: { slug: brandSlug, name: brand },
+    });
+
+    // Resolve Category
+    const categorySlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const dbCategory = await prisma.category.upsert({
+      where: { categorySlug },
+      update: {},
+      create: { categorySlug, name: category },
+    });
+
     const original = Number(req.body.originalPrice) || Number(price);
     const cost = Number(req.body.costPrice) || Math.round(Number(price) * 0.65);
     const discount = original > Number(price) ? Math.round(((original - Number(price)) / original) * 100) : 0;
 
-    const newProd = {
-      id: `p_${Date.now()}`,
-      name,
-      sku: sku.toUpperCase(),
-      brand,
-      category,
-      price: Number(price),
-      originalPrice: original,
-      costPrice: cost,
-      discount,
-      profitMargin: Number(price) - cost,
-      stock: Number(req.body.stock) || 10,
-      status: req.body.status || 'Active',
-      rating: 4.5,
-      reviewsCount: 0,
-      isFeatured: req.body.isFeatured || false,
-      image: req.body.image || '/images/products/featured_rolex_submariner.jpg',
-      images: req.body.images || [req.body.image || '/images/products/featured_rolex_submariner.jpg'],
-      specifications: req.body.specifications || {},
-      variants: req.body.variants || [],
-      warehouseLocation: req.body.warehouseLocation || 'Zone A - Luxury Vault',
-      barcode: req.body.barcode || `890${Date.now().toString().slice(-10)}`,
-      description: req.body.description || 'WatchHub Luxury Certified Timepiece.',
-      createdAt: new Date().toISOString(),
-    };
+    const defaultWh = await prisma.warehouse.findFirst({ where: { isActive: true } });
 
-    productsCache.unshift(newProd);
+    const newProd = await prisma.product.create({
+      data: {
+        name,
+        sku: cleanSku,
+        brandId: dbBrand.brandId,
+        categoryId: dbCategory.categoryId,
+        price: Number(price),
+        originalPrice: original,
+        costPrice: cost,
+        discountPercentage: discount,
+        description: req.body.description || 'WatchHub Certified Luxury Timepiece.',
+        caseMaterial: req.body.caseMaterial || 'Stainless Steel',
+        dialColor: req.body.dialColor || 'Black',
+        strapMaterial: req.body.strapMaterial || 'Steel / Leather',
+        waterResistance: req.body.waterResistance || '100M Water Resistant',
+        movementType: req.body.movementType || 'Automatic Chronometer',
+        gender: req.body.gender || 'Men',
+        isFeatured: Boolean(req.body.isFeatured),
+        isActive: req.body.status !== 'Draft',
+        productImages: {
+          create: {
+            imageUrl: req.body.image || '/images/products/featured_rolex_submariner.jpg',
+            displayOrder: 1,
+            isPrimary: true,
+          },
+        },
+        inventory: defaultWh ? {
+          create: {
+            warehouseId: defaultWh.warehouseId,
+            currentStock: Number(req.body.stock) || 10,
+          },
+        } : undefined,
+      },
+      include: {
+        brand: true,
+        category: true,
+        productImages: true,
+        inventory: true,
+      },
+    });
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'success',
       message: 'Product created successfully.',
-      data: newProd,
+      data: mapPrismaProduct(newProd),
     });
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    return res.status(500).json({ status: 'error', message: err.message });
   }
 };
 
@@ -416,26 +231,40 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const index = productsCache.findIndex((p) => p.id === id || p.sku === id);
-    if (index === -1) {
+
+    const existing = await prisma.product.findFirst({
+      where: { OR: [{ productId: id }, { sku: id.toUpperCase() }] },
+    });
+
+    if (!existing) {
       return res.status(404).json({ status: 'fail', message: 'Product not found.' });
     }
 
-    const updated = {
-      ...productsCache[index],
-      ...req.body,
-      updatedAt: new Date().toISOString(),
-    };
+    const updated = await prisma.product.update({
+      where: { productId: existing.productId },
+      data: {
+        name: req.body.name || undefined,
+        price: req.body.price !== undefined ? Number(req.body.price) : undefined,
+        originalPrice: req.body.originalPrice !== undefined ? Number(req.body.originalPrice) : undefined,
+        isFeatured: req.body.isFeatured !== undefined ? Boolean(req.body.isFeatured) : undefined,
+        description: req.body.description || undefined,
+        updatedAt: new Date(),
+      },
+      include: {
+        brand: true,
+        category: true,
+        productImages: true,
+        inventory: true,
+      },
+    });
 
-    productsCache[index] = updated;
-
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       message: 'Product updated successfully.',
-      data: updated,
+      data: mapPrismaProduct(updated),
     });
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    return res.status(500).json({ status: 'error', message: err.message });
   }
 };
 
@@ -443,92 +272,67 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const beforeCount = productsCache.length;
-    productsCache = productsCache.filter((p) => p.id !== id && p.sku !== id);
 
-    if (productsCache.length === beforeCount) {
+    const existing = await prisma.product.findFirst({
+      where: { OR: [{ productId: id }, { sku: id.toUpperCase() }] },
+    });
+
+    if (!existing) {
       return res.status(404).json({ status: 'fail', message: 'Product not found.' });
     }
 
-    res.status(200).json({
+    // Cascade delete related images and inventory first
+    await prisma.productImage.deleteMany({ where: { productId: existing.productId } });
+    await prisma.inventory.deleteMany({ where: { productId: existing.productId } });
+    await prisma.product.delete({ where: { productId: existing.productId } });
+
+    return res.status(200).json({
       status: 'success',
       message: 'Product deleted successfully.',
     });
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    return res.status(500).json({ status: 'error', message: err.message });
   }
 };
 
 // POST /api/products/bulk
 export const bulkProductsAction = async (req, res) => {
   try {
-    const { action, ids, products } = req.body;
-
-    if (action === 'import' && Array.isArray(products)) {
-      let imported = 0;
-      let skipped = 0;
-      const errors = [];
-
-      products.forEach((prod) => {
-        if (!prod.name || !prod.sku) {
-          errors.push(`Row missing name or SKU: ${JSON.stringify(prod)}`);
-          skipped++;
-          return;
-        }
-        if (productsCache.some((p) => p.sku.toUpperCase() === prod.sku.toUpperCase())) {
-          errors.push(`SKU ${prod.sku} already exists.`);
-          skipped++;
-          return;
-        }
-
-        productsCache.unshift({
-          id: `p_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
-          name: prod.name,
-          sku: prod.sku.toUpperCase(),
-          brand: prod.brand || 'WatchHub Heritage',
-          category: prod.category || 'Luxury Watches',
-          price: Number(prod.price) || 9999,
-          originalPrice: Number(prod.originalPrice) || Number(prod.price || 9999) * 1.25,
-          stock: Number(prod.stock) || 10,
-          status: prod.status || 'Active',
-          rating: 4.5,
-          reviewsCount: 1,
-          image: prod.image || '/images/products/featured_rolex_submariner.jpg',
-        });
-        imported++;
-      });
-
-      return res.status(200).json({
-        status: 'success',
-        message: `Import complete: ${imported} imported, ${skipped} skipped.`,
-        imported,
-        skipped,
-        errors,
-      });
-    }
+    const { action, ids } = req.body;
 
     if (action === 'delete' && Array.isArray(ids)) {
-      productsCache = productsCache.filter((p) => !ids.includes(p.id) && !ids.includes(p.sku));
+      await prisma.productImage.deleteMany({ where: { productId: { in: ids } } });
+      await prisma.inventory.deleteMany({ where: { productId: { in: ids } } });
+      await prisma.product.deleteMany({ where: { productId: { in: ids } } });
       return res.status(200).json({ status: 'success', message: `${ids.length} products deleted.` });
     }
 
     if (action === 'activate' && Array.isArray(ids)) {
-      productsCache = productsCache.map((p) => (ids.includes(p.id) || ids.includes(p.sku) ? { ...p, status: 'Active' } : p));
+      await prisma.product.updateMany({
+        where: { productId: { in: ids } },
+        data: { isActive: true },
+      });
       return res.status(200).json({ status: 'success', message: `${ids.length} products activated.` });
     }
 
     if (action === 'deactivate' && Array.isArray(ids)) {
-      productsCache = productsCache.map((p) => (ids.includes(p.id) || ids.includes(p.sku) ? { ...p, status: 'Draft' } : p));
+      await prisma.product.updateMany({
+        where: { productId: { in: ids } },
+        data: { isActive: false },
+      });
       return res.status(200).json({ status: 'success', message: `${ids.length} products moved to draft.` });
     }
 
     if (action === 'feature' && Array.isArray(ids)) {
-      productsCache = productsCache.map((p) => (ids.includes(p.id) || ids.includes(p.sku) ? { ...p, isFeatured: true } : p));
+      await prisma.product.updateMany({
+        where: { productId: { in: ids } },
+        data: { isFeatured: true },
+      });
       return res.status(200).json({ status: 'success', message: `${ids.length} products marked as featured.` });
     }
 
-    res.status(400).json({ status: 'fail', message: 'Invalid bulk action.' });
+    return res.status(400).json({ status: 'fail', message: 'Invalid bulk action.' });
   } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
+    return res.status(500).json({ status: 'error', message: err.message });
   }
 };

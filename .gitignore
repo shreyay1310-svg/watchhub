@@ -11,21 +11,41 @@ client/dist/
 build/
 .output/
 
-# Android build outputs & caches
+# Android build outputs, caches & local properties
 android/.gradle/
 android/app/build/
 android/build/
+android-native/.gradle/
+android-native/.kotlin/
+android-native/build/
+android-native/app/build/
+android-native/local.properties
+android_legacy_backup/
 *.apk
 *.apk.idsig
-!WatchHub-v1.0.0.apk
-!client/public/downloads/*.apk
 
-# Environment Variables
+# Environment Variables & Secrets
 .env
 .env.local
 .env.production
 .env.development
 *.env
+server/.env
+client/.env
+!.env.example
+!server/.env.example
+!client/.env.example
+
+# Local Mocks, Databases & Backups containing sensitive customer data
+server/.mock_sms_dispatches.json
+server/backups/
+qc
+qc/
+
+# Python cache & temporary scratch
+__pycache__/
+*.pyc
+docs/__pycache__/
 
 # Logs
 npm-debug.log*
@@ -39,12 +59,22 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Vercel
+# Vercel & CI/CD
 .vercel/
+.github/
 
 # Antigravity & Scratch
 .antigravity/
 .gemini/
 scratch/
 
-.vercel
+# Security, Keystores & Heavy Binaries
+*.keystore
+*.jks
+audit_phase_1/PHASE_1_EVIDENCE/
+
+# Office Documents (Ignore generated scratch binaries, retain project reports)
+*.docx
+*.pdf
+!WatchHub_Project_Report.pdf
+!docs/*.pdf

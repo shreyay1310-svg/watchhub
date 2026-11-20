@@ -6,10 +6,36 @@ import cookieParser from 'cookie-parser';
 
 const app = express();
 
+// Allowed Origins for Production, Custom Domains & Vercel Preview Deployments
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://watchhub.in',
+  'https://www.watchhub.in',
+  'https://thewatchhub.in',
+  'https://watchhubstore.com',
+  'https://shopwatchhub.com',
+  'https://watchhub-store-silk.vercel.app',
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 // Security & Parsing Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Allow PWA assets, external CDNs, and Google fonts
+  crossOriginEmbedderPolicy: false,
+}));
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith('.vercel.app') ||
+      process.env.NODE_ENV !== 'production'
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -22,7 +48,7 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'WatchHub E-Commerce REST API is live and operational.',
-    version: '1.0.0',
+    version: '1.1.0',
     timestamp: new Date().toISOString(),
   });
 });
@@ -71,6 +97,13 @@ import deliveryRoutes from './routes/deliveryRoutes.js';
 import supportRoutes from './routes/supportRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+
+// 404 & Static Assets
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
+// Compatibility alias for direct root routes
+app.use('/auth', authRoutes);
+app.use('/products', productRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);

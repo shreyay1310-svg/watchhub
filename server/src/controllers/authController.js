@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import { prisma } from '../config/prisma.js';
 
 const generateTokens = (user) => {
   const payload = {
-    id: user._id || user.id,
-    name: user.name,
+    id: user.id || user.userId,
+    name: user.name || user.fullName,
     email: user.email,
     role: user.role,
-    permissions: user.permissions,
+    permissions: user.permissions || [],
   };
 
   const accessSecret = process.env.JWT_ACCESS_SECRET || 'watchhub_super_secret_access_jwt_key_2026_luxury_chronograph';
@@ -28,59 +29,72 @@ export const login = async (req, res) => {
       return res.status(400).json({ status: 'fail', message: 'Please provide email and password.' });
     }
 
-    // Try finding user in MongoDB if connected
+    const cleanEmail = email.toLowerCase().trim();
+
+    // Find user in MSSQL database via Prisma
     let user = null;
     try {
-      user = await User.findOne({ email: email.toLowerCase() });
+      user = await prisma.user.findUnique({
+        where: { email: cleanEmail },
+        include: {
+          userRoles: {
+            include: {
+              role: {
+                include: {
+                  rolePermissions: {
+                    include: {
+                      permission: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
     } catch (e) {
-      // MongoDB might not be connected in local dev, allow fallback
+      console.error('[Auth Error] Database lookup error:', e.message);
     }
 
     if (!user) {
-      const cleanEmail = email.toLowerCase().trim();
-      let role = 'Customer';
-      let permissions = ['orders.own', 'cart.own', 'wishlist.own'];
-      let avatar = '👤';
-      let name = email.split('@')[0];
-
-      if (cleanEmail.includes('super')) {
-        role = 'Super Admin';
-        permissions = ['all'];
-        avatar = '👑';
-        name = 'Vikram Malhotra';
-      } else if (cleanEmail.includes('inventory')) {
-        role = 'Inventory Manager';
-        permissions = ['manage_stock', 'receive_shipments', 'update_low_stock', 'view_reports'];
-        avatar = '📦';
-        name = 'Rajesh Mehta';
-      } else if (cleanEmail.includes('delivery')) {
-        role = 'Delivery Manager';
-        permissions = ['assign_courier', 'update_tracking', 'manage_returns', 'confirm_dispatch'];
-        avatar = '🚚';
-        name = 'Karan Verma';
-      } else if (cleanEmail.includes('support')) {
-        role = 'Customer Support Executive';
-        permissions = ['view_tickets', 'resolve_complaints', 'initiate_refund', 'live_chat'];
-        avatar = '🎧';
-        name = 'Pooja Sharma';
-      } else if (cleanEmail.includes('admin') || cleanEmail.includes('store')) {
-        role = 'Store Admin';
-        permissions = ['manage_products', 'manage_orders', 'view_analytics', 'manage_discounts'];
-        avatar = '💼';
-        name = 'Aanya Singhania';
-      }
-
-      user = {
-        id: `usr_${Date.now()}`,
-        name,
-        email: cleanEmail,
-        role,
-        permissions,
-        avatar,
-      };
+      return res.status(401).json({ status: 'fail', message: 'Invalid email or password.' });
     }
 
-    const { accessToken, refreshToken } = generateTokens(user);
+    // Strictly verify password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ status: 'fail', message: 'Invalid email or password.' });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ status: 'fail', message: 'Your account is deactivated. Please contact support.' });
+    }
+
+    // Resolve primary role & granular permissions
+    const primaryRole = user.userRoles[0]?.role?.roleName || 'Customer';
+    let permissions = [];
+    if (primaryRole === 'Super Admin') {
+      permissions = ['all'];
+    } else {
+      user.userRoles.forEach((ur) => {
+        ur.role?.rolePermissions?.forEach((rp) => {
+          if (rp.permission?.permissionCode && !permissions.includes(rp.permission.permissionCode)) {
+            permissions.push(rp.permission.permissionCode);
+          }
+        });
+      });
+    }
+
+    const userPayload = {
+      id: user.userId,
+      name: user.fullName,
+      email: user.email,
+      role: primaryRole,
+      permissions,
+      avatar: user.avatarUrl,
+    };
+
+    const { accessToken, refreshToken } = generateTokens(userPayload);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -93,14 +107,7 @@ export const login = async (req, res) => {
       status: 'success',
       message: 'Login successful.',
       accessToken,
-      user: {
-        id: user._id || user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        permissions: user.permissions,
-        avatar: user.avatar,
-      },
+      user: userPayload,
     });
   } catch (err) {
     res.status(500).json({ status: 'error', message: err.message });
@@ -116,36 +123,49 @@ export const register = async (req, res) => {
       return res.status(400).json({ status: 'fail', message: 'Name, email and password are required.' });
     }
 
-    let newUser = {
-      id: `usr_${Date.now()}`,
-      name,
-      email,
-      phone,
-      role: 'Customer', // Public registration is strictly Customer role
-      permissions: ['orders.own', 'cart.own', 'wishlist.own'],
-    };
+    const cleanEmail = email.toLowerCase().trim();
 
-    try {
-      const created = await User.create({
-        name,
-        email,
-        phone,
-        password,
-        role: 'Customer',
-        permissions: ['orders.own'],
-      });
-      newUser = created;
-    } catch (e) {
-      // Standalone mode fallback
+    // Check existing
+    const existing = await prisma.user.findUnique({ where: { email: cleanEmail } });
+    if (existing) {
+      return res.status(400).json({ status: 'fail', message: 'An account with this email address already exists.' });
     }
 
-    const { accessToken } = generateTokens(newUser);
+    const passwordHash = await bcrypt.hash(password, 10);
+    const customerRole = await prisma.role.findUnique({ where: { roleName: 'Customer' } });
+
+    const created = await prisma.user.create({
+      data: {
+        fullName: name,
+        email: cleanEmail,
+        phone: phone || null,
+        passwordHash,
+        isActive: true,
+        isEmailVerified: true,
+        isPhoneVerified: false,
+        userRoles: customerRole ? {
+          create: {
+            roleId: customerRole.roleId,
+          },
+        } : undefined,
+      },
+    });
+
+    const userPayload = {
+      id: created.userId,
+      name: created.fullName,
+      email: created.email,
+      role: 'Customer',
+      permissions: ['shop', 'review', 'track_orders', 'wishlist'],
+    };
+
+    const { accessToken } = generateTokens(userPayload);
 
     res.status(201).json({
       status: 'success',
       message: 'Customer registered successfully.',
       accessToken,
-      user: newUser,
+      user: userPayload,
     });
   } catch (err) {
     res.status(500).json({ status: 'error', message: err.message });
@@ -159,4 +179,3 @@ export const getMe = async (req, res) => {
     user: req.user,
   });
 };
-

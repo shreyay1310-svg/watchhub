@@ -6,11 +6,80 @@ import {
   verifyRazorpayWebhookSignature,
   processRazorpayRefund,
 } from '../services/razorpayService.js';
-import { Order } from '../models/Order.js';
-import { Payment } from '../models/Payment.js';
+import { prisma } from '../config/prisma.js';
 import { authenticate, authorizeRoles } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// 0. Validate Coupon Voucher (Database-driven via Prisma Coupon Model - HD-012)
+// POST /api/payments/validate-coupon
+router.post('/validate-coupon', async (req, res) => {
+  try {
+    const { promoCode, subtotal = 0 } = req.body;
+    if (!promoCode || typeof promoCode !== 'string' || !promoCode.trim()) {
+      return res.status(400).json({
+        status: 'fail',
+        valid: false,
+        message: 'Promotional voucher code is required.',
+      });
+    }
+
+    const cleanCode = promoCode.trim().toUpperCase();
+    const orderSubtotal = Number(subtotal) || 0;
+
+    const matchedCoupon = await prisma.coupon.findUnique({
+      where: { code: cleanCode },
+    });
+
+    if (!matchedCoupon || !matchedCoupon.isActive) {
+      return res.status(400).json({
+        status: 'fail',
+        valid: false,
+        message: `Invalid or expired promotional voucher code: ${promoCode}`,
+      });
+    }
+
+    if (matchedCoupon.validUntil && new Date(matchedCoupon.validUntil) < new Date()) {
+      return res.status(400).json({
+        status: 'fail',
+        valid: false,
+        message: `Promotional voucher code ${cleanCode} has expired.`,
+      });
+    }
+
+    const minOrder = Number(matchedCoupon.minOrderAmount || 0);
+    if (orderSubtotal < minOrder) {
+      return res.status(400).json({
+        status: 'fail',
+        valid: false,
+        message: `Voucher ${cleanCode} requires a minimum order value of ₹${minOrder.toLocaleString('en-IN')}.`,
+        minOrder,
+      });
+    }
+
+    const discountPct = Number(matchedCoupon.discountPercentage);
+    const maxCap = matchedCoupon.maxDiscountAmount !== null ? Number(matchedCoupon.maxDiscountAmount) : 50000;
+    const calculatedDiscount = Math.min(
+      Math.round(orderSubtotal * (discountPct / 100)),
+      maxCap
+    );
+
+    return res.status(200).json({
+      status: 'success',
+      valid: true,
+      coupon: {
+        code: cleanCode,
+        discountPct,
+        maxCap,
+        minOrder,
+        description: matchedCoupon.description || `${discountPct}% off on luxury orders above ₹${minOrder}`,
+        discountAmount: calculatedDiscount,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+});
 
 // 1. Create Razorpay Order
 // POST /api/payments/create-order
@@ -18,19 +87,34 @@ router.post('/create-order', async (req, res) => {
   try {
     const { items = [], shippingMethod = 'armoured', promoCode } = req.body;
 
-    // Calculate payable amount strictly from item prices (never trust client total directly!)
-    let calculatedSubtotal = 0;
-    if (Array.isArray(items) && items.length > 0) {
-      calculatedSubtotal = items.reduce((acc, item) => {
-        const itemPrice = Number(item.price || item.unitPrice || 0);
-        const itemQty = Number(item.quantity || 1);
-        return acc + itemPrice * itemQty;
-      }, 0);
-    } else {
-      calculatedSubtotal = 18999; // Default fallback luxury cart value
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Cart cannot be empty. Please select timepieces before proceeding to checkout.',
+      });
     }
 
-    // Shipping charges calculation
+    // Server-side price calculation against SQL Server WatchHubDB
+    let calculatedSubtotal = 0;
+    for (const item of items) {
+      const pId = item.productId || item.id;
+      let unitPrice = Number(item.price || item.unitPrice || 0);
+
+      if (pId) {
+        try {
+          const dbProduct = await prisma.product.findFirst({
+            where: { OR: [{ productId: pId }, { sku: pId }] },
+          });
+          if (dbProduct) {
+            unitPrice = Number(dbProduct.price);
+          }
+        } catch {}
+      }
+
+      const itemQty = Math.max(1, parseInt(item.quantity || 1, 10));
+      calculatedSubtotal += unitPrice * itemQty;
+    }
+
     const shippingRates = {
       standard: 0,
       express: 1200,
@@ -38,10 +122,26 @@ router.post('/create-order', async (req, res) => {
     };
     const shippingCharge = shippingRates[shippingMethod] !== undefined ? shippingRates[shippingMethod] : 3500;
 
-    // VIP Promo verification
     let discount = 0;
-    if (promoCode && promoCode.toUpperCase() === 'HOROLOGYVIP') {
-      discount = Math.min(Math.round(calculatedSubtotal * 0.1), 50000); // 10% up to 50k
+    if (promoCode && typeof promoCode === 'string' && promoCode.trim().length > 0) {
+      const cleanCode = promoCode.trim().toUpperCase();
+      const matchedCoupon = await prisma.coupon.findUnique({ where: { code: cleanCode } });
+      if (!matchedCoupon || !matchedCoupon.isActive) {
+        return res.status(400).json({
+          status: 'fail',
+          message: `Invalid or expired promotional voucher code: ${promoCode}`,
+        });
+      }
+      const minOrder = Number(matchedCoupon.minOrderAmount || 0);
+      if (calculatedSubtotal < minOrder) {
+        return res.status(400).json({
+          status: 'fail',
+          message: `Voucher ${cleanCode} requires a minimum order value of ₹${minOrder.toLocaleString('en-IN')}.`,
+        });
+      }
+      const discountPct = Number(matchedCoupon.discountPercentage);
+      const maxCap = matchedCoupon.maxDiscountAmount !== null ? Number(matchedCoupon.maxDiscountAmount) : 50000;
+      discount = Math.min(Math.round(calculatedSubtotal * (discountPct / 100)), maxCap);
     }
 
     const finalPayable = Math.max(calculatedSubtotal + shippingCharge - discount, 1);
@@ -57,20 +157,6 @@ router.post('/create-order', async (req, res) => {
         promoCode: promoCode || 'NONE',
       },
     });
-
-    // Record payment initialization in DB
-    try {
-      await Payment.create({
-        orderId: receiptId,
-        razorpayOrderId: orderResult.orderId,
-        amount: finalPayable,
-        currency: 'INR',
-        status: 'Created',
-        method: 'upi',
-      });
-    } catch (e) {
-      // Ignore DB offline in dev
-    }
 
     return res.status(200).json({
       status: 'success',
@@ -105,7 +191,6 @@ router.post('/verify', async (req, res) => {
       });
     }
 
-    // 1. Verify HMAC SHA-256 signature
     const isValidSignature = verifyRazorpayPaymentSignature({
       razorpay_order_id,
       razorpay_payment_id,
@@ -120,58 +205,92 @@ router.post('/verify', async (req, res) => {
       });
     }
 
-    // 2. Fetch payment details from Razorpay to verify actual 'captured' status
-    const paymentCheck = await fetchPaymentDetails(razorpay_payment_id);
-    const isCaptured = paymentCheck.payment?.status === 'captured' || paymentCheck.payment?.status === 'authorized';
+    // Idempotent duplicate check: If payment was already verified and captured, return existing confirmed record
+    try {
+      const existingPayment = await prisma.payment.findUnique({
+        where: { razorpayOrderId: razorpay_order_id },
+        include: { order: true },
+      });
 
-    // Generate or use permanent Order ID & AWB
+      if (existingPayment && existingPayment.paymentStatus === 'Captured') {
+        return res.status(200).json({
+          status: 'success',
+          duplicate: true,
+          message: 'Payment already verified and captured.',
+          orderId: existingPayment.order?.orderNumber || existingPayment.orderId,
+          awbNumber: orderData.awbNumber || `BLU${Math.floor(100000000 + Math.random() * 900000000)}`,
+          paymentId: existingPayment.razorpayPaymentId || razorpay_payment_id,
+          paymentStatus: 'Captured',
+          verifiedAt: existingPayment.capturedAt?.toISOString() || new Date().toISOString(),
+        });
+      }
+    } catch (checkErr) {
+      console.warn('[Payment Idempotency Check Notice]', checkErr.message);
+    }
+
     const newOrderId = orderData.orderId || `WH2026${Math.floor(1000 + Math.random() * 9000)}`;
     const newAwb = orderData.awbNumber || `BLU${Math.floor(100000000 + Math.random() * 900000000)}`;
 
-    // 3. Save / Update in MongoDB
     try {
-      await Payment.findOneAndUpdate(
-        { razorpayOrderId: razorpay_order_id },
-        {
-          orderId: newOrderId,
-          razorpayPaymentId: razorpay_payment_id,
-          razorpaySignature: razorpay_signature,
-          status: 'Captured',
-          method: paymentCheck.payment?.method || 'upi',
-          customer: {
-            name: orderData.shippingAddress?.fullName || 'Collector',
-            email: orderData.customerEmail,
-            phone: orderData.shippingAddress?.phone,
-          },
-        },
-        { upsert: true, new: true }
-      );
+      let customerUser = await prisma.user.findFirst({
+        where: { userRoles: { some: { role: { roleName: 'Customer' } } } },
+      });
+      const customerId = customerUser ? customerUser.userId : '660000000000000000000006';
 
-      // Save Order entity
-      await Order.findOneAndUpdate(
-        { orderId: newOrderId },
-        {
-          orderId: newOrderId,
-          customerName: orderData.shippingAddress?.fullName || 'Valued Collector',
-          customerEmail: orderData.customerEmail || 'collector@watchhub.com',
-          shippingAddress: orderData.shippingAddress,
-          payment: {
-            method: paymentCheck.payment?.method || 'Online',
-            status: 'Captured',
-            transactionId: razorpay_payment_id,
-            razorpayOrderId: razorpay_order_id,
-            razorpayPaymentId: razorpay_payment_id,
-            razorpaySignature: razorpay_signature,
-            amount: Number(orderData.amount || 18999),
+      let address = await prisma.address.findFirst({ where: { userId: customerId } });
+      if (!address) {
+        address = await prisma.address.create({
+          data: {
+            userId: customerId,
+            fullName: orderData.shippingAddress?.fullName || 'Collector',
+            street: orderData.shippingAddress?.street || 'WatchHub Luxury Suite',
+            city: orderData.shippingAddress?.city || 'Mumbai',
+            state: orderData.shippingAddress?.state || 'Maharashtra',
+            pincode: orderData.shippingAddress?.pincode || '400050',
+            phone: orderData.shippingAddress?.phone || '+91 99887 66554',
           },
+        });
+      }
+
+      const order = await prisma.order.upsert({
+        where: { orderNumber: newOrderId },
+        update: {
+          orderStatus: 'Confirmed',
+          totalAmount: Number(orderData.amount || 18999),
+        },
+        create: {
+          orderId: `ord_${Date.now()}`,
+          orderNumber: newOrderId,
+          customerId,
+          shippingAddressId: address.addressId,
           orderStatus: 'Confirmed',
           subtotal: Number(orderData.amount || 18999),
           totalAmount: Number(orderData.amount || 18999),
         },
-        { upsert: true, new: true }
-      );
-    } catch (err) {
-      console.warn('[Payment DB Notice]', err.message);
+      });
+
+      await prisma.payment.upsert({
+        where: { razorpayOrderId: razorpay_order_id },
+        update: {
+          razorpayPaymentId: razorpay_payment_id,
+          razorpaySignature: razorpay_signature,
+          paymentStatus: 'Captured',
+          capturedAt: new Date(),
+        },
+        create: {
+          orderId: order.orderId,
+          razorpayOrderId: razorpay_order_id,
+          razorpayPaymentId: razorpay_payment_id,
+          razorpaySignature: razorpay_signature,
+          amount: Number(orderData.amount || 18999),
+          currency: 'INR',
+          paymentStatus: 'Captured',
+          paymentMethod: 'UPI',
+          capturedAt: new Date(),
+        },
+      });
+    } catch (dbErr) {
+      console.warn('[Payment DB Notice]', dbErr.message);
     }
 
     return res.status(200).json({
@@ -196,7 +315,6 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     const signature = req.headers['x-razorpay-signature'];
     const rawBody = req.body.toString();
 
-    // Verify webhook signature
     const isValid = verifyRazorpayWebhookSignature({
       rawBody,
       signature,
@@ -215,35 +333,19 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     }
 
     const event = payload.event;
-    const eventId = payload.account_id || `evt_${Date.now()}`;
-    console.log(`[Razorpay Webhook Event] ${event} (Event ID: ${eventId})`);
+    console.log(`[Razorpay Webhook Event] ${event}`);
 
-    // Handle payment.captured
     if (event === 'payment.captured') {
       const paymentEntity = payload.payload?.payment?.entity;
-      if (paymentEntity) {
-        await Payment.findOneAndUpdate(
-          { razorpayOrderId: paymentEntity.order_id },
-          {
-            status: 'Captured',
+      if (paymentEntity?.order_id) {
+        await prisma.payment.updateMany({
+          where: { razorpayOrderId: paymentEntity.order_id },
+          data: {
+            paymentStatus: 'Captured',
             razorpayPaymentId: paymentEntity.id,
-            $push: { webhookEventsReceived: { eventId, eventType: event } },
-          }
-        );
-      }
-    }
-
-    // Handle payment.failed
-    if (event === 'payment.failed') {
-      const paymentEntity = payload.payload?.payment?.entity;
-      if (paymentEntity) {
-        await Payment.findOneAndUpdate(
-          { razorpayOrderId: paymentEntity.order_id },
-          {
-            status: 'Failed',
-            $push: { webhookEventsReceived: { eventId, eventType: event } },
-          }
-        );
+            capturedAt: new Date(),
+          },
+        });
       }
     }
 
@@ -255,12 +357,19 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 });
 
 // 4. Query Payment Status
-// GET /api/payments/:orderId/status
-router.get('/:orderId/status', async (req, res) => {
+// GET /api/payments/status/:orderId & GET /api/payments/:orderId/status
+router.get(['/status/:orderId', '/:orderId/status'], async (req, res) => {
   try {
     const { orderId } = req.params;
-    let payment = await Payment.findOne({
-      $or: [{ orderId }, { razorpayOrderId: orderId }, { razorpayPaymentId: orderId }],
+    const payment = await prisma.payment.findFirst({
+      where: {
+        OR: [
+          { orderId },
+          { razorpayOrderId: orderId },
+          { razorpayPaymentId: orderId },
+          { order: { orderNumber: orderId } },
+        ],
+      },
     });
 
     if (!payment) {
@@ -278,18 +387,105 @@ router.get('/:orderId/status', async (req, res) => {
       orderId: payment.orderId,
       razorpayOrderId: payment.razorpayOrderId,
       razorpayPaymentId: payment.razorpayPaymentId,
-      paymentStatus: payment.status,
-      amount: payment.amount,
+      paymentStatus: payment.paymentStatus,
+      amount: Number(payment.amount),
       currency: payment.currency,
-      method: payment.method,
-      refunds: payment.refunds,
+      method: payment.paymentMethod,
     });
   } catch (err) {
     return res.status(500).json({ status: 'error', message: err.message });
   }
 });
 
-// 5. Razorpay Refund API (RBAC Protected: Store Admin, Customer Support, Super Admin)
+// 5. Handle Payment Failure / Cancellation
+// POST /api/payments/failure
+router.post('/failure', async (req, res) => {
+  try {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      error_code,
+      error_description,
+      orderData = {},
+    } = req.body;
+
+    if (!razorpay_order_id) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'razorpay_order_id is required to record payment failure.',
+      });
+    }
+
+    try {
+      // Maintain SQL Server referential integrity: link to existing order or create failed order placeholder
+      let targetOrderId = orderData.orderId;
+      let existingOrder = null;
+      if (targetOrderId) {
+        existingOrder = await prisma.order.findFirst({
+          where: { OR: [{ orderId: targetOrderId }, { orderNumber: targetOrderId }] },
+        });
+      }
+
+      if (!existingOrder) {
+        let customerUser = await prisma.user.findFirst({
+          where: { userRoles: { some: { role: { roleName: 'Customer' } } } },
+        });
+        const customerId = customerUser ? customerUser.userId : (await prisma.user.findFirst())?.userId;
+        let address = customerId ? await prisma.address.findFirst({ where: { userId: customerId } }) : null;
+        if (customerId && address) {
+          const failOrderNum = `FAIL_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+          existingOrder = await prisma.order.create({
+            data: {
+              orderNumber: failOrderNum,
+              customerId,
+              shippingAddressId: address.addressId,
+              orderStatus: 'PaymentFailed',
+              subtotal: Number(orderData.amount || 0),
+              totalAmount: Number(orderData.amount || 0),
+            },
+          });
+          targetOrderId = existingOrder.orderId;
+        }
+      } else {
+        targetOrderId = existingOrder.orderId;
+      }
+
+      if (targetOrderId) {
+        await prisma.payment.upsert({
+          where: { razorpayOrderId: razorpay_order_id },
+          update: {
+            razorpayPaymentId: razorpay_payment_id || null,
+            paymentStatus: 'Failed',
+            failureReason: error_description || error_code || 'Payment declined by issuing bank or cancelled by user.',
+          },
+          create: {
+            orderId: targetOrderId,
+            razorpayOrderId: razorpay_order_id,
+            razorpayPaymentId: razorpay_payment_id || null,
+            paymentStatus: 'Failed',
+            failureReason: error_description || error_code || 'Payment declined by issuing bank or cancelled by user.',
+            amount: Number(orderData.amount || 0),
+            currency: 'INR',
+            paymentMethod: 'UPI',
+          },
+        });
+      }
+    } catch (dbErr) {
+      console.warn('[Payment Failure DB Notice]', dbErr.message);
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Payment failure recorded.',
+      paymentStatus: 'Failed',
+      failureReason: error_description || 'Payment was declined or cancelled.',
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+});
+
+// 5. Razorpay Refund API
 // POST /api/payments/:orderId/refund
 router.post(
   '/:orderId/refund',
@@ -300,8 +496,10 @@ router.post(
       const { orderId } = req.params;
       const { amount, reason = 'Customer return / order cancellation' } = req.body;
 
-      const payment = await Payment.findOne({
-        $or: [{ orderId }, { razorpayOrderId: orderId }],
+      const payment = await prisma.payment.findFirst({
+        where: {
+          OR: [{ orderId }, { razorpayOrderId: orderId }, { order: { orderNumber: orderId } }],
+        },
       });
 
       const paymentId = payment?.razorpayPaymentId || `pay_${Date.now()}`;
@@ -312,23 +510,20 @@ router.post(
       });
 
       if (payment) {
-        payment.status = amount && amount < payment.amount ? 'Partially Refunded' : 'Refunded';
-        payment.refunds.push({
-          refundId: refundResult.refundId,
-          amount: refundResult.amount,
-          status: refundResult.status,
-          speed: refundResult.speed,
-          notes: reason,
-          processedBy: req.user?.name || 'Authorized Staff',
+        await prisma.payment.update({
+          where: { paymentId: payment.paymentId },
+          data: {
+            paymentStatus: amount && Number(amount) < Number(payment.amount) ? 'Partially Refunded' : 'Refunded',
+          },
         });
-        await payment.save();
       }
 
-      // Update Order Status
-      await Order.findOneAndUpdate(
-        { orderId },
-        { orderStatus: 'Returned', 'payment.status': 'Refunded' }
-      );
+      await prisma.order.updateMany({
+        where: {
+          OR: [{ orderId }, { orderNumber: orderId }],
+        },
+        data: { orderStatus: 'Returned' },
+      });
 
       return res.status(200).json({
         status: 'success',

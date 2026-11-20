@@ -12,9 +12,10 @@
     "start": "node server/src/server.js",
     "start:server": "npm start --prefix server",
     "install:all": "npm install --prefix server && npm install --prefix client",
-    "db:seed": "node server/src/scripts/seed.js"
+    "db:seed": "node server/scripts/seed_mssql_prisma.mjs"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -22,8 +23,12 @@
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.5",
     "morgan": "^1.10.0",
+    "nodemailer": "^10.6.0",
+    "prisma": "^6.19.3",
+    "razorpay": "^2.9.8",
+    "resend": "^6.38.1",
+    "socket.io": "^4.8.4",
     "zod": "^3.24.1"
   },
   "keywords": [
@@ -33,10 +38,15 @@
     "react",
     "node",
     "express",
-    "mongodb",
+    "mssql",
+    "prisma",
     "rbac",
     "manufacturing-hub"
   ],
   "author": "WatchHub Architecture Team",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "playwright-core": "^1.65.1",
+    "prisma": "^6.19.3"
+  }
 }

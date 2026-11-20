@@ -1,6 +1,5 @@
 import express from 'express';
-import { LocationHistory } from '../models/LocationHistory.js';
-import { Order } from '../models/Order.js';
+import { prisma } from '../config/prisma.js';
 
 const router = express.Router();
 
@@ -11,8 +10,8 @@ router.post('/rider-location', async (req, res) => {
     const {
       orderId,
       shipmentId,
-      riderId = 'RIDER_001',
-      riderName = 'Vikram Singh (Armoured Escort)',
+      riderId = 'rd_001',
+      riderName = 'Rohan Singh (Armoured Escort)',
       lat,
       lng,
       speed = 34.5,
@@ -40,11 +39,34 @@ router.post('/rider-location', async (req, res) => {
       timestamp: new Date(),
     };
 
-    // Save location to MongoDB
+    // Save location ping to Microsoft SQL Server via Prisma
     try {
-      await LocationHistory.create(payload);
+      const delivery = await prisma.delivery.findFirst({
+        where: {
+          OR: [{ deliveryId: orderId }, { trackingNumber: orderId }, { order: { orderNumber: orderId } }],
+        },
+      });
+
+      const rider = await prisma.user.findFirst({
+        where: { userId: riderId },
+      }) || await prisma.user.findFirst({
+        where: { userRoles: { some: { role: { roleName: 'Delivery Partner' } } } },
+      });
+
+      if (delivery && rider) {
+        await prisma.deliveryLocationPing.create({
+          data: {
+            deliveryId: delivery.deliveryId,
+            riderId: rider.userId,
+            latitude: Number(lat),
+            longitude: Number(lng),
+            speedKmh: Number(speed),
+            headingDegrees: Number(heading),
+            pingTimestamp: new Date(),
+          },
+        });
+      }
     } catch (dbErr) {
-      // Don't fail if DB is offline in dev
       console.warn('[Tracking] DB write warning:', dbErr.message);
     }
 
@@ -71,19 +93,34 @@ router.get('/:orderId/live-gps', async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    // Fetch latest rider GPS update from DB
-    let latestLocation = null;
-    try {
-      latestLocation = await LocationHistory.findOne({ orderId }).sort({ timestamp: -1 });
-    } catch {}
-
-    // Fetch order to get delivery destination coordinates
+    // Fetch delivery and order from MSSQL
+    let delivery = null;
     let order = null;
+    let latestPing = null;
+
     try {
-      order = await Order.findOne({ orderId });
+      delivery = await prisma.delivery.findFirst({
+        where: {
+          OR: [{ deliveryId: orderId }, { trackingNumber: orderId }, { order: { orderNumber: orderId } }],
+        },
+        include: {
+          order: { include: { shippingAddress: true, customer: true } },
+          assignedRider: true,
+          locationPings: { orderBy: { pingTimestamp: 'desc' }, take: 1 },
+        },
+      });
+
+      if (delivery) {
+        order = delivery.order;
+        latestPing = delivery.locationPings[0];
+      } else {
+        order = await prisma.order.findFirst({
+          where: { OR: [{ orderId }, { orderNumber: orderId }] },
+          include: { shippingAddress: true, customer: true },
+        });
+      }
     } catch {}
 
-    // Default luxury store / vault origin (Oberoi Gurgaon Hub)
     const storeOrigin = {
       name: 'WatchHub Armoured Vault',
       lat: 28.5020,
@@ -91,28 +128,25 @@ router.get('/:orderId/live-gps', async (req, res) => {
       address: 'WatchHub Vault, Phase 2, Udyog Vihar, Gurugram, HR',
     };
 
-    // Customer destination address coordinates
     const destination = {
-      lat: order?.shippingAddress?.lat || 28.4595,
-      lng: order?.shippingAddress?.lng || 77.0850,
+      lat: order?.shippingAddress?.latitude ? Number(order.shippingAddress.latitude) : 28.4595,
+      lng: order?.shippingAddress?.longitude ? Number(order.shippingAddress.longitude) : 77.0850,
       address: order?.shippingAddress?.street || 'Penthouse 14B, The Oberoi Sky Heights, Gurugram',
-      customerName: order?.customer?.name || 'Alexander Sterling',
+      customerName: order?.customer?.fullName || 'Alexander Sterling',
     };
 
-    // Current rider coordinates
     const rider = {
-      riderId: latestLocation?.riderId || 'RIDER_001',
-      riderName: latestLocation?.riderName || 'Vikram Singh (Armoured Escort)',
-      lat: latestLocation?.lat || 28.4815,
-      lng: latestLocation?.lng || 77.0862,
-      speed: latestLocation?.speed || 38.2,
-      heading: latestLocation?.heading || 180,
-      accuracy: latestLocation?.accuracy || 4,
-      lastUpdated: latestLocation?.timestamp || new Date().toISOString(),
-      isLive: Boolean(latestLocation),
+      riderId: delivery?.assignedRider?.userId || 'rd_001',
+      riderName: delivery?.assignedRider?.fullName || 'Rohan Singh (Armoured Escort)',
+      lat: latestPing?.latitude ? Number(latestPing.latitude) : 28.4815,
+      lng: latestPing?.longitude ? Number(latestPing.longitude) : 77.0862,
+      speed: latestPing?.speedKmh ? Number(latestPing.speedKmh) : 38.2,
+      heading: latestPing?.headingDegrees ? Number(latestPing.headingDegrees) : 180,
+      accuracy: 4,
+      lastUpdated: latestPing?.pingTimestamp || new Date().toISOString(),
+      isLive: Boolean(latestPing),
     };
 
-    // Calculate approx distance & ETA
     // Haversine formula
     const toRad = (v) => (v * Math.PI) / 180;
     const R = 6371; // km
@@ -123,7 +157,7 @@ router.get('/:orderId/live-gps', async (req, res) => {
       Math.cos(toRad(rider.lat)) * Math.cos(toRad(destination.lat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distanceKm = Math.max(Number((R * c).toFixed(2)), 0.4);
-    const etaMinutes = Math.max(Math.round((distanceKm / 30) * 60), 4); // Avg city speed 30km/h
+    const etaMinutes = Math.max(Math.round((distanceKm / 30) * 60), 4);
 
     return res.status(200).json({
       status: 'success',
@@ -137,8 +171,8 @@ router.get('/:orderId/live-gps', async (req, res) => {
           distanceFormatted: `${distanceKm} km`,
           etaMinutes,
           etaFormatted: `${etaMinutes} mins`,
-          status: 'Out for Armoured Delivery',
-          securityCode: 'SEC-8924',
+          status: delivery?.deliveryStatus || 'Out for Armoured Delivery',
+          securityCode: delivery?.deliveryHandoverOtp || 'SEC-8924',
         },
       },
     });
@@ -176,10 +210,10 @@ const MOCK_TRACKING_ORDERS = [
       { stageId: 2, title: 'Payment Confirmed', time: '13 Nov 2026, 10:32 AM', description: 'Payment has been successfully processed.', completed: true },
       { stageId: 3, title: 'Order Packed', time: '13 Nov 2026, 02:15 PM', description: 'Your watch has been packed securely.', completed: true },
       { stageId: 4, title: 'Shipped', time: '14 Nov 2026, 08:45 AM', description: 'Order has been handed over to Delhivery.', completed: true },
-      { stageId: 5, title: 'In Transit', time: '15 Nov 2026, 11:20 AM', description: 'Your parcel is in transit to the destination city (Current location: Gurugram Hub).', completed: false, active: true },
-      { stageId: 6, title: 'Arrived at Destination Hub', time: 'Expected 16 Nov 2026, 07:00 AM', description: 'Pending arrival at city facility.', completed: false },
-      { stageId: 7, title: 'Out for Delivery', time: 'Expected 16 Nov 2026, 10:00 AM', description: 'Assigned courier agent.', completed: false },
-      { stageId: 8, title: 'Delivered', time: 'Expected 16 Nov 2026, By 08:00 PM', description: 'Doorstep handover with OTP.', completed: false },
+      { stageId: 5, title: 'In Transit', time: '15 Nov 2026, 11:20 AM', description: 'Your parcel is in transit to the destination city.', completed: false, active: true },
+      { stageId: 6, title: 'Arrived at Destination Hub', time: 'Expected 16 Nov 2026', description: 'Pending arrival at city facility.', completed: false },
+      { stageId: 7, title: 'Out for Delivery', time: 'Expected 16 Nov 2026', description: 'Assigned courier agent.', completed: false },
+      { stageId: 8, title: 'Delivered', time: 'Expected 16 Nov 2026', description: 'Doorstep handover with OTP.', completed: false },
     ],
   },
   {
@@ -208,28 +242,65 @@ const MOCK_TRACKING_ORDERS = [
   },
 ];
 
-// In-memory update subscriptions
 const updateSubscriptions = [];
 
 // GET /api/tracking/:query
-router.get('/:query', (req, res) => {
-  const query = (req.params.query || '').trim().toUpperCase().replace('#', '');
-  const found = MOCK_TRACKING_ORDERS.find(
-    (o) => o.orderId.toUpperCase() === query || o.awbNumber.toUpperCase() === query
-  );
+router.get('/:query', async (req, res) => {
+  try {
+    const query = (req.params.query || '').trim().toUpperCase().replace('#', '');
+    if (!query) {
+      return res.status(400).json({ status: 'fail', message: 'Tracking query parameter is required.' });
+    }
 
-  if (found) {
-    return res.status(200).json({ status: 'success', data: found });
+    // 1. Check live database Orders via Prisma
+    try {
+      const dbOrder = await prisma.order.findFirst({
+        where: {
+          OR: [{ orderId: query }, { orderNumber: query }],
+        },
+        include: { deliveries: true },
+      });
+
+      if (dbOrder) {
+        const dlv = dbOrder.deliveries[0];
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            orderId: dbOrder.orderNumber || dbOrder.orderId,
+            awbNumber: dlv?.trackingNumber || `DLV${dbOrder.orderNumber ? dbOrder.orderNumber.replace(/[^0-9]/g, '') : '99824'}`,
+            orderStatus: dbOrder.orderStatus,
+            totalAmount: Number(dbOrder.totalAmount),
+            createdAt: dbOrder.createdAt,
+            timeline: [
+              { stageId: 1, title: 'Order Placed', time: dbOrder.createdAt, completed: true },
+              { stageId: 2, title: 'Payment Confirmed', completed: dbOrder.orderStatus !== 'Pending' },
+              { stageId: 3, title: 'Out for Armoured Delivery', completed: dbOrder.orderStatus === 'Out for Delivery' || dbOrder.orderStatus === 'Delivered' },
+              { stageId: 4, title: 'Delivered', completed: dbOrder.orderStatus === 'Delivered' },
+            ],
+          },
+        });
+      }
+    } catch {
+      // Proceed to test ledger check
+    }
+
+    // 2. Check test seed orders (for deterministic testing)
+    const testSeed = MOCK_TRACKING_ORDERS.find(
+      (o) => o.orderId.toUpperCase() === query || o.awbNumber.toUpperCase() === query
+    );
+
+    if (testSeed) {
+      return res.status(200).json({ status: 'success', data: testSeed });
+    }
+
+    // Never fabricate fake success for unknown tracking numbers
+    return res.status(404).json({
+      status: 'fail',
+      message: `No active consignment found for tracking number '${query}'. Please verify your Order ID or AWB number.`,
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
   }
-
-  // Fallback realistic response
-  const order = {
-    ...MOCK_TRACKING_ORDERS[0],
-    orderId: query.startsWith('WH') ? query : `WH-${query}`,
-    awbNumber: query.length >= 10 ? query : `DLV${Math.abs(query.split('').reduce((a, b) => a + b.charCodeAt(0), 1000000000))}`,
-  };
-
-  return res.status(200).json({ status: 'success', data: order });
 });
 
 // POST /api/tracking/subscribe-updates
@@ -258,4 +329,3 @@ router.post('/subscribe-updates', (req, res) => {
 });
 
 export default router;
-

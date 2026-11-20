@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import CustomerNavbar from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import ProductCard from '../../components/common/ProductCard';
+import SEO from '../../components/common/SEO';
 import { useCart } from '../../context/CartContext';
 import { MOCK_PRODUCTS, GLOBAL_WATCH_BRANDS } from '../../data/mockProducts';
 import {
@@ -153,6 +154,8 @@ const NAV_ITEMS = [
 
 export const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const queryParam = searchParams.get('q') || '';
   const categoryParam = searchParams.get('cat') || '';
   const tagParam = searchParams.get('tag') || '';
@@ -303,6 +306,12 @@ export const ProductsPage = () => {
 
   return (
     <div className="min-h-screen bg-watch-light flex flex-col font-poppins">
+      <SEO
+        title="Luxury Watches Collection – Rolex, Omega, Patek Philippe | WatchHub"
+        description="Explore over 28 world-renowned horology brands. Certified authentic luxury mechanical watches with international manufacturer warranty."
+        canonical="https://watchhub.in/products"
+        keywords="luxury watches, swiss watches, buy rolex, buy omega, patek philippe, luxury watch collection"
+      />
       <CustomerNavbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-6 w-full flex-1 space-y-6">
@@ -520,8 +529,8 @@ export const ProductsPage = () => {
                     product={p}
                     onAddToCart={handleAddToCart}
                     onToggleWishlist={toggleWishlist}
-                    onQuickView={setSelectedProduct}
-                    onNavigate={(prod) => setSelectedProduct(prod)}
+                    onQuickView={(prod) => setSelectedProduct(prod)}
+                    onNavigate={(prod) => navigate(`/product/${prod.id}`)}
                     isInWishlist={isInWishlist(p.id)}
                     isAdded={addedItem === p.id}
                   />
