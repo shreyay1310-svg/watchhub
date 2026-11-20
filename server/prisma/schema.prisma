@@ -54,6 +54,13 @@ model User {
   isActive             Boolean                @default(true) @map("IsActive")
   isEmailVerified      Boolean                @default(false) @map("IsEmailVerified")
   isPhoneVerified      Boolean                @default(false) @map("IsPhoneVerified")
+  otpCode              String?                @db.NVarChar(10) @map("OtpCode")
+  otpHash              String?                @db.NVarChar(128) @map("OtpHash")
+  otpExpiresAt         DateTime?              @map("OtpExpiresAt")
+  otpPurpose           String?                @db.NVarChar(40) @map("OtpPurpose")
+  resetPasswordToken   String?                @db.NVarChar(255) @map("ResetPasswordToken")
+  resetPasswordExpiresAt DateTime?            @map("ResetPasswordExpiresAt")
+  passwordChangedAt    DateTime?              @map("PasswordChangedAt")
   createdAt            DateTime               @default(now()) @map("CreatedAt")
   updatedAt            DateTime               @default(now()) @updatedAt @map("UpdatedAt")
   userRoles            UserRole[]

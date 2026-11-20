@@ -448,6 +448,15 @@ router.post('/verify-reset-otp', async (req, res) => {
       { expiresIn: '15m' }
     );
 
+    // Persist reset token state in user record
+    await prisma.user.updateMany({
+      where: { email: cleanEmail },
+      data: {
+        resetPasswordToken: resetToken,
+        resetPasswordExpiresAt: new Date(Date.now() + 15 * 60 * 1000),
+      },
+    }).catch(() => {});
+
     return res.status(200).json({
       status: 'success',
       verified: true,
@@ -535,6 +544,12 @@ router.post('/reset-password', async (req, res) => {
         data: {
           passwordHash: hashedPassword,
           isEmailVerified: true,
+          passwordChangedAt: new Date(),
+          resetPasswordToken: null,
+          resetPasswordExpiresAt: null,
+          otpCode: null,
+          otpHash: null,
+          otpExpiresAt: null,
           updatedAt: new Date(),
         },
       });

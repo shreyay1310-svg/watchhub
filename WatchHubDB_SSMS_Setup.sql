@@ -84,6 +84,13 @@ BEGIN
         [IsActive] BIT NOT NULL CONSTRAINT [Users_IsActive_df] DEFAULT 1,
         [IsEmailVerified] BIT NOT NULL CONSTRAINT [Users_IsEmailVerified_df] DEFAULT 0,
         [IsPhoneVerified] BIT NOT NULL CONSTRAINT [Users_IsPhoneVerified_df] DEFAULT 0,
+        [OtpCode] NVARCHAR(10) NULL,
+        [OtpHash] NVARCHAR(128) NULL,
+        [OtpExpiresAt] DATETIME2 NULL,
+        [OtpPurpose] NVARCHAR(40) NULL,
+        [ResetPasswordToken] NVARCHAR(255) NULL,
+        [ResetPasswordExpiresAt] DATETIME2 NULL,
+        [PasswordChangedAt] DATETIME2 NULL,
         [CreatedAt] DATETIME2 NOT NULL CONSTRAINT [Users_CreatedAt_df] DEFAULT CURRENT_TIMESTAMP,
         [UpdatedAt] DATETIME2 NOT NULL CONSTRAINT [Users_UpdatedAt_df] DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT [Users_pkey] PRIMARY KEY CLUSTERED ([UserId]),
@@ -92,6 +99,24 @@ BEGIN
     );
     CREATE NONCLUSTERED INDEX [IX_Users_Email] ON [dbo].[Users]([Email]);
     CREATE NONCLUSTERED INDEX [IX_Users_Phone] ON [dbo].[Users]([Phone]);
+END
+ELSE
+BEGIN
+    -- Ensure columns exist if table was previously created
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND name = 'OtpCode')
+        ALTER TABLE [dbo].[Users] ADD [OtpCode] NVARCHAR(10) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND name = 'OtpHash')
+        ALTER TABLE [dbo].[Users] ADD [OtpHash] NVARCHAR(128) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND name = 'OtpExpiresAt')
+        ALTER TABLE [dbo].[Users] ADD [OtpExpiresAt] DATETIME2 NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND name = 'OtpPurpose')
+        ALTER TABLE [dbo].[Users] ADD [OtpPurpose] NVARCHAR(40) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND name = 'ResetPasswordToken')
+        ALTER TABLE [dbo].[Users] ADD [ResetPasswordToken] NVARCHAR(255) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND name = 'ResetPasswordExpiresAt')
+        ALTER TABLE [dbo].[Users] ADD [ResetPasswordExpiresAt] DATETIME2 NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND name = 'PasswordChangedAt')
+        ALTER TABLE [dbo].[Users] ADD [PasswordChangedAt] DATETIME2 NULL;
 END
 GO
 
