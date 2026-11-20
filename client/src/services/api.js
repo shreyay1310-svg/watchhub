@@ -1,8 +1,15 @@
 import axios from 'axios';
 
 const rawApiUrl = import.meta.env.VITE_API_URL;
-const resolvedBaseUrl = rawApiUrl
-  ? (rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl.replace(/\/+$/, '')}/api`)
+// On HTTPS origins (like Vercel), prevent mixed-content blocks against insecure local URLs
+const isHttpsOrigin = typeof window !== 'undefined' && window.location.protocol === 'https:';
+const sanitizedApiUrl =
+  isHttpsOrigin && rawApiUrl && rawApiUrl.startsWith('http://localhost')
+    ? '/api'
+    : (rawApiUrl || '/api');
+
+const resolvedBaseUrl = sanitizedApiUrl
+  ? (sanitizedApiUrl.endsWith('/api') ? sanitizedApiUrl : `${sanitizedApiUrl.replace(/\/+$/, '')}/api`)
   : '/api';
 
 const api = axios.create({
