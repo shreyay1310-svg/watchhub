@@ -45,11 +45,12 @@ export const LoginPage = () => {
   // If already authenticated, redirect to destination or role dashboard immediately
   useEffect(() => {
     if (!authLoading && isAuthenticated && user) {
+      const dest = getRoleDashboardPath(user.role);
       const fromPath = location.state?.from?.pathname;
-      if (fromPath && fromPath !== '/login') {
+      if (fromPath && fromPath !== '/login' && !fromPath.includes('/dashboard') && user.role === ROLES.CUSTOMER) {
         navigate(fromPath, { replace: true });
       } else {
-        navigate(getRoleDashboardPath(user.role), { replace: true });
+        navigate(dest, { replace: true });
       }
     }
   }, [authLoading, isAuthenticated, user, location, navigate]);
@@ -109,7 +110,7 @@ export const LoginPage = () => {
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
-  // Exactly matching the 5 role tabs from the reference UI
+  // Exactly matching all 7 roles from WatchHubDB
   const ROLE_TABS = [
     {
       id: ROLES.CUSTOMER,
@@ -159,6 +160,14 @@ export const LoginPage = () => {
       email: 'support@watchhub.com',
       password: 'Admin@123',
     },
+    {
+      id: ROLES.SUPER_ADMIN,
+      line1: 'Super',
+      line2: 'Admin',
+      icon: ShieldCheck,
+      email: 'superadmin@watchhub.com',
+      password: 'Admin@123',
+    },
   ];
 
   const handleRoleSelect = (tab) => {
@@ -187,11 +196,11 @@ export const LoginPage = () => {
     if (res.success) {
       setSuccessMessage(`Welcome back! Logged in as ${res.user.name || selectedRole}.`);
       setTimeout(() => {
+        const dest = getRoleDashboardPath(res.user.role);
         const fromPath = location.state?.from?.pathname;
-        if (fromPath && fromPath !== '/login') {
+        if (fromPath && fromPath !== '/login' && !fromPath.includes('/dashboard') && res.user.role === ROLES.CUSTOMER) {
           navigate(fromPath, { replace: true });
         } else {
-          const dest = getRoleDashboardPath(res.user.role);
           navigate(dest, { replace: true });
         }
       }, 700);
@@ -398,8 +407,8 @@ export const LoginPage = () => {
         <div className="lg:col-span-5 bg-[#FAF7F2] lg:rounded-l-[28px] p-6 sm:p-10 flex flex-col justify-between shadow-[-15px_0_35px_rgba(0,0,0,0.25)] relative z-20">
 
           <div>
-            {/* 1. Horizontal Segmented Role Tabs (5 Clean Segments, No Text Cut-Off) */}
-            <div className="grid grid-cols-5 gap-1.5 p-1 bg-[#F2EDE4] rounded-xl border border-[#E8E2D5] mb-6">
+            {/* 1. Horizontal Segmented Role Tabs (All 7 Roles from WatchHubDB) */}
+            <div className="flex overflow-x-auto gap-1 p-1 bg-[#F2EDE4] rounded-xl border border-[#E8E2D5] mb-6 scrollbar-none sm:grid sm:grid-cols-7">
               {ROLE_TABS.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = selectedRole === tab.id;
@@ -408,7 +417,7 @@ export const LoginPage = () => {
                     key={tab.id}
                     type="button"
                     onClick={() => handleRoleSelect(tab)}
-                    className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-lg text-center transition-all ${isActive
+                    className={`flex-shrink-0 min-w-[56px] sm:min-w-0 flex flex-col items-center justify-center py-2.5 px-1 rounded-lg text-center transition-all ${isActive
                       ? 'bg-gradient-to-b from-[#C4913B] to-[#AD7929] text-white shadow-sm font-semibold'
                       : 'text-[#4A5568] hover:text-[#1A202C] hover:bg-white/60'
                       }`}

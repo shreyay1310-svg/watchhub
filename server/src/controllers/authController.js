@@ -179,3 +179,17 @@ export const getMe = async (req, res) => {
     user: req.user,
   });
 };
+
+// Logout Controller
+export const logout = async (req, res) => {
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+  res.clearCookie('accessToken');
+  res.status(200).json({
+    status: 'success',
+    message: 'Logged out successfully.',
+  });
+};

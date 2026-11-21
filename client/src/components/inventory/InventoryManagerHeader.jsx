@@ -61,27 +61,9 @@ export default function InventoryManagerHeader({
     if (onSearch) onSearch(e.target.value);
   };
 
-  const handleRoleChange = (targetRole) => {
-    switchRole(targetRole);
-    setProfileDropdownOpen(false);
-    if (targetRole === ROLES.INVENTORY_MANAGER) {
-      navigate('/inventory-manager/dashboard');
-    } else if (targetRole === ROLES.STORE_ADMIN) {
-      navigate('/store-admin/dashboard');
-    } else if (targetRole === ROLES.DELIVERY_MANAGER) {
-      navigate('/delivery-manager/dashboard');
-    } else if (targetRole === ROLES.CUSTOMER_SUPPORT) {
-      navigate('/customer-support/dashboard');
-    } else if (targetRole === ROLES.SUPER_ADMIN) {
-      navigate('/super-admin/dashboard');
-    } else {
-      navigate('/');
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -202,31 +184,15 @@ export default function InventoryManagerHeader({
                 </div>
               </div>
 
-              {/* Role Switcher Demo */}
+              {/* User Identity Details */}
               <div className="py-2 border-b border-[#29305D]/80">
                 <span className="px-3 text-[10px] font-bold text-[#A7B1C2] uppercase tracking-wider block mb-1">
-                  Switch Staff Workspace
+                  Assigned Authority
                 </span>
-                {MOCK_STAFF_ACCOUNTS &&
-                  Object.keys(MOCK_STAFF_ACCOUNTS).map((accKey) => {
-                    const acc = MOCK_STAFF_ACCOUNTS[accKey];
-                    const isCurrent = (user?.role || ROLES.INVENTORY_MANAGER) === acc.role;
-                    return (
-                      <button
-                        key={accKey}
-                        type="button"
-                        onClick={() => handleRoleChange(acc.role)}
-                        className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
-                          isCurrent
-                            ? 'bg-[#17165A] text-[#00D5FF] font-bold'
-                            : 'text-[#A7B1C2] hover:bg-[#17165A]/50 hover:text-white'
-                        }`}
-                      >
-                        <span className="text-[11px]">{acc.role}</span>
-                        {isCurrent && <Check className="w-3 h-3 text-[#00D5FF]" />}
-                      </button>
-                    );
-                  })}
+                <div className="px-3 py-1">
+                  <span className="text-[11px] text-[#00D5FF] font-bold block">{user?.role || ROLES.INVENTORY_MANAGER}</span>
+                  <span className="text-[10px] text-[#A7B1C2] block">{user?.email || 'inventory@watchhub.com'}</span>
+                </div>
               </div>
 
               {/* Logout */}

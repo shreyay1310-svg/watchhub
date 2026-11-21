@@ -195,8 +195,8 @@ export default function POSManagerModals({
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
-              <table className="w-full text-left font-mono text-[11px]">
+            <div className="flex-1 overflow-auto">
+              <table className="w-full text-left font-mono text-[11px] min-w-[550px]">
                 <thead className="bg-[#080923] text-slate-400 text-[10px] uppercase border-b border-[#23275E]">
                   <tr>
                     <th className="py-2.5 px-3">Invoice #</th>

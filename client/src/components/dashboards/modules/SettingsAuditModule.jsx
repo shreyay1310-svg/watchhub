@@ -135,36 +135,38 @@ export const SettingsAuditModule = () => {
         </form>
       ) : (
         <div className="bg-[#10182D]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm overflow-hidden">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#0B1022]/80 border-b border-white/10 text-[#A6B1C8] font-semibold uppercase text-[10.5px]">
-              <tr>
-                <th className="py-3 px-4">Timestamp</th>
-                <th className="py-3 px-4">Staff Member & Role</th>
-                <th className="py-3 px-4">Action Type</th>
-                <th className="py-3 px-4">Target Record / Details</th>
-                <th className="py-3 px-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {INITIAL_LOGS.map((l) => (
-                <tr key={l.id} className="hover:bg-[#0B1022]/80">
-                  <td className="py-3 px-4 text-[#A6B1C8] text-[11px] whitespace-nowrap">{l.time}</td>
-                  <td className="py-3 px-4 font-bold text-[#F8FAFC]">{l.actor}</td>
-                  <td className="py-3 px-4">
-                    <span className="bg-white/5 text-[#F8FAFC] px-2 py-0.5 rounded-full font-semibold text-[10px]">
-                      {l.action}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-[#A6B1C8]">{l.target}</td>
-                  <td className="py-3 px-4">
-                    <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold text-[10px]">
-                      {l.status}
-                    </span>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs min-w-[650px]">
+              <thead className="bg-[#0B1022]/80 border-b border-white/10 text-[#A6B1C8] font-semibold uppercase text-[10.5px]">
+                <tr>
+                  <th className="py-3 px-4">Timestamp</th>
+                  <th className="py-3 px-4">Staff Member & Role</th>
+                  <th className="py-3 px-4">Action Type</th>
+                  <th className="py-3 px-4">Target Record / Details</th>
+                  <th className="py-3 px-4">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {INITIAL_LOGS.map((l) => (
+                  <tr key={l.id} className="hover:bg-[#0B1022]/80">
+                    <td className="py-3 px-4 text-[#A6B1C8] text-[11px] whitespace-nowrap">{l.time}</td>
+                    <td className="py-3 px-4 font-bold text-[#F8FAFC]">{l.actor}</td>
+                    <td className="py-3 px-4">
+                      <span className="bg-white/5 text-[#F8FAFC] px-2 py-0.5 rounded-full font-semibold text-[10px]">
+                        {l.action}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-[#A6B1C8]">{l.target}</td>
+                    <td className="py-3 px-4">
+                      <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold text-[10px]">
+                        {l.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

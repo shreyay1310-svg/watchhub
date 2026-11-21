@@ -263,8 +263,8 @@ export default function POSCheckoutModals({
             </div>
 
             {/* Line Items Table */}
-            <div className="border border-[#23275E] rounded-xl overflow-hidden font-mono">
-              <table className="w-full text-left">
+            <div className="border border-[#23275E] rounded-xl overflow-x-auto font-mono">
+              <table className="w-full text-left min-w-[480px]">
                 <thead className="bg-[#080923] text-slate-400 text-[10px] uppercase border-b border-[#23275E]">
                   <tr>
                     <th className="py-2 px-3">Item / Timepiece</th>

@@ -118,8 +118,8 @@ export const ProductViewDetailsModal = ({
               {showDetailsModal.variants?.length > 0 && (
                 <div className="border-t border-white/10 pt-4">
                   <h4 className="font-bold text-[#F8FAFC] text-sm mb-2">Available Variants</h4>
-                  <div className="border border-white/10 rounded-xl overflow-hidden">
-                    <table className="w-full text-left text-xs">
+                  <div className="border border-white/10 rounded-xl overflow-x-auto">
+                    <table className="w-full text-left text-xs min-w-[480px]">
                       <thead className="bg-[#0B1022]/80 text-[10px] text-[#A6B1C8] font-bold uppercase">
                         <tr>
                           <th className="p-2">Variant SKU</th>

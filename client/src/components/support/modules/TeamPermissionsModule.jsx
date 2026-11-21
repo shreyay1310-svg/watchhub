@@ -38,7 +38,7 @@ export const TeamPermissionsModule = ({
   ];
 
   const filteredAgents = agents.filter((ag) => {
-    const q = searchQuery.toLowerCase();
+    const q = searchQuery.toLowerCase().trim();
     return (
       !q ||
       ag.name?.toLowerCase().includes(q) ||
@@ -50,13 +50,11 @@ export const TeamPermissionsModule = ({
   const handleSave = (e) => {
     e.preventDefault();
     if (selectedAgent) {
-      // Edit
       const updated = agents.map((a) =>
         a.id === selectedAgent.id ? { ...a, ...agentForm } : a
       );
       setAgents(updated);
     } else {
-      // Create
       const newAg = {
         id: `agent_${Date.now()}`,
         ...agentForm,
@@ -86,17 +84,19 @@ export const TeamPermissionsModule = ({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-white tracking-wide flex items-center gap-2">
-            Team & Role-Based Permissions
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#00D9E8]/15 text-[#00D9E8] border border-[#00D9E8]/30 font-semibold">
+    <div className="w-full max-w-full space-y-6 animate-in fade-in duration-200 min-w-0">
+      {/* 1. Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-wide">
+              Team & Role-Based Permissions
+            </h2>
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#00D9E8]/15 text-[#00D9E8] border border-[#00D9E8]/30 font-semibold whitespace-nowrap">
               {agents.length} Executives
             </span>
-          </h2>
-          <p className="text-xs text-[#A7B1C2] mt-0.5">
+          </div>
+          <p className="text-xs text-[#A7B1C2] mt-1">
             Configure agent RBAC permissions, allocate concierge shift coverage & review SLAs
           </p>
         </div>
@@ -113,148 +113,222 @@ export const TeamPermissionsModule = ({
             });
             setModalOpen(true);
           }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00D9E8] to-[#00B4D8] text-[#070918] font-bold text-xs hover:shadow-[0_0_20px_rgba(0,217,232,0.4)] transition-all cursor-pointer"
+          className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00D9E8] to-[#00B4D8] text-[#070918] font-bold text-xs hover:shadow-[0_0_20px_rgba(0,217,232,0.4)] transition-all cursor-pointer"
         >
           <PlusCircle className="w-4 h-4" />
           <span>Add Support Agent</span>
         </button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg">
-          <span className="text-xs text-[#A7B1C2] font-medium">Total Staff Members</span>
+      {/* 2. Responsive Summary KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
+        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg min-w-0">
+          <span className="text-xs text-[#A7B1C2] font-medium block truncate">Total Staff Members</span>
           <p className="text-2xl font-bold text-white mt-1">{agents.length}</p>
-          <p className="text-xs text-[#64748B] mt-1.5">Across L1, L2 and L3 tiers</p>
+          <p className="text-xs text-[#64748B] mt-1.5 truncate">Across L1, L2 and L3 tiers</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg">
-          <span className="text-xs text-[#A7B1C2] font-medium">Active Right Now</span>
+        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg min-w-0">
+          <span className="text-xs text-[#A7B1C2] font-medium block truncate">Active Right Now</span>
           <p className="text-2xl font-bold text-[#10B981] mt-1">
-            {agents.filter((a) => a.status === 'online').length} Online
+            {agents.filter((a) => a.status?.toLowerCase() === 'online').length} Online
           </p>
-          <p className="text-xs text-[#10B981] mt-1.5 font-semibold">24/7 Concierge coverage</p>
+          <p className="text-xs text-[#10B981] mt-1.5 font-semibold truncate">24/7 Concierge coverage</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg">
-          <span className="text-xs text-[#A7B1C2] font-medium">Team Resolution Output</span>
+        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg min-w-0">
+          <span className="text-xs text-[#A7B1C2] font-medium block truncate">Team Resolution Output</span>
           <p className="text-2xl font-bold text-[#00D9E8] mt-1">1,096 Cases</p>
-          <p className="text-xs text-[#64748B] mt-1.5">This calendar month</p>
+          <p className="text-xs text-[#64748B] mt-1.5 truncate">This calendar month</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg">
-          <span className="text-xs text-[#A7B1C2] font-medium">Team Average CSAT</span>
+        <div className="p-4 rounded-2xl bg-[#111729] border border-[#252D42] shadow-lg min-w-0">
+          <span className="text-xs text-[#A7B1C2] font-medium block truncate">Team Average CSAT</span>
           <p className="text-2xl font-bold text-[#E7B43F] mt-1">4.88 / 5</p>
-          <p className="text-xs text-[#E7B43F] mt-1.5 font-semibold">Exceeds luxury benchmark</p>
+          <p className="text-xs text-[#E7B43F] mt-1.5 font-semibold truncate">Exceeds luxury benchmark</p>
         </div>
       </div>
 
-      {/* Search Input */}
-      <div className="relative">
-        <Search className="w-4 h-4 text-[#A7B1C2] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+      {/* 3. Search Input */}
+      <div className="relative w-full min-w-0">
+        <Search className="w-4 h-4 text-[#A7B1C2] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search team members by name, email, or role..."
-          className="w-full bg-[#111729] text-white text-xs pl-9 pr-3 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8]"
+          className="w-full bg-[#111729] text-white text-xs pl-10 pr-4 py-2.5 rounded-xl border border-[#252D42] focus:outline-none focus:border-[#00D9E8] transition-all"
         />
       </div>
 
-      {/* Team Roster Table */}
-      <div className="rounded-2xl bg-[#111729] border border-[#252D42] overflow-hidden shadow-xl">
-        <div className="overflow-x-auto custom-scrollbar">
-          <table className="w-full text-left text-xs">
+      {/* 4. Table Scroll Container & Stable Layout */}
+      <div className="w-full rounded-2xl bg-[#111729] border border-[#252D42] shadow-xl overflow-hidden min-w-0">
+        <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#252D42] scrollbar-track-transparent">
+          <table className="w-full text-left text-xs border-collapse table-auto">
             <thead>
               <tr className="bg-[#091426] border-b border-[#252D42] text-[#64748B] uppercase tracking-wider text-[10px]">
-                <th className="py-3.5 px-4 font-semibold">Agent Name</th>
-                <th className="py-3.5 px-4 font-semibold">Email</th>
-                <th className="py-3.5 px-4 font-semibold">Role Designation</th>
-                <th className="py-3.5 px-4 font-semibold">Status</th>
-                <th className="py-3.5 px-4 font-semibold">Resolved</th>
-                <th className="py-3.5 px-4 font-semibold">CSAT</th>
-                <th className="py-3.5 px-4 font-semibold">Key Permissions</th>
-                <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[200px] w-[24%]">Agent Name</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[180px] w-[18%]">Email</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[150px] w-[15%]">Role Designation</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[100px] w-[10%]">Status</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[80px] w-[7%] text-center">Resolved</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[80px] w-[7%] text-center">CSAT</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[140px] w-[13%]">Key Permissions</th>
+                <th className="py-3.5 px-4 font-semibold min-w-[90px] w-[6%] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#252D42]/60">
-              {filteredAgents.map((ag) => (
-                <tr key={ag.id} className="hover:bg-[#070918]/60 transition-colors">
-                  <td className="py-3.5 px-4 font-semibold text-white flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#00D9E8]/20 to-[#E7B43F]/20 border border-[#00D9E8]/40 flex items-center justify-center text-sm">
-                      {ag.avatar || '🎧'}
-                    </span>
-                    <span>{ag.name}</span>
-                  </td>
-                  <td className="py-3.5 px-4 text-[#A7B1C2]">{ag.email}</td>
-                  <td className="py-3.5 px-4 text-white font-medium">{ag.role}</td>
-                  <td className="py-3.5 px-4">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
-                        ag.status === 'online'
-                          ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30'
-                          : ag.status === 'busy'
-                          ? 'bg-[#E7B43F]/15 text-[#E7B43F] border-[#E7B43F]/30'
-                          : 'bg-white/10 text-[#64748B] border-[#252D42]'
-                      }`}
-                    >
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          ag.status === 'online'
-                            ? 'bg-[#10B981]'
-                            : ag.status === 'busy'
-                            ? 'bg-[#E7B43F]'
-                            : 'bg-[#64748B]'
-                        }`}
-                      />
-                      <span className="capitalize">{ag.status}</span>
-                    </span>
-                  </td>
-                  <td className="py-3.5 px-4 font-bold text-[#10B981]">
-                    {ag.resolvedTickets || 142}
-                  </td>
-                  <td className="py-3.5 px-4 font-bold text-[#E7B43F] flex items-center gap-1">
-                    <Star className="w-3 h-3 fill-current" />
-                    <span>{ag.csat || '4.9'}</span>
-                  </td>
-                  <td className="py-3.5 px-4 text-[#A7B1C2]">
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
-                      {(ag.permissions || ['tickets.manage', 'orders.lookup']).map((p) => (
-                        <span
-                          key={p}
-                          className="px-1.5 py-0.2 rounded bg-[#070918] border border-[#252D42] text-[9px] text-[#00D9E8]"
-                        >
-                          {p.split('.')[0]}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="py-3.5 px-4 text-right">
-                    <button
-                      onClick={() => {
-                        setSelectedAgent(ag);
-                        setAgentForm({
-                          name: ag.name,
-                          email: ag.email,
-                          role: ag.role,
-                          status: ag.status,
-                          permissions: ag.permissions || ['tickets.manage', 'orders.lookup'],
-                        });
-                        setModalOpen(true);
-                      }}
-                      className="px-3 py-1 rounded-lg bg-[#00D9E8]/10 hover:bg-[#00D9E8] text-[#00D9E8] hover:text-[#070918] font-bold text-[11px] border border-[#00D9E8]/30 transition-colors"
-                    >
-                      Configure
-                    </button>
+              {filteredAgents.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-8 px-4 text-center text-[#A7B1C2]">
+                    No support agents match your search criteria.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredAgents.map((ag) => {
+                  const isImageUrl =
+                    typeof ag.avatar === 'string' &&
+                    (ag.avatar.startsWith('http://') || ag.avatar.startsWith('https://') || ag.avatar.startsWith('/'));
+
+                  const normalizedStatus = (ag.status || 'offline').toLowerCase();
+
+                  return (
+                    <tr key={ag.id} className="hover:bg-[#070918]/60 transition-colors">
+                      {/* Column 1: Agent Name with Avatar Image */}
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="relative w-9 h-9 flex-shrink-0">
+                            {isImageUrl ? (
+                              <img
+                                src={ag.avatar}
+                                alt={ag.name || 'Support Agent'}
+                                className="w-9 h-9 rounded-xl object-cover border border-[#00D9E8]/30 shadow-sm"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  if (e.currentTarget.nextElementSibling) {
+                                    e.currentTarget.nextElementSibling.style.display = 'flex';
+                                  }
+                                }}
+                              />
+                            ) : null}
+                            <div
+                              className={`w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00D9E8]/20 to-[#E7B43F]/20 border border-[#00D9E8]/40 items-center justify-center font-bold text-xs text-[#00D9E8] flex-shrink-0 ${
+                                isImageUrl ? 'hidden' : 'flex'
+                              }`}
+                            >
+                              {typeof ag.avatar === 'string' && !ag.avatar.startsWith('http') && ag.avatar.length <= 4
+                                ? ag.avatar
+                                : ag.name?.charAt(0) || '🎧'}
+                            </div>
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-semibold text-white truncate block text-xs" title={ag.name}>
+                              {ag.name}
+                            </span>
+                            {ag.shortName && (
+                              <span className="text-[10px] text-[#64748B] block truncate">
+                                ({ag.shortName})
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Column 2: Email */}
+                      <td className="py-3.5 px-4 text-[#A7B1C2] truncate max-w-[180px]" title={ag.email}>
+                        {ag.email}
+                      </td>
+
+                      {/* Column 3: Role Designation */}
+                      <td className="py-3.5 px-4 text-white font-medium truncate max-w-[150px]" title={ag.role}>
+                        {ag.role}
+                      </td>
+
+                      {/* Column 4: Status */}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
+                            normalizedStatus === 'online'
+                              ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30'
+                              : normalizedStatus === 'busy' || normalizedStatus === 'away'
+                              ? 'bg-[#E7B43F]/15 text-[#E7B43F] border-[#E7B43F]/30'
+                              : 'bg-white/10 text-[#64748B] border-[#252D42]'
+                          }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              normalizedStatus === 'online'
+                                ? 'bg-[#10B981]'
+                                : normalizedStatus === 'busy' || normalizedStatus === 'away'
+                                ? 'bg-[#E7B43F]'
+                                : 'bg-[#64748B]'
+                            }`}
+                          />
+                          <span className="capitalize">{ag.status || 'Offline'}</span>
+                        </span>
+                      </td>
+
+                      {/* Column 5: Resolved Tickets */}
+                      <td className="py-3.5 px-4 font-bold text-[#10B981] text-center whitespace-nowrap">
+                        {ag.resolvedTickets || 142}
+                      </td>
+
+                      {/* Column 6: CSAT */}
+                      <td className="py-3.5 px-4 font-bold text-[#E7B43F] text-center whitespace-nowrap">
+                        <div className="inline-flex items-center gap-1">
+                          <Star className="w-3 h-3 fill-current" />
+                          <span>{ag.csat || '4.9'}</span>
+                        </div>
+                      </td>
+
+                      {/* Column 7: Key Permissions */}
+                      <td className="py-3.5 px-4 text-[#A7B1C2]">
+                        <div className="flex flex-wrap gap-1 max-w-[180px]">
+                          {(ag.permissions || ['tickets.manage', 'orders.lookup']).slice(0, 3).map((p) => (
+                            <span
+                              key={p}
+                              className="px-1.5 py-0.5 rounded bg-[#070918] border border-[#252D42] text-[9px] text-[#00D9E8] font-mono whitespace-nowrap"
+                            >
+                              {p.split('.')[0]}
+                            </span>
+                          ))}
+                          {(ag.permissions || []).length > 3 && (
+                            <span className="px-1 py-0.5 text-[9px] text-[#64748B] font-mono">
+                              +{ag.permissions.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Column 8: Actions */}
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                        <button
+                          onClick={() => {
+                            setSelectedAgent(ag);
+                            setAgentForm({
+                              name: ag.name,
+                              email: ag.email,
+                              role: ag.role,
+                              status: ag.status,
+                              permissions: ag.permissions || ['tickets.manage', 'orders.lookup'],
+                            });
+                            setModalOpen(true);
+                          }}
+                          className="px-3 py-1 rounded-lg bg-[#00D9E8]/10 hover:bg-[#00D9E8] text-[#00D9E8] hover:text-[#070918] font-bold text-[11px] border border-[#00D9E8]/30 transition-colors cursor-pointer"
+                        >
+                          Configure
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Add / Edit Agent Modal */}
+      {/* 5. Add / Edit Agent Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-[#091426] border border-[#252D42] rounded-3xl p-6 shadow-2xl space-y-4">
@@ -262,7 +336,11 @@ export const TeamPermissionsModule = ({
               <h3 className="text-base font-bold text-white">
                 {selectedAgent ? 'Edit Agent & RBAC Privileges' : 'Add New Support Agent'}
               </h3>
-              <button onClick={() => setModalOpen(false)} className="text-[#64748B] hover:text-white">
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                className="text-[#64748B] hover:text-white cursor-pointer"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -355,13 +433,13 @@ export const TeamPermissionsModule = ({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-[#A7B1C2] hover:text-white"
+                  className="px-4 py-2 text-xs font-semibold text-[#A7B1C2] hover:text-white cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-[#00D9E8] to-[#00B4D8] text-[#070918]"
+                  className="px-5 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-[#00D9E8] to-[#00B4D8] text-[#070918] cursor-pointer"
                 >
                   Save Agent Profile
                 </button>

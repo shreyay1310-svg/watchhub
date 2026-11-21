@@ -32,13 +32,19 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for token refresh / auth handling
+// Response interceptor for token refresh / auth handling & network failure detection
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      // In production: trigger refresh token rotation or clear auth
-      console.warn('[API Auth] Session expired or unauthorized.');
+    if (typeof window !== 'undefined') {
+      if (error.code === 'ECONNABORTED' || (error.message && error.message.includes('timeout'))) {
+        window.dispatchEvent(new CustomEvent('watchhub-network-issue', { detail: { type: 'REQUEST_TIMEOUT' } }));
+      } else if (error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+        window.dispatchEvent(new CustomEvent('watchhub-network-issue', { detail: { type: 'BACKEND_UNAVAILABLE' } }));
+      } else if (error.response?.status === 401) {
+        console.warn('[API Auth] Session expired or unauthorized.');
+        window.dispatchEvent(new CustomEvent('watchhub-network-issue', { detail: { type: 'AUTHENTICATION_EXPIRED' } }));
+      }
     }
     return Promise.reject(error);
   }

@@ -6,9 +6,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      disable: true,
       registerType: 'prompt',
       manifestFilename: 'manifest.webmanifest',
-      includeAssets: ['favicon.ico', 'icons/*.png', 'offline.html'],
+      includeAssets: ['favicon.ico', 'icons/*.png'],
       manifest: {
         name: 'WatchHub',
         short_name: 'WatchHub',
@@ -46,7 +47,7 @@ export default defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024, // 6 MiB limit for rich luxury assets
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,webmanifest}'],
-        navigateFallback: '/offline.html',
+        navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {

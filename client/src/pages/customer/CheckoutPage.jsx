@@ -9,25 +9,9 @@ import GoogleMapAddressPicker from '../../components/common/GoogleMapAddressPick
 import CheckoutPaymentSection from '../../components/checkout/CheckoutPaymentSection';
 import { getProductImage, getProductAlt } from '../../utils/productImageMap';
 import {
-  ShieldCheck,
-  CheckCircle2,
-  Lock,
-  Truck,
-  CreditCard,
-  QrCode,
-  Building,
-  Wallet,
-  Banknote,
-  ChevronRight,
-  ArrowRight,
-  Package,
-  Calendar,
-  Sparkles,
-  Download,
-  MapPin,
-  Compass,
-  AlertCircle,
-  ExternalLink,
+  ShieldCheck, CheckCircle2, Lock, Truck, CreditCard, QrCode, Building,
+  Wallet, Banknote, ChevronRight, ArrowRight, Package, Calendar, Sparkles,
+  Download, MapPin, Compass, AlertCircle, ExternalLink,
 } from 'lucide-react';
 
 export const CheckoutPage = () => {
@@ -60,8 +44,9 @@ export const CheckoutPage = () => {
   });
 
   const [shippingMethod, setShippingMethod] = useState('armoured'); // 'standard' | 'express' | 'armoured'
-  const [paymentMethod, setPaymentMethod] = useState('razorpay'); // 'razorpay' | 'upi' | 'card' | 'netbanking' | 'cod'
+  const [paymentMethod, setPaymentMethod] = useState('card'); // 'upi' | 'card' | 'netbanking' | 'cod'
   const [upiId, setUpiId] = useState('collector@okhdfcbank');
+  const [simulateFailure, setSimulateFailure] = useState(false);
   const [cardDetails, setCardDetails] = useState({
     number: '•••• •••• •••• 4242',
     name: 'Alexander Sterling',
@@ -80,15 +65,6 @@ export const CheckoutPage = () => {
   };
   const currentShippingFee = shippingFees[shippingMethod] || 0;
   const grandTotal = subtotal + currentShippingFee;
-
-  // Load Razorpay Standard Checkout SDK dynamically
-  useEffect(() => {
-    if (window.Razorpay) return;
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
 
   const handleNextStep = () => {
     if (currentStep < 5) {
@@ -113,136 +89,20 @@ export const CheckoutPage = () => {
     setAddressCoords({ lat: selected.lat, lng: selected.lng });
   };
 
-  // Launch Official Razorpay Standard Checkout Gateway
-  const handleRazorpayPayment = async () => {
-    setIsProcessing(true);
-    setPaymentError(null);
-
-    try {
-      // 1. Create order on backend with server-side price recalculation
-      const createOrderRes = await fetch('/api/payments/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart.length > 0 ? cart : [{ name: 'Rolex Submariner Date 41mm', price: 18999, quantity: 1 }],
-          shippingMethod,
-          promoCode: 'HOROLOGYVIP',
-        }),
-      });
-
-      const orderData = await createOrderRes.json();
-      if (!createOrderRes.ok || !orderData.orderId) {
-        throw new Error(orderData.message || 'Failed to initialize payment gateway.');
-      }
-
-      // Check if Razorpay script loaded
-      if (typeof window.Razorpay === 'undefined') {
-        // Fallback simulated payment if offline or script blocked
-        console.warn('[Razorpay] Script unavailable, using sandbox transaction simulation');
-        finalizeOrderConfirmation({
-          razorpay_order_id: orderData.orderId,
-          razorpay_payment_id: `pay_sb_${Date.now()}`,
-          razorpay_signature: 'sandbox_verified_signature',
-        });
-        return;
-      }
-
-      // 2. Configure official Razorpay Checkout options
-      const options = {
-        key: orderData.keyId || 'rzp_test_WatchHubDev001',
-        amount: orderData.amount,
-        currency: orderData.currency || 'INR',
-        name: 'WatchHub Luxury Horology',
-        description: 'Certified Timepiece Acquisition & Armoured Freight',
-        image: 'https://cdn-icons-png.flaticon.com/512/2972/2972531.png',
-        order_id: orderData.orderId,
-        handler: async (response) => {
-          try {
-            // 3. Verify Razorpay cryptographic signature on backend
-            const verifyRes = await fetch('/api/payments/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                orderData: {
-                  customer: {
-                    name: address.fullName,
-                    email: guestEmail,
-                    phone: address.phone,
-                  },
-                  shippingAddress: address,
-                  shippingMethod,
-                  items: cart,
-                  totalAmount: grandTotal,
-                },
-              }),
-            });
-
-            const verifyData = await verifyRes.json();
-            if (verifyRes.ok && verifyData.status === 'success') {
-              finalizeOrderConfirmation(response, verifyData.order);
-            } else {
-              throw new Error(verifyData.message || 'Payment signature verification failed.');
-            }
-          } catch (err) {
-            console.error('[Verification Error]', err);
-            // Fallback confirmation in dev sandbox
-            finalizeOrderConfirmation(response);
-          }
-        },
-        prefill: {
-          name: address.fullName,
-          email: guestEmail,
-          contact: address.phone.replace(/[^0-9]/g, '').slice(-10),
-        },
-        notes: {
-          shipping_method: shippingMethod,
-          gps_coordinates: `${address.lat},${address.lng}`,
-        },
-        theme: {
-          color: '#070918',
-        },
-        modal: {
-          ondismiss: () => {
-            setIsProcessing(false);
-          },
-        },
-      };
-
-      const razorpayInstance = new window.Razorpay(options);
-      razorpayInstance.on('payment.failed', (failRes) => {
-        setIsProcessing(false);
-        setPaymentError(failRes.error?.description || 'Payment was declined by issuing bank.');
-      });
-
-      razorpayInstance.open();
-    } catch (err) {
-      console.error('[Payment Flow Error]', err);
-      // If error occurs, fallback to clean sandbox confirmation so testing isn't blocked
-      finalizeOrderConfirmation({
-        razorpay_order_id: `order_dev_${Date.now()}`,
-        razorpay_payment_id: `pay_dev_${Date.now()}`,
-      });
-    }
-  };
-
-  const finalizeOrderConfirmation = (paymentPayload, serverOrder = null) => {
+  const finalizeOrderConfirmation = (serverOrder = null) => {
     setIsProcessing(false);
     const newOrder = {
       orderId: serverOrder?.orderId || `WH-${Math.floor(100000 + Math.random() * 900000)}`,
       awbNumber: serverOrder?.awbNumber || `AWB-SWISS-${Math.floor(10000000 + Math.random() * 90000000)}`,
       date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
       items: cart.length > 0 ? [...cart] : [{ name: 'Chronoswiss Open Gear Flying Tourbillon Paraiba', price: 3450000, quantity: 1, image: '/images/products/chronoswiss-tourbillon.png' }],
-      amount: grandTotal > 0 ? grandTotal : 3453500,
+      amount: serverOrder?.amount || (grandTotal > 0 ? grandTotal : 3453500),
       shippingAddress: { ...address },
       shippingMethod,
-      paymentMethod: 'Razorpay / Instant Secure Gateway',
-      paymentId: paymentPayload.razorpay_payment_id,
-      razorpayOrderId: paymentPayload.razorpay_order_id,
-      paymentStatus: 'PAID / CAPTURED',
-      status: 'Order Placed (Handcrafting Dispatch Preparation)',
+      paymentMethod: `Demo Payment Mode — ${paymentMethod.toUpperCase()}`,
+      paymentId: `PAY_DEMO_${Date.now()}`,
+      paymentStatus: paymentMethod === 'cod' ? 'PENDING' : 'PAID / CAPTURED',
+      status: serverOrder?.orderStatus || 'Order Placed (Handcrafting Dispatch Preparation)',
       lat: address.lat,
       lng: address.lng,
     };
@@ -253,17 +113,39 @@ export const CheckoutPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleFinalPayment = () => {
-    if (paymentMethod === 'razorpay') {
-      handleRazorpayPayment();
-    } else {
-      setIsProcessing(true);
-      setTimeout(() => {
-        finalizeOrderConfirmation({
-          razorpay_order_id: `WH_MANUAL_${Date.now()}`,
-          razorpay_payment_id: `PAY_OFFLINE_${Date.now()}`,
-        });
-      }, 1200);
+  const handleFinalPayment = async () => {
+    if (!paymentMethod) {
+      setPaymentError('Please select a payment method before authorizing payment.');
+      return;
+    }
+
+    setIsProcessing(true);
+    setPaymentError(null);
+
+    try {
+      const response = await fetch('/api/payments/dummy-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart.length > 0 ? cart : [{ name: 'Rolex Submariner Date 41mm', price: 18999, quantity: 1 }],
+          shippingMethod,
+          paymentMethod,
+          shippingAddress: address,
+          simulateFailure,
+          customerEmail: guestEmail,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || data.status !== 'success') {
+        throw new Error(data.message || 'Payment authorization was declined.');
+      }
+
+      finalizeOrderConfirmation(data.order);
+    } catch (err) {
+      console.warn('[Checkout Dummy Payment Note]', err.message);
+      setPaymentError(err.message || 'Payment authorization failed.');
+      setIsProcessing(false);
     }
   };
 
@@ -697,6 +579,8 @@ export const CheckoutPage = () => {
                 handleFinalPayment={handleFinalPayment}
                 grandTotal={grandTotal}
                 formatPrice={formatPrice}
+                simulateFailure={simulateFailure}
+                setSimulateFailure={setSimulateFailure}
               />
             </div>
 

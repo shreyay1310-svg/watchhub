@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ShoppingBag,
   Plus,
@@ -6,6 +6,7 @@ import {
   Trash2,
   Tag,
   Percent,
+  User,
   UserPlus,
   ChevronDown,
   ArrowRight,
@@ -14,6 +15,7 @@ import {
   Pause,
   CreditCard,
   Check,
+  X,
 } from 'lucide-react';
 
 export default function POSCartSidebar({
@@ -38,16 +40,20 @@ export default function POSCartSidebar({
   handleApplyDiscountInput,
   managerAuthorized,
   setManagerPinModalOpen,
-  grossSubtotal,
-  customerDiscountAmount,
-  couponDiscountAmount,
-  totalDiscount,
-  netTaxableAmount,
-  cgstAmount,
-  sgstAmount,
-  grandTotal,
+  grossSubtotal = 0,
+  customerDiscountAmount = 0,
+  couponDiscountAmount = 0,
+  totalDiscount = 0,
+  netTaxableAmount = 0,
+  cgstAmount = 0,
+  sgstAmount = 0,
+  grandTotal = 0,
   setPaymentModalOpen,
+  showToast = () => {},
 }) {
+  const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
+  const [customerSearch, setCustomerSearch] = useState('');
+  const totalGst = (cgstAmount || 0) + (sgstAmount || 0);
   return (
     <section className="xl:col-span-5 bg-[#11123D] border border-[#23275E] rounded-3xl p-5 shadow-2xl space-y-4 sticky top-4">
           {/* Header of Current Sale */}
@@ -98,13 +104,13 @@ export default function POSCartSidebar({
             >
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#6500FF] to-[#E9B94F] flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
-                  {selectedCustomer.name.charAt(0)}
+                  {selectedCustomer?.name ? selectedCustomer.name.charAt(0) : 'C'}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-bold text-white truncate">{selectedCustomer.name}</p>
+                  <p className="text-xs font-bold text-white truncate">{selectedCustomer?.name || 'Walk-in Client'}</p>
                   <p className="text-[10px] text-slate-400 font-mono">
-                    {selectedCustomer.phone} •{' '}
-                    <span className="text-[#E9B94F] font-bold">{selectedCustomer.tier}</span>
+                    {selectedCustomer?.phone || 'N/A'} •{' '}
+                    <span className="text-[#E9B94F] font-bold">{selectedCustomer?.tier || 'Client'}</span>
                   </p>
                 </div>
               </div>
@@ -136,7 +142,7 @@ export default function POSCartSidebar({
                           setShowCustomerDropdown(false);
                           showToast(`Selected client: ${cust.name}`);
                         }}
-                        className={`p-2 rounded-xl text-xs flex justify-between items-center cursor-pointer transition-colors ${selectedCustomer.id === cust.id
+                        className={`p-2 rounded-xl text-xs flex justify-between items-center cursor-pointer transition-colors ${selectedCustomer?.id === cust.id
                           ? 'bg-[#6500FF] text-white font-bold'
                           : 'hover:bg-[#11123D] text-slate-300'
                           }`}

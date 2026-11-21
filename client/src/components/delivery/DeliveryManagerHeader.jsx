@@ -22,6 +22,8 @@ import { useAuth, ROLES } from '../../context/AuthContext';
 export const DeliveryManagerHeader = ({
   sidebarCollapsed,
   setSidebarCollapsed,
+  mobileSidebarOpen,
+  setMobileSidebarOpen,
   activeTab,
   setActiveTab,
   searchQuery,
@@ -29,7 +31,7 @@ export const DeliveryManagerHeader = ({
   onOpenCreateShipment,
   onOpenSupportModal,
 }) => {
-  const { user, switchRole, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const [currentTime, setCurrentTime] = useState('');
@@ -89,9 +91,16 @@ export const DeliveryManagerHeader = ({
       {/* Left: Sidebar Toggle & Page Title / Breadcrumb */}
       <div className="flex items-center gap-3">
         <button
-          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+              setMobileSidebarOpen && setMobileSidebarOpen(!mobileSidebarOpen);
+            } else {
+              setSidebarCollapsed(!sidebarCollapsed);
+            }
+          }}
           className="p-2 rounded-xl text-[#A7B1C2] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-          title="Toggle Sidebar"
+          title="Toggle Navigation Menu"
+          aria-label="Toggle Navigation Menu"
         >
           <SlidersHorizontal className="w-5 h-5" />
         </button>
@@ -268,10 +277,10 @@ export const DeliveryManagerHeader = ({
               <div className="border-t border-[#28334B] my-1" />
 
               <button
-                onClick={() => {
+                onClick={async () => {
                   setProfileDropdownOpen(false);
-                  logout();
-                  navigate('/login');
+                  await logout();
+                  navigate('/login', { replace: true });
                 }}
                 className="w-full text-left px-4 py-2 text-[#FF4966] hover:bg-[#FF4966]/10 flex items-center gap-2 transition-colors cursor-pointer font-semibold"
               >

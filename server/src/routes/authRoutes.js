@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { login, register, getMe } from '../controllers/authController.js';
+import { login, register, getMe, logout } from '../controllers/authController.js';
 import { authenticate } from '../middleware/auth.js';
 import { requestAndSendOtp, verifyOtp, maskEmail } from '../services/otpService.js';
 import { prisma } from '../config/prisma.js';
@@ -50,9 +50,10 @@ const sendAuthSuccessResponse = (res, user, message = 'Authentication confirmed.
   });
 };
 
-// Standard Password Login & Register
+// Standard Password Login, Register & Session
 router.post('/login', login);
 router.post('/register', register);
+router.post('/logout', logout);
 router.get('/me', authenticate, getMe);
 
 // ============================================================================

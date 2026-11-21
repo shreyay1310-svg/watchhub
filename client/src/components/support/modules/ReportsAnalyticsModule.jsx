@@ -231,11 +231,34 @@ export const ReportsAnalyticsModule = ({
             <tbody className="divide-y divide-[#252D42]/60">
               {agents.map((ag) => (
                 <tr key={ag.id} className="hover:bg-[#070918]/60 transition-colors">
-                  <td className="py-3.5 px-4 font-semibold text-white flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#00D9E8]/10 text-[#00D9E8] flex items-center justify-center font-bold text-[10px]">
-                      {ag.avatar || '🎧'}
-                    </span>
-                    <span>{ag.name}</span>
+                  <td className="py-3.5 px-4 font-semibold text-white">
+                    <div className="flex items-center gap-2 min-w-0">
+                      {typeof ag.avatar === 'string' && (ag.avatar.startsWith('http') || ag.avatar.startsWith('/')) ? (
+                        <img
+                          src={ag.avatar}
+                          alt={ag.name}
+                          className="w-7 h-7 rounded-lg object-cover border border-[#00D9E8]/30 flex-shrink-0"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            if (e.currentTarget.nextElementSibling) {
+                              e.currentTarget.nextElementSibling.style.display = 'flex';
+                            }
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className={`w-7 h-7 rounded-lg bg-[#00D9E8]/10 text-[#00D9E8] items-center justify-center font-bold text-[10px] flex-shrink-0 ${
+                          typeof ag.avatar === 'string' && (ag.avatar.startsWith('http') || ag.avatar.startsWith('/'))
+                            ? 'hidden'
+                            : 'flex'
+                        }`}
+                      >
+                        {typeof ag.avatar === 'string' && !ag.avatar.startsWith('http') && ag.avatar.length <= 4
+                          ? ag.avatar
+                          : ag.name?.charAt(0) || '🎧'}
+                      </div>
+                      <span className="truncate">{ag.name}</span>
+                    </div>
                   </td>
                   <td className="py-3.5 px-4 text-[#A7B1C2]">{ag.role}</td>
                   <td className="py-3.5 px-4 font-semibold text-white">
@@ -246,9 +269,11 @@ export const ReportsAnalyticsModule = ({
                   </td>
                   <td className="py-3.5 px-4 text-[#A7B1C2]">{ag.avgResponse || '3m 45s'}</td>
                   <td className="py-3.5 px-4 text-[#A7B1C2]">{ag.avgResolution || '2h 15m'}</td>
-                  <td className="py-3.5 px-4 font-bold text-[#E7B43F] flex items-center gap-1">
-                    <Star className="w-3 h-3 fill-current" />
-                    <span>{ag.csat || '4.9'}</span>
+                  <td className="py-3.5 px-4 font-bold text-[#E7B43F]">
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-current" />
+                      <span>{ag.csat || '4.9'}</span>
+                    </div>
                   </td>
                   <td className="py-3.5 px-4 text-[#10B981] font-semibold">
                     {ag.fcr || '89.2%'}

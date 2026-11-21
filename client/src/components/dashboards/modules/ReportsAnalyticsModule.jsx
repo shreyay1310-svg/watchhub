@@ -64,28 +64,30 @@ export const ReportsAnalyticsModule = () => {
           <span className="font-bold text-[#F8FAFC]">Quarterly Category Financial Breakdown</span>
           <span className="text-gray-400">Total Revenue: ₹12,48,000</span>
         </div>
-        <table className="w-full text-left text-xs">
-          <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10.5px]">
-            <tr>
-              <th className="py-3 px-4">Watch Category</th>
-              <th className="py-3 px-4">Units Sold</th>
-              <th className="py-3 px-4">Gross Revenue</th>
-              <th className="py-3 px-4">Avg Selling Price</th>
-              <th className="py-3 px-4">Return %</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {SALES_REPORT.map((row, idx) => (
-              <tr key={idx} className="hover:bg-[#0B1022]/80">
-                <td className="py-3 px-4 font-bold text-[#F8FAFC]">{row.category}</td>
-                <td className="py-3 px-4">{row.orders} orders</td>
-                <td className="py-3 px-4 font-bold text-emerald-700">₹{row.revenue.toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-[#A6B1C8]">₹{Math.round(row.revenue / row.orders).toLocaleString('en-IN')}</td>
-                <td className="py-3 px-4 text-[#A6B1C8]">{row.returnRate}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs min-w-[600px]">
+            <thead className="bg-[#0B1022]/80 text-[#A6B1C8] font-semibold uppercase text-[10.5px]">
+              <tr>
+                <th className="py-3 px-4">Watch Category</th>
+                <th className="py-3 px-4">Units Sold</th>
+                <th className="py-3 px-4">Gross Revenue</th>
+                <th className="py-3 px-4">Avg Selling Price</th>
+                <th className="py-3 px-4">Return %</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {SALES_REPORT.map((row, idx) => (
+                <tr key={idx} className="hover:bg-[#0B1022]/80">
+                  <td className="py-3 px-4 font-bold text-[#F8FAFC]">{row.category}</td>
+                  <td className="py-3 px-4">{row.orders} orders</td>
+                  <td className="py-3 px-4 font-bold text-emerald-700">₹{row.revenue.toLocaleString('en-IN')}</td>
+                  <td className="py-3 px-4 text-[#A6B1C8]">₹{Math.round(row.revenue / row.orders).toLocaleString('en-IN')}</td>
+                  <td className="py-3 px-4 text-[#A6B1C8]">{row.returnRate}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

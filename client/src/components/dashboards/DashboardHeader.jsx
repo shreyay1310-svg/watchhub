@@ -165,52 +165,25 @@ export const DashboardHeader = ({ activeTab, onTabChange }) => {
             {roleMenuOpen && (
               <div className="absolute right-0 mt-2 w-64 bg-[#10182D]/95 backdrop-blur-xl rounded-xl shadow-[0_0_35px_rgba(0,207,255,0.2)] border border-[#00CFFF]/30 py-2 z-50 text-xs text-[#F8FAFC]">
                 <div className="px-3.5 py-1.5 border-b border-white/10 text-[10.5px] font-bold text-[#A6B1C8] uppercase tracking-wider">
-                  Switch Role Dashboard
+                  Authenticated Identity
                 </div>
-
-                {Object.values(ROLES).filter(r => r !== ROLES.CUSTOMER).map((r) => {
-                  const staff = MOCK_STAFF_ACCOUNTS[r];
-                  const isActive = currentRole === r;
-                  return (
-                    <button
-                      key={r}
-                      onClick={() => {
-                        switchRole(r);
-                        setRoleMenuOpen(false);
-                      }}
-                      className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-amber-50 transition-colors ${
-                        isActive ? 'bg-white/10 text-[#F4B942] font-bold' : 'hover:bg-white/5 text-[#F8FAFC]'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-base">{staff?.avatar}</span>
-                        <span>{r}</span>
-                      </div>
-                      {isActive && <CheckCircle className="w-3.5 h-3.5 text-watch-gold" />}
-                    </button>
-                  );
-                })}
-
-                <div className="border-t border-white/10 mt-1.5 pt-1">
+                <div className="px-3.5 py-2.5">
+                  <div className="font-semibold text-white">{user?.name || 'Administrator'}</div>
+                  <div className="text-[11px] text-[#A6B1C8] truncate">{user?.email || 'admin@watchhub.com'}</div>
+                  <div className="mt-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#F4B942]/20 text-[#F4B942] border border-[#F4B942]/40">
+                    {currentRole}
+                  </div>
+                </div>
+                <div className="border-t border-white/10 mt-1 pt-1">
                   <button
-                    onClick={() => {
-                      switchRole(ROLES.CUSTOMER);
+                    onClick={async () => {
                       setRoleMenuOpen(false);
-                      navigate('/');
+                      await logout();
+                      navigate('/login', { replace: true });
                     }}
-                    className="w-full text-left px-3.5 py-2 text-[#A6B1C8] hover:bg-white/5 hover:text-[#F8FAFC] flex items-center gap-2"
+                    className="w-full text-left px-3.5 py-2 text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 cursor-pointer font-medium"
                   >
-                    <span>👤</span> Customer Storefront
-                  </button>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setRoleMenuOpen(false);
-                      navigate('/login');
-                    }}
-                    className="w-full text-left px-3.5 py-2 text-rose-600 hover:bg-rose-50 flex items-center gap-2"
-                  >
-                    <LogOut className="w-3.5 h-3.5" /> Logout
+                    <LogOut className="w-3.5 h-3.5" /> Sign Out
                   </button>
                 </div>
               </div>

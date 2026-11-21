@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   X,
@@ -36,6 +36,20 @@ export const CustomerDrawer = ({ isOpen, onClose }) => {
   const [accountSubmenuOpen, setAccountSubmenuOpen] = useState(true);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Close on Escape key and prevent background scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -475,9 +489,9 @@ export const CustomerDrawer = ({ isOpen, onClose }) => {
                 </div>
               </div>
               <button
-                onClick={() => {
-                  logout();
+                onClick={async () => {
                   onClose();
+                  await logout();
                   navigate('/login', { replace: true });
                 }}
                 className="text-[11px] text-rose-400 hover:text-rose-300 font-semibold cursor-pointer"

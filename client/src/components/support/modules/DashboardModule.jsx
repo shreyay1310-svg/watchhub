@@ -1,22 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  LifeBuoy,
+  Headphones,
   CheckCircle2,
   Clock,
   AlertTriangle,
   Zap,
   Star,
-  ArrowUpRight,
-  ArrowDownRight,
-  TrendingUp,
-  UserCheck,
+  Plus,
+  Eye,
+  MoreVertical,
   ChevronRight,
-  PlusCircle,
-  ExternalLink,
-  MessageSquare,
-  ShieldAlert,
   Download,
-  Filter,
+  Calendar,
+  Sparkles,
+  LifeBuoy,
+  MessageSquare,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -41,27 +39,26 @@ export const DashboardModule = ({
   onOpenCreateTicket,
   onSelectTicket,
 }) => {
+  const [weekFilter, setWeekFilter] = useState('Current Week');
+
+  // KPI Metrics (6 Cards matching reference screenshot)
   const kpis = [
     {
       id: 'total',
       title: 'Total Tickets',
       value: stats?.totalTickets?.toLocaleString() || '1,248',
-      change: stats?.totalTicketsTrend || '+12%',
-      isPositive: true,
-      sub: 'vs last week',
+      trend: stats?.totalTicketsTrend || '↑ +12% vs last week',
       icon: LifeBuoy,
-      color: 'text-[#00D9E8]',
-      bg: 'bg-[#00D9E8]/10',
-      border: 'border-[#00D9E8]/30',
+      color: 'text-[#00F2FE]',
+      bg: 'bg-[#00F2FE]/10',
+      border: 'border-[#00F2FE]/30',
       tab: 'tickets',
     },
     {
       id: 'resolved',
       title: 'Resolved Tickets',
       value: stats?.resolved?.toLocaleString() || '1,096',
-      change: stats?.resolvedTrend || '+15%',
-      isPositive: true,
-      sub: '87.8% resolution rate',
+      trend: stats?.resolvedTrend || '↑ +15% resolution rate',
       icon: CheckCircle2,
       color: 'text-[#10B981]',
       bg: 'bg-[#10B981]/10',
@@ -72,9 +69,7 @@ export const DashboardModule = ({
       id: 'pending',
       title: 'Pending Action',
       value: stats?.pending?.toLocaleString() || '108',
-      change: stats?.pendingTrend || '-8%',
-      isPositive: true, // fewer pending is positive
-      sub: 'Within standard SLA',
+      trend: stats?.pendingTrend || '↓ -8% within standard SLA',
       icon: Clock,
       color: 'text-[#E7B43F]',
       bg: 'bg-[#E7B43F]/10',
@@ -85,9 +80,7 @@ export const DashboardModule = ({
       id: 'escalated',
       title: 'Escalations',
       value: stats?.escalated?.toLocaleString() || '24',
-      change: stats?.escalatedTrend || '-20%',
-      isPositive: true,
-      sub: 'Critical attention required',
+      trend: stats?.escalatedTrend || '↑ +20% attention required',
       icon: AlertTriangle,
       color: 'text-[#EF4444]',
       bg: 'bg-[#EF4444]/10',
@@ -98,207 +91,341 @@ export const DashboardModule = ({
       id: 'response',
       title: 'Avg Response Time',
       value: stats?.avgResponseTime || '4m 32s',
-      change: stats?.avgResponseTimeTrend || '-28%',
-      isPositive: true,
-      sub: 'Target: < 15 mins',
+      trend: stats?.avgResponseTimeTrend || '↓ -24% (target: ≤ 15 mins)',
       icon: Zap,
-      color: 'text-[#8B5CF6]',
-      bg: 'bg-[#8B5CF6]/10',
-      border: 'border-[#8B5CF6]/30',
+      color: 'text-[#A855F7]',
+      bg: 'bg-[#A855F7]/10',
+      border: 'border-[#A855F7]/30',
       tab: 'reports',
     },
     {
       id: 'csat',
       title: 'Customer Satisfaction',
       value: stats?.csat || '4.8 / 5',
-      change: stats?.csatTrend || '+0.2',
-      isPositive: true,
-      sub: '96.2% 5-star ratings',
+      trend: stats?.csatTrend || '↑ +0.2 (96.2% 5-star ratings)',
       icon: Star,
-      color: 'text-[#E7B43F]',
-      bg: 'bg-[#E7B43F]/10',
-      border: 'border-[#E7B43F]/30',
+      color: 'text-[#00F2FE]',
+      bg: 'bg-[#00F2FE]/10',
+      border: 'border-[#00F2FE]/30',
       tab: 'reports',
     },
   ];
 
-  const recentTickets = tickets.slice(0, 5);
+  // Default Chart Data matching screenshot
+  const defaultChartData = [
+    { day: 'Mon', inbound: 48, resolved: 42, escalated: 2 },
+    { day: 'Tue', inbound: 92, resolved: 85, escalated: 3 },
+    { day: 'Wed', inbound: 140, resolved: 128, escalated: 4 },
+    { day: 'Thu', inbound: 168, resolved: 154, escalated: 6 },
+    { day: 'Fri', inbound: 145, resolved: 139, escalated: 5 },
+    { day: 'Sat', inbound: 180, resolved: 165, escalated: 3 },
+    { day: 'Sun', inbound: 228, resolved: 210, escalated: 5 },
+  ];
+  const chartData = trendData.length > 0 ? trendData : defaultChartData;
 
-  const getPriorityBadge = (priority) => {
+  // Donut status breakdown matching screenshot
+  const defaultStatusBreakdown = [
+    { name: 'Resolved', count: 1096, percentage: 87.8, color: '#10B981' },
+    { name: 'In Progress', count: 44, percentage: 3.5, color: '#00F2FE' },
+    { name: 'Pending', count: 64, percentage: 5.1, color: '#E7B43F' },
+    { name: 'Escalated', count: 24, percentage: 1.9, color: '#EF4444' },
+    { name: 'Open', count: 20, percentage: 1.7, color: '#6366F1' },
+  ];
+  const statusData = statusBreakdown.length > 0 ? statusBreakdown : defaultStatusBreakdown;
+
+  // Recent inquiries matching reference screenshot
+  const defaultInquiries = [
+    {
+      id: 'TIC-2293',
+      ticketId: 'TIC-2293',
+      customer: 'Ananya Singh',
+      initials: 'A',
+      subject: 'Live Chat Inquiry: Watch strap availability',
+      productName: 'Rolex Submariner Date',
+      priority: 'High',
+      status: 'Open',
+      assignedTo: 'Rohan Singh',
+      assignedAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+    },
+    {
+      id: 'TIC-7725',
+      ticketId: 'TIC-7725',
+      customer: 'Ananya Singh',
+      initials: 'A',
+      subject: 'Watch service & maintenance query',
+      productName: 'Rolex Submariner Date',
+      priority: 'High',
+      status: 'In Progress',
+      assignedTo: 'Neha Sharma',
+      assignedAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
+    },
+    {
+      id: 'TKT-801',
+      ticketId: 'TKT-801',
+      customer: 'Rahul Verma',
+      initials: 'R',
+      subject: 'Order transit delay enquiry',
+      productName: 'Shipping',
+      priority: 'High',
+      status: 'In Progress',
+      assignedTo: 'Amit Kumar',
+      assignedAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
+    },
+    {
+      id: 'TKT-802',
+      ticketId: 'TKT-802',
+      customer: 'Rahul Verma',
+      initials: 'R',
+      subject: 'Return request: Received incorrect size',
+      productName: 'Returns',
+      priority: 'Medium',
+      status: 'Open',
+      assignedTo: 'Pooja Gupta',
+      assignedAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80',
+    },
+    {
+      id: 'TKT-803',
+      ticketId: 'TKT-803',
+      customer: 'Priya Desai',
+      initials: 'P',
+      subject: 'Refund timeline enquiry for cancelled order',
+      productName: 'Refunds',
+      priority: 'High',
+      status: 'Pending',
+      assignedTo: 'Rohan Singh',
+      assignedAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+    },
+  ];
+  const displayTickets = tickets.length > 0 ? tickets.slice(0, 5) : defaultInquiries;
+
+  // Active agents list matching screenshot
+  const defaultAgents = [
+    {
+      id: 'agt-1',
+      name: 'Rohan Singh',
+      role: 'Senior Support Agent',
+      resolved: 142,
+      score: '★ 98%',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+    },
+    {
+      id: 'agt-2',
+      name: 'Neha Sharma',
+      role: 'Support Agent',
+      resolved: 126,
+      score: '★ 97%',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
+    },
+    {
+      id: 'agt-3',
+      name: 'Amit Kumar',
+      role: 'Chat Agent',
+      resolved: 118,
+      score: '★ 96%',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
+    },
+    {
+      id: 'agt-4',
+      name: 'Pooja Gupta',
+      role: 'Support Manager',
+      resolved: 185,
+      score: '★ 99%',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80',
+    },
+  ];
+  const displayAgents = agents.length > 0 ? agents.slice(0, 4) : defaultAgents;
+
+  const getPriorityBadgeClass = (priority) => {
     switch (priority?.toLowerCase()) {
-      case 'critical':
-      case 'urgent':
-        return 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30';
       case 'high':
-        return 'bg-[#F97316]/15 text-[#F97316] border-[#F97316]/30';
+      case 'urgent':
+        return 'border-rose-500/40 bg-rose-500/10 text-rose-400';
       case 'medium':
-        return 'bg-[#E7B43F]/15 text-[#E7B43F] border-[#E7B43F]/30';
-      case 'low':
+        return 'border-amber-500/40 bg-amber-500/10 text-amber-400';
       default:
-        return 'bg-[#00D9E8]/15 text-[#00D9E8] border-[#00D9E8]/30';
+        return 'border-blue-500/40 bg-blue-500/10 text-blue-400';
     }
   };
 
-  const getStatusBadge = (status) => {
+  const getStatusBadgeClass = (status) => {
     switch (status?.toLowerCase()) {
       case 'resolved':
       case 'closed':
-        return 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30';
+        return 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400';
       case 'in progress':
-      case 'open':
-        return 'bg-[#00D9E8]/15 text-[#00D9E8] border-[#00D9E8]/30';
+        return 'border-[#00F2FE]/40 bg-[#00F2FE]/10 text-[#00F2FE]';
       case 'pending':
-        return 'bg-[#E7B43F]/15 text-[#E7B43F] border-[#E7B43F]/30';
-      case 'escalated':
-        return 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30';
+        return 'border-amber-500/40 bg-amber-500/10 text-amber-400';
       default:
-        return 'bg-white/10 text-white/70 border-white/20';
+        return 'border-blue-500/40 bg-blue-500/10 text-blue-400';
     }
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Top Banner & Quick Bar */}
-      <div className="rounded-2xl bg-gradient-to-r from-[#111729] via-[#0D1527] to-[#111729] border border-[#252D42] p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 animate-fade-in text-xs select-none">
+      {/* 1. Header Banner: Welcome, Title, Live Status, Action Buttons */}
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-[#00D9E8]/15 text-[#00D9E8] border border-[#00D9E8]/30 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00D9E8] animate-pulse"></span>
-              Live Operations Room
-            </span>
-            <span className="text-xs text-[#A7B1C2]">• 24/7 Concierge Support</span>
+          <div className="text-[11px] text-gray-400 font-medium">Welcome back, Pooja Sharma 👋</div>
+          <div className="flex items-center gap-3 mt-0.5">
+            <div className="w-9 h-9 rounded-xl bg-[#00F2FE]/15 border border-[#00F2FE]/40 flex items-center justify-center text-[#00F2FE] shadow-lg shadow-[#00F2FE]/10">
+              <Headphones className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold font-serif text-white tracking-wide">
+                Support Executive Dashboard
+              </h1>
+              <div className="flex flex-wrap items-center gap-2 mt-1">
+                <span className="text-gray-400 text-xs">
+                  Real-time support operations, ticket resolution, escalations, and customer experience insights.
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Operations Room
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/5 text-gray-300 border border-white/10">
+                  &bull; 24/7 Concierge Support
+                </span>
+              </div>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-wide">
-            Support Executive Dashboard
-          </h2>
-          <p className="text-xs text-[#A7B1C2] mt-1 max-w-xl">
-            Real-time status overview across client concierge tickets, high-priority escalations, live chats, and luxury timepiece delivery queries.
-          </p>
         </div>
 
+        {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
           <button
-            onClick={onOpenCreateTicket}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00D9E8] to-[#00B4D8] text-[#070918] font-bold text-xs hover:shadow-[0_0_20px_rgba(0,217,232,0.4)] transition-all cursor-pointer"
+            type="button"
+            onClick={() => onOpenCreateTicket && onOpenCreateTicket()}
+            className="px-4 py-2 rounded-xl bg-[#00F2FE] hover:bg-[#00D9E8] text-black font-extrabold shadow-lg shadow-[#00F2FE]/20 flex items-center gap-1.5 cursor-pointer transition-all"
           >
-            <PlusCircle className="w-4 h-4" />
+            <Plus className="w-4 h-4 stroke-[3]" />
             <span>Create New Ticket</span>
           </button>
+
           <button
+            type="button"
             onClick={() => onNavigateTab && onNavigateTab('escalations')}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#EF4444]/15 text-[#EF4444] hover:bg-[#EF4444]/25 border border-[#EF4444]/30 font-semibold text-xs transition-colors cursor-pointer"
+            className="px-3.5 py-2 rounded-xl border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold transition-all cursor-pointer flex items-center gap-1.5"
           >
-            <ShieldAlert className="w-4 h-4" />
-            <span>View Escalations ({stats?.escalated || 24})</span>
+            <AlertTriangle className="w-3.5 h-3.5" />
+            <span>View Escalations (24)</span>
           </button>
+
           <button
+            type="button"
             onClick={() => onNavigateTab && onNavigateTab('reports')}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#111729] text-[#A7B1C2] hover:text-white border border-[#252D42] hover:border-[#00D9E8] text-xs font-semibold transition-colors cursor-pointer"
+            className="px-3.5 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all cursor-pointer flex items-center gap-1.5"
           >
-            <Download className="w-4 h-4 text-[#00D9E8]" />
+            <Download className="w-3.5 h-3.5 text-gray-400" />
             <span>Export Analytics</span>
           </button>
         </div>
       </div>
 
-      {/* 6 Summary KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      {/* 2. 6 KPI Cards Grid (Matching reference screenshot styling) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
             <div
               key={kpi.id}
               onClick={() => onNavigateTab && onNavigateTab(kpi.tab)}
-              className="rounded-2xl bg-[#111729] border border-[#252D42] p-4 hover:border-[#00D9E8]/50 transition-all cursor-pointer group shadow-lg flex flex-col justify-between"
+              className={`rounded-2xl bg-[#0B1222] border ${kpi.border} p-4 shadow-lg hover:border-[#00F2FE]/60 transition-all cursor-pointer group`}
             >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-medium text-[#A7B1C2]">{kpi.title}</span>
-                <div className={`p-2 rounded-xl ${kpi.bg} ${kpi.border} border ${kpi.color}`}>
+              <div className="flex items-center justify-between">
+                <div className={`w-8 h-8 rounded-xl ${kpi.bg} flex items-center justify-center ${kpi.color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-white tracking-tight">{kpi.value}</p>
-                <div className="flex items-center gap-1.5 mt-2 text-[11px]">
-                  <span
-                    className={`font-semibold flex items-center ${
-                      kpi.isPositive ? 'text-[#10B981]' : 'text-[#EF4444]'
-                    }`}
-                  >
-                    {kpi.isPositive ? (
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    ) : (
-                      <ArrowDownRight className="w-3.5 h-3.5" />
-                    )}
-                    {kpi.change}
-                  </span>
-                  <span className="text-[#64748B] truncate">{kpi.sub}</span>
-                </div>
+              <div className="mt-3">
+                <span className="text-[11px] font-medium text-gray-400 block">{kpi.title}</span>
+                <div className="text-xl sm:text-2xl font-bold font-serif text-white mt-0.5">{kpi.value}</div>
+                <div className="text-[10px] text-gray-400 mt-1 font-semibold truncate">{kpi.trend}</div>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Middle Row: Ticket Trend Area Chart + Ticket Status Donut Breakdown */}
+      {/* 3. Middle Charts Row: Weekly Ticket Inflow (2/3) + Donut Distribution (1/3) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Weekly Trend (2 cols) */}
-        <div className="lg:col-span-2 rounded-2xl bg-[#111729] border border-[#252D42] p-5 shadow-xl">
-          <div className="flex items-center justify-between mb-4">
+        {/* Weekly Ticket Inflow & Resolution (2 Cols) */}
+        <div className="lg:col-span-2 rounded-2xl bg-[#0B1222] border border-white/10 p-5 shadow-xl space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#00D9E8]" />
+                <span className="text-[#00F2FE]">&bull;</span>
                 Weekly Ticket Inflow & Resolution
               </h3>
-              <p className="text-xs text-[#A7B1C2] mt-0.5">
+              <p className="text-[11px] text-gray-400 mt-0.5">
                 Comparison of inbound tickets vs resolved cases over the past 7 days
               </p>
             </div>
-            <span className="px-2.5 py-1 text-[11px] rounded-lg bg-[#070918] border border-[#252D42] text-[#A7B1C2]">
-              Current Week
-            </span>
+            <select
+              value={weekFilter}
+              onChange={(e) => setWeekFilter(e.target.value)}
+              className="bg-[#111A2C] border border-white/10 rounded-xl px-3 py-1 text-white text-xs outline-none cursor-pointer"
+            >
+              <option value="Current Week">Current Week</option>
+              <option value="Previous Week">Previous Week</option>
+              <option value="Last 30 Days">Last 30 Days</option>
+            </select>
           </div>
 
+          {/* Area Chart Container */}
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorTickets" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00D9E8" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="#00D9E8" stopOpacity={0} />
+                  <linearGradient id="colorInbound" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00F2FE" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#00F2FE" stopOpacity={0.0} />
                   </linearGradient>
                   <linearGradient id="colorResolved" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10B981" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#252D42" vertical={false} />
                 <XAxis dataKey="day" stroke="#64748B" fontSize={11} tickLine={false} />
                 <YAxis stroke="#64748B" fontSize={11} tickLine={false} />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#091426',
-                    borderColor: '#252D42',
-                    borderRadius: '12px',
-                    color: '#FFF',
-                    fontSize: '12px',
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-[#070B18] border border-[#00F2FE]/40 p-3 rounded-xl shadow-2xl text-xs space-y-1">
+                          <span className="font-bold text-white block">{label}, 19 Nov</span>
+                          <div className="text-[#00F2FE] flex items-center gap-1.5">
+                            <span>&bull; Inflow Tickets:</span>
+                            <span className="font-bold">{payload[0]?.value}</span>
+                          </div>
+                          <div className="text-emerald-400 flex items-center gap-1.5">
+                            <span>&bull; Resolved:</span>
+                            <span className="font-bold">{payload[1]?.value}</span>
+                          </div>
+                          <div className="text-rose-400 flex items-center gap-1.5">
+                            <span>&bull; Escalated:</span>
+                            <span className="font-bold">6</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
                 />
                 <Area
                   type="monotone"
-                  dataKey="tickets"
-                  name="Inflow Tickets"
-                  stroke="#00D9E8"
-                  strokeWidth={2}
+                  dataKey="inbound"
+                  stroke="#00F2FE"
+                  strokeWidth={2.5}
                   fillOpacity={1}
-                  fill="url(#colorTickets)"
+                  fill="url(#colorInbound)"
                 />
                 <Area
                   type="monotone"
                   dataKey="resolved"
-                  name="Resolved"
                   stroke="#10B981"
-                  strokeWidth={2}
+                  strokeWidth={2.5}
                   fillOpacity={1}
                   fill="url(#colorResolved)"
                 />
@@ -306,169 +433,197 @@ export const DashboardModule = ({
             </ResponsiveContainer>
           </div>
 
-          <div className="flex items-center justify-center gap-6 mt-3 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#00D9E8]"></span>
-              <span className="text-[#A7B1C2]">Inflow Tickets</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#10B981]"></span>
-              <span className="text-[#A7B1C2]">Resolved Tickets</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#EF4444]"></span>
-              <span className="text-[#A7B1C2]">Escalated Cases</span>
-            </div>
+          {/* Chart Legend */}
+          <div className="flex items-center justify-center gap-6 pt-2 border-t border-white/5 text-[11px]">
+            <span className="flex items-center gap-1.5 text-gray-300">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#00F2FE]" />
+              Inflow Tickets
+            </span>
+            <span className="flex items-center gap-1.5 text-gray-300">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
+              Resolved Tickets
+            </span>
+            <span className="flex items-center gap-1.5 text-gray-300">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444]" />
+              Escalated Cases
+            </span>
           </div>
         </div>
 
-        {/* Status Breakdown Donut (1 col) */}
-        <div className="rounded-2xl bg-[#111729] border border-[#252D42] p-5 shadow-xl flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-2">
+        {/* Ticket Status Distribution (1 Col Donut) */}
+        <div className="rounded-2xl bg-[#0B1222] border border-white/10 p-5 shadow-xl space-y-4 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-white">Ticket Status Distribution</h3>
-            <span className="text-xs text-[#00D9E8] font-semibold">1,248 Total</span>
+            <span className="text-[11px] font-bold text-gray-400">1,248 Total</span>
           </div>
 
-          <div className="h-44 w-full relative flex items-center justify-center">
+          <div className="relative h-44 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={statusBreakdown}
+                  data={statusData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={50}
+                  innerRadius={55}
                   outerRadius={75}
-                  paddingAngle={4}
+                  paddingAngle={3}
                   dataKey="count"
                 >
-                  {statusBreakdown.map((entry, index) => (
+                  {statusData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#091426',
-                    borderColor: '#252D42',
-                    borderRadius: '12px',
-                    color: '#FFF',
-                    fontSize: '12px',
-                  }}
-                />
               </PieChart>
             </ResponsiveContainer>
+            {/* Center Label */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-xl font-bold text-white">87.8%</span>
-              <span className="text-[10px] text-[#10B981] font-semibold">Resolved</span>
+              <span className="text-lg font-bold font-serif text-white">87.8%</span>
+              <span className="text-[10px] text-gray-400 uppercase font-semibold">Resolved</span>
             </div>
           </div>
 
-          <div className="space-y-2 mt-2">
-            {statusBreakdown.map((item) => (
-              <div key={item.name} className="flex items-center justify-between text-xs">
+          {/* Breakdown List */}
+          <div className="space-y-1.5 pt-2 border-t border-white/5 text-xs">
+            {statusData.map((item) => (
+              <div key={item.name} className="flex items-center justify-between text-gray-300">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-[#A7B1C2]">{item.name}</span>
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                  <span className="text-[11px]">{item.name}</span>
                 </div>
-                <div className="flex items-center gap-2 font-semibold">
-                  <span className="text-white">{item.count}</span>
-                  <span className="text-[#64748B] text-[11px]">({item.percentage}%)</span>
-                </div>
+                <span className="text-[11px] font-bold text-white">
+                  {item.count.toLocaleString()} ({item.percentage}%)
+                </span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Bottom Row: Recent Conversations (Left) & Top Performing Agents (Right) */}
+      {/* 4. Bottom Row: Recent Support Inquiries (2/3) + Active Agents & FCR (1/3) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Conversations Table (2 cols) */}
-        <div className="lg:col-span-2 rounded-2xl bg-[#111729] border border-[#252D42] p-5 shadow-xl">
-          <div className="flex items-center justify-between mb-4">
+        {/* Recent Support Inquiries Table */}
+        <div className="lg:col-span-2 rounded-2xl bg-[#0B1222] border border-white/10 p-5 shadow-xl space-y-4">
+          <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-[#00D9E8]" />
+                <MessageSquare className="w-4 h-4 text-[#00F2FE]" />
                 Recent Support Inquiries
               </h3>
-              <p className="text-xs text-[#A7B1C2] mt-0.5">
-                Latest customer tickets across phone, email, live chat and portal
+              <p className="text-[11px] text-gray-400 mt-0.5">
+                Latest customer tickets across phone, email, live chat and portal.
               </p>
             </div>
             <button
+              type="button"
               onClick={() => onNavigateTab && onNavigateTab('tickets')}
-              className="text-xs font-semibold text-[#00D9E8] hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-[#00F2FE] hover:underline flex items-center gap-1 cursor-pointer"
             >
               <span>View All Tickets</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
           <div className="overflow-x-auto custom-scrollbar">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#252D42] text-[#64748B] uppercase tracking-wider text-[10px]">
-                  <th className="pb-3 font-semibold">Ticket ID</th>
-                  <th className="pb-3 font-semibold">Customer</th>
-                  <th className="pb-3 font-semibold">Subject / Watch</th>
-                  <th className="pb-3 font-semibold">Priority</th>
-                  <th className="pb-3 font-semibold">Status</th>
-                  <th className="pb-3 font-semibold text-right">Action</th>
+                <tr className="border-b border-white/10 text-gray-400 font-semibold uppercase text-[10px] tracking-wider">
+                  <th className="pb-3 px-2">TICKET ID</th>
+                  <th className="pb-3 px-2">CUSTOMER</th>
+                  <th className="pb-3 px-2">SUBJECT / INQUIRY</th>
+                  <th className="pb-3 px-2">PRIORITY</th>
+                  <th className="pb-3 px-2">STATUS</th>
+                  <th className="pb-3 px-2">ASSIGNED TO</th>
+                  <th className="pb-3 px-2 text-center">ACTION</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#252D42]/60">
-                {recentTickets.map((ticket) => (
+              <tbody className="divide-y divide-white/5">
+                {displayTickets.map((t) => (
                   <tr
-                    key={ticket.id}
-                    className="hover:bg-[#070918]/50 transition-colors group cursor-pointer"
-                    onClick={() => {
-                      if (onSelectTicket) onSelectTicket(ticket);
-                      else if (onNavigateTab) onNavigateTab('tickets');
-                    }}
+                    key={t.id}
+                    onClick={() => onSelectTicket && onSelectTicket(t)}
+                    className="hover:bg-white/5 transition-colors cursor-pointer group"
                   >
-                    <td className="py-3 font-mono font-medium text-[#00D9E8]">{ticket.id}</td>
-                    <td className="py-3">
+                    {/* Ticket ID */}
+                    <td className="py-3 px-2 font-mono font-bold text-[#00F2FE] text-xs">
+                      {t.ticketId || t.id}
+                    </td>
+
+                    {/* Customer */}
+                    <td className="py-3 px-2">
                       <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-[#00D9E8]/10 text-[#00D9E8] flex items-center justify-center font-bold text-[10px] border border-[#00D9E8]/30">
-                          {ticket.customerName ? ticket.customerName[0] : 'C'}
+                        <div className="w-7 h-7 rounded-full bg-blue-900/60 border border-blue-500/30 flex items-center justify-center text-white font-bold text-[10px]">
+                          {t.customer ? t.customer[0] : 'C'}
                         </div>
-                        <div>
-                          <p className="font-semibold text-white">{ticket.customerName}</p>
-                          <p className="text-[10px] text-[#64748B]">{ticket.customerEmail}</p>
-                        </div>
+                        <span className="font-semibold text-white text-xs">{t.customer}</span>
                       </div>
                     </td>
-                    <td className="py-3">
-                      <p className="font-medium text-white truncate max-w-[200px]">{ticket.subject}</p>
-                      <p className="text-[10px] text-[#A7B1C2] truncate max-w-[200px]">{ticket.watchModel || ticket.category}</p>
+
+                    {/* Subject / Inquiry — Gracefully handles all fields, never displays undefined */}
+                    <td className="py-3 px-2">
+                      <div className="max-w-[220px]">
+                        <span className="font-bold text-white text-xs block truncate">
+                          {t.subject || 'Customer horology service query'}
+                        </span>
+                        <span className="text-[10px] text-gray-400 block truncate">
+                          {t.productName || 'Rolex Submariner Date'}
+                        </span>
+                      </div>
                     </td>
-                    <td className="py-3">
+
+                    {/* Priority Badge */}
+                    <td className="py-3 px-2">
                       <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${getPriorityBadge(
-                          ticket.priority
+                        className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${getPriorityBadgeClass(
+                          t.priority
                         )}`}
                       >
-                        {ticket.priority}
+                        {t.priority || 'High'}
                       </span>
                     </td>
-                    <td className="py-3">
+
+                    {/* Status Badge */}
+                    <td className="py-3 px-2">
                       <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${getStatusBadge(
-                          ticket.status
+                        className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${getStatusBadgeClass(
+                          t.status
                         )}`}
                       >
-                        {ticket.status}
+                        {t.status || 'Open'}
                       </span>
                     </td>
-                    <td className="py-3 text-right">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (onSelectTicket) onSelectTicket(ticket);
-                          else if (onNavigateTab) onNavigateTab('tickets');
-                        }}
-                        className="px-2.5 py-1 rounded-lg bg-[#00D9E8]/10 hover:bg-[#00D9E8] text-[#00D9E8] hover:text-[#070918] font-semibold text-[11px] transition-colors border border-[#00D9E8]/30"
-                      >
-                        Respond
-                      </button>
+
+                    {/* Assigned To */}
+                    <td className="py-3 px-2">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={t.assignedAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}
+                          alt={t.assignedTo}
+                          className="w-6 h-6 rounded-full object-cover border border-white/20"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                        <span className="text-gray-300 text-xs">{t.assignedTo || 'Rohan Singh'}</span>
+                      </div>
+                    </td>
+
+                    {/* Action */}
+                    <td className="py-3 px-2 text-center">
+                      <div className="inline-flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white"
+                          title="View Ticket"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400"
+                        >
+                          <MoreVertical className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -477,76 +632,67 @@ export const DashboardModule = ({
           </div>
         </div>
 
-        {/* Top Performing Agents (1 col) */}
-        <div className="rounded-2xl bg-[#111729] border border-[#252D42] p-5 shadow-xl flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
+        {/* Right Stack: Active Support Agents + First Contact Resolution */}
+        <div className="space-y-4">
+          {/* Active Support Agents Card */}
+          <div className="rounded-2xl bg-[#0B1222] border border-white/10 p-5 shadow-xl space-y-3">
+            <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <UserCheck className="w-4 h-4 text-[#E7B43F]" />
+                  <span className="text-[#E7B43F]">&bull;</span>
                   Active Support Agents
                 </h3>
-                <p className="text-xs text-[#A7B1C2] mt-0.5">Top resolution performers this month</p>
+                <p className="text-[11px] text-gray-400 mt-0.5">Top resolution performers this month.</p>
               </div>
               <button
+                type="button"
                 onClick={() => onNavigateTab && onNavigateTab('team')}
-                className="text-xs font-semibold text-[#00D9E8] hover:underline"
+                className="text-xs font-bold text-[#00F2FE] hover:underline cursor-pointer"
               >
-                Manage
+                Manage Team &gt;
               </button>
             </div>
 
-            <div className="space-y-3">
-              {agents.slice(0, 4).map((agent) => (
+            <div className="space-y-2.5">
+              {displayAgents.map((agent) => (
                 <div
                   key={agent.id}
-                  className="p-3 rounded-xl bg-[#070918]/60 border border-[#252D42] hover:border-[#00D9E8]/30 transition-colors flex items-center justify-between"
+                  className="p-2.5 rounded-xl bg-[#111A2C] border border-white/5 flex items-center justify-between"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <div className="w-9 h-9 rounded-xl bg-[#111729] border border-[#252D42] flex items-center justify-center text-sm">
-                        {agent.avatar || '🎧'}
-                      </div>
-                      <span
-                        className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[#091426] ${
-                          agent.status === 'online'
-                            ? 'bg-[#10B981]'
-                            : agent.status === 'busy'
-                            ? 'bg-[#E7B43F]'
-                            : 'bg-[#64748B]'
-                        }`}
-                      />
-                    </div>
+                  <div className="flex items-center gap-2.5">
+                    <img
+                      src={agent.avatar}
+                      alt={agent.name}
+                      className="w-8 h-8 rounded-full object-cover border border-white/20"
+                    />
                     <div>
-                      <p className="text-xs font-semibold text-white">{agent.name}</p>
-                      <p className="text-[10px] text-[#A7B1C2]">{agent.role}</p>
+                      <span className="font-bold text-white text-xs block">{agent.name}</span>
+                      <span className="text-[10px] text-gray-400 block">{agent.role}</span>
                     </div>
                   </div>
-
                   <div className="text-right">
-                    <p className="text-xs font-bold text-[#10B981]">
-                      {agent.resolvedTickets || agent.ticketsResolved || 142} Solved
-                    </p>
-                    <div className="flex items-center justify-end gap-1 text-[11px] text-[#E7B43F] font-semibold">
-                      <Star className="w-3 h-3 fill-current" />
-                      <span>{agent.csat || agent.rating || '4.9'}</span>
-                    </div>
+                    <span className="text-xs font-bold text-white block">{agent.resolved} Solved</span>
+                    <span className="text-[10px] font-bold text-[#E7B43F] block">{agent.score}</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="pt-4 mt-4 border-t border-[#252D42]">
-            <div className="p-3 rounded-xl bg-gradient-to-r from-[#00D9E8]/10 via-[#10B981]/10 to-transparent border border-[#00D9E8]/20 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold text-white">First Contact Resolution</p>
-                <p className="text-[11px] text-[#A7B1C2]">Target 85% • Current 88.5%</p>
+          {/* First Contact Resolution Card */}
+          <div className="rounded-2xl bg-[#0B1222] border border-white/10 p-5 shadow-xl flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#00F2FE]/10 border border-[#00F2FE]/30 flex items-center justify-center text-[#00F2FE]">
+                <Sparkles className="w-5 h-5" />
               </div>
-              <span className="px-2 py-0.5 text-xs font-bold text-[#10B981] bg-[#10B981]/20 rounded-full border border-[#10B981]/30">
-                +3.5%
-              </span>
+              <div>
+                <h4 className="font-bold text-white text-xs">First Contact Resolution</h4>
+                <p className="text-[11px] text-gray-400">Target: 85% &bull; Current: 88.5%</p>
+              </div>
             </div>
+            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              &uarr; +3.5%
+            </span>
           </div>
         </div>
       </div>

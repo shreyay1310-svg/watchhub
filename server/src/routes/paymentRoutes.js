@@ -537,4 +537,153 @@ router.post(
   }
 );
 
+// 6. Local Dummy Payment Checkout Endpoint (Zero Razorpay / 100% Local Development)
+// POST /api/payments/dummy-checkout
+router.post('/dummy-checkout', async (req, res) => {
+  try {
+    const {
+      items = [],
+      shippingMethod = 'armoured',
+      paymentMethod = 'card',
+      shippingAddress = {},
+      simulateFailure = false,
+      customerEmail = 'collector@watchhub.com',
+    } = req.body;
+
+    if (simulateFailure) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Simulated issuing bank authorization decline (Test Failure Mode).',
+      });
+    }
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Cart cannot be empty for checkout.',
+      });
+    }
+
+    // Calculate totals
+    const shippingRates = { standard: 0, express: 1200, armoured: 3500 };
+    const shippingFee = shippingRates[shippingMethod] !== undefined ? shippingRates[shippingMethod] : 3500;
+    let subtotal = 0;
+    const validatedItems = [];
+
+    const defaultProduct = await prisma.product.findFirst({ where: { isActive: true } });
+
+    for (const it of items) {
+      const pId = it.productId || it.id;
+      let unitPrice = Number(it.price || it.unitPrice || 0);
+      let productName = it.name || 'Luxury Watch';
+      let resolvedProductId = defaultProduct?.productId;
+
+      if (pId) {
+        try {
+          const dbP = await prisma.product.findFirst({
+            where: { OR: [{ productId: pId }, { sku: pId }] },
+          });
+          if (dbP) {
+            unitPrice = Number(dbP.price);
+            productName = dbP.name;
+            resolvedProductId = dbP.productId;
+          }
+        } catch {}
+      }
+
+      const qty = Math.max(1, parseInt(it.quantity || 1, 10));
+      subtotal += unitPrice * qty;
+      validatedItems.push({
+        productId: resolvedProductId,
+        name: productName,
+        unitPrice,
+        quantity: qty,
+      });
+    }
+
+    const grandTotal = subtotal + shippingFee;
+    const orderNumber = `WH-${Math.floor(100000 + Math.random() * 900000)}`;
+    const awbNumber = `AWB-SWISS-${Math.floor(10000000 + Math.random() * 90000000)}`;
+
+    // Resolve or find customer
+    let customerUser = await prisma.user.findFirst({
+      where: { email: customerEmail },
+    });
+    if (!customerUser) {
+      customerUser = await prisma.user.findFirst({
+        where: { userRoles: { some: { role: { roleName: 'Customer' } } } },
+      });
+    }
+    const customerId = customerUser ? customerUser.userId : defaultProduct?.userId;
+
+    let address = await prisma.address.findFirst({ where: { userId: customerId } });
+    if (!address) {
+      address = await prisma.address.create({
+        data: {
+          userId: customerId,
+          addressLine1: shippingAddress.street || 'Penthouse 14B',
+          city: shippingAddress.city || 'Gurugram',
+          state: shippingAddress.state || 'Haryana',
+          postalCode: shippingAddress.postalCode || '122002',
+          country: shippingAddress.country || 'India',
+        },
+      });
+    }
+
+    const order = await prisma.order.create({
+      data: {
+        orderNumber,
+        customerId,
+        shippingAddressId: address?.addressId,
+        orderStatus: paymentMethod === 'cod' ? 'Confirmed' : 'Processing',
+        subtotal,
+        shippingFee,
+        discountAmount: 0,
+        totalAmount: grandTotal,
+        shippingMethod: shippingMethod || 'Armoured Courier',
+        specialInstructions: `Local Dummy Checkout (${paymentMethod.toUpperCase()}) — Demo Payment Mode`,
+        orderItems: {
+          create: validatedItems.map((vi) => ({
+            productId: vi.productId,
+            quantity: vi.quantity,
+            unitPrice: vi.unitPrice,
+          })),
+        },
+        payments: {
+          create: {
+            paymentMethod: `Demo Payment Mode — ${paymentMethod.toUpperCase()}`,
+            amount: grandTotal,
+            currency: 'INR',
+            paymentStatus: paymentMethod === 'cod' ? 'Pending' : 'Captured',
+            razorpayPaymentId: `PAY_DEMO_${Date.now()}`,
+            razorpayOrderId: `ORD_DEMO_${Date.now()}`,
+            capturedAt: new Date(),
+          },
+        },
+      },
+      include: {
+        orderItems: true,
+        payments: true,
+      },
+    });
+
+    return res.status(201).json({
+      status: 'success',
+      order: {
+        orderId: order.orderNumber,
+        awbNumber,
+        amount: grandTotal,
+        paymentStatus: order.paymentStatus,
+        paymentMethod: order.paymentMethod,
+        orderStatus: order.orderStatus,
+        items: validatedItems,
+        shippingAddress,
+      },
+    });
+  } catch (err) {
+    console.error('[Dummy Checkout API Error]', err);
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+});
+
 export default router;

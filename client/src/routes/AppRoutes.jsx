@@ -23,6 +23,7 @@ import EmailOtpLoginPage from '../pages/auth/EmailOtpLoginPage';
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import RoleDashboard from '../pages/dashboards/RoleDashboard';
+import SuperAdminDashboardPage from '../pages/dashboards/SuperAdminDashboardPage';
 import InventoryManagerDashboardPage from '../pages/dashboards/InventoryManagerDashboardPage';
 import DeliveryManagerDashboardPage from '../pages/dashboards/DeliveryManagerDashboardPage';
 import DeliveryPartnerDashboardPage from '../pages/dashboards/DeliveryPartnerDashboardPage';
@@ -235,7 +236,7 @@ export const AppRoutes = () => {
         path="/super-admin/dashboard"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <RoleDashboard initialTab="dashboard" />
+            <SuperAdminDashboardPage initialTab="users" />
           </RoleProtectedRoute>
         }
       />
@@ -243,7 +244,23 @@ export const AppRoutes = () => {
         path="/super-admin"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <RoleDashboard initialTab="dashboard" />
+            <SuperAdminDashboardPage initialTab="users" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/super-admin/users"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN, 'Super Admin']}>
+            <SuperAdminDashboardPage initialTab="users" />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path="/super-admin/overview"
+        element={
+          <RoleProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN, 'Super Admin']}>
+            <SuperAdminDashboardPage initialTab="overview" />
           </RoleProtectedRoute>
         }
       />
@@ -251,7 +268,7 @@ export const AppRoutes = () => {
         path="/super-admin/releases"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <RoleDashboard initialTab="releases" />
+            <SuperAdminDashboardPage initialTab="releases" />
           </RoleProtectedRoute>
         }
       />
@@ -259,7 +276,7 @@ export const AppRoutes = () => {
         path="/admin/releases"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <RoleDashboard initialTab="releases" />
+            <SuperAdminDashboardPage initialTab="releases" />
           </RoleProtectedRoute>
         }
       />
@@ -375,7 +392,7 @@ export const AppRoutes = () => {
         path="/store-admin/inventory"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.STORE_ADMIN, 'Store Admin', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <InventoryManagerDashboardPage initialTab="dashboard" />
+            <RoleDashboard initialTab="products" />
           </RoleProtectedRoute>
         }
       />
@@ -383,7 +400,7 @@ export const AppRoutes = () => {
         path="/admin/inventory"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.STORE_ADMIN, 'Store Admin', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <InventoryManagerDashboardPage initialTab="dashboard" />
+            <RoleDashboard initialTab="products" />
           </RoleProtectedRoute>
         }
       />
@@ -499,7 +516,7 @@ export const AppRoutes = () => {
         path="/store-admin/delivery"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.STORE_ADMIN, 'Store Admin', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <DeliveryManagerDashboardPage initialTab="dashboard" />
+            <RoleDashboard initialTab="orders" />
           </RoleProtectedRoute>
         }
       />
@@ -507,7 +524,7 @@ export const AppRoutes = () => {
         path="/admin/delivery"
         element={
           <RoleProtectedRoute allowedRoles={[ROLES.STORE_ADMIN, 'Store Admin', ROLES.SUPER_ADMIN, 'Super Admin']}>
-            <DeliveryManagerDashboardPage initialTab="dashboard" />
+            <RoleDashboard initialTab="orders" />
           </RoleProtectedRoute>
         }
       />

@@ -16,25 +16,13 @@ export default function InventoryManagerLayout({
   warehouses = [],
   reorderAlertsCount = 18,
 }) {
-  const { user, switchRole } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // If user is not an Inventory Manager or Super Admin, auto-switch to demo Inventory Manager so UI always displays smoothly
-  useEffect(() => {
-    if (!user || (user.role !== ROLES.INVENTORY_MANAGER && user.role !== 'Inventory Manager' && user.role !== ROLES.SUPER_ADMIN && user.role !== 'Super Admin')) {
-      if (switchRole) {
-        switchRole(ROLES.INVENTORY_MANAGER);
-      }
-    }
-  }, [user, switchRole]);
-
-  const activeUser =
-    user && (user.role === ROLES.INVENTORY_MANAGER || user.role === 'Inventory Manager' || user.role === ROLES.SUPER_ADMIN || user.role === 'Super Admin')
-      ? user
-      : MOCK_STAFF_ACCOUNTS[ROLES.INVENTORY_MANAGER];
+  const activeUser = user || MOCK_STAFF_ACCOUNTS[ROLES.INVENTORY_MANAGER];
 
   return (
     <div className="min-h-screen bg-[#080923] text-white flex flex-col font-sans relative">

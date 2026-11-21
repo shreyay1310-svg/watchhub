@@ -127,7 +127,10 @@ export const CustomerAccountPage = () => {
               <span>Watch Studio</span>
             </Link>
             <button
-              onClick={logout}
+              onClick={async () => {
+                await logout();
+                navigate('/login', { replace: true });
+              }}
               className="py-2.5 px-4 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />

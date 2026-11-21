@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>WatchHub – Luxury Watches, Horology Atelier &amp; Customization</title>
 
+    <!-- Immediate Service Worker & Stale Cache Killer -->
+    <script>
+      (function() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (var i = 0; i < registrations.length; i++) {
+              registrations[i].unregister();
+            }
+          }).catch(function() {});
+        }
+        if ('caches' in window) {
+          caches.keys().then(function(names) {
+            for (var i = 0; i < names.length; i++) {
+              caches.delete(names[i]);
+            }
+          }).catch(function() {});
+        }
+      })();
+    </script>
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="Explore WatchHub for authentic luxury watches from Rolex, Omega, Patek Philippe, and TAG Heuer. Experience our 3D Watch Customizer Studio and Horology Atelier." />
     <meta name="keywords" content="luxury watches, rolex, omega, patek philippe, mechanical watches, buy watches online india, custom watches, swiss watches" />

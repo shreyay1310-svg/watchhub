@@ -70,8 +70,8 @@ export const DiySizeGuideModal = ({ isOpen, onClose, onSelectSize }) => {
         </div>
 
         {/* Reference Table */}
-        <div className="rounded-2xl overflow-hidden border border-white/10 mb-6">
-          <table className="w-full text-left text-xs">
+        <div className="rounded-2xl overflow-x-auto border border-white/10 mb-6">
+          <table className="w-full text-left text-xs min-w-[480px]">
             <thead className="bg-[#141A3D] text-slate-300 border-b border-white/10 font-semibold">
               <tr>
                 <th className="py-3 px-3">Wrist Size</th>

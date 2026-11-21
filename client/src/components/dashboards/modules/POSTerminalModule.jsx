@@ -1,46 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  CreditCard,
-  Search,
-  Barcode,
-  ShoppingBag,
-  Plus,
-  Minus,
-  Trash2,
-  Tag,
-  Percent,
-  User,
-  UserPlus,
-  DollarSign,
-  QrCode,
-  Smartphone,
-  Printer,
-  FileText,
-  Download,
-  Mail,
-  Share2,
-  CheckCircle2,
-  AlertCircle,
-  Clock,
-  Calendar,
-  Lock,
-  Unlock,
-  RefreshCw,
-  X,
-  Pause,
-  Play,
-  RotateCcw,
-  ShieldCheck,
-  ChevronRight,
-  ChevronDown,
-  Layers,
-  ArrowRight,
-  TrendingUp,
-  Sparkles,
-  Award,
-  Check,
-  Building,
-  Key,
+  CreditCard, Search, Barcode, ShoppingBag, Plus, Minus, Trash2, Tag, Percent,
+  User, UserPlus, DollarSign, QrCode, Smartphone, Printer, FileText, Download,
+  Mail, Share2, CheckCircle2, AlertCircle, Clock, Calendar, Lock, Unlock, RefreshCw,
+  X, Pause, Play, RotateCcw, ShieldCheck, ChevronRight, ChevronDown, Layers,
+  ArrowRight, TrendingUp, Sparkles, Award, Check, Building, Key,
 } from 'lucide-react';
 import { useCurrencyLanguage } from '../../../context/CurrencyLanguageContext';
 
@@ -100,8 +64,11 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
   const [discountValue, setDiscountValue] = useState(0);
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [managerAuthorized, setManagerAuthorized] = useState(false);
   const [managerPinModalOpen, setManagerPinModalOpen] = useState(false);
   const [managerPinInput, setManagerPinInput] = useState('');
+  const managerPin = managerPinInput;
+  const setManagerPin = setManagerPinInput;
   const [managerPinError, setManagerPinError] = useState(null);
   const [pendingHighDiscount, setPendingHighDiscount] = useState(null);
 
@@ -113,12 +80,16 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
   const [zReportModalOpen, setZReportModalOpen] = useState(false);
   const [scannerModalOpen, setScannerModalOpen] = useState(false);
 
-  // Payment Execution State
-  const [paymentMethod, setPaymentMethod] = useState('Card'); // 'Cash' | 'Card' | 'Debit' | 'UPI' | 'Split'
+  // Payment Execution State (Dummy Payment Architecture)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Card'); // 'Cash' | 'Card' | 'Debit' | 'UPI' | 'Split'
+  const paymentMethod = selectedPaymentMethod;
+  const setPaymentMethod = setSelectedPaymentMethod;
   const [cashTendered, setCashTendered] = useState('');
+  const [splitDetails, setSplitDetails] = useState({ cash: '', card: '' });
   const [splitCashAmount, setSplitCashAmount] = useState('');
   const [splitCardAmount, setSplitCardAmount] = useState('');
   const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const isAuthorizingPayment = paymentProcessing;
 
   // Completed Transactions Store
   const [completedTransactions, setCompletedTransactions] = useState([
@@ -157,6 +128,7 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
       status: 'Completed',
     },
   ]);
+  const salesHistory = completedTransactions;
 
   // Held Sales Store
   const [heldSales, setHeldSales] = useState([
@@ -168,6 +140,8 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
       total: 2595882,
     },
   ]);
+  const heldSalesList = heldSales;
+  const setHeldSalesList = setHeldSales;
 
   // Active Completed Invoice
   const [activeInvoice, setActiveInvoice] = useState(null);
@@ -340,6 +314,7 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
         setDiscountValue(pendingHighDiscount.value);
         setDiscountType(pendingHighDiscount.type);
       }
+      setManagerAuthorized(true);
       setManagerPinModalOpen(false);
       setManagerPinInput('');
       setManagerPinError(null);
@@ -723,6 +698,7 @@ export const POSTerminalModule = ({ onOpenDrawer }) => {
           sgstAmount={sgstAmount}
           grandTotal={grandTotal}
           setPaymentModalOpen={setPaymentModalOpen}
+          showToast={showToast}
         />
       </main>
 

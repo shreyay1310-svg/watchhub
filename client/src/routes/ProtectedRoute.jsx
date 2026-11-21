@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth, ROLES } from '../context/AuthContext';
 import AuthLoadingScreen from '../components/common/AuthLoadingScreen';
+import AccessDeniedScreen from '../components/common/AccessDeniedScreen';
 
 /**
  * Maps any user role to their authorized primary dashboard path
@@ -70,9 +71,8 @@ export const ProtectedRoute = ({ allowedRoles = [], children }) => {
     });
 
     if (!isSuperAdmin && !isExplicitlyAllowed) {
-      // User is authenticated but lacks required role -> redirect to their authorized role dashboard
-      const authorizedPath = getRoleDashboardPath(userRole);
-      return <Navigate to={authorizedPath} replace />;
+      // User is authenticated but lacks required role -> Render Luxury Access Denied Screen
+      return <AccessDeniedScreen allowedRoles={allowedRoles} currentRole={userRole} />;
     }
   }
 

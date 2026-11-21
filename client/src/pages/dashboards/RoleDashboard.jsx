@@ -37,7 +37,6 @@ import POSTerminalModule from '../../components/dashboards/modules/POSTerminalMo
 import ProductsManagementModule from '../../components/dashboards/modules/ProductsManagementModule';
 import OrdersManagementModule from '../../components/dashboards/modules/OrdersManagementModule';
 import InventoryManagementModule from '../../components/dashboards/modules/InventoryManagementModule';
-import InventoryManagerDashboardPage from './InventoryManagerDashboardPage';
 import CustomerSupportModule from '../../components/dashboards/modules/CustomerSupportModule';
 import OffersCouponsModule from '../../components/dashboards/modules/OffersCouponsModule';
 import SettingsAuditModule from '../../components/dashboards/modules/SettingsAuditModule';
@@ -123,7 +122,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
       case 'stock_update':
       case 'stock_requests':
       case 'warehouses':
-        return <InventoryManagerDashboardPage />;
+        return <InventoryManagementModule />;
       case 'orders':
       case 'payments':
         return <OrdersManagementModule />;
@@ -213,7 +212,7 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050B2D] text-white flex font-sans antialiased select-none">
+    <div className="min-h-screen bg-[#050B2D] text-white flex font-sans antialiased select-none relative overflow-x-hidden w-full">
       <SEO title="Administrative Management Portal | WatchHub" noindex={true} />
       
       {/* ════════════════════════════════════════════════════════════════
@@ -314,6 +313,19 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
               </div>
             </div>
           )}
+          {/* Direct Sidebar Sign Out Button */}
+          <button
+            type="button"
+            onClick={async () => {
+              await logout();
+              navigate('/login', { replace: true });
+            }}
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-rose-400 hover:text-white hover:bg-rose-500/20 transition-all cursor-pointer mt-2"
+            title="Sign Out"
+          >
+            <LogOut className="w-4 h-4 flex-shrink-0" />
+            {!sidebarCollapsed && <span>Sign Out</span>}
+          </button>
         </div>
 
         {/* Store Admin User Profile at Very Bottom */}
@@ -371,10 +383,10 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
 
               <button
                 type="button"
-                onClick={() => {
-                  logout();
+                onClick={async () => {
                   setProfileMenuOpen(false);
-                  navigate('/login');
+                  await logout();
+                  navigate('/login', { replace: true });
                 }}
                 className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors text-left"
               >
@@ -397,13 +409,13 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
           2. MAIN CONTENT AREA (Header + Body)
           ════════════════════════════════════════════════════════════════ */}
       <div
-        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
+        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 min-w-0 w-full overflow-x-hidden ${
           sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'
         }`}
       >
         {/* Top Navbar Header */}
-        <header className="sticky top-0 z-20 h-16 bg-[#050B2D]/95 backdrop-blur-md border-b border-[#1E2968] px-4 sm:px-6 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-20 h-16 bg-[#050B2D]/95 backdrop-blur-md border-b border-[#1E2968] px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {/* Sidebar Toggle Button */}
             <button
               type="button"
@@ -414,34 +426,34 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
                   setSidebarCollapsed(!sidebarCollapsed);
                 }
               }}
-              className="p-1.5 text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+              className="p-1.5 text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer flex-shrink-0"
               title="Toggle Sidebar"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* Global Search Bar (Exact ShopMax Style) */}
-            <div className="relative w-64 sm:w-80 md:w-96">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            {/* Global Search Bar (Responsive) */}
+            <div className="relative w-28 xs:w-36 sm:w-64 md:w-80 flex-shrink min-w-0">
+              <Search className="absolute left-2.5 sm:left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
               <input
                 type="text"
                 value={searchVal}
                 onChange={(e) => setSearchVal(e.target.value)}
-                placeholder="Search watches, orders, customers..."
-                className="w-full h-10 pl-10 pr-4 text-xs rounded-full bg-[#0B1445] text-white placeholder-slate-400 border border-[#1E2968] focus:border-[#1265FF] outline-none transition-all font-medium"
+                placeholder="Search watches, orders..."
+                className="w-full h-9 sm:h-10 pl-8 sm:pl-10 pr-3 sm:pr-4 text-xs rounded-full bg-[#0B1445] text-white placeholder-slate-400 border border-[#1E2968] focus:border-[#1265FF] outline-none transition-all font-medium truncate"
               />
             </div>
           </div>
 
           {/* Right Header Action Buttons */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
             
-            {/* Calendar Icon Button */}
-            <div className="relative">
+            {/* Calendar Icon Button (Desktop/Tablet) */}
+            <div className="relative hidden md:block">
               <button
                 type="button"
                 onClick={() => setCalendarOpen(!calendarOpen)}
-                className="w-10 h-10 rounded-xl bg-[#0B1445] hover:bg-[#101E5E] border border-[#1E2968] text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#0B1445] hover:bg-[#101E5E] border border-[#1E2968] text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 title="Calendar & Date Range"
               >
                 <Calendar className="w-4 h-4" />
@@ -531,10 +543,24 @@ export const RoleDashboard = ({ initialTab = 'dashboard' }) => {
             <button
               type="button"
               onClick={() => setShowAddProductModal(true)}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#741BFF] to-[#1265FF] hover:opacity-95 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-[#741BFF] to-[#1265FF] hover:opacity-95 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer flex-shrink-0"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span className="hidden sm:inline">Add Product</span>
+            </button>
+
+            {/* Direct Top Navbar Logout Button */}
+            <button
+              type="button"
+              onClick={async () => {
+                await logout();
+                navigate('/login', { replace: true });
+              }}
+              className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 hover:text-white font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-sm flex-shrink-0"
+              title="Sign Out"
+            >
+              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden md:inline">Sign Out</span>
             </button>
 
           </div>

@@ -39,6 +39,8 @@ export const DeliveryManagerSidebar = ({
   setActiveTab,
   sidebarCollapsed,
   setSidebarCollapsed,
+  mobileSidebarOpen,
+  setMobileSidebarOpen,
 }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -51,9 +53,9 @@ export const DeliveryManagerSidebar = ({
 
   return (
     <aside
-      className={`${
+      className={`fixed lg:static top-0 bottom-0 left-0 z-50 bg-[#081529] text-white flex-shrink-0 flex flex-col justify-between transition-transform lg:transition-all duration-300 border-r border-[#28334B] select-none ${
         sidebarCollapsed ? 'w-20' : 'w-64'
-      } bg-[#081529] text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 border-r border-[#28334B] select-none z-30`}
+      } ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
     >
       {/* Top Header / Branding */}
       <div>
@@ -92,6 +94,7 @@ export const DeliveryManagerSidebar = ({
                 key={item.id}
                 onClick={() => {
                   if (setActiveTab) setActiveTab(item.id);
+                  if (setMobileSidebarOpen) setMobileSidebarOpen(false);
                   if (item.path && location.pathname !== item.path) {
                     navigate(item.path);
                   }

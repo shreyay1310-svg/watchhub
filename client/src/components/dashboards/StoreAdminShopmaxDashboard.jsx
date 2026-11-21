@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -15,41 +15,46 @@ import {
   ShoppingCart,
   Users,
   TrendingUp,
-  TrendingDown,
-  Plus,
-  Minus,
-  Trash2,
-  CreditCard,
-  Barcode,
-  Camera,
-  CheckCircle,
-  X,
-  Printer,
   ChevronDown,
-  Sparkles,
-  ArrowUpRight,
-  ShieldCheck,
-  Search,
-  Check,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react';
 
+import api from '../../services/api';
 import ShopmaxPOSTerminalPanel from './ShopmaxPOSTerminalPanel';
 import ShopmaxModals from './ShopmaxModals';
 import {
-  WEEKLY_SALES_DATA,
   SALES_CHANNEL_DATA,
   INITIAL_POS_ITEMS,
-  TOP_WATCHES_DATA,
-  RECENT_ORDERS_DATA
 } from '../../data/shopmaxDashboardData';
+
 export const StoreAdminShopmaxDashboard = ({
   onNavigateTab,
   onOpenAddProduct,
   searchQuery = '',
 }) => {
-  // Sales Overview Date Filter
+  // Loading & Error States
+  const [overviewLoading, setOverviewLoading] = useState(true);
+  const [overviewError, setOverviewError] = useState(null);
+
+  // Overview Data from Backend
+  const [overviewData, setOverviewData] = useState({
+    totalSales: 0,
+    totalOrders: 0,
+    totalCustomers: 0,
+    conversionRate: null,
+    recentOrders: [],
+    topWatches: [],
+  });
+
+  // Sales Overview Date Filter & Dynamic Chart Data
   const [selectedRange, setSelectedRange] = useState('This Week');
   const [rangeDropdownOpen, setRangeDropdownOpen] = useState(false);
+  const [salesOverviewData, setSalesOverviewData] = useState([]);
+  const [salesOverviewLoading, setSalesOverviewLoading] = useState(false);
+
+  // Channel Breakdown
+  const [channelData, setChannelData] = useState(SALES_CHANNEL_DATA);
 
   // POS State
   const [posTab, setPosTab] = useState('pos'); // 'pos' | 'scanner'
@@ -57,12 +62,79 @@ export const StoreAdminShopmaxDashboard = ({
   const [scannedSku, setScannedSku] = useState('');
   const [cameraActive, setCameraActive] = useState(false);
   const [scanSuccessMessage, setScanSuccessMessage] = useState('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cash');
+  const [tenderedCash, setTenderedCash] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
 
   // Modals State
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [cardPaymentModalOpen, setCardPaymentModalOpen] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
+
+  // Fetch High-Level Overview
+  const fetchOverview = useCallback(async () => {
+    try {
+      setOverviewLoading(true);
+      setOverviewError(null);
+      const res = await api.get('/store-admin/overview');
+      if (res.data && res.data.status === 'success') {
+        const d = res.data.data;
+        setOverviewData({
+          totalSales: d.kpis?.totalSales ?? d.totalSales ?? 0,
+          totalOrders: d.kpis?.totalOrders ?? d.totalOrders ?? 0,
+          totalCustomers: d.kpis?.totalCustomers ?? d.totalCustomers ?? 0,
+          conversionRate: d.kpis?.conversionRate ?? d.conversionRate ?? null,
+          recentOrders: d.recentOrders ?? [],
+          topWatches: d.topWatches ?? [],
+        });
+      }
+    } catch (err) {
+      console.warn('[StoreAdmin] Overview fetch error:', err.message);
+      setOverviewError(err.response?.data?.message || 'Failed to load live overview.');
+    } finally {
+      setOverviewLoading(false);
+    }
+  }, []);
+
+  // Fetch Sales Overview series based on filter
+  const fetchSalesOverview = useCallback(async (range) => {
+    try {
+      setSalesOverviewLoading(true);
+      const rangeParam = range.toLowerCase().replace(' ', '-');
+      const res = await api.get(`/store-admin/sales-overview?range=${rangeParam}`);
+      if (res.data && res.data.status === 'success') {
+        setSalesOverviewData(res.data.data.series || []);
+      }
+    } catch (err) {
+      console.warn('[StoreAdmin] Sales overview fetch error:', err.message);
+    } finally {
+      setSalesOverviewLoading(false);
+    }
+  }, []);
+
+  // Fetch Sales by Channel
+  const fetchSalesByChannel = useCallback(async () => {
+    try {
+      const res = await api.get('/store-admin/sales-by-channel');
+      if (res.data && res.data.status === 'success') {
+        const channels = res.data.data.channels || [];
+        if (channels.length > 0) {
+          setChannelData(channels);
+        }
+      }
+    } catch (err) {
+      console.warn('[StoreAdmin] Channel fetch error:', err.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchOverview();
+    fetchSalesByChannel();
+  }, [fetchOverview, fetchSalesByChannel]);
+
+  useEffect(() => {
+    fetchSalesOverview(selectedRange);
+  }, [selectedRange, fetchSalesOverview]);
 
   // Calculations for POS
   const subtotal = posCart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -88,30 +160,61 @@ export const StoreAdminShopmaxDashboard = ({
     setPosCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleBarcodeScan = (e) => {
+  const handleBarcodeScan = async (e) => {
     e?.preventDefault();
     if (!scannedSku.trim()) return;
 
-    // Check if matching sku or generic add
     const skuCode = scannedSku.trim().toUpperCase();
     const existingIndex = posCart.findIndex(
-      (item) => item.sku.toUpperCase() === skuCode
+      (item) => (item.sku || '').toUpperCase() === skuCode
     );
 
     if (existingIndex > -1) {
       handleQtyChange(posCart[existingIndex].id, 1);
       setScanSuccessMessage(`Increased quantity for ${posCart[existingIndex].name}!`);
-    } else {
-      const newItem = {
+      setScannedSku('');
+      setTimeout(() => setScanSuccessMessage(''), 3000);
+      return;
+    }
+
+    try {
+      const res = await api.get(`/store-admin/pos/search?query=${encodeURIComponent(skuCode)}`);
+      if (res.data?.status === 'success' && res.data.data?.length > 0) {
+        const p = res.data.data[0];
+        const newItem = {
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          qty: 1,
+          image: p.image || '/images/products/rolex-submariner.png',
+          sku: p.sku || skuCode,
+          currentStock: p.currentStock,
+        };
+        setPosCart((prev) => [newItem, ...prev]);
+        setScanSuccessMessage(`Added ${p.name} to POS Cart!`);
+      } else {
+        const fallbackItem = {
+          id: `pos-${Date.now()}`,
+          name: `Watch SKU ${skuCode}`,
+          price: 250000,
+          qty: 1,
+          image: '/images/products/rolex-submariner.png',
+          sku: skuCode,
+        };
+        setPosCart((prev) => [fallbackItem, ...prev]);
+        setScanSuccessMessage(`Added SKU ${skuCode} to POS Cart!`);
+      }
+    } catch {
+      const fallbackItem = {
         id: `pos-${Date.now()}`,
-        name: `Scanned Watch (${skuCode})`,
-        price: 350000,
+        name: `Watch SKU ${skuCode}`,
+        price: 250000,
         qty: 1,
         image: '/images/products/rolex-submariner.png',
         sku: skuCode,
       };
-      setPosCart((prev) => [newItem, ...prev]);
-      setScanSuccessMessage(`Added ${newItem.name} to POS Cart!`);
+      setPosCart((prev) => [fallbackItem, ...prev]);
+      setScanSuccessMessage(`Added SKU ${skuCode} to POS Cart!`);
     }
 
     setScannedSku('');
@@ -119,97 +222,130 @@ export const StoreAdminShopmaxDashboard = ({
   };
 
   // Filter Top Watches & Recent Orders based on search query
-  const filteredTopWatches = TOP_WATCHES_DATA.filter((w) =>
-    w.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const displayTopWatches = (overviewData.topWatches && overviewData.topWatches.length > 0)
+    ? overviewData.topWatches
+    : [];
+
+  const filteredTopWatches = displayTopWatches.filter((w) =>
+    (w.name || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredRecentOrders = RECENT_ORDERS_DATA.filter(
+  const displayRecentOrders = (overviewData.recentOrders && overviewData.recentOrders.length > 0)
+    ? overviewData.recentOrders
+    : [];
+
+  const filteredRecentOrders = displayRecentOrders.filter(
     (o) =>
-      o.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      o.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      o.status.toLowerCase().includes(searchQuery.toLowerCase())
+      (o.id || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (o.customer || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (o.status || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const formattedTotalSales = `₹${(overviewData.totalSales || 0).toLocaleString('en-IN')}`;
 
   return (
-    <div className="space-y-6 text-white font-sans select-none">
-      {/* ════════════════════════════════════════════════════════════════
-          1. WELCOME SECTION (Exact match to reference)
-          ════════════════════════════════════════════════════════════════ */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
-          <span>Welcome back, Store Admin!</span>
-          <span>👋</span>
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
-          Here's what's happening with your WatchHub store today.
-        </p>
+    <div className="space-y-6 text-white font-sans select-none min-w-0 w-full overflow-x-hidden">
+      {/* 1. WELCOME SECTION */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            <span>Welcome back, Store Admin!</span>
+            <span>👋</span>
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            Real-time status and telemetry from your WatchHub store &amp; database.
+          </p>
+        </div>
+        {overviewLoading && (
+          <div className="flex items-center gap-2 text-xs text-sky-400 bg-sky-500/10 border border-sky-500/20 px-3 py-1.5 rounded-xl w-fit">
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <span>Syncing database...</span>
+          </div>
+        )}
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════
-          2. KPI CARDS (4 horizontally aligned cards)
-          ════════════════════════════════════════════════════════════════ */}
+      {overviewError && (
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{overviewError}</span>
+        </div>
+      )}
+
+      {/* 2. KPI CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total Sales */}
-        <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-[#1265FF]/60 transition-all">
+        <div
+          onClick={() => onNavigateTab?.('reports')}
+          className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-[#1265FF] hover:scale-[1.01] transition-all cursor-pointer"
+          title="Click to view full Sales Reports"
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#1265FF]/20 flex items-center justify-center text-[#1265FF] flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#1265FF]/20 flex items-center justify-center text-[#1265FF] flex-shrink-0 group-hover:bg-[#1265FF]/30 transition-colors">
               <ShoppingBag className="w-6 h-6 stroke-[2]" />
             </div>
             <div>
               <p className="text-xs font-medium text-slate-400">Total Sales</p>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5">
-                ₹24,85,075
+                {formattedTotalSales}
               </h3>
               <p className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-1">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>+12.5%</span>
-                <span className="text-slate-400 font-normal">vs yesterday</span>
+                <span>Active</span>
+                <span className="text-slate-400 font-normal">from completed orders</span>
               </p>
             </div>
           </div>
         </div>
 
         {/* Card 2: Orders */}
-        <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-[#00D9FF]/60 transition-all">
+        <div
+          onClick={() => onNavigateTab?.('orders')}
+          className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-[#00D9FF] hover:scale-[1.01] transition-all cursor-pointer"
+          title="Click to view Orders module"
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#00D9FF]/20 flex items-center justify-center text-[#00D9FF] flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#00D9FF]/20 flex items-center justify-center text-[#00D9FF] flex-shrink-0 group-hover:bg-[#00D9FF]/30 transition-colors">
               <ShoppingCart className="w-6 h-6 stroke-[2]" />
             </div>
             <div>
               <p className="text-xs font-medium text-slate-400">Orders</p>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5">
-                356
+                {(overviewData.totalOrders || 0).toLocaleString()}
               </h3>
               <p className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-1">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>+8.3%</span>
-                <span className="text-slate-400 font-normal">vs yesterday</span>
+                <span>Persistent</span>
+                <span className="text-slate-400 font-normal">in database</span>
               </p>
             </div>
           </div>
         </div>
 
         {/* Card 3: Customers */}
-        <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-[#741BFF]/60 transition-all">
+        <div
+          onClick={() => onNavigateTab?.('customers')}
+          className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-[#741BFF] hover:scale-[1.01] transition-all cursor-pointer"
+          title="Click to view Customers module"
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#741BFF]/20 flex items-center justify-center text-[#741BFF] flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#741BFF]/20 flex items-center justify-center text-[#741BFF] flex-shrink-0 group-hover:bg-[#741BFF]/30 transition-colors">
               <Users className="w-6 h-6 stroke-[2]" />
             </div>
             <div>
               <p className="text-xs font-medium text-slate-400">Customers</p>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5">
-                1,245
+                {(overviewData.totalCustomers || 0).toLocaleString()}
               </h3>
               <p className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-1">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>+15.7%</span>
-                <span className="text-slate-400 font-normal">vs yesterday</span>
+                <span>Registered</span>
+                <span className="text-slate-400 font-normal">verified buyers</span>
               </p>
             </div>
           </div>
         </div>
 
-        {/* Card 4: Conversion Rate */}
+        {/* Card 4: Conversion Rate (Display Not Available if no visitor tracking) */}
         <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-purple-500/60 transition-all">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-[#A855F7]/20 flex items-center justify-center text-[#A855F7] flex-shrink-0">
@@ -217,35 +353,31 @@ export const StoreAdminShopmaxDashboard = ({
             </div>
             <div>
               <p className="text-xs font-medium text-slate-400">Conversion Rate</p>
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5">
-                3.42%
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight mt-0.5">
+                {overviewData.conversionRate !== null ? `${overviewData.conversionRate}%` : 'Not Available'}
               </h3>
-              <p className="text-[11px] font-semibold text-rose-400 flex items-center gap-1 mt-1">
-                <TrendingDown className="w-3.5 h-3.5" />
-                <span>-2.1%</span>
-                <span className="text-slate-400 font-normal">vs yesterday</span>
+              <p className="text-[10px] text-slate-400 mt-1">
+                Visitor telemetry uninstrumented
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════
-          3. MAIN TWO-COLUMN WORKSPACE: LEFT (Charts & Tables) | RIGHT (POS & Promo)
-          ════════════════════════════════════════════════════════════════ */}
+      {/* 3. MAIN TWO-COLUMN WORKSPACE: LEFT (Charts & Tables) | RIGHT (POS & Promo) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-        
-        {/* ── LEFT SECTION (8 COLS ON DESKTOP) ── */}
+        {/* LEFT SECTION (8 COLS ON DESKTOP) */}
         <div className="xl:col-span-8 space-y-6">
-          
-          {/* ── ROW: SALES OVERVIEW + SALES BY CHANNEL ── */}
+          {/* ROW: SALES OVERVIEW + SALES BY CHANNEL */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
             {/* Sales Overview Line Chart (7 Cols) */}
             <div className="lg:col-span-7 bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg relative">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-white">Sales Overview</h3>
-                
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-white">Sales Overview</h3>
+                  {salesOverviewLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-400" />}
+                </div>
+
                 {/* Time Range Selector */}
                 <div className="relative">
                   <button
@@ -281,17 +413,17 @@ export const StoreAdminShopmaxDashboard = ({
                 </div>
               </div>
 
-              {/* Peak Saturday Floating Tooltip Pill (as shown in reference image) */}
+              {/* Peak Floating Tooltip Pill */}
               <div className="absolute top-12 right-16 z-10 bg-[#741BFF] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-lg border border-purple-400/40 pointer-events-none hidden sm:block text-center">
-                <p className="font-extrabold text-xs">₹24,85,075</p>
-                <p className="text-[9px] text-purple-200 font-medium">Total Sales</p>
+                <p className="font-extrabold text-xs">{formattedTotalSales}</p>
+                <p className="text-[9px] text-purple-200 font-medium">Database Revenue</p>
               </div>
 
               {/* Recharts Area Line Chart */}
               <div className="h-60 sm:h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
-                    data={WEEKLY_SALES_DATA[selectedRange] || WEEKLY_SALES_DATA['This Week']}
+                    data={salesOverviewData}
                     margin={{ top: 20, right: 10, left: -15, bottom: 0 }}
                   >
                     <defs>
@@ -313,8 +445,6 @@ export const StoreAdminShopmaxDashboard = ({
                       tickLine={false}
                       axisLine={false}
                       tickFormatter={(val) => `₹${val}L`}
-                      ticks={[0, 10, 20, 30]}
-                      domain={[0, 30]}
                     />
                     <Tooltip
                       content={({ active, payload }) => {
@@ -348,7 +478,11 @@ export const StoreAdminShopmaxDashboard = ({
             </div>
 
             {/* Sales by Channel Donut Chart (5 Cols) */}
-            <div className="lg:col-span-5 bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+            <div
+              onClick={() => onNavigateTab?.('orders')}
+              className="lg:col-span-5 bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg flex flex-col justify-between cursor-pointer hover:border-[#1265FF]/40 transition-colors"
+              title="Click to view Channel Orders"
+            >
               <div>
                 <h3 className="text-base font-bold text-white mb-2">Sales by Channel</h3>
               </div>
@@ -358,7 +492,7 @@ export const StoreAdminShopmaxDashboard = ({
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={SALES_CHANNEL_DATA}
+                      data={channelData}
                       cx="50%"
                       cy="50%"
                       innerRadius={52}
@@ -366,8 +500,8 @@ export const StoreAdminShopmaxDashboard = ({
                       paddingAngle={3}
                       dataKey="value"
                     >
-                      {SALES_CHANNEL_DATA.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      {channelData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color || '#1265FF'} />
                       ))}
                     </Pie>
                     <Tooltip
@@ -392,7 +526,7 @@ export const StoreAdminShopmaxDashboard = ({
                 {/* Center Value */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                   <span className="text-sm font-bold text-white tracking-tight">
-                    ₹24,85,075
+                    {formattedTotalSales}
                   </span>
                   <span className="text-[10px] text-slate-400 font-medium">Total</span>
                 </div>
@@ -400,7 +534,7 @@ export const StoreAdminShopmaxDashboard = ({
 
               {/* Channel Legend Breakdown */}
               <div className="space-y-1.5 pt-2 border-t border-[#1E2968]/70 text-xs">
-                {SALES_CHANNEL_DATA.map((c) => (
+                {channelData.map((c) => (
                   <div key={c.name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span
@@ -421,11 +555,10 @@ export const StoreAdminShopmaxDashboard = ({
             </div>
           </div>
 
-          {/* ── ROW: TOP WATCHES + RECENT ORDERS ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
+          {/* ROW: TOP WATCHES + RECENT ORDERS */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-w-0">
             {/* Top Watches Table */}
-            <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg">
+            <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-4 sm:p-5 shadow-lg min-w-0 overflow-hidden">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-bold text-white">Top Watches</h3>
                 <button
@@ -437,8 +570,8 @@ export const StoreAdminShopmaxDashboard = ({
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+              <div className="overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left text-xs min-w-[280px]">
                   <thead>
                     <tr className="text-slate-400 border-b border-[#1E2968] pb-2 font-medium">
                       <th className="pb-2.5">Product</th>
@@ -447,36 +580,44 @@ export const StoreAdminShopmaxDashboard = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#1E2968]/60">
-                    {filteredTopWatches.map((watch) => (
-                      <tr key={watch.id} className="hover:bg-white/[0.03] transition-colors">
-                        <td className="py-2.5 flex items-center gap-2.5">
-                          <img
-                            src={watch.image}
-                            alt={watch.name}
-                            className="w-9 h-9 rounded-xl object-contain bg-black/40 border border-white/10 p-0.5 flex-shrink-0"
-                            onError={(e) => {
-                              e.target.src = '/images/products/rolex-submariner.png';
-                            }}
-                          />
-                          <span className="font-semibold text-white truncate max-w-[140px]">
-                            {watch.name}
-                          </span>
-                        </td>
-                        <td className="py-2.5 text-center font-medium text-slate-300">
-                          {watch.sold}
-                        </td>
-                        <td className="py-2.5 text-right font-bold text-white">
-                          {watch.revenue}
+                    {filteredTopWatches.length === 0 ? (
+                      <tr>
+                        <td colSpan="3" className="py-4 text-center text-slate-400">
+                          No top selling watches recorded yet.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      filteredTopWatches.map((watch) => (
+                        <tr key={watch.id} className="hover:bg-white/[0.03] transition-colors">
+                          <td className="py-2.5 flex items-center gap-2.5">
+                            <img
+                              src={watch.image || '/images/products/rolex-submariner.png'}
+                              alt={watch.name}
+                              className="w-9 h-9 rounded-xl object-contain bg-black/40 border border-white/10 p-0.5 flex-shrink-0"
+                              onError={(e) => {
+                                e.target.src = '/images/products/rolex-submariner.png';
+                              }}
+                            />
+                            <span className="font-semibold text-white truncate max-w-[140px]">
+                              {watch.name}
+                            </span>
+                          </td>
+                          <td className="py-2.5 text-center font-medium text-slate-300">
+                            {watch.sold}
+                          </td>
+                          <td className="py-2.5 text-right font-bold text-white">
+                            {watch.revenue}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
 
             {/* Recent Orders Table */}
-            <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-5 shadow-lg">
+            <div className="bg-[#0B1445]/90 border border-[#1E2968] rounded-2xl p-4 sm:p-5 shadow-lg min-w-0 overflow-hidden">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-bold text-white">Recent Orders</h3>
                 <button
@@ -488,8 +629,8 @@ export const StoreAdminShopmaxDashboard = ({
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+              <div className="overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left text-xs min-w-[320px]">
                   <thead>
                     <tr className="text-slate-400 border-b border-[#1E2968] pb-2 font-medium">
                       <th className="pb-2.5">Order ID</th>
@@ -499,43 +640,50 @@ export const StoreAdminShopmaxDashboard = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#1E2968]/60">
-                    {filteredRecentOrders.map((ord) => (
-                      <tr
-                        key={ord.id}
-                        onClick={() => setSelectedOrder(ord)}
-                        className="hover:bg-white/[0.04] transition-colors cursor-pointer group"
-                      >
-                        <td className="py-2.5 font-mono text-[#00D9FF] group-hover:underline">
-                          {ord.id}
-                        </td>
-                        <td className="py-2.5 text-white font-medium truncate max-w-[110px]">
-                          {ord.customer}
-                        </td>
-                        <td className="py-2.5 font-bold text-slate-200">
-                          {ord.amount}
-                        </td>
-                        <td className="py-2.5 text-right">
-                          <span
-                            className={`inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full ${ord.statusStyle}`}
-                          >
-                            {ord.status}
-                          </span>
+                    {filteredRecentOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" className="py-4 text-center text-slate-400">
+                          No recent orders in database.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      filteredRecentOrders.map((ord) => (
+                        <tr
+                          key={ord.id}
+                          onClick={() => setSelectedOrder(ord)}
+                          className="hover:bg-white/[0.04] transition-colors cursor-pointer group"
+                        >
+                          <td className="py-2.5 font-mono text-[#00D9FF] group-hover:underline">
+                            {ord.id}
+                          </td>
+                          <td className="py-2.5 text-white font-medium truncate max-w-[110px]">
+                            {ord.customer}
+                          </td>
+                          <td className="py-2.5 font-bold text-slate-200">
+                            {ord.amount}
+                          </td>
+                          <td className="py-2.5 text-right">
+                            <span
+                              className={`inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                                ord.statusStyle || 'bg-blue-500/20 text-blue-400'
+                              }`}
+                            >
+                              {ord.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
-
           </div>
-
         </div>
 
-        {/* ── RIGHT SECTION (4 COLS ON DESKTOP) ── */}
+        {/* RIGHT SECTION (4 COLS ON DESKTOP) */}
         <div className="xl:col-span-4 space-y-6">
-          
-          {/* 8. POS TERMINAL & BARCODE SCANNER PANEL */}
+          {/* POS TERMINAL & BARCODE SCANNER PANEL */}
           <ShopmaxPOSTerminalPanel
             posTab={posTab}
             setPosTab={setPosTab}
@@ -557,11 +705,8 @@ export const StoreAdminShopmaxDashboard = ({
             onNavigateTab={onNavigateTab}
           />
 
-            {/* ════════════════════════════════════════════════════════════
-                11. NEW COLLECTION PROMOTION CARD
-              ════════════════════════════════════════════════════════════ */}
+          {/* NEW COLLECTION PROMOTION CARD */}
           <div className="rounded-2xl bg-[#0B1445]/90 border border-[#1E2968] p-5 shadow-lg relative overflow-hidden flex items-center justify-between">
-            {/* Left Content */}
             <div className="z-10 max-w-[170px] space-y-1.5">
               <h3 className="text-lg font-bold text-white tracking-tight">
                 New Collection
@@ -580,7 +725,6 @@ export const StoreAdminShopmaxDashboard = ({
               </div>
             </div>
 
-            {/* Right Luxury Watch Image */}
             <div className="relative w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 flex items-center justify-center">
               <img
                 src="/images/footer_newsletter_watch.png"
@@ -592,9 +736,7 @@ export const StoreAdminShopmaxDashboard = ({
               />
             </div>
           </div>
-
         </div>
-
       </div>
 
       <ShopmaxModals

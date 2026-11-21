@@ -9,7 +9,9 @@ const app = express();
 // Allowed Origins for Production, Custom Domains & Vercel Preview Deployments
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://127.0.0.1:5173',
   'http://localhost:3000',
+  'http://127.0.0.1:3000',
   'https://watchhub.in',
   'https://www.watchhub.in',
   'https://thewatchhub.in',
@@ -97,6 +99,9 @@ import deliveryRoutes from './routes/deliveryRoutes.js';
 import supportRoutes from './routes/supportRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import storeAdminRoutes from './routes/storeAdminRoutes.js';
+import superAdminRoutes from './routes/superAdminRoutes.js';
+import riderRoutes from './routes/riderRoutes.js';
 
 // 404 & Static Assets
 app.get('/favicon.ico', (req, res) => res.status(204).end());
@@ -116,6 +121,9 @@ app.use('/api/delivery', deliveryRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/store-admin', storeAdminRoutes);
+app.use('/api/super-admin', superAdminRoutes);
+app.use('/api/rider', riderRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {
